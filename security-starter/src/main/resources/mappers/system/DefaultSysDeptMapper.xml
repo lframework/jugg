@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lframework.starter.security.mappers.system.DefaultSysDeptMapper">
+
+    <resultMap id="SysDeptDto" type="com.lframework.starter.security.dto.system.dept.DefaultSysDeptDto">
+        <id column="id" property="id"/>
+        <result column="code" property="code"/>
+        <result column="name" property="name"/>
+        <result column="short_name" property="shortName"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="available" property="available"/>
+        <result column="description" property="description"/>
+    </resultMap>
+
+    <sql id="SysDeptDto_sql">
+        SELECT
+            id,
+            code,
+            name,
+            short_name,
+            parent_id,
+            available,
+            description
+        FROM sys_dept
+    </sql>
+
+    <select id="selector" resultMap="SysDeptDto">
+        <include refid="SysDeptDto_sql"/>
+        ORDER BY code
+    </select>
+    <select id="getById" resultMap="SysDeptDto">
+        <include refid="SysDeptDto_sql"/>
+        WHERE id = #{id}
+    </select>
+</mapper>

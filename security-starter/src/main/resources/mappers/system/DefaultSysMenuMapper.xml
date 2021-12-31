@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lframework.starter.security.mappers.system.DefaultSysMenuMapper">
+
+    <resultMap id="SysMenuDto" type="com.lframework.starter.security.dto.system.menu.DefaultSysMenuDto">
+        <id column="id" property="id"/>
+        <result column="code" property="code"/>
+        <result column="name" property="name"/>
+        <result column="title" property="title"/>
+        <result column="component" property="component"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="path" property="path"/>
+        <result column="no_cache" property="noCache"/>
+        <result column="display" property="display"/>
+        <result column="hidden" property="hidden"/>
+        <result column="permission" property="permission"/>
+        <result column="is_special" property="isSpecial"/>
+        <result column="available" property="available"/>
+        <result column="description" property="description"/>
+    </resultMap>
+
+    <sql id="SysMenuDto_sql">
+        SELECT
+            id,
+            code,
+            name,
+            title,
+            component,
+            parent_id,
+            path,
+            no_cache,
+            display,
+            hidden,
+            permission,
+            is_special,
+            available,
+            description
+        FROM sys_menu
+    </sql>
+
+    <select id="query" resultMap="SysMenuDto">
+        <include refid="SysMenuDto_sql"/>
+        ORDER BY code
+    </select>
+    <select id="selector" resultMap="SysMenuDto">
+        <include refid="SysMenuDto_sql"/>
+        <where>
+            <if test="vo != null">
+                <if test="vo.display != null">
+                    AND display = #{vo.display}
+                </if>
+            </if>
+            AND display IN (0, 1)
+        </where>
+        ORDER BY code
+    </select>
+    <select id="getById" resultMap="SysMenuDto">
+        <include refid="SysMenuDto_sql"/>
+        WHERE id = #{id}
+    </select>
+    <select id="getChildrenById" resultMap="SysMenuDto">
+        <include refid="SysMenuDto_sql"/>
+        WHERE parent_id = #{id}
+    </select>
+    <select id="getByRoleId" resultMap="SysMenuDto">
+        <include refid="SysMenuDto_sql"/>
+        WHERE id IN (
+        SELECT
+        menu_id
+        FROM sys_role_menu
+        WHERE role_id = #{roleId}
+        )
+        ORDER BY code
+    </select>
+</mapper>

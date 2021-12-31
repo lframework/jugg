@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lframework.starter.security.mappers.system.DefaultSysUserPositionMapper">
+    <resultMap id="SysUserPositionDto" type="com.lframework.starter.security.dto.system.position.DefaultSysUserPositionDto">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="position_id" property="positionId"/>
+    </resultMap>
+
+    <sql id="SysUserPositionDto_sql">
+        SELECT
+            up.id,
+            up.user_id,
+            up.position_id
+        FROM sys_user_position AS up
+        INNER JOIN sys_position AS p ON p.id = up.position_id
+    </sql>
+    <select id="getByUserId" resultMap="SysUserPositionDto">
+        <include refid="SysUserPositionDto_sql"/>
+        WHERE up.user_id = #{userId}
+        ORDER BY p.code
+    </select>
+</mapper>

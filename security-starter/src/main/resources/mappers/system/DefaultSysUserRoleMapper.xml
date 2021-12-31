@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lframework.starter.security.mappers.system.DefaultSysUserRoleMapper">
+    <resultMap id="SysUserRoleDto" type="com.lframework.starter.security.dto.system.role.DefaultSysUserRoleDto">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="role_id" property="roleId"/>
+    </resultMap>
+
+    <sql id="SysUserRoleDto_sql">
+        SELECT
+            ur.id,
+            ur.user_id,
+            ur.role_id
+        FROM sys_user_role AS ur
+        INNER JOIN sys_role AS r ON r.id = ur.role_id
+    </sql>
+    <select id="getByUserId" resultMap="SysUserRoleDto">
+        <include refid="SysUserRoleDto_sql"/>
+        WHERE ur.user_id = #{userId}
+        ORDER BY r.code
+    </select>
+</mapper>
