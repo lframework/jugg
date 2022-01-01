@@ -327,3 +327,5 @@ INSERT INTO `sys_role_menu`
 VALUES ('5e616c1ac66541b8beb392327e5e5f80', '75fde99fc20d4f9e92806003b5c26643', '2001005002');
 INSERT INTO `sys_role_menu`
 VALUES ('98776bde1ab046cfbc2eb6cb604c8e7c', '75fde99fc20d4f9e92806003b5c26643', '2001005003');
+
+INSERT INTO `sys_user_role` (`id`, `user_id`, `role_id`) VALUES ('1', '1', '1');
