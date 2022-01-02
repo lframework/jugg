@@ -51,95 +51,95 @@ public class OpLogAspector {
 
             Object value = joinPoint.proceed();
 
-            try {
-                //获取方法的参数名和参数值
-                MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
-                List<String> paramNameList = Arrays.asList(methodSignature.getParameterNames());
-                List<Object> paramList = Arrays.asList(joinPoint.getArgs());
+            if (currentUser != null) {
+                try {
+                    //获取方法的参数名和参数值
+                    MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+                    List<String> paramNameList = Arrays.asList(methodSignature.getParameterNames());
+                    List<Object> paramList = Arrays.asList(joinPoint.getArgs());
 
-                //将方法的参数名和参数值一一对应的放入上下文中
-                EvaluationContext ctx = SpelUtil.buildContext();
-                for (int i = 0; i < paramNameList.size(); i++) {
-                    ctx.setVariable(paramNameList.get(i), paramList.get(i));
-                }
-
-                //将返回值放入上下文中
-                ctx.setVariable("_result", value);
-
-                Map<String, String> variables = OpLogUtil.getVariables();
-                if (!CollectionUtil.isEmpty(variables)) {
-                    variables.forEach((k, v) -> {
-                        ctx.setVariable(k, v);
-                    });
-                }
-
-                // 解析SpEL表达式获取结果
-                Object[] params;
-                OpLog opLog = methodSignature.getMethod().getAnnotation(OpLog.class);
-                if (!ArrayUtil.isEmpty(opLog.params())) {
-                    params = new Object[opLog.params().length];
-                    for (int i = 0; i < opLog.params().length; i++) {
-                        String param = opLog.params()[i];
-                        Object p = SpelUtil.parse(param, ctx);
-                        params[i] = p;
-                    }
-                } else {
-                    params = new String[0];
-                }
-
-                List<String[]> paramsList = new ArrayList<>();
-                //循环format
-                if (opLog.loopFormat() && Arrays.stream(params).anyMatch(t -> t instanceof Collection)) {
-                    String[] strParams = new String[params.length];
-                    //collectionIndex的索引
-                    List<Integer> collectionIndexes = new ArrayList<>();
-                    for (int i = 0; i < params.length; i++) {
-                        //先处理不是Collection的元素
-                        if (params[i] instanceof Collection) {
-                            collectionIndexes.add(i);
-                            continue;
-                        }
-                        strParams[i] = params[i] == null ? null : params[i].toString();
+                    //将方法的参数名和参数值一一对应的放入上下文中
+                    EvaluationContext ctx = SpelUtil.buildContext();
+                    for (int i = 0; i < paramNameList.size(); i++) {
+                        ctx.setVariable(paramNameList.get(i), paramList.get(i));
                     }
 
-                    paramsList.add(strParams);
+                    //将返回值放入上下文中
+                    ctx.setVariable("_result", value);
 
-                    if (!CollectionUtil.isEmpty(collectionIndexes)) {
-                        //将所有的collection组合，例：collection1的size是2 collection2的size是3 则组合后的条数为2*3=6
-                        for (Integer collectionIndex : collectionIndexes) {
-                            List<String[]> tmpParamsList = new ArrayList<>();
-                            for (String[] paramsArr : paramsList) {
+                    Map<String, String> variables = OpLogUtil.getVariables();
+                    if (!CollectionUtil.isEmpty(variables)) {
+                        variables.forEach((k, v) -> {
+                            ctx.setVariable(k, v);
+                        });
+                    }
 
-                                Collection collection = (Collection) params[collectionIndex];
-                                for (Object o : collection) {
-                                    String[] tmp = new String[paramsArr.length];
-                                    for (int j = 0; j < paramsArr.length; j++) {
-                                        if (j == collectionIndex) {
-                                            tmp[j] = o == null ? null : o.toString();
-                                        } else {
-                                            tmp[j] = paramsArr[j];
-                                        }
-                                    }
-
-                                    tmpParamsList.add(tmp);
-                                }
-                            }
-
-                            paramsList.clear();
-                            paramsList.addAll(tmpParamsList);
+                    // 解析SpEL表达式获取结果
+                    Object[] params;
+                    OpLog opLog = methodSignature.getMethod().getAnnotation(OpLog.class);
+                    if (!ArrayUtil.isEmpty(opLog.params())) {
+                        params = new Object[opLog.params().length];
+                        for (int i = 0; i < opLog.params().length; i++) {
+                            String param = opLog.params()[i];
+                            Object p = SpelUtil.parse(param, ctx);
+                            params[i] = p;
                         }
                     } else {
+                        params = new String[0];
+                    }
+
+                    List<String[]> paramsList = new ArrayList<>();
+                    //循环format
+                    if (opLog.loopFormat() && Arrays.stream(params).anyMatch(t -> t instanceof Collection)) {
+                        String[] strParams = new String[params.length];
+                        //collectionIndex的索引
+                        List<Integer> collectionIndexes = new ArrayList<>();
+                        for (int i = 0; i < params.length; i++) {
+                            //先处理不是Collection的元素
+                            if (params[i] instanceof Collection) {
+                                collectionIndexes.add(i);
+                                continue;
+                            }
+                            strParams[i] = params[i] == null ? null : params[i].toString();
+                        }
+
+                        paramsList.add(strParams);
+
+                        if (!CollectionUtil.isEmpty(collectionIndexes)) {
+                            //将所有的collection组合，例：collection1的size是2 collection2的size是3 则组合后的条数为2*3=6
+                            for (Integer collectionIndex : collectionIndexes) {
+                                List<String[]> tmpParamsList = new ArrayList<>();
+                                for (String[] paramsArr : paramsList) {
+
+                                    Collection collection = (Collection) params[collectionIndex];
+                                    for (Object o : collection) {
+                                        String[] tmp = new String[paramsArr.length];
+                                        for (int j = 0; j < paramsArr.length; j++) {
+                                            if (j == collectionIndex) {
+                                                tmp[j] = o == null ? null : o.toString();
+                                            } else {
+                                                tmp[j] = paramsArr[j];
+                                            }
+                                        }
+
+                                        tmpParamsList.add(tmp);
+                                    }
+                                }
+
+                                paramsList.clear();
+                                paramsList.addAll(tmpParamsList);
+                            }
+                        } else {
+                            paramsList.add(strParams);
+                        }
+                    } else {
+                        String[] strParams = new String[params.length];
+                        for (int i = 0; i < params.length; i++) {
+                            strParams[i] = params[i] == null ? null : params[i].toString();
+                        }
                         paramsList.add(strParams);
                     }
-                } else {
-                    String[] strParams = new String[params.length];
-                    for (int i = 0; i < params.length; i++) {
-                        strParams[i] = params[i] == null ? null : params[i].toString();
-                    }
-                    paramsList.add(strParams);
-                }
 
-                if (currentUser != null) {
                     for (String[] strArr : paramsList) {
                         CreateOpLogsVo vo = new CreateOpLogsVo();
                         vo.setName(StringUtil.format(opLog.name(), strArr));
@@ -150,11 +150,10 @@ public class OpLogAspector {
 
                         OpLogUtil.addLog(vo);
                     }
+                } catch (Exception e) {
+                    log.error(e.getMessage(), e);
                 }
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
             }
-
             return value;
         } finally {
             OpLogUtil.clear();

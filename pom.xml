@@ -40,6 +40,7 @@
         <httpclient.version>4.5.10</httpclient.version>
         <dom4j.version>1.6.1</dom4j.version>
         <commons-codec.version>1.13</commons-codec.version>
+        <groovy.version>3.0.9</groovy.version>
     </properties>
 
     <dependencyManagement>
@@ -179,6 +180,12 @@
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
                 <version>${commons-codec.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-all</artifactId>
+                <version>${groovy.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
