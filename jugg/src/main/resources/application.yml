@@ -107,6 +107,9 @@ op-logs:
   #操作日志保留天数
   retain-days: 7
 
+#同步锁类型 不配置则为JUC的ReentrantLock，可配置为Redis
+#locker-type: redis
+
 #重复提交拦截暂时不实现
 #repeat-request:
   #重复提交拦截间隔（单位：秒）
