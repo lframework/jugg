@@ -38,4 +38,11 @@ public interface IRecursionMappingService {
      * @param nodeType
      */
     void saveNode(String nodeId, NodeType nodeType);
+
+    /**
+     * 根据节点ID删除
+     * @param nodeId
+     * @param nodeType
+     */
+    void deleteNode(String nodeId, NodeType nodeType);
 }

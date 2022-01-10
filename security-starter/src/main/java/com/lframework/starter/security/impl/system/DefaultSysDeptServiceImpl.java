@@ -186,10 +186,16 @@ public class DefaultSysDeptServiceImpl implements ISysDeptService {
     protected DefaultSysDept doCreate(CreateSysDeptVo vo) {
 
         //查询Code是否重复
-        Wrapper<DefaultSysDept> checkCodeWrapper = Wrappers.lambdaQuery(DefaultSysDept.class)
+        Wrapper<DefaultSysDept> checkWrapper = Wrappers.lambdaQuery(DefaultSysDept.class)
                 .eq(DefaultSysDept::getCode, vo.getCode());
-        if (defaultSysDeptMapper.selectCount(checkCodeWrapper) > 0) {
+        if (defaultSysDeptMapper.selectCount(checkWrapper) > 0) {
             throw new DefaultClientException("编号重复，请重新输入！");
+        }
+
+        //查询Name是否重复
+        checkWrapper = Wrappers.lambdaQuery(DefaultSysDept.class).eq(DefaultSysDept::getName, vo.getName());
+        if (defaultSysDeptMapper.selectCount(checkWrapper) > 0) {
+            throw new DefaultClientException("名称重复，请重新输入！");
         }
 
         //如果parentId不为空，查询上级部门是否存在
@@ -225,10 +231,17 @@ public class DefaultSysDeptServiceImpl implements ISysDeptService {
         }
 
         //查询Code是否重复
-        Wrapper<DefaultSysDept> checkCodeWrapper = Wrappers.lambdaQuery(DefaultSysDept.class)
+        Wrapper<DefaultSysDept> checkWrapper = Wrappers.lambdaQuery(DefaultSysDept.class)
                 .eq(DefaultSysDept::getCode, vo.getCode()).ne(DefaultSysDept::getId, data.getId());
-        if (defaultSysDeptMapper.selectCount(checkCodeWrapper) > 0) {
+        if (defaultSysDeptMapper.selectCount(checkWrapper) > 0) {
             throw new DefaultClientException("编号重复，请重新输入！");
+        }
+
+        //查询Name是否重复
+        checkWrapper = Wrappers.lambdaQuery(DefaultSysDept.class)
+                .eq(DefaultSysDept::getName, vo.getName()).ne(DefaultSysDept::getId, data.getId());
+        if (defaultSysDeptMapper.selectCount(checkWrapper) > 0) {
+            throw new DefaultClientException("名称重复，请重新输入！");
         }
 
         //如果parentId不为空，查询上级部门是否存在

@@ -17,5 +17,5 @@ import java.util.List;
  */
 public interface RecursionMappingMapper extends BaseMapper<RecursionMapping> {
 
-    List<String> getNodeChildIds(@Param("nodeId") String nodeId, @Param("nodeType") NodeType nodeType);
+    List<String> getNodeChildIds(@Param("nodeId") String nodeId, @Param("nodeType") Integer nodeType);
 }
