@@ -43,7 +43,7 @@ public class RecursionMappingServiceImpl implements IRecursionMappingService {
     @Override
     public List<String> getNodeChildIds(String nodeId, NodeType nodeType) {
 
-        return recursionMappingMapper.getNodeChildIds(nodeId, nodeType);
+        return recursionMappingMapper.getNodeChildIds(nodeId, nodeType.getCode());
     }
 
     @Transactional
@@ -51,6 +51,15 @@ public class RecursionMappingServiceImpl implements IRecursionMappingService {
     public void saveNode(String nodeId, NodeType nodeType) {
 
         this.saveNode(nodeId, nodeType, null);
+    }
+
+    @Transactional
+    @Override
+    public void deleteNode(String nodeId, NodeType nodeType) {
+
+        Wrapper<RecursionMapping> deleteWrapper = Wrappers.lambdaQuery(RecursionMapping.class)
+                .eq(RecursionMapping::getNodeId, nodeId).eq(RecursionMapping::getNodeType, nodeType.getCode());
+        recursionMappingMapper.delete(deleteWrapper);
     }
 
     @Transactional

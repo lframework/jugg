@@ -209,6 +209,12 @@ public class DefaultSysRoleServiceImpl implements ISysRoleService {
             throw new DefaultClientException("编号重复，请重新输入！");
         }
 
+        checkWrapper = Wrappers.lambdaQuery(DefaultSysRole.class)
+                .eq(DefaultSysRole::getName, vo.getName());
+        if (defaultSysRoleMapper.selectCount(checkWrapper) > 0) {
+            throw new DefaultClientException("名称重复，请重新输入！");
+        }
+
         if (!StringUtil.isBlank(vo.getPermission())) {
 
             if (StringPool.PERMISSION_ADMIN_NAME.equals(vo.getPermission())) {
@@ -240,6 +246,12 @@ public class DefaultSysRoleServiceImpl implements ISysRoleService {
                 .eq(DefaultSysRole::getCode, vo.getCode()).ne(DefaultSysRole::getId, vo.getId());
         if (defaultSysRoleMapper.selectCount(checkWrapper) > 0) {
             throw new DefaultClientException("编号重复，请重新输入！");
+        }
+
+        checkWrapper = Wrappers.lambdaQuery(DefaultSysRole.class)
+                .eq(DefaultSysRole::getName, vo.getName()).ne(DefaultSysRole::getId, vo.getId());
+        if (defaultSysRoleMapper.selectCount(checkWrapper) > 0) {
+            throw new DefaultClientException("名称重复，请重新输入！");
         }
 
         LambdaUpdateWrapper<DefaultSysRole> updateWrapper = Wrappers.lambdaUpdate(DefaultSysRole.class)

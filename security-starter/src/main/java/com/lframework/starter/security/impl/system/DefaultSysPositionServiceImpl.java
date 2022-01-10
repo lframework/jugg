@@ -169,6 +169,12 @@ public class DefaultSysPositionServiceImpl implements ISysPositionService {
             throw new DefaultClientException("编号重复，请重新输入！");
         }
 
+        checkWrapper = Wrappers.lambdaQuery(DefaultSysPosition.class)
+                .eq(DefaultSysPosition::getName, vo.getName());
+        if (defaultSysPositionMapper.selectCount(checkWrapper) > 0) {
+            throw new DefaultClientException("名称重复，请重新输入！");
+        }
+
         DefaultSysPosition data = new DefaultSysPosition();
         data.setId(IdUtil.getId());
         data.setCode(vo.getCode());
@@ -193,6 +199,12 @@ public class DefaultSysPositionServiceImpl implements ISysPositionService {
                 .eq(DefaultSysPosition::getCode, vo.getCode()).ne(DefaultSysPosition::getId, vo.getId());
         if (defaultSysPositionMapper.selectCount(checkWrapper) > 0) {
             throw new DefaultClientException("编号重复，请重新输入！");
+        }
+
+        checkWrapper = Wrappers.lambdaQuery(DefaultSysPosition.class)
+                .eq(DefaultSysPosition::getName, vo.getName()).ne(DefaultSysPosition::getId, vo.getId());
+        if (defaultSysPositionMapper.selectCount(checkWrapper) > 0) {
+            throw new DefaultClientException("名称重复，请重新输入！");
         }
 
         LambdaUpdateWrapper<DefaultSysPosition> updateWrapper = Wrappers.lambdaUpdate(DefaultSysPosition.class)
