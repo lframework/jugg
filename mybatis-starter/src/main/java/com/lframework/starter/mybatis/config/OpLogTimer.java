@@ -5,12 +5,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.time.LocalDateTime;
 
-@EnableScheduling
+import static com.lframework.starter.mybatis.config.OpLogConfiguration.OP_LOG_THREAD_POOL_NAME;
+
+@EnableAsync
 @Configuration
 @ConditionalOnProperty(value = "op-logs.enabled", matchIfMissing = true)
 public class OpLogTimer {
@@ -28,6 +31,7 @@ public class OpLogTimer {
      * 清除过期日志
      * 每一小时执行一次
      */
+    @Async(OP_LOG_THREAD_POOL_NAME)
     @Scheduled(fixedDelay = 3600000L)
     public void clearLogs() {
 
