@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 测试环境下log配置信息 -->
 <configuration debug="false" scan="false" packagingData="true">
+    <springProperty scope="context" name="logFilePath" source="logging.file.path" defaultValue="logs"/>
+
     <appender name="LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>./logs/log.log</file>
+        <file>${logFilePath}/log.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>./logs/%d{yyyy-MM-dd}/log.%i.log</fileNamePattern>
+            <fileNamePattern>${logFilePath}/%d{yyyy-MM-dd}/log.%i.log</fileNamePattern>
             <maxFileSize>30MB</maxFileSize>
             <maxHistory>30</maxHistory>
             <totalSizeCap>10GB</totalSizeCap>
@@ -14,7 +16,7 @@
         </encoder>
     </appender>
 
-    <logger name="com.lframework" level="info" additivity="false">
+    <logger name="com.lframework" level="debug" additivity="false">
         <appender-ref ref="LOG_FILE"/>
     </logger>
     <root level="info">
