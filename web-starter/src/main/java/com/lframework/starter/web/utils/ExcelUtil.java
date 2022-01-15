@@ -284,7 +284,8 @@ public class ExcelUtil {
             String sheetName, Class<T> clazz) {
 
         HttpServletResponse response = ResponseUtil.getResponse();
-        try (OutputStream os = response.getOutputStream()) {
+        try {
+            OutputStream os = response.getOutputStream();
             fileName = URLEncoder.encode(fileName + ExcelTypeEnum.XLS.getValue(), StandardCharsets.UTF_8.name());
             response.setContentType("application/msexcel");
             response.setCharacterEncoding(StandardCharsets.UTF_8.name());
