@@ -81,11 +81,11 @@ public class DefaultSysMenuServiceImpl implements ISysMenuService {
 
         DefaultSysMenuDto oriMenu = this.getById(vo.getId());
         if (oriMenu.getIsSpecial()) {
-            throw new DefaultClientException("菜单【" + oriMenu.getName() + "】为内置菜单，不允许修改！");
+            throw new DefaultClientException("菜单【" + oriMenu.getTitle() + "】为内置菜单，不允许修改！");
         }
 
         if (!ObjectUtil.equals(vo.getDisplay(), oriMenu.getDisplay().getCode())) {
-            throw new DefaultClientException("菜单【" + oriMenu.getName() + "】" + "不允许更改类型！");
+            throw new DefaultClientException("菜单【" + oriMenu.getTitle() + "】" + "不允许更改类型！");
         }
 
         DefaultSysMenu data = this.doUpdate(vo);
@@ -105,13 +105,13 @@ public class DefaultSysMenuServiceImpl implements ISysMenuService {
 
         DefaultSysMenuDto oriMenu = this.getById(id);
         if (oriMenu.getIsSpecial()) {
-            throw new DefaultClientException("菜单【" + oriMenu.getName() + "】为内置菜单，不允许删除！");
+            throw new DefaultClientException("菜单【" + oriMenu.getTitle() + "】为内置菜单，不允许删除！");
         }
 
         List<DefaultSysMenuDto> children = this.doGetChildrenById(id);
         if (CollectionUtil.isNotEmpty(children)) {
             //如果子节点不为空
-            throw new DefaultClientException("菜单【" + oriMenu.getName() + "】存在子菜单，无法删除！");
+            throw new DefaultClientException("菜单【" + oriMenu.getTitle() + "】存在子菜单，无法删除！");
         }
 
         this.doDeleteById(id);
@@ -138,7 +138,7 @@ public class DefaultSysMenuServiceImpl implements ISysMenuService {
         for (String id : ids) {
             DefaultSysMenuDto oriMenu = this.getById(id);
             if (oriMenu.getIsSpecial()) {
-                throw new DefaultClientException("菜单【" + oriMenu.getName() + "】为内置菜单，不允许启用！");
+                throw new DefaultClientException("菜单【" + oriMenu.getTitle() + "】为内置菜单，不允许启用！");
             }
         }
 
@@ -162,7 +162,7 @@ public class DefaultSysMenuServiceImpl implements ISysMenuService {
         for (String id : ids) {
             DefaultSysMenuDto oriMenu = this.getById(id);
             if (oriMenu.getIsSpecial()) {
-                throw new DefaultClientException("菜单【" + oriMenu.getName() + "】为内置菜单，不允许停用！");
+                throw new DefaultClientException("菜单【" + oriMenu.getTitle() + "】为内置菜单，不允许停用！");
             }
         }
 
