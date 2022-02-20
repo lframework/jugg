@@ -172,5 +172,10 @@ public class CreateTemplate {
          * 字段备注
          */
         private String description;
+
+        /**
+         * 是否包含状态Tag
+         */
+        private Boolean hasAvailableTag = Boolean.FALSE;
     }
 }

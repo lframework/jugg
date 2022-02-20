@@ -853,6 +853,7 @@ public class Generator {
             columnObj.setNameProperty(
                     column.getColumnName().substring(0, 1).toUpperCase() + column.getColumnName().substring(1));
             columnObj.setDescription(column.getName());
+            columnObj.setHasAvailableTag(column.getViewType() == GenViewType.SELECT && column.getDataType() == GenDataType.BOOLEAN && "available".equals(column.getColumnName()));
             if (!StringUtil.isBlank(column.getRegularExpression())) {
                 columnObj.setRegularExpression(column.getRegularExpression());
                 importPackages.add(Pattern.class.getName());
@@ -964,6 +965,7 @@ public class Generator {
             columnObj.setNameProperty(
                     column.getColumnName().substring(0, 1).toUpperCase() + column.getColumnName().substring(1));
             columnObj.setDescription(column.getName());
+            columnObj.setHasAvailableTag(column.getViewType() == GenViewType.SELECT && column.getDataType() == GenDataType.BOOLEAN && "available".equals(column.getColumnName()));
             if (!StringUtil.isBlank(column.getRegularExpression())) {
                 columnObj.setRegularExpression(column.getRegularExpression());
                 importPackages.add(Pattern.class.getName());
