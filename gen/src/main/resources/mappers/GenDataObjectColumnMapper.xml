@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lframework.gen.mappers.GenDataObjectColumnMapper">
+    <resultMap id="GenDataObjectColumnDto" type="com.lframework.gen.dto.dataobj.GenDataObjectColumnDto">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="column_name" property="columnName"/>
+        <result column="is_key" property="isKey"/>
+        <result column="data_type" property="dataType"/>
+        <result column="column_order" property="columnOrder"/>
+        <result column="description" property="description"/>
+        <result column="view_type" property="viewType"/>
+        <result column="fix_enum" property="fixEnum"/>
+        <result column="enum_back" property="enumBack"/>
+        <result column="enum_front" property="enumFront"/>
+        <result column="regular_expression" property="regularExpression"/>
+        <result column="is_order" property="isOrder"/>
+        <result column="order_type" property="orderType"/>
+    </resultMap>
+
+    <sql id="GenDataObjectColumnDto_sql">
+        SELECT
+            c.id,
+            c.name,
+            c.column_name,
+            c.is_key,
+            c.data_type,
+            c.column_order,
+            c.description,
+            c.view_type,
+            c.fix_enum,
+            c.enum_back,
+            c.enum_front,
+            c.regular_expression,
+            c.is_order,
+            c.order_type
+        FROM gen_data_object_column AS c
+    </sql>
+
+    <select id="getByDataObjId" resultMap="GenDataObjectColumnDto">
+        <include refid="GenDataObjectColumnDto_sql"/>
+        WHERE c.data_obj_id = #{dataObjId}
+        ORDER BY c.column_order
+    </select>
+</mapper>

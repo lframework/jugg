@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lframework.gen.mappers.GenSimpleTableColumnMapper">
+
+    <resultMap id="SimpleTableColumnDto" type="com.lframework.gen.dto.simpledb.SimpleTableColumnDto">
+        <id column="id" property="id"/>
+        <result column="table_id" property="tableId"/>
+        <result column="column_name" property="columnName"/>
+        <result column="data_type" property="dataType"/>
+        <result column="is_nullable" property="isNullable"/>
+        <result column="is_key" property="isKey"/>
+        <result column="column_default" property="columnDefault"/>
+        <result column="ordinal_position" property="ordinalPosition"/>
+        <result column="column_comment" property="columnComment"/>
+    </resultMap>
+
+    <resultMap id="OriSimpleTableColumnDto" type="com.lframework.gen.dto.simpledb.OriSimpleTableColumnDto">
+        <id column="id" property="id"/>
+        <result column="table_id" property="tableId"/>
+        <result column="column_name" property="columnName"/>
+        <result column="data_type" property="dataType"/>
+        <result column="is_nullable" property="isNullable"/>
+        <result column="is_key" property="isKey"/>
+        <result column="column_default" property="columnDefault"/>
+        <result column="ordinal_position" property="ordinalPosition"/>
+        <result column="column_comment" property="columnComment"/>
+    </resultMap>
+
+    <sql id="SimpleTableColumnDto_sql">
+        SELECT id,
+               table_id,
+               column_name,
+               data_type,
+               is_nullable,
+               is_key,
+               column_default,
+               ordinal_position,
+               column_comment
+        FROM gen_simple_table_column
+    </sql>
+    <select id="getByTableId" resultMap="SimpleTableColumnDto">
+        <include refid="SimpleTableColumnDto_sql"/>
+        WHERE table_id = #{id}
+        ORDER BY ordinal_position
+    </select>
+
+    <select id="get" resultMap="OriSimpleTableColumnDto">
+        SELECT
+            c.COLUMN_NAME AS column_name,
+            c.DATA_TYPE AS data_type,
+            c.IS_NULLABLE = 'YES' AS is_nullable,
+            c.COLUMN_DEFAULT AS column_default,
+            c.ORDINAL_POSITION AS ordinal_position,
+            u.CONSTRAINT_NAME IS NOT NULL AS is_key,
+            c.COLUMN_COMMENT AS column_comment
+        FROM information_schema.COLUMNS AS c
+        LEFT JOIN information_schema.KEY_COLUMN_USAGE AS u ON u.TABLE_SCHEMA = c.TABLE_SCHEMA AND u.TABLE_NAME = c.TABLE_NAME AND u.COLUMN_NAME = c.COLUMN_NAME AND u.CONSTRAINT_NAME = 'PRIMARY'
+        WHERE c.TABLE_SCHEMA = #{tableSchema}
+        AND c.TABLE_NAME = #{tableName}
+        ORDER BY c.ORDINAL_POSITION
+    </select>
+    <select id="getById" resultMap="SimpleTableColumnDto">
+        <include refid="SimpleTableColumnDto_sql"/>
+        WHERE id = #{id}
+    </select>
+</mapper>

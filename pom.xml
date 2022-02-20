@@ -16,6 +16,7 @@
     <version>1.1.1</version>
     <modules>
         <module>common</module>
+        <module>gen</module>
         <module>web-starter</module>
         <module>mybatis-starter</module>
         <module>security-starter</module>
