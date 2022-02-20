@@ -16,7 +16,7 @@ import java.io.Serializable;
  *
  * @author zmj
  */
-public class PatternValidator implements ConstraintValidator<Pattern, CharSequence> {
+public class PatternValidator implements ConstraintValidator<Pattern, Object> {
 
     /**
      * 正则表达式
@@ -30,8 +30,8 @@ public class PatternValidator implements ConstraintValidator<Pattern, CharSequen
     }
 
     @Override
-    public boolean isValid(CharSequence value, ConstraintValidatorContext context) {
+    public boolean isValid(Object value, ConstraintValidatorContext context) {
 
-        return StringUtil.isEmpty(value) || RegUtil.isMatch(java.util.regex.Pattern.compile(this.regExp), StringUtil.toString(value));
+        return value == null || (value instanceof CharSequence && StringUtil.isEmpty((CharSequence) value)) || RegUtil.isMatch(java.util.regex.Pattern.compile(this.regExp), StringUtil.toString(value));
     }
 }
