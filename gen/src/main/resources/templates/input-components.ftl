@@ -27,8 +27,8 @@
 </el-select>
 <#else>
 <el-select v-model="${formData}.${column.name}" clearable>
-	<el-option label="是" :value="true" />
-	<el-option label="否" :value="false" />
+	<el-option label="<#if column.hasAvailableTag>启用<#else>是</#if>" :value="true" />
+	<el-option label="<#if column.hasAvailableTag>停用<#else>否</#if>" :value="false" />
 </el-select>
 </#if>
 <#elseif column.viewType == 6>
