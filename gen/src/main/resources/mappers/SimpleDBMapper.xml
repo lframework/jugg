@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lframework.gen.mappers.SimpleDBMapper">
+
+    <resultMap id="SimpleDBDto" type="com.lframework.gen.dto.simpledb.SimpleDBDto">
+        <result column="TABLE_SCHEMA" property="tableSchema"/>
+        <result column="TABLE_NAME" property="tableName"/>
+    </resultMap>
+
+    <select id="getTables" resultMap="SimpleDBDto">
+        select TABLE_SCHEMA, TABLE_NAME from information_schema.tables
+        <where>
+            <if test="dbName != null and dbName != ''">
+                AND TABLE_SCHEMA = #{dbName}
+            </if>
+        </where>
+        ORDER BY TABLE_SCHEMA, TABLE_NAME
+    </select>
+</mapper>
