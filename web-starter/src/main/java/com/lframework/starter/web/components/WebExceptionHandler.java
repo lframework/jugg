@@ -1,23 +1,31 @@
 package com.lframework.starter.web.components;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.lframework.common.exceptions.BaseException;
 import com.lframework.common.exceptions.ClientException;
 import com.lframework.common.exceptions.SysException;
+import com.lframework.common.exceptions.impl.DefaultClientException;
 import com.lframework.common.exceptions.impl.DefaultSysException;
 import com.lframework.common.exceptions.impl.InputErrorException;
+import com.lframework.starter.web.components.validation.TypeMismatch;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
 import com.lframework.starter.web.resp.Response;
 import com.lframework.starter.web.utils.ResponseUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.method.annotation.MethodArgumentConversionNotSupportedException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -88,13 +96,35 @@ public class WebExceptionHandler {
         this.logException(e, method);
 
         InputErrorException exception = null;
-        for (ObjectError error : e.getAllErrors()) {
-            exception = new InputErrorException(error.getDefaultMessage());
-            break;
-        }
 
+        if (e.getErrorCount() > 0) {
+            ObjectError objectError = e.getAllErrors().get(0);
+
+            if (objectError instanceof FieldError && "typeMismatch".equals(objectError.getCode())) {
+                String fieldName = ((FieldError) objectError).getField();
+
+                Class targetClazz = e.getBindingResult().getTarget().getClass();
+
+                TypeMismatch typeMismatch = null;
+                try {
+                    typeMismatch = targetClazz.getDeclaredField(fieldName).getAnnotation(TypeMismatch.class);
+                } catch (NoSuchFieldException exp) {
+                    throw new DefaultSysException(exp.getMessage());
+                }
+                if (typeMismatch != null) {
+                    exception = new InputErrorException(typeMismatch.message());
+                }
+            }
+        }
         if (exception == null) {
-            throw new InputErrorException();
+            for (ObjectError error : e.getAllErrors()) {
+                exception = new InputErrorException(error.getDefaultMessage());
+                break;
+            }
+
+            if (exception == null) {
+                exception = new InputErrorException();
+            }
         }
 
         this.setResponseCode(exception);
@@ -158,8 +188,43 @@ public class WebExceptionHandler {
 
         this.logException(e, method);
 
-        BaseException ex = new InputErrorException();
+        MethodParameter methodParameter = null;
+        if (e instanceof MethodArgumentConversionNotSupportedException) {
+            methodParameter = ((MethodArgumentConversionNotSupportedException) e).getParameter();
+        }
+        else if (e instanceof MethodArgumentTypeMismatchException) {
+            methodParameter = ((MethodArgumentTypeMismatchException) e).getParameter();
+        }
 
+        BaseException ex = null;
+        if (methodParameter != null) {
+            TypeMismatch typeMismatch = methodParameter.getMethod().getParameters()[methodParameter.getParameterIndex()].getAnnotation(TypeMismatch.class);
+            if (typeMismatch != null) {
+                ex = new InputErrorException(typeMismatch.message());
+            }
+        }
+
+        if (ex == null) {
+            ex = new InputErrorException();
+        }
+
+        this.setResponseCode(ex);
+
+        return InvokeResultBuilder.fail(ex);
+    }
+
+    /**
+     * 处理由于传入参数类型不匹配导致的异常
+     * @param e
+     * @param method
+     * @return
+     */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public Response invalidFormatException(HttpMessageNotReadableException e, HandlerMethod method) {
+
+        this.logException(e, method);
+
+        BaseException ex = new InputErrorException();
         this.setResponseCode(ex);
 
         return InvokeResultBuilder.fail(ex);

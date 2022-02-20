@@ -2,6 +2,7 @@ package com.lframework.starter.mybatis.mapper;
 
 import com.baomidou.mybatisplus.core.conditions.AbstractWrapper;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.lframework.common.exceptions.impl.DefaultSysException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +30,7 @@ public interface BaseMapper<T> extends com.baomidou.mybatisplus.core.mapper.Base
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
+            throw new DefaultSysException(e.getMessage());
         }
 
         return update(entity, updateWrapper);
