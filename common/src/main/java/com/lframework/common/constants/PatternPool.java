@@ -69,7 +69,7 @@ public class PatternPool extends cn.hutool.core.lang.PatternPool {
     /**
      * 是否 浮点数
      */
-    public static final String PATTERN_STR_IS_FLOAT = "^(-?\\d+)(\\.\\d+)?$";
+    public static final String PATTERN_STR_IS_FLOAT = "^((-?([1-9]\\d*\\.\\d*|0\\.\\d*[1-9]\\d*|0?\\.0+|0))|((-?[1-9]\\d*|[0])))$";
 
     public static final Pattern PATTERN_IS_FLOAT = Pattern.compile(PATTERN_STR_IS_FLOAT);
 
