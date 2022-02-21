@@ -744,6 +744,7 @@ public class Generator {
             columnObj.setNameProperty(
                     column.getColumnName().substring(0, 1).toUpperCase() + column.getColumnName().substring(1));
             columnObj.setDescription(column.getName());
+            columnObj.setHasAvailableTag(column.getViewType() == GenViewType.SELECT && column.getDataType() == GenDataType.BOOLEAN && "available".equals(column.getColumnName()));
             columnObj.setFixEnum(column.getFixEnum());
             if (!StringUtil.isBlank(column.getRegularExpression())) {
                 columnObj.setRegularExpression(column.getRegularExpression());
@@ -1215,12 +1216,12 @@ public class Generator {
         }
         if (controllerTemplate.getQueryParams() != null) {
             importPackages.addAll(controllerTemplate.getQueryParams().getImportPackages());
+            if (!controllerTemplate.getHasAvailableTag()) {
+                controllerTemplate.setHasAvailableTag(controllerTemplate.getQueryParams().getColumns().stream().anyMatch(QueryParamsTemplate.Column::getHasAvailableTag));
+            }
         }
         if (controllerTemplate.getDetail() != null) {
             importPackages.addAll(controllerTemplate.getDetail().getImportPackages());
-            if (!controllerTemplate.getHasAvailableTag()) {
-                controllerTemplate.setHasAvailableTag(controllerTemplate.getDetail().getColumns().stream().anyMatch(DetailTemplate.Column::getHasAvailableTag));
-            }
         }
 
         return controllerTemplate;

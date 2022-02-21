@@ -156,12 +156,12 @@ public class ${className}ServiceImpl implements I${className}Service {
 
         ${classNameProperty}Mapper.update(updateWrapper);
 
-        OpLogUtil.setVariable("${update.keys[0].name}", <#if create.keys[0].type == 'String'>data.get${create.keys[0].nameProperty}()<#else>String.valueOf(data.get${create.keys[0].nameProperty}())</#if>);
+        OpLogUtil.setVariable("${update.keys[0].name}", <#if update.keys[0].type == 'String'>data.get${update.keys[0].nameProperty}()<#else>String.valueOf(data.get${update.keys[0].nameProperty}())</#if>);
         OpLogUtil.setExtra(vo);
         <#if isCache>
 
         I${className}Service thisService = getThis(this.getClass());
-        thisService.cleanCacheByKey(<#if create.keys[0].type == 'String'>data.get${create.keys[0].nameProperty}()<#else>String.valueOf(data.get${create.keys[0].nameProperty}())</#if>);
+        thisService.cleanCacheByKey(<#if update.keys[0].type == 'String'>data.get${update.keys[0].nameProperty}()<#else>String.valueOf(data.get${update.keys[0].nameProperty}())</#if>);
 
         </#if>
     }
