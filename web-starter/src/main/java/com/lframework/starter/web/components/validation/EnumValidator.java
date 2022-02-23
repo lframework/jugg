@@ -1,6 +1,7 @@
 package com.lframework.starter.web.components.validation;
 
 import com.lframework.common.utils.ObjectUtil;
+import com.lframework.common.utils.StringUtil;
 import com.lframework.starter.web.enums.BaseEnum;
 import com.lframework.starter.web.utils.EnumUtil;
 
@@ -27,6 +28,6 @@ public class EnumValidator implements ConstraintValidator<IsEnum, Serializable> 
     @Override
     public boolean isValid(Serializable value, ConstraintValidatorContext context) {
 
-        return ObjectUtil.isNull(value) || ObjectUtil.isNotNull(EnumUtil.getByCode(enumsClass, value));
+        return ObjectUtil.isNull(value) || ObjectUtil.isNotNull(EnumUtil.getByCode(enumsClass, value)) || (value instanceof CharSequence && StringUtil.isEmpty((CharSequence) value));
     }
 }

@@ -1,86 +1,87 @@
 <template>
-  <div v-permission="['${moduleName}:${bizName}:query']" class="app-container">
-    <!-- 数据列表 -->
-    <vxe-grid
-      ref="grid"
-      resizable
-      show-overflow
-      highlight-hover-row
-      keep-source
-      row-id="id"
-      :proxy-config="proxyConfig"
-      :columns="tableColumn"
-      :toolbar-config="toolbarConfig"
-      :pager-config="{}"
-      :loading="loading"
-      :height="$defaultTableHeight"
-    >
-      <#if query?? && queryParams??>
-      <template v-slot:form>
-        <j-border>
-          <j-form label-width="80px" @collapse="$refs.grid.refreshColumn()">
-            <#list queryParams.columns as column>
-            <j-form-item label="${column.description}"<#if column.viewType != 0 && column.viewType != 1 && column.viewType != 5> :content-nest="false"</#if>>
-              <#assign formData="searchFormData"/>
-              <@format><#include "input-components.ftl" /></@format>
-            </j-form-item>
-            </#list>
-          </j-form>
-        </j-border>
-      </template>
-      </#if>
-      <!-- 工具栏 -->
-      <template v-slot:toolbar_buttons>
-        <el-form :inline="true">
-          <#if query??>
-          <el-form-item>
-            <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
-          </el-form-item>
-          </#if>
-          <#if create??>
-          <el-form-item v-permission="['${moduleName}:${bizName}:add']">
-            <el-button type="primary" icon="el-icon-plus" @click="$refs.addDialog.openDialog()">新增</el-button>
-          </el-form-item>
-          </#if>
-        </el-form>
-      </template>
-      <#list query.columns as column>
-          <#if column.hasAvailableTag>
-
-      <!-- 状态 列自定义内容 -->
-      <template v-slot:available_default="{ row }">
-        <available-tag :available="row.available" />
-      </template>
-          </#if>
-      </#list>
-
-      <!-- 操作 列自定义内容 -->
-      <template v-slot:action_default="{ row }">
-        <#if detail??>
-        <el-button v-permission="['${moduleName}:${bizName}:query']" type="text" icon="el-icon-view" @click="e => { id = row.${keys[0].name};$refs.viewDialog.openDialog() }">查看</el-button>
+  <div>
+    <div v-permission="['${moduleName}:${bizName}:query']" class="app-container">
+      <!-- 数据列表 -->
+      <vxe-grid
+        ref="grid"
+        resizable
+        show-overflow
+        highlight-hover-row
+        keep-source
+        row-id="id"
+        :proxy-config="proxyConfig"
+        :columns="tableColumn"
+        :toolbar-config="toolbarConfig"
+        :pager-config="{}"
+        :loading="loading"
+        :height="$defaultTableHeight"
+      >
+        <#if query?? && queryParams??>
+        <template v-slot:form>
+          <j-border>
+            <j-form label-width="80px" @collapse="$refs.grid.refreshColumn()">
+              <#list queryParams.columns as column>
+              <j-form-item label="${column.description}"<#if column.viewType != 0 && column.viewType != 1 && column.viewType != 5> :content-nest="false"</#if>>
+                <#assign formData="searchFormData"/>
+                <@format><#include "input-components.ftl" /></@format>
+              </j-form-item>
+              </#list>
+            </j-form>
+          </j-border>
+        </template>
         </#if>
-        <#if update??>
-        <el-button v-permission="['${moduleName}:${bizName}:modify']" type="text" icon="el-icon-edit" @click="e => { id = row.${keys[0].name};$refs.updateDialog.openDialog() }">修改</el-button>
-        </#if>
-        <#if hasDelete>
-          <el-button v-permission="['${moduleName}:${bizName}:modify']" type="text" icon="el-icon-delete" @click="e => { deleteRow(row.${keys[0].name}) }">删除</el-button>
-        </#if>
-      </template>
-    </vxe-grid>
+        <!-- 工具栏 -->
+        <template v-slot:toolbar_buttons>
+          <el-form :inline="true">
+            <#if query??>
+            <el-form-item>
+              <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
+            </el-form-item>
+            </#if>
+            <#if create??>
+            <el-form-item v-permission="['${moduleName}:${bizName}:add']">
+              <el-button type="primary" icon="el-icon-plus" @click="$refs.addDialog.openDialog()">新增</el-button>
+            </el-form-item>
+            </#if>
+          </el-form>
+        </template>
+        <#list query.columns as column>
+            <#if column.hasAvailableTag>
 
+        <!-- 状态 列自定义内容 -->
+        <template v-slot:available_default="{ row }">
+          <available-tag :available="row.available" />
+        </template>
+            </#if>
+        </#list>
+
+        <!-- 操作 列自定义内容 -->
+        <template v-slot:action_default="{ row }">
+          <#if detail??>
+          <el-button v-permission="['${moduleName}:${bizName}:query']" type="text" icon="el-icon-view" @click="e => { id = row.${keys[0].name};$refs.viewDialog.openDialog() }">查看</el-button>
+          </#if>
+          <#if update??>
+          <el-button v-permission="['${moduleName}:${bizName}:modify']" type="text" icon="el-icon-edit" @click="e => { id = row.${keys[0].name};$refs.updateDialog.openDialog() }">修改</el-button>
+          </#if>
+          <#if hasDelete>
+            <el-button v-permission="['${moduleName}:${bizName}:modify']" type="text" icon="el-icon-delete" @click="e => { deleteRow(row.${keys[0].name}) }">删除</el-button>
+          </#if>
+        </template>
+      </vxe-grid>
+    </div>
     <#if create??>
-    <!-- 新增窗口 -->
-    <add ref="addDialog" @confirm="search" />
+      <!-- 新增窗口 -->
+      <add ref="addDialog" @confirm="search" />
 
     </#if>
     <#if update??>
-    <!-- 修改窗口 -->
-    <modify :id="id" ref="updateDialog" @confirm="search" />
+      <!-- 修改窗口 -->
+      <modify :id="id" ref="updateDialog" @confirm="search" />
 
     </#if>
     <#if detail??>
-    <!-- 查看窗口 -->
-    <detail :id="id" ref="viewDialog" />
+      <!-- 查看窗口 -->
+      <detail :id="id" ref="viewDialog" />
 
     </#if>
   </div>
@@ -113,7 +114,12 @@ export default {
       searchFormData: {
         <#if queryParams??>
         <#list queryParams.columns as column>
+        <#if column.viewType == 6>
+        ${column.name}Start: '',
+        ${column.name}End: ''<#if column_index != queryParams.columns?size - 1>,</#if>
+        <#else>
         ${column.name}: ''<#if column_index != queryParams.columns?size - 1>,</#if>
+        </#if>
         </#list>
         </#if>
       },
