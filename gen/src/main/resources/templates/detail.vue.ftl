@@ -1,6 +1,6 @@
 <template>
   <el-dialog :visible.sync="visible" :close-on-click-modal="false" append-to-body width="40%" title="查看" top="5vh" @open="open">
-    <div v-if="visible" v-permission="['${moduleName}:${bizName}:query']">
+    <div v-if="visible" v-permission="['${moduleName}:${bizName}:query']" v-loading="loading">
       <el-descriptions :column="${detailSpan}" border label-class-name="descriptions-label" content-class-name="descriptions-content">
         <#list columns as column>
           <el-descriptions-item label="${column.description}" :span="${column.span}">
