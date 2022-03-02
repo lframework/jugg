@@ -1,5 +1,6 @@
 package com.lframework.starter.web.components.generator.impl;
 
+import com.lframework.common.constants.StringPool;
 import com.lframework.common.exceptions.impl.DefaultSysException;
 import com.lframework.common.utils.DateUtil;
 import com.lframework.starter.redis.components.RedisHandler;
@@ -29,7 +30,7 @@ public abstract class AbstractFlowGenerator implements Generator {
             throw new DefaultSysException("code为null！");
         }
         String lockerName = LOCK_KEY + type.getClass().getName();
-        String nowStr = DateUtil.formatDate(LocalDate.now());
+        String nowStr = DateUtil.formatDate(LocalDate.now(), "yyyyMMdd");
         String redisKey = nowStr + lockerName;
         long no = redisHandler.incr(redisKey, 1L);
         redisHandler.expire(redisKey, 86400000L);
