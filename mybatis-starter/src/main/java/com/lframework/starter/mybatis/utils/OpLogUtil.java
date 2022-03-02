@@ -21,7 +21,7 @@ import java.util.concurrent.ExecutorService;
 @Slf4j
 public class OpLogUtil {
 
-    private static final ThreadLocal<Map<String, Map<String, String>>> VARIABLE_POOL = new ThreadLocal<>();
+    private static final ThreadLocal<Map<String, Map<String, Object>>> VARIABLE_POOL = new ThreadLocal<>();
 
     private static final ThreadLocal<List<String>> LOG_ID_POOL = new ThreadLocal<>();
 
@@ -46,12 +46,12 @@ public class OpLogUtil {
         });
     }
 
-    public static void setVariable(String key, String value) {
+    public static void setVariable(String key, Object value) {
 
         VARIABLE_POOL.get().get(getCurrentLogId()).put(key, value);
     }
 
-    public static Map<String, String> getVariables() {
+    public static Map<String, Object> getVariables() {
 
         return VARIABLE_POOL.get().get(getCurrentLogId());
     }
