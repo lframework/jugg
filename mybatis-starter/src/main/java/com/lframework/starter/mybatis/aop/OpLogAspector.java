@@ -67,7 +67,7 @@ public class OpLogAspector {
                     //将返回值放入上下文中
                     ctx.setVariable("_result", value);
 
-                    Map<String, String> variables = OpLogUtil.getVariables();
+                    Map<String, Object> variables = OpLogUtil.getVariables();
                     if (!CollectionUtil.isEmpty(variables)) {
                         variables.forEach((k, v) -> {
                             ctx.setVariable(k, v);

@@ -59,7 +59,7 @@ public class ${className}Controller extends DefaultBaseController {
     /**
      * 查询列表
      */
-    @PreAuthorize("@permission.valid('${moduleName}:${bizName}:query','${moduleName}:${bizName}:add','${moduleName}:${bizName}:modify')")
+    @PreAuthorize("@permission.valid('${moduleName}:${bizName}:query')")
     @GetMapping("/query")
     public InvokeResult query(@Valid Query${className}Vo vo) {
 
@@ -81,7 +81,7 @@ public class ${className}Controller extends DefaultBaseController {
     /**
      * 根据ID查询
      */
-    @PreAuthorize("@permission.valid('${moduleName}:${bizName}:query','${moduleName}:${bizName}:add','${moduleName}:${bizName}:modify')")
+    @PreAuthorize("@permission.valid('${moduleName}:${bizName}:query')")
     @GetMapping
     public InvokeResult get(<#if keys[0].type == 'String'>@NotBlank<#else>@NotNull</#if>(message = "${keys[0].name}不能为空！") ${keys[0].type} ${keys[0].name}) {
 
