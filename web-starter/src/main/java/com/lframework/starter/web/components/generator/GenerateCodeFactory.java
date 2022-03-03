@@ -46,8 +46,20 @@ public class GenerateCodeFactory {
 
         Map<String, Generator> generators = ApplicationUtil.getBeansOfType(Generator.class);
         for (Generator value : generators.values()) {
-            if (value.getType() == type) {
-                return value;
+            if (!value.isSpecial()) {
+                // 优先匹配自定义生成器
+                if (value.getType() == type) {
+                    return value;
+                }
+            }
+        }
+
+        for (Generator value : generators.values()) {
+            if (value.isSpecial()) {
+                // 匹配内置生成器
+                if (value.getType() == type) {
+                    return value;
+                }
             }
         }
 
