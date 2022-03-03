@@ -24,4 +24,11 @@ public interface Generator {
      * @return
      */
     String generate();
+
+    /**
+     * 是否内置生成器
+     * 用于区分是内置的还是自定义的生成器
+     * @return
+     */
+    boolean isSpecial();
 }

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * @author zmj
  */
 @Component
-public class DefaultGenerator extends AbstractGenerator implements Generator {
+public class DefaultGenerator extends AbstractSnowFlakeGenerator implements Generator {
 
     @Value("${default-setting.generator-type:'SNOW_FLAKE'}")
     private GeneratorType generatorType;
@@ -40,5 +40,10 @@ public class DefaultGenerator extends AbstractGenerator implements Generator {
 
     public enum GeneratorType {
         FLOW, SNOW_FLAKE
+    }
+
+    @Override
+    public boolean isSpecial() {
+        return true;
     }
 }

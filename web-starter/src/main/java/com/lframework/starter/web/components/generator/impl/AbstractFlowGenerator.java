@@ -15,7 +15,7 @@ import java.time.LocalDate;
  *
  * @author zmj
  */
-public abstract class AbstractFlowGenerator implements Generator {
+public abstract class AbstractFlowGenerator extends AbstractGenerator implements Generator {
 
     private static final String LOCK_KEY = "flow_generator_index";
 

@@ -10,11 +10,16 @@ import org.springframework.stereotype.Component;
  * @author zmj
  */
 @Component
-public class DefaultSnowFlakeGenerator extends AbstractGenerator implements Generator {
+public class DefaultSnowFlakeGenerator extends AbstractSnowFlakeGenerator implements Generator {
 
     @Override
     public GenerateCodeType getType() {
 
         return GenerateCodeType.SNOW_FLAKE;
+    }
+
+    @Override
+    public boolean isSpecial() {
+        return true;
     }
 }
