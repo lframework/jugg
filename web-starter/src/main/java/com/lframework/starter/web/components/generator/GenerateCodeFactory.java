@@ -22,6 +22,7 @@ public class GenerateCodeFactory {
         Generator generator = GENERATOR_POOL.get(type);
         if (generator == null) {
             synchronized (GenerateCodeFactory.class) {
+                generator = GENERATOR_POOL.get(type);
                 if (generator == null) {
 
                     generator = getGenrator(type);
