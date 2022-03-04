@@ -42,7 +42,7 @@ public class OpLogTimerConfiguration implements ApplicationListener<ApplicationR
         }
     }
 
-    public static class OpLogClearJob implements QrtzJob {
+    public static class OpLogClearJob extends QrtzJob {
 
         @Autowired
         private IOpLogsService opLogsService;
@@ -54,7 +54,7 @@ public class OpLogTimerConfiguration implements ApplicationListener<ApplicationR
         private Integer retainDays;
 
         @Override
-        public void execute(JobExecutionContext context) throws JobExecutionException {
+        public void onExecute(JobExecutionContext context) {
             LocalDateTime now = LocalDateTime.now();
             LocalDateTime endTime = now.minusDays(retainDays);
 
