@@ -244,19 +244,34 @@ public class DefaultSysMenuServiceImpl implements ISysMenuService {
 
         SysMenuDisplay sysMenuDisplay = EnumUtil.getByCode(SysMenuDisplay.class, vo.getDisplay());
 
+        DefaultSysMenuDto parentMenu = null;
+        if (!StringUtil.isBlank(vo.getParentId())) {
+            parentMenu = this.getById(vo.getParentId());
+        }
         data.setCode(vo.getCode());
         data.setTitle(vo.getTitle());
-        data.setParentId(vo.getParentId());
+        data.setParentId(parentMenu == null ? StringPool.EMPTY_STR : parentMenu.getId());
         data.setDisplay(sysMenuDisplay);
         data.setDescription(StringUtil.isBlank(vo.getDescription()) ? StringPool.EMPTY_STR : vo.getDescription());
 
         if (sysMenuDisplay == SysMenuDisplay.CATALOG || sysMenuDisplay == SysMenuDisplay.FUNCTION) {
+            if (parentMenu != null) {
+                //父级菜单必须是目录
+                if (parentMenu.getDisplay() != SysMenuDisplay.CATALOG) {
+                    throw new DefaultClientException("父级菜单类型必须是【" + SysMenuDisplay.CATALOG.getDesc() + "】！");
+                }
+            }
+
             data.setName(vo.getName());
             /*data.setIcon(vo.getIcon());*/
             data.setPath(vo.getPath());
             data.setHidden(vo.getHidden());
 
             if (sysMenuDisplay == SysMenuDisplay.FUNCTION) {
+                // 功能必须有parentId
+                if (parentMenu == null) {
+                    throw new DefaultClientException("此菜单类型是【" + SysMenuDisplay.FUNCTION.getDesc() + "】，父级菜单不能为空！");
+                }
                 data.setComponent(vo.getComponent());
                 data.setNoCache(vo.getNoCache());
 
@@ -267,6 +282,15 @@ public class DefaultSysMenuServiceImpl implements ISysMenuService {
                 data.setPermission(vo.getPermission());
             }
         } else if (sysMenuDisplay == SysMenuDisplay.PERMISSION) {
+
+            if (parentMenu != null) {
+                //父级菜单必须是目录
+                if (parentMenu.getDisplay() != SysMenuDisplay.FUNCTION) {
+                    throw new DefaultClientException("父级菜单类型必须是【" + SysMenuDisplay.FUNCTION.getDesc() + "】！");
+                }
+            } else {
+                throw new DefaultClientException("此菜单类型是【" + SysMenuDisplay.PERMISSION.getDesc() + "】，父级菜单不能为空！");
+            }
 
             if (StringPool.PERMISSION_ADMIN_NAME.equals(vo.getPermission())) {
                 throw new DefaultClientException("权限【" + StringPool.PERMISSION_ADMIN_NAME + "】为内置权限，请修改！");
