@@ -51,6 +51,10 @@ public class CaptchaFilter extends OncePerRequestFilter {
         String captchaKey = StringUtil.format(StringPool.LOGIN_CAPTCHA_KEY, sn);
         try {
             String captcha = (String) redisHandler.get(captchaKey);
+            if (StringUtil.isEmpty(captcha)) {
+                ResponseUtil.respFailJson(response, new DefaultClientException("验证码已过期，请重新输入！"));
+                return;
+            }
             if (!StringUtil.equalsIgnoreCase(captcha, code)) {
                 ResponseUtil.respFailJson(response, new DefaultClientException("验证码错误，请重新输入！"));
                 return;
