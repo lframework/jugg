@@ -128,7 +128,7 @@ public class ${className}Controller extends DefaultBaseController {
     /**
      * 根据ID删除
      */
-    @PreAuthorize("@permission.valid('${moduleName}:${bizName}:modify')")
+    @PreAuthorize("@permission.valid('${moduleName}:${bizName}:delete')")
     @DeleteMapping
     public InvokeResult deleteById(<#if keys[0].type == 'String'>@NotBlank<#else>@NotNull</#if>(message = "${keys[0].name}不能为空！") ${keys[0].type} ${keys[0].name}) {
 
