@@ -64,7 +64,7 @@
           <el-button v-permission="['${moduleName}:${bizName}:modify']" type="text" icon="el-icon-edit" @click="e => { id = row.${keys[0].name};$refs.updateDialog.openDialog() }">修改</el-button>
           </#if>
           <#if hasDelete>
-            <el-button v-permission="['${moduleName}:${bizName}:modify']" type="text" icon="el-icon-delete" @click="e => { deleteRow(row.${keys[0].name}) }">删除</el-button>
+            <el-button v-permission="['${moduleName}:${bizName}:delete']" type="text" icon="el-icon-delete" @click="e => { deleteRow(row.${keys[0].name}) }">删除</el-button>
           </#if>
         </template>
       </vxe-grid>
