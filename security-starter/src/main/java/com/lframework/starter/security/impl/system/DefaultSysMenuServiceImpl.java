@@ -247,6 +247,12 @@ public class DefaultSysMenuServiceImpl implements ISysMenuService {
         DefaultSysMenuDto parentMenu = null;
         if (!StringUtil.isBlank(vo.getParentId())) {
             parentMenu = this.getById(vo.getParentId());
+            if (parentMenu == null) {
+                throw new DefaultClientException("父级菜单不存在！");
+            }
+            if (parentMenu.getId().equals(data.getId())) {
+                throw new DefaultClientException("父级菜单不能是当前菜单！");
+            }
         }
         data.setCode(vo.getCode());
         data.setTitle(vo.getTitle());
