@@ -28,6 +28,11 @@ public interface StringPool {
     String STR_SPLIT_CN = "，";
 
     /**
+     * 城市名称分隔符
+     */
+    String CITY_SPLIT = "/";
+
+    /**
      * utf-8字符集
      */
     String CHARACTER_ENCODING_UTF_8 = "utf-8";
