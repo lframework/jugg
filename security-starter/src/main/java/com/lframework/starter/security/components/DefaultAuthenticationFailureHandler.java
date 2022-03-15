@@ -82,6 +82,7 @@ public class DefaultAuthenticationFailureHandler implements AuthenticationFailur
                     AbstractUserDetailsService userDetailsService = ApplicationUtil.getBean(AbstractUserDetailsService.class);
                     AbstractUserDetails user = userDetailsService.findByUsername(username);
                     userService.lockById(user.getId());
+                    redisHandler.expire(lockKey, 1L);
                     // 锁定用户
                     ex = new DefaultClientException("用户已锁定，无法登录！");
                 }
