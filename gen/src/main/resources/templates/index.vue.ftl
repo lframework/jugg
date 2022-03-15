@@ -32,18 +32,14 @@
         </#if>
         <!-- 工具栏 -->
         <template v-slot:toolbar_buttons>
-          <el-form :inline="true">
+          <a-space>
             <#if query??>
-            <el-form-item>
-              <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
-            </el-form-item>
+            <a-button type="primary" icon="search" @click="search">查询</a-button>
             </#if>
             <#if create??>
-            <el-form-item v-permission="['${moduleName}:${bizName}:add']">
-              <el-button type="primary" icon="el-icon-plus" @click="$refs.addDialog.openDialog()">新增</el-button>
-            </el-form-item>
+            <a-button v-permission="['${moduleName}:${bizName}:add']" type="primary" icon="plus" @click="$refs.addDialog.openDialog()">新增</a-button>
             </#if>
-          </el-form>
+          </a-space>
         </template>
         <#list query.columns as column>
             <#if column.hasAvailableTag>
@@ -58,13 +54,13 @@
         <!-- 操作 列自定义内容 -->
         <template v-slot:action_default="{ row }">
           <#if detail??>
-          <el-button v-permission="['${moduleName}:${bizName}:query']" type="text" icon="el-icon-view" @click="e => { id = row.${keys[0].name};$refs.viewDialog.openDialog() }">查看</el-button>
+          <a-button v-permission="['${moduleName}:${bizName}:query']" type="link" @click="e => { id = row.${keys[0].name};$nextTick(() => $refs.viewDialog.openDialog()) }">查看</a-button>
           </#if>
           <#if update??>
-          <el-button v-permission="['${moduleName}:${bizName}:modify']" type="text" icon="el-icon-edit" @click="e => { id = row.${keys[0].name};$refs.updateDialog.openDialog() }">修改</el-button>
+          <a-button v-permission="['${moduleName}:${bizName}:modify']" type="link" @click="e => { id = row.${keys[0].name};$nextTick(() => $refs.updateDialog.openDialog()) }">修改</a-button>
           </#if>
           <#if hasDelete>
-            <el-button v-permission="['${moduleName}:${bizName}:delete']" type="text" icon="el-icon-delete" @click="e => { deleteRow(row.${keys[0].name}) }">删除</el-button>
+            <a-button v-permission="['${moduleName}:${bizName}:delete']" type="link" @click="e => { deleteRow(row.${keys[0].name}) }">删除</a-button>
           </#if>
         </template>
       </vxe-grid>
@@ -118,7 +114,7 @@ export default {
         ${column.name}Start: '',
         ${column.name}End: ''<#if column_index != queryParams.columns?size - 1>,</#if>
         <#else>
-        ${column.name}: ''<#if column_index != queryParams.columns?size - 1>,</#if>
+        ${column.name}: <#if column.fixEnum>undefined<#else>''</#if><#if column_index != queryParams.columns?size - 1>,</#if>
         </#if>
         </#list>
         </#if>
@@ -137,7 +133,7 @@ export default {
         { field: '${column.name}', title: '${column.description}', <#if column.widthType == 0>width<#else>minWidth</#if>: ${column.width}<#if column.sortable>, sortable: true</#if><#if column.isNumberType>, align: 'right'</#if><#if column.hasAvailableTag>, slots: {default: 'available_default'}</#if><#if column.fixEnum>, formatter: ({ cellValue }) => { return this.${r"$enums"}.${column.frontType}.getDesc(cellValue) }</#if> },
         </#list>
         </#if>
-        { title: '操作', width: <#if hasDelete>210<#else>140</#if>, fixed: 'right', slots: { default: 'action_default' }}
+        { title: '操作', width: <#if hasDelete>150<#else>120</#if>, fixed: 'right', slots: { default: 'action_default' }}
       ],
       // 请求接口配置
       proxyConfig: {

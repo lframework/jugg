@@ -1,9 +1,9 @@
 <template>
-  <el-dialog :visible.sync="visible" :close-on-click-modal="false" append-to-body width="40%" title="查看" top="5vh" @open="open">
+  <a-modal v-model="visible" :mask-closable="false" width="40%" title="查看" :dialog-style="{ top: '20px' }" :footer="null">
     <div v-if="visible" v-permission="['${moduleName}:${bizName}:query']" v-loading="loading">
-      <el-descriptions :column="${detailSpan}" border label-class-name="descriptions-label" content-class-name="descriptions-content">
+      <a-descriptions :column="${detailSpan}" bordered>
         <#list columns as column>
-          <el-descriptions-item label="${column.description}" :span="${column.span}">
+          <a-descriptions-item label="${column.description}" :span="${column.span}">
               <#if column.fixEnum>
             {{ $enums.${column.frontType}.getDesc(formData.${column.name}) }}
               <#else>
@@ -13,11 +13,11 @@
             {{ formData.${column.name} }}
                   </#if>
               </#if>
-          </el-descriptions-item>
+          </a-descriptions-item>
         </#list>
-      </el-descriptions>
+      </a-descriptions>
     </div>
-  </el-dialog>
+  </a-modal>
 </template>
 <script>
 <#if hasAvailableTag>
@@ -51,6 +51,8 @@ export default {
     // 打开对话框 由父页面触发
     openDialog() {
       this.visible = true
+
+      this.$nextTick(() => this.open())
     },
     // 关闭对话框
     closeDialog() {

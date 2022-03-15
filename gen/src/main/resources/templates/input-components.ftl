@@ -1,58 +1,61 @@
 <#if column.viewType == 0>
-<el-input v-model="${formData}.${column.name}" clearable />
+<a-input v-model="${formData}.${column.name}" allow-clear />
 <#elseif column.viewType == 1>
-<el-input v-model="${formData}.${column.name}" type="textarea" clearable />
+<a-textarea v-model="${formData}.${column.name}" allow-clear />
 <#elseif column.viewType == 2>
-<el-date-picker
+<a-date-picker
 	v-model="${formData}.${column.name}"
-	value-format="yyyy-MM-dd HH:mm:ss"
-	type="datetime"
+	value-format="YYYY-MM-DD HH:mm:ss"
+	show-time
 />
 <#elseif column.viewType == 3>
-<el-date-picker
+<a-date-picker
     v-model="${formData}.${column.name}"
-    value-format="yyyy-MM-dd"
-    type="date"
+    value-format="YYYY-MM-DD"
 />
 <#elseif column.viewType == 4>
-<el-time-picker
+<a-time-picker
     v-model="${formData}.${column.name}"
 	value-format="HH:mm:ss"
 >
-</el-time-picker>
+</a-time-picker>
 <#elseif column.viewType == 5>
 <#if column.fixEnum>
-<el-select v-model="${formData}.${column.name}" clearable>
-	<el-option v-for="item in $enums.${column.frontType}.values()" :key="item.code" :label="item.desc" :value="item.code" />
-</el-select>
+<a-select v-model="${formData}.${column.name}" allow-clear>
+	<a-select-option v-for="item in $enums.${column.frontType}.values()" :key="item.code" :value="item.code">{{ item.desc }}</a-select-option>
+</a-select>
 <#else>
-<el-select v-model="${formData}.${column.name}" clearable>
-	<el-option label="<#if column.hasAvailableTag>启用<#else>是</#if>" :value="true" />
-	<el-option label="<#if column.hasAvailableTag>停用<#else>否</#if>" :value="false" />
-</el-select>
+<a-select v-model="${formData}.${column.name}" allow-clear>
+	<a-select-option :value="true"><#if column.hasAvailableTag>启用<#else>是</#if></a-select-option>
+	<a-select-option :value="false"><#if column.hasAvailableTag>停用<#else>否</#if></a-select-option>
+</a-select>
 </#if>
 <#elseif column.viewType == 6>
 <#if column.type == 'LocalDateTime'>
-<el-date-picker
-	v-model="${formData}.${column.name}Start"
-	type="date"
-	value-format="yyyy-MM-dd 00:00:00"
-/>
-<span class="date-split">至</span>
-<el-date-picker
-	v-model="${formData}.${column.name}End"
-	type="date"
-	value-format="yyyy-MM-dd 23:59:59"
-/>
+<div class="date-range-container">
+	<a-date-picker
+		v-model="${formData}.${column.name}Start"
+		value-format="YYYY-MM-DD 00:00:00"
+	/>
+	<span class="date-split">至</span>
+	<a-date-picker
+		v-model="${formData}.${column.name}End"
+		value-format="YYYY-MM-DD 23:59:59"
+	/>
+</div>
 <#else>
-<el-date-picker
-	v-model="${formData}.${column.name}Start"
-	type="datetime"
-/>
-<span class="date-split">至</span>
-<el-date-picker
-	v-model="${formData}.${column.name}End"
-	type="datetime"
-/>
+<div class="date-range-container">
+	<a-date-picker
+		v-model="${formData}.${column.name}Start"
+		show-time
+		value-format="YYYY-MM-DD HH:mm:ss"
+	/>
+	<span class="date-split">至</span>
+	<el-date-picker
+		v-model="${formData}.${column.name}End"
+		show-time
+		value-format="YYYY-MM-DD HH:mm:ss"
+	/>
+</div>
 </#if>
 </#if>

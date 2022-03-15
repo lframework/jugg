@@ -1,20 +1,24 @@
 <template>
-  <el-dialog :visible.sync="visible" :close-on-click-modal="false" append-to-body width="40%" title="修改" top="5vh" @open="open">
-    <div v-if="visible" v-permission="['${moduleName}:${bizName}:modify']">
-      <el-form ref="form" v-loading="loading" label-width="100px" title-align="right" :model="formData" :rules="rules">
+  <a-modal v-model="visible" :mask-closable="false" width="40%" title="修改" :dialog-style="{ top: '20px' }">
+    <div v-if="visible" v-permission="['${moduleName}:${bizName}:modify']" v-loading="loading">
+      <a-form-model ref="form" :label-col="{span: 4}" :wrapper-col="{span: 16}" :model="formData" :rules="rules">
         <#list columns as column>
-          <el-form-item label="${column.description}" prop="${column.name}">
+          <a-form-model-item label="${column.description}" prop="${column.name}">
             <#assign formData="formData"/>
             <@format><#include "input-components.ftl" /></@format>
-          </el-form-item>
+          </a-form-model-item>
         </#list>
-        <el-form-item>
-          <el-button type="primary" @click="submit">保存</el-button>
-          <el-button @click="closeDialog">取消</el-button>
-        </el-form-item>
-      </el-form>
+      </a-form-model>
     </div>
-  </el-dialog>
+    <template slot="footer">
+      <div class="form-modal-footer">
+        <a-space>
+          <a-button type="primary" :loading="loading" @click="submit">保存</a-button>
+          <a-button :loading="loading" @click="closeDialog">取消</a-button>
+        </a-space>
+      </div>
+    </template>
+  </a-modal>
 </template>
 <script>
 export default {
