@@ -6,6 +6,7 @@ import com.lframework.starter.web.components.security.AbstractUserDetails;
 import com.lframework.starter.web.service.IMenuService;
 import com.lframework.starter.web.utils.RequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

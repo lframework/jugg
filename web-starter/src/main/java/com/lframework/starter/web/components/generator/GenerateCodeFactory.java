@@ -2,6 +2,7 @@ package com.lframework.starter.web.components.generator;
 
 
 import com.lframework.common.exceptions.impl.DefaultSysException;
+import com.lframework.common.utils.ObjectUtil;
 import com.lframework.starter.web.components.code.GenerateCodeType;
 import com.lframework.starter.web.utils.ApplicationUtil;
 
@@ -15,14 +16,14 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class GenerateCodeFactory {
 
-    public static final Map<GenerateCodeType, Generator> GENERATOR_POOL = new ConcurrentHashMap<>();
+    public static final Map<Class<? extends GenerateCodeType>, Generator> GENERATOR_POOL = new ConcurrentHashMap<>();
 
     public static Generator getInstance(GenerateCodeType type) {
 
-        Generator generator = GENERATOR_POOL.get(type);
+        Generator generator = GENERATOR_POOL.get(type.getClass());
         if (generator == null) {
             synchronized (GenerateCodeFactory.class) {
-                generator = GENERATOR_POOL.get(type);
+                generator = GENERATOR_POOL.get(type.getClass());
                 if (generator == null) {
 
                     generator = getGenrator(type);
@@ -35,7 +36,7 @@ public class GenerateCodeFactory {
                         throw new DefaultSysException("未找到" + type + "单号生成器！");
                     }
 
-                    GENERATOR_POOL.put(type, generator);
+                    GENERATOR_POOL.put(type.getClass(), generator);
                 }
             }
         }
@@ -49,7 +50,7 @@ public class GenerateCodeFactory {
         for (Generator value : generators.values()) {
             if (!value.isSpecial()) {
                 // 优先匹配自定义生成器
-                if (value.getType() == type) {
+                if (value.getType().getClass() == type.getClass()) {
                     return value;
                 }
             }
@@ -58,7 +59,7 @@ public class GenerateCodeFactory {
         for (Generator value : generators.values()) {
             if (value.isSpecial()) {
                 // 匹配内置生成器
-                if (value.getType() == type) {
+                if (value.getType().getClass() == type.getClass()) {
                     return value;
                 }
             }

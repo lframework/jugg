@@ -4,6 +4,8 @@ import com.lframework.common.constants.StringPool;
 import com.lframework.common.exceptions.impl.DefaultClientException;
 import com.lframework.common.utils.StringUtil;
 import com.lframework.starter.redis.components.RedisHandler;
+import com.lframework.starter.security.dto.system.config.SysConfigDto;
+import com.lframework.starter.security.service.system.ISysConfigService;
 import com.lframework.starter.web.utils.ResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -31,11 +33,20 @@ public class CaptchaFilter extends OncePerRequestFilter {
     @Autowired
     private RedisHandler redisHandler;
 
+    @Autowired
+    private ISysConfigService sysConfigService;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
         if (!matcher.matches(request)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        SysConfigDto config = sysConfigService.get();
+        if (!config.getAllowCaptcha()) {
             filterChain.doFilter(request, response);
             return;
         }

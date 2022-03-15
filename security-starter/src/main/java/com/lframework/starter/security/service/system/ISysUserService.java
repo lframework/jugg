@@ -2,10 +2,7 @@ package com.lframework.starter.security.service.system;
 
 import com.lframework.starter.mybatis.resp.PageResult;
 import com.lframework.starter.security.dto.system.user.DefaultSysUserDto;
-import com.lframework.starter.security.vo.system.user.CreateSysUserVo;
-import com.lframework.starter.security.vo.system.user.SysUserSelectorVo;
-import com.lframework.starter.security.vo.system.user.QuerySysUserVo;
-import com.lframework.starter.security.vo.system.user.UpdateSysUserVo;
+import com.lframework.starter.security.vo.system.user.*;
 import com.lframework.starter.web.service.BaseService;
 
 import java.util.List;
@@ -61,4 +58,10 @@ public interface ISysUserService extends BaseService {
      * @return
      */
     PageResult<DefaultSysUserDto> selector(Integer pageIndex, Integer pageSize, SysUserSelectorVo vo);
+
+    /**
+     * 注册
+     * @param vo
+     */
+    void regist(RegistUserVo vo);
 }

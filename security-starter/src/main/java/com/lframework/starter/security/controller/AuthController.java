@@ -7,6 +7,11 @@ import com.lframework.common.exceptions.impl.DefaultClientException;
 import com.lframework.common.utils.IdUtil;
 import com.lframework.common.utils.StringUtil;
 import com.lframework.starter.redis.components.RedisHandler;
+import com.lframework.starter.security.bo.system.config.AuthInitBo;
+import com.lframework.starter.security.dto.system.config.SysConfigDto;
+import com.lframework.starter.security.service.system.ISysConfigService;
+import com.lframework.starter.security.service.system.ISysUserService;
+import com.lframework.starter.security.vo.system.user.RegistUserVo;
 import com.lframework.starter.web.components.security.AbstractUserDetails;
 import com.lframework.starter.web.config.KaptchaProperties;
 import com.lframework.starter.web.dto.GenerateCaptchaDto;
@@ -26,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.List;
@@ -52,6 +58,40 @@ public class AuthController extends SecurityController {
 
     @Autowired
     private IMenuService menuService;
+
+    @Autowired
+    private ISysConfigService sysConfigService;
+
+    @Autowired
+    private ISysUserService sysUserService;
+
+    /**
+     * 登录初始化参数
+     * @return
+     */
+    @GetMapping(StringPool.AUTH_INIT_URL)
+    public InvokeResult getInit() {
+        SysConfigDto data = sysConfigService.get();
+
+        return InvokeResultBuilder.success(new AuthInitBo(data));
+    }
+
+    /**
+     * 注册
+     * @param vo
+     * @return
+     */
+    @PostMapping(StringPool.AUTH_REGIST_URL)
+    public InvokeResult regist(@Valid RegistUserVo vo) {
+        SysConfigDto config = sysConfigService.get();
+        if (!config.getAllowRegist()) {
+            throw new DefaultClientException("系统不允许注册账户！");
+        }
+
+        sysUserService.regist(vo);
+
+        return InvokeResultBuilder.success();
+    }
 
     /**
      * 获取登录验证码

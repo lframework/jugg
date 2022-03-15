@@ -11,6 +11,7 @@
         <result column="telephone" property="telephone"/>
         <result column="gender" property="gender"/>
         <result column="available" property="available"/>
+        <result column="lock_status" property="lockStatus"/>
         <result column="description" property="description"/>
         <result column="create_by" property="createBy"/>
         <result column="create_time" property="createTime"/>
@@ -29,6 +30,7 @@
             u.telephone,
             u.gender,
             u.available,
+            u.lock_status,
             u.description,
             u.create_by,
             u.create_time,
@@ -58,6 +60,9 @@
                 </if>
                 <if test="vo.available != null">
                     AND u.available = #{vo.available}
+                </if>
+                <if test="vo.lockStatus != null">
+                    AND u.lock_status = #{vo.lockStatus}
                 </if>
             </if>
         </where>

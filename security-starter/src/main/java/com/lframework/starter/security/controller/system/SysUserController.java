@@ -14,6 +14,7 @@ import com.lframework.starter.security.vo.system.user.QuerySysUserVo;
 import com.lframework.starter.security.vo.system.user.UpdateSysUserVo;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
+import com.lframework.starter.web.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -39,6 +40,9 @@ public class SysUserController extends DefaultBaseController {
 
     @Autowired
     private ISysUserService sysUserService;
+
+    @Autowired
+    private IUserService userService;
 
     /**
      * 用户列表
@@ -119,6 +123,17 @@ public class SysUserController extends DefaultBaseController {
     public InvokeResult update(@Valid UpdateSysUserVo vo) {
 
         sysUserService.update(vo);
+
+        return InvokeResultBuilder.success();
+    }
+
+    /**
+     * 修改用户
+     */
+    @PreAuthorize("@permission.valid('system:user:modify')")
+    @PatchMapping("unlock")
+    public InvokeResult unlock(@NotBlank(message = "ID不能为空！") String id) {
+        userService.unlockById(id);
 
         return InvokeResultBuilder.success();
     }

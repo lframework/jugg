@@ -81,6 +81,25 @@ public class DefaultUserServiceImpl implements IUserService {
         return this.doGetById(id);
     }
 
+    @Transactional
+    @Override
+    public void lockById(String id) {
+
+        userMapper.lockById(id);
+
+        IUserService thisService = getThis(this.getClass());
+        thisService.cleanCacheByKey(id);
+    }
+
+    @Transactional
+    @Override
+    public void unlockById(String id) {
+        userMapper.unlockById(id);
+
+        IUserService thisService = getThis(this.getClass());
+        thisService.cleanCacheByKey(id);
+    }
+
     @CacheEvict(value = {UserInfoDto.CACHE_NAME, UserDto.CACHE_NAME}, key = "#key")
     @Override
     public void cleanCacheByKey(String key) {

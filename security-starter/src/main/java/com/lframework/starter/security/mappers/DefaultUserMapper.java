@@ -47,4 +47,16 @@ public interface DefaultUserMapper extends BaseMapper {
      * @return
      */
     UserDto getById(String id);
+
+    /**
+     * 根据ID锁定
+     * @param id
+     */
+    void lockById(String id);
+
+    /**
+     * 根据ID解锁
+     * @param id
+     */
+    void unlockById(String id);
 }

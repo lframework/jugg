@@ -42,4 +42,9 @@ public class QuerySysUserVo extends PageVo implements BaseVo, Serializable {
      * 状态
      */
     private Boolean available;
+
+    /**
+     * 是否锁定
+     */
+    private Boolean lockStatus;
 }

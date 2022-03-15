@@ -59,6 +59,11 @@ public class DefaultSysUserDto implements BaseDto, Serializable {
     private Boolean available;
 
     /**
+     * 是否锁定
+     */
+    private Boolean lockStatus;
+
+    /**
      * 备注
      */
     private String description;

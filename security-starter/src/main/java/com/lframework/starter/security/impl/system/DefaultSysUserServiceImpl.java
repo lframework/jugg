@@ -27,13 +27,17 @@ import com.lframework.starter.security.service.system.ISysUserService;
 import com.lframework.starter.security.vo.system.dept.SysUserDeptSettingVo;
 import com.lframework.starter.security.vo.system.position.SysUserPositionSettingVo;
 import com.lframework.starter.security.vo.system.user.*;
+import com.lframework.starter.web.components.code.GenerateCodeType;
+import com.lframework.starter.web.components.generator.impl.AbstractFlowGenerator;
 import com.lframework.starter.web.dto.UserDto;
 import com.lframework.starter.web.dto.UserInfoDto;
+import com.lframework.starter.web.service.IGenerateCodeService;
 import com.lframework.starter.web.utils.EnumUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
@@ -55,6 +59,9 @@ public class DefaultSysUserServiceImpl implements ISysUserService, ApplicationLi
 
     @Autowired
     private ISysUserRoleService sysUserRoleService;
+
+    @Autowired
+    private IGenerateCodeService generateCodeService;
 
     @Override
     public PageResult<DefaultSysUserDto> query(Integer pageIndex, Integer pageSize, QuerySysUserVo vo) {
@@ -200,6 +207,13 @@ public class DefaultSysUserServiceImpl implements ISysUserService, ApplicationLi
         return PageResultUtil.convert(new PageInfo<>(datas));
     }
 
+    @Transactional
+    @Override
+    public void regist(RegistUserVo vo) {
+
+        this.doRegist(vo);
+    }
+
     protected List<DefaultSysUserDto> doQuery(QuerySysUserVo vo) {
 
         return defaultSysUserMapper.query(vo);
@@ -303,6 +317,34 @@ public class DefaultSysUserServiceImpl implements ISysUserService, ApplicationLi
         return defaultSysUserMapper.selector(vo);
     }
 
+    protected void doRegist(RegistUserVo vo) {
+
+        Wrapper<DefaultSysUser> queryWrapper = Wrappers.lambdaQuery(DefaultSysUser.class).eq(DefaultSysUser::getUsername, vo.getUsername());
+        if (defaultSysUserMapper.selectCount(queryWrapper) > 0) {
+            throw new DefaultClientException("用户名重复，请重新输入！");
+        }
+
+        DefaultSysUser record = new DefaultSysUser();
+        record.setId(IdUtil.getId());
+        record.setCode(generateCodeService.generate(new UserCodeType()));
+        record.setName(vo.getName());
+        record.setUsername(vo.getUsername());
+        record.setPassword(encoderWrapper.getEncoder().encode(vo.getPassword()));
+        if (!StringUtil.isBlank(vo.getEmail())) {
+            record.setEmail(vo.getEmail());
+        }
+
+        if (!StringUtil.isBlank(vo.getTelephone())) {
+            record.setTelephone(vo.getTelephone());
+        }
+
+        record.setGender(Gender.UNKNOWN);
+        record.setAvailable(Boolean.TRUE);
+        record.setDescription(StringPool.EMPTY_STR);
+
+        defaultSysUserMapper.insert(record);
+    }
+
     @CacheEvict(value = {DefaultSysUserDto.CACHE_NAME, UserDto.CACHE_NAME, UserInfoDto.CACHE_NAME}, key = "#key")
     @Override
     public void cleanCacheByKey(String key) {
@@ -314,5 +356,28 @@ public class DefaultSysUserServiceImpl implements ISysUserService, ApplicationLi
 
         ISysUserService thisService = getThis(this.getClass());
         thisService.cleanCacheByKey(event.getId());
+    }
+
+    public static class UserCodeType implements GenerateCodeType {
+
+    }
+
+    @Component
+    public static class UserCodeGenerator extends AbstractFlowGenerator {
+
+        @Override
+        public GenerateCodeType getType() {
+            return new UserCodeType();
+        }
+
+        @Override
+        protected int getCodeLength() {
+            return 5;
+        }
+
+        @Override
+        protected String getPreffix() {
+            return "R";
+        }
     }
 }

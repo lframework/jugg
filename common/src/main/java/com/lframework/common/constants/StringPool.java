@@ -88,6 +88,16 @@ public interface StringPool {
     String CAPTCHA_URL = "/auth/captcha";
 
     /**
+     * 登录初始化参数URL
+     */
+    String AUTH_INIT_URL = "/auth/init";
+
+    /**
+     * 注册URL
+     */
+    String AUTH_REGIST_URL = "/auth/regist";
+
+    /**
      * 登录提交验证码的参数名
      */
     String CAPTCHA_PARAMETER_NAME = "captcha";

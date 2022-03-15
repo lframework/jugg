@@ -19,6 +19,16 @@
         SET telephone = #{telephone}
         WHERE id = #{userId}
     </update>
+    <update id="lockById">
+        UPDATE sys_user
+        SET lock_status = TRUE
+        WHERE id = #{id}
+    </update>
+    <update id="unlockById">
+        UPDATE sys_user
+        SET lock_status = FALSE
+        WHERE id = #{id}
+    </update>
 
     <select id="getInfo" resultType="com.lframework.starter.web.dto.UserInfoDto">
         SELECT

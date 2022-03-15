@@ -138,7 +138,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.headers().frameOptions().disable();
         http.addFilterBefore(captchaFilter, UsernamePasswordAuthenticationFilter.class);
-
         if (StringUtil.isNotEmpty(this.filterUrl)) {
             String[] filterUrls = filterUrl.split(",");
             http.authorizeRequests().antMatchers(filterUrls).permitAll();
@@ -146,7 +145,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 //登录、验证码允许匿名访问
-                .antMatchers(StringPool.LOGIN_API_URL, StringPool.CAPTCHA_URL, StringPool.LOGOUT_API_URL).permitAll()
+                .antMatchers(StringPool.LOGIN_API_URL, StringPool.CAPTCHA_URL, StringPool.LOGOUT_API_URL, StringPool.AUTH_INIT_URL, StringPool.AUTH_REGIST_URL).permitAll()
                 .anyRequest().authenticated();
     }
 

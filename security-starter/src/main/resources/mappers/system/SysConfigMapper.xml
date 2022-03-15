@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lframework.starter.security.mappers.SysConfigMapper">
+
+    <resultMap id="SysConfigDto" type="com.lframework.starter.security.dto.system.config.SysConfigDto">
+        <id column="id" property="id"/>
+        <result column="allow_regist" property="allowRegist"/>
+        <result column="allow_lock" property="allowLock"/>
+        <result column="fail_num" property="failNum"/>
+        <result column="allow_captcha" property="allowCaptcha"/>
+    </resultMap>
+
+    <sql id="SysConfigDto_sql">
+        SELECT
+            tb.id,
+            tb.allow_regist,
+            tb.allow_lock,
+            tb.fail_num,
+            tb.allow_captcha
+        FROM sys_config AS tb
+    </sql>
+
+    <select id="get" resultMap="SysConfigDto">
+        <include refid="SysConfigDto_sql"/>
+    </select>
+</mapper>

@@ -65,6 +65,11 @@ public abstract class AbstractUserDetails implements UserDetails, Serializable {
     private String ip;
 
     /**
+     * 锁定状态
+     */
+    private Boolean lockStatus;
+
+    /**
      * Spring Security所需权限
      */
     private Collection<? extends GrantedAuthority> authorities;
@@ -89,7 +94,7 @@ public abstract class AbstractUserDetails implements UserDetails, Serializable {
     @Override
     public boolean isAccountNonLocked() {
 
-        return true;
+        return !this.lockStatus;
     }
 
     @Override

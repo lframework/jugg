@@ -8,10 +8,11 @@
         <result property="password" column="password"/>
         <result property="name" column="name"/>
         <result property="available" column="available"/>
+        <result property="lockStatus" column="lock_status"/>
     </resultMap>
 
     <select id="findByUsername" resultType="com.lframework.starter.web.components.security.DefaultUserDetails">
-        SELECT id, username, password, name, available FROM sys_user
+        SELECT id, username, password, name, available, lock_status FROM sys_user
         WHERE username = #{username}
     </select>
 </mapper>
