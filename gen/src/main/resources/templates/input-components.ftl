@@ -5,17 +5,20 @@
 <#elseif column.viewType == 2>
 <a-date-picker
 	v-model="${formData}.${column.name}"
+	placeholder=""
 	value-format="YYYY-MM-DD HH:mm:ss"
 	show-time
 />
 <#elseif column.viewType == 3>
 <a-date-picker
     v-model="${formData}.${column.name}"
+	placeholder=""
     value-format="YYYY-MM-DD"
 />
 <#elseif column.viewType == 4>
 <a-time-picker
     v-model="${formData}.${column.name}"
+	placeholder=""
 	value-format="HH:mm:ss"
 >
 </a-time-picker>
@@ -35,11 +38,13 @@
 <div class="date-range-container">
 	<a-date-picker
 		v-model="${formData}.${column.name}Start"
+		placeholder=""
 		value-format="YYYY-MM-DD 00:00:00"
 	/>
 	<span class="date-split">至</span>
 	<a-date-picker
 		v-model="${formData}.${column.name}End"
+		placeholder=""
 		value-format="YYYY-MM-DD 23:59:59"
 	/>
 </div>
@@ -47,12 +52,14 @@
 <div class="date-range-container">
 	<a-date-picker
 		v-model="${formData}.${column.name}Start"
+		placeholder=""
 		show-time
 		value-format="YYYY-MM-DD HH:mm:ss"
 	/>
 	<span class="date-split">至</span>
-	<el-date-picker
+	<a-date-picker
 		v-model="${formData}.${column.name}End"
+		placeholder=""
 		show-time
 		value-format="YYYY-MM-DD HH:mm:ss"
 	/>
