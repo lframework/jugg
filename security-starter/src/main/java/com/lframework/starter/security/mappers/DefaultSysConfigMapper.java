@@ -11,7 +11,7 @@ import com.lframework.starter.security.entity.SysConfig;
  *
  * @author zmj
  */
-public interface SysConfigMapper extends BaseMapper<SysConfig> {
+public interface DefaultSysConfigMapper extends BaseMapper<SysConfig> {
 
     /**
      * 根据ID查询

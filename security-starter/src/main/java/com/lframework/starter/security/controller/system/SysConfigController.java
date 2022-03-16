@@ -8,6 +8,7 @@ import com.lframework.starter.security.vo.system.config.UpdateSysConfigVo;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ import javax.validation.Valid;
 @Validated
 @RestController
 @RequestMapping("/system/config")
+@ConditionalOnProperty(value = "default-setting.sys-function.enabled", matchIfMissing = true)
 public class SysConfigController extends DefaultBaseController {
 
     @Autowired

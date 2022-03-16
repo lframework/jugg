@@ -73,4 +73,11 @@ public class DefaultSystemFunctionConfiguration {
 
         return new DefaultSysUserDeptServiceImpl();
     }
+
+    @Bean
+    @ConditionalOnMissingBean(ISysConfigService.class)
+    public ISysConfigService getSysConfigService() {
+
+        return new DefaultSysConfigServiceImpl();
+    }
 }
