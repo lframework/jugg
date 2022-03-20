@@ -2,6 +2,9 @@ package com.lframework.starter.security.impl.system;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.lframework.starter.mybatis.annotations.OpLog;
+import com.lframework.starter.mybatis.enums.OpLogType;
+import com.lframework.starter.mybatis.utils.OpLogUtil;
 import com.lframework.starter.security.dto.system.config.SysConfigDto;
 import com.lframework.starter.security.entity.SysConfig;
 import com.lframework.starter.security.mappers.DefaultSysConfigMapper;
@@ -23,12 +26,15 @@ public class DefaultSysConfigServiceImpl implements ISysConfigService {
         return sysConfigMapper.get();
     }
 
+    @OpLog(type = OpLogType.OTHER, name = "修改系统设置")
     @Override
     public void update(UpdateSysConfigVo vo) {
         ISysConfigService thisService = getThis(this.getClass());
 
         Wrapper<SysConfig> updateWrapper = Wrappers.lambdaUpdate(SysConfig.class).set(SysConfig::getAllowRegist, vo.getAllowRegist()).set(SysConfig::getAllowLock, vo.getAllowLock()).set(SysConfig::getFailNum, vo.getFailNum()).set(SysConfig::getAllowCaptcha, vo.getAllowCaptcha());
         sysConfigMapper.update(updateWrapper);
+
+        OpLogUtil.setExtra(vo);
 
         thisService.cleanCacheByKey("config");
     }
