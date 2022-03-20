@@ -12,6 +12,7 @@ import com.lframework.starter.web.resp.InvokeResultBuilder;
 import com.lframework.starter.web.resp.Response;
 import com.lframework.starter.web.utils.ResponseUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
@@ -247,6 +248,18 @@ public class WebExceptionHandler {
         this.setResponseCode(ex);
 
         return InvokeResultBuilder.fail();
+    }
+
+    @ExceptionHandler(FileUploadException.class)
+    public Response fileUploadExceptionHandler(FileUploadException e, HandlerMethod method) {
+
+        this.logException(e, method);
+
+        BaseException ex = new DefaultClientException("文件上传失败！");
+
+        this.setResponseCode(ex);
+
+        return InvokeResultBuilder.fail(ex);
     }
 
     /**

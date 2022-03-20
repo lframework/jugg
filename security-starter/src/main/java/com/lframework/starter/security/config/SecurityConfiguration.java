@@ -113,6 +113,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Value("${filter-url:}")
     private String filterUrl;
 
+    @Value("${upload.url}")
+    private String uploadUrl;
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
@@ -145,7 +148,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 //登录、验证码允许匿名访问
-                .antMatchers(StringPool.LOGIN_API_URL, StringPool.CAPTCHA_URL, StringPool.LOGOUT_API_URL, StringPool.AUTH_INIT_URL, StringPool.AUTH_REGIST_URL).permitAll()
+                .antMatchers(StringPool.LOGIN_API_URL, StringPool.CAPTCHA_URL, StringPool.LOGOUT_API_URL, StringPool.AUTH_INIT_URL, StringPool.AUTH_REGIST_URL, uploadUrl.endsWith("/") ? uploadUrl + "**" : uploadUrl + "/**").permitAll()
                 .anyRequest().authenticated();
     }
 
