@@ -48,6 +48,7 @@
         <commons-codec.version>1.13</commons-codec.version>
         <groovy.version>3.0.9</groovy.version>
         <javax.mail.version>1.6.2</javax.mail.version>
+        <aliyun-sms.version>2.0.9</aliyun-sms.version>
     </properties>
 
     <dependencyManagement>
@@ -200,6 +201,12 @@
                 <groupId>com.sun.mail</groupId>
                 <artifactId>javax.mail</artifactId>
                 <version>${javax.mail.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.aliyun</groupId>
+                <artifactId>dysmsapi20170525</artifactId>
+                <version>${aliyun-sms.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
