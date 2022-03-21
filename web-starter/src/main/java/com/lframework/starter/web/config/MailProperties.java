@@ -1,0 +1,42 @@
+package com.lframework.starter.web.config;
+
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+/**
+ * 邮箱配置
+ */
+@Data
+@ConfigurationProperties(prefix = "mail")
+public class MailProperties {
+
+    /**
+     * 邮件服务器的SMTP地址
+     */
+    private String host;
+
+    /**
+     * 邮件服务器的SMTP端口
+     */
+    private Integer port = 25;
+
+    /**
+     * 发件人
+     */
+    private String from;
+
+    /**
+     * 用户名
+     */
+    private String user;
+
+    /**
+     * 密码
+     */
+    private String pass;
+
+    /**
+     * 使用SSL安全连接
+     */
+    private Boolean sslEnable;
+}
