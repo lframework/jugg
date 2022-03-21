@@ -15,7 +15,7 @@ public class DefaultUserDetailsService extends AbstractUserDetailsService {
     private DefaultUserDetailsMapper DefaultUserDetailsMapper;
 
     @Override
-    protected AbstractUserDetails findByUsername(String username) {
+    public AbstractUserDetails findByUsername(String username) {
 
         AbstractUserDetails user = DefaultUserDetailsMapper.findByUsername(username);
 

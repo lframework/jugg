@@ -39,6 +39,9 @@ public class SysConfigController extends DefaultBaseController {
     @PreAuthorize("@permission.valid('system:config:modify')")
     @PutMapping
     public InvokeResult update(@Valid UpdateSysConfigVo vo) {
+
+        vo.validate();
+
         sysConfigService.update(vo);
 
         return InvokeResultBuilder.success();

@@ -44,4 +44,29 @@ public class SysConfig extends BaseEntity {
      */
     private Boolean allowCaptcha;
 
+    /**
+     * 是否开启忘记密码
+     */
+    private Boolean allowForgetPsw;
+
+    /**
+     * 忘记密码是否使用邮箱
+     */
+    private Boolean forgetPswRequireMail;
+
+    /**
+     * 忘记密码是否使用短信
+     */
+    private Boolean forgetPswRequireSms;
+
+    /**
+     * signName
+     */
+    private String signName;
+
+    /**
+     * templateCode
+     */
+    private String templateCode;
+
 }

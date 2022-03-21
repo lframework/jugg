@@ -48,5 +48,5 @@ public abstract class AbstractUserDetailsService implements UserDetailsService {
      * @param username
      * @return
      */
-    protected abstract AbstractUserDetails findByUsername(String username);
+    public abstract AbstractUserDetails findByUsername(String username);
 }

@@ -47,6 +47,16 @@ public abstract class AbstractUserDetails implements UserDetails, Serializable {
     private String password;
 
     /**
+     * 邮箱
+     */
+    private String email;
+
+    /**
+     * 联系电话
+     */
+    private String telephone;
+
+    /**
      * 状态
      * 由AbstractUserDetailsService查询
      */

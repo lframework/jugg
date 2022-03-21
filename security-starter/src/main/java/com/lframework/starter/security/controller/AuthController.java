@@ -2,24 +2,32 @@ package com.lframework.starter.security.controller;
 
 import cn.hutool.core.codec.Base64;
 import com.google.code.kaptcha.Producer;
+import com.lframework.common.constants.PatternPool;
 import com.lframework.common.constants.StringPool;
 import com.lframework.common.exceptions.impl.DefaultClientException;
 import com.lframework.common.utils.IdUtil;
+import com.lframework.common.utils.RegUtil;
 import com.lframework.common.utils.StringUtil;
 import com.lframework.starter.redis.components.RedisHandler;
 import com.lframework.starter.security.bo.system.config.AuthInitBo;
+import com.lframework.starter.security.components.AbstractUserDetailsService;
 import com.lframework.starter.security.dto.system.config.SysConfigDto;
 import com.lframework.starter.security.service.system.ISysConfigService;
 import com.lframework.starter.security.service.system.ISysUserService;
 import com.lframework.starter.security.vo.system.user.RegistUserVo;
 import com.lframework.starter.web.components.security.AbstractUserDetails;
+import com.lframework.starter.web.components.validation.Pattern;
 import com.lframework.starter.web.config.KaptchaProperties;
 import com.lframework.starter.web.dto.GenerateCaptchaDto;
 import com.lframework.starter.web.dto.LoginDto;
 import com.lframework.starter.web.dto.MenuDto;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
+import com.lframework.starter.web.service.IAliSmsService;
+import com.lframework.starter.web.service.IMailService;
 import com.lframework.starter.web.service.IMenuService;
+import com.lframework.starter.web.service.IUserService;
+import jdk.internal.org.objectweb.asm.Handle;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -32,9 +40,13 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 默认用户认证Controller
@@ -64,6 +76,18 @@ public class AuthController extends SecurityController {
 
     @Autowired
     private ISysUserService sysUserService;
+
+    @Autowired
+    private AbstractUserDetailsService userDetailsService;
+
+    @Autowired
+    private IUserService userService;
+
+    @Autowired
+    private IMailService mailService;
+
+    @Autowired
+    private IAliSmsService aliSmsService;
 
     /**
      * 登录初始化参数
@@ -170,6 +194,197 @@ public class AuthController extends SecurityController {
 
         AbstractUserDetails user = getCurrentUser();
         menuService.cancelCollect(user.getId(), menuId);
+
+        return InvokeResultBuilder.success();
+    }
+
+    /**
+     * 忘记密码时，根据用户名获取信息
+     * @param username
+     * @return
+     */
+    @GetMapping("/forget/username")
+    public InvokeResult getByForget(@NotBlank(message = "用户名不能为空！") String username) {
+
+        SysConfigDto sysConfig = sysConfigService.get();
+        if (!sysConfig.getAllowForgetPsw()) {
+            throw new DefaultClientException("系统不允许重置密码！");
+        }
+
+        AbstractUserDetails user = userDetailsService.findByUsername(username);
+
+        if (user == null) {
+            throw new DefaultClientException("用户名不存在！");
+        }
+
+        Map<String, String> results = new HashMap<>(2, 1);
+
+        results.put("email", StringUtil.encodeEmail(user.getEmail()));
+        results.put("telephone", StringUtil.encodeTelephone(user.getTelephone()));
+
+        return InvokeResultBuilder.success(results);
+    }
+
+    /**
+     * 发送邮箱验证码
+     * @return
+     */
+    @GetMapping("/forget/mail/code")
+    public InvokeResult sendMailCodeByForget(@NotBlank(message = "用户名不能为空！") String username) {
+
+        SysConfigDto sysConfig = sysConfigService.get();
+        if (!sysConfig.getAllowForgetPsw()) {
+            throw new DefaultClientException("系统不允许重置密码！");
+        }
+
+        AbstractUserDetails user = userDetailsService.findByUsername(username);
+
+        if (user == null) {
+            throw new DefaultClientException("用户名不存在！");
+        }
+
+        if (!RegUtil.isMatch(PatternPool.EMAIL, user.getEmail())) {
+            throw new DefaultClientException("用户邮箱不存在，无法重置密码！");
+        }
+
+        String key = "FORGET_PSW_MAIL_CODE_" + username;
+        String checkKey = "FORGET_PSW_CHECK_MAIL_CODE_" + username;
+        if (redisHandler.get(checkKey) != null) {
+            throw new DefaultClientException("获取验证码过于频繁，请稍后再试！");
+        } else {
+            redisHandler.set(checkKey, true, 60 * 1000L);
+        }
+
+        String code = (String) redisHandler.get(key);
+        if (code == null) {
+            code = producer.createText();
+            redisHandler.set(key, code, 15 * 60 * 1000L);
+        }
+
+        try {
+            mailService.send(user.getEmail(), "重置密码", "您正在重置密码，验证码【" + code  + "】，切勿将验证码泄露于他人，本条验证码有效期15分钟。");
+        }
+        catch (Exception e) {
+            throw new DefaultClientException("获取验证码失败，请稍后重试！");
+        }
+
+        return InvokeResultBuilder.success();
+    }
+
+    /**
+     * 根据邮箱验证码重置密码
+     * @param username
+     * @param password
+     * @param code
+     * @return
+     */
+    @PostMapping("/forget/mail")
+    public InvokeResult updatePswByMail(@NotBlank(message = "用户名不能为空！") String username, @NotBlank(message = "新密码不能为空！") @Pattern(regexp = PatternPool.PATTERN_STR_PASSWORD, message = "密码长度必须为5-16位，只允许包含大写字母、小写字母、数字、下划线") String password, @NotBlank(message = "验证码不能为空！") String code) {
+
+        SysConfigDto sysConfig = sysConfigService.get();
+        if (!sysConfig.getAllowForgetPsw()) {
+            throw new DefaultClientException("系统不允许重置密码！");
+        }
+
+        AbstractUserDetails user = userDetailsService.findByUsername(username);
+
+        if (user == null) {
+            throw new DefaultClientException("用户名不存在！");
+        }
+
+        String key = "FORGET_PSW_MAIL_CODE_" + username;
+        String codeInDb = (String) redisHandler.get(key);
+        if (codeInDb == null) {
+            throw new DefaultClientException("验证码已过期，请重新获取！");
+        }
+
+        if (!code.equalsIgnoreCase(codeInDb)) {
+            throw new DefaultClientException("验证码不正确，请检查！");
+        }
+
+        userService.updatePassword(user.getId(), password);
+
+        return InvokeResultBuilder.success();
+    }
+
+    /**
+     * 发送短信验证码
+     * @return
+     */
+    @GetMapping("/forget/sms/code")
+    public InvokeResult sendSmsCodeByForget(@NotBlank(message = "用户名不能为空！") String username) {
+
+        SysConfigDto sysConfig = sysConfigService.get();
+        if (!sysConfig.getAllowForgetPsw()) {
+            throw new DefaultClientException("系统不允许重置密码！");
+        }
+
+        AbstractUserDetails user = userDetailsService.findByUsername(username);
+
+        if (user == null) {
+            throw new DefaultClientException("用户名不存在！");
+        }
+
+        if (!RegUtil.isMatch(PatternPool.PATTERN_CN_TEL, user.getTelephone())) {
+            throw new DefaultClientException("用户联系电话不存在，无法重置密码！");
+        }
+
+        String key = "FORGET_PSW_SMS_CODE_" + username;
+        String checkKey = "FORGET_PSW_CHECK_SMS_CODE_" + username;
+        if (redisHandler.get(checkKey) != null) {
+            throw new DefaultClientException("获取验证码过于频繁，请稍后再试！");
+        } else {
+            redisHandler.set(checkKey, true, 60 * 1000L);
+        }
+        
+        String code = (String) redisHandler.get(key);
+        if (code == null) {
+            code = producer.createText();
+            redisHandler.set(key, code, 15 * 60 * 1000L);
+        }
+
+        try {
+            aliSmsService.send(user.getTelephone(), sysConfig.getSignName(), sysConfig.getTemplateCode(), Collections.singletonMap("code", code));
+        }
+        catch (Exception e) {
+            throw new DefaultClientException("获取验证码失败，请稍后重试！");
+        }
+
+        return InvokeResultBuilder.success();
+    }
+
+    /**
+     * 根据短信验证码重置密码
+     * @param username
+     * @param password
+     * @param code
+     * @return
+     */
+    @PostMapping("/forget/sms")
+    public InvokeResult updatePswBySms(@NotBlank(message = "用户名不能为空！") String username, @NotBlank(message = "新密码不能为空！") @Pattern(regexp = PatternPool.PATTERN_STR_PASSWORD, message = "密码长度必须为5-16位，只允许包含大写字母、小写字母、数字、下划线") String password, @NotBlank(message = "验证码不能为空！") String code) {
+
+        SysConfigDto sysConfig = sysConfigService.get();
+        if (!sysConfig.getAllowForgetPsw()) {
+            throw new DefaultClientException("系统不允许重置密码！");
+        }
+
+        AbstractUserDetails user = userDetailsService.findByUsername(username);
+
+        if (user == null) {
+            throw new DefaultClientException("用户名不存在！");
+        }
+
+        String key = "FORGET_PSW_SMS_CODE_" + username;
+        String codeInDb = (String) redisHandler.get(key);
+        if (codeInDb == null) {
+            throw new DefaultClientException("验证码已过期，请重新获取！");
+        }
+
+        if (!code.equalsIgnoreCase(codeInDb)) {
+            throw new DefaultClientException("验证码不正确，请检查！");
+        }
+
+        userService.updatePassword(user.getId(), password);
 
         return InvokeResultBuilder.success();
     }

@@ -31,7 +31,11 @@ public class DefaultSysConfigServiceImpl implements ISysConfigService {
     public void update(UpdateSysConfigVo vo) {
         ISysConfigService thisService = getThis(this.getClass());
 
-        Wrapper<SysConfig> updateWrapper = Wrappers.lambdaUpdate(SysConfig.class).set(SysConfig::getAllowRegist, vo.getAllowRegist()).set(SysConfig::getAllowLock, vo.getAllowLock()).set(SysConfig::getFailNum, vo.getFailNum()).set(SysConfig::getAllowCaptcha, vo.getAllowCaptcha());
+        Wrapper<SysConfig> updateWrapper = Wrappers.lambdaUpdate(SysConfig.class).set(SysConfig::getAllowRegist, vo.getAllowRegist())
+                .set(SysConfig::getAllowLock, vo.getAllowLock()).set(SysConfig::getFailNum, vo.getFailNum())
+                .set(SysConfig::getAllowCaptcha, vo.getAllowCaptcha()).set(SysConfig::getAllowForgetPsw, vo.getAllowForgetPsw())
+                .set(SysConfig::getForgetPswRequireMail, vo.getForgetPswRequireMail()).set(SysConfig::getForgetPswRequireSms, vo.getForgetPswRequireSms())
+                .set(SysConfig::getSignName, vo.getSignName()).set(SysConfig::getTemplateCode, vo.getTemplateCode());
         sysConfigMapper.update(updateWrapper);
 
         OpLogUtil.setExtra(vo);

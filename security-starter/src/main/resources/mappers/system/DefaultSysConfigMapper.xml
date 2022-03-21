@@ -8,6 +8,11 @@
         <result column="allow_lock" property="allowLock"/>
         <result column="fail_num" property="failNum"/>
         <result column="allow_captcha" property="allowCaptcha"/>
+        <result column="allow_forget_psw" property="allowForgetPsw"/>
+        <result column="forget_psw_require_mail" property="forgetPswRequireMail"/>
+        <result column="forget_psw_require_sms" property="forgetPswRequireSms"/>
+        <result column="sign_name" property="signName"/>
+        <result column="template_code" property="templateCode"/>
     </resultMap>
 
     <sql id="SysConfigDto_sql">
@@ -16,7 +21,12 @@
             tb.allow_regist,
             tb.allow_lock,
             tb.fail_num,
-            tb.allow_captcha
+            tb.allow_captcha,
+            allow_forget_psw,
+            forget_psw_require_mail,
+            forget_psw_require_sms,
+            sign_name,
+            template_code
         FROM sys_config AS tb
     </sql>
 

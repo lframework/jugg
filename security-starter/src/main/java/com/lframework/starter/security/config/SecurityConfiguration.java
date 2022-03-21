@@ -148,7 +148,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 //登录、验证码允许匿名访问
-                .antMatchers(StringPool.LOGIN_API_URL, StringPool.CAPTCHA_URL, StringPool.LOGOUT_API_URL, StringPool.AUTH_INIT_URL, StringPool.AUTH_REGIST_URL, uploadUrl.endsWith("/") ? uploadUrl + "**" : uploadUrl + "/**").permitAll()
+                .antMatchers(StringPool.LOGIN_API_URL, StringPool.CAPTCHA_URL, StringPool.LOGOUT_API_URL, StringPool.AUTH_INIT_URL, StringPool.AUTH_REGIST_URL, uploadUrl.endsWith("/") ? uploadUrl + "**" : uploadUrl + "/**", "/forget/username", "/forget/mail/code", "/forget/mail", "/forget/sms/code", "/forget/sms").permitAll()
                 .anyRequest().authenticated();
     }
 
