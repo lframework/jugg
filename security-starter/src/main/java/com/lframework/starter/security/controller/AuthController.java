@@ -8,6 +8,7 @@ import com.lframework.common.exceptions.impl.DefaultClientException;
 import com.lframework.common.utils.IdUtil;
 import com.lframework.common.utils.RegUtil;
 import com.lframework.common.utils.StringUtil;
+import com.lframework.common.utils.ThreadUtil;
 import com.lframework.starter.redis.components.RedisHandler;
 import com.lframework.starter.security.bo.system.config.AuthInitBo;
 import com.lframework.starter.security.components.AbstractUserDetailsService;
@@ -262,12 +263,11 @@ public class AuthController extends SecurityController {
             redisHandler.set(key, code, 15 * 60 * 1000L);
         }
 
-        try {
-            mailService.send(user.getEmail(), "重置密码", "您正在重置密码，验证码【" + code  + "】，切勿将验证码泄露于他人，本条验证码有效期15分钟。");
-        }
-        catch (Exception e) {
-            throw new DefaultClientException("获取验证码失败，请稍后重试！");
-        }
+        String content = "您正在重置密码，验证码【" + code  + "】，切勿将验证码泄露于他人，本条验证码有效期15分钟。";
+
+        ThreadUtil.execAsync(() -> {
+            mailService.send(user.getEmail(), "重置密码", content);
+        });
 
         return InvokeResultBuilder.success();
     }
@@ -346,12 +346,11 @@ public class AuthController extends SecurityController {
             redisHandler.set(key, code, 15 * 60 * 1000L);
         }
 
-        try {
-            aliSmsService.send(user.getTelephone(), sysConfig.getSignName(), sysConfig.getTemplateCode(), Collections.singletonMap("code", code));
-        }
-        catch (Exception e) {
-            throw new DefaultClientException("获取验证码失败，请稍后重试！");
-        }
+        String captcha = code;
+
+        ThreadUtil.execAsync(() -> {
+            aliSmsService.send(user.getTelephone(), sysConfig.getSignName(), sysConfig.getTemplateCode(), Collections.singletonMap("code", captcha));
+        });
 
         return InvokeResultBuilder.success();
     }
