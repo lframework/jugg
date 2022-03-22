@@ -13,11 +13,12 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties(AliSmsProperties.class)
 public class AliSmsConfiguration {
 
-    @Bean
-    @ConditionalOnMissingBean(IAliSmsService.class)
-    public IAliSmsService getAliSmsService(AliSmsProperties properties) throws Exception {
+  @Bean
+  @ConditionalOnMissingBean(IAliSmsService.class)
+  public IAliSmsService getAliSmsService(AliSmsProperties properties) throws Exception {
 
-        Client client = AliSmsUtil.createClient(properties.getAccessKeyId(), properties.getAccessKeySecret());
-        return new AliSmsServiceImpl(client);
-    }
+    Client client = AliSmsUtil
+        .createClient(properties.getAccessKeyId(), properties.getAccessKeySecret());
+    return new AliSmsServiceImpl(client);
+  }
 }

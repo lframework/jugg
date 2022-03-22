@@ -9,32 +9,32 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class SysUserSelectorBo extends BaseBo<DefaultSysUserDto> {
 
-    /**
-     * ID
-     */
-    private String id;
+  /**
+   * ID
+   */
+  private String id;
 
-    /**
-     * 编号
-     */
-    private String code;
+  /**
+   * 编号
+   */
+  private String code;
 
-    /**
-     * 姓名
-     */
-    private String name;
+  /**
+   * 姓名
+   */
+  private String name;
 
-    /**
-     * 状态 1-在用 0停用
-     */
-    private Boolean available;
+  /**
+   * 状态 1-在用 0停用
+   */
+  private Boolean available;
 
-    public SysUserSelectorBo() {
+  public SysUserSelectorBo() {
 
-    }
+  }
 
-    public SysUserSelectorBo(DefaultSysUserDto dto) {
+  public SysUserSelectorBo(DefaultSysUserDto dto) {
 
-        super(dto);
-    }
+    super(dto);
+  }
 }

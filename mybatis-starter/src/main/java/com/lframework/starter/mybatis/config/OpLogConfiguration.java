@@ -2,12 +2,11 @@ package com.lframework.starter.mybatis.config;
 
 import com.lframework.starter.mybatis.impl.DefaultOpLogsServiceImpl;
 import com.lframework.starter.mybatis.service.IOpLogsService;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * 操作日志配置
@@ -17,19 +16,19 @@ import java.util.concurrent.Executors;
 @Configuration
 public class OpLogConfiguration {
 
-    public static final String OP_LOG_THREAD_POOL_NAME = "opLogThreadPool";
+  public static final String OP_LOG_THREAD_POOL_NAME = "opLogThreadPool";
 
 
-    @Bean(OP_LOG_THREAD_POOL_NAME)
-    public ExecutorService opLogThreadPool() {
+  @Bean(OP_LOG_THREAD_POOL_NAME)
+  public ExecutorService opLogThreadPool() {
 
-        return Executors.newCachedThreadPool();
-    }
+    return Executors.newCachedThreadPool();
+  }
 
-    @Bean
-    @ConditionalOnMissingBean(IOpLogsService.class)
-    public IOpLogsService getOpLogsService() {
+  @Bean
+  @ConditionalOnMissingBean(IOpLogsService.class)
+  public IOpLogsService getOpLogsService() {
 
-        return new DefaultOpLogsServiceImpl();
-    }
+    return new DefaultOpLogsServiceImpl();
+  }
 }

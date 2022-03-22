@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
- *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author zmj
@@ -15,18 +15,21 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface GenSimpleTableMapper extends BaseMapper<GenSimpleTable> {
 
-    /**
-     * 根据数据对象ID查询
-     * @param id
-     * @return
-     */
-    SimpleTableDto getByDataObjId(@Param("id") String id);
+  /**
+   * 根据数据对象ID查询
+   *
+   * @param id
+   * @return
+   */
+  SimpleTableDto getByDataObjId(@Param("id") String id);
 
-    /**
-     * 根据TableSchema、TableName
-     * @param tableSchema
-     * @param tableName
-     * @return
-     */
-    SimpleTableDto get(@Param("tableSchema") String tableSchema, @Param("tableName") String tableName);
+  /**
+   * 根据TableSchema、TableName
+   *
+   * @param tableSchema
+   * @param tableName
+   * @return
+   */
+  SimpleTableDto get(@Param("tableSchema") String tableSchema,
+      @Param("tableName") String tableName);
 }

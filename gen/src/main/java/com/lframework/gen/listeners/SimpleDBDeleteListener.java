@@ -9,14 +9,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class SimpleDBDeleteListener implements ApplicationListener<DataObjectDeleteEvent> {
 
-    @Autowired
-    private ISimpleTableService simpleTableService;
+  @Autowired
+  private ISimpleTableService simpleTableService;
 
-    @Override
-    public void onApplicationEvent(DataObjectDeleteEvent event) {
+  @Override
+  public void onApplicationEvent(DataObjectDeleteEvent event) {
 
-        String id = event.getId();
+    String id = event.getId();
 
-        simpleTableService.deleteByDataObjId(id);
-    }
+    simpleTableService.deleteByDataObjId(id);
+  }
 }

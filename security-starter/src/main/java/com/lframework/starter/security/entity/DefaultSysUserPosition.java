@@ -17,20 +17,21 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_user_position")
 public class DefaultSysUserPosition extends BaseEntity {
-    private static final long serialVersionUID = 1L;
 
-    /**
-     * ID
-     */
-    private String id;
+  private static final long serialVersionUID = 1L;
 
-    /**
-     * 用户ID
-     */
-    private String userId;
+  /**
+   * ID
+   */
+  private String id;
 
-    /**
-     * 岗位ID
-     */
-    private String positionId;
+  /**
+   * 用户ID
+   */
+  private String userId;
+
+  /**
+   * 岗位ID
+   */
+  private String positionId;
 }

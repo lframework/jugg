@@ -9,47 +9,47 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class UserInfoBo extends BaseBo<UserInfoDto> {
 
-    /**
-     * ID
-     */
-    private String id;
+  /**
+   * ID
+   */
+  private String id;
 
-    /**
-     * 登录名
-     */
-    private String username;
+  /**
+   * 登录名
+   */
+  private String username;
 
-    /**
-     * 编号
-     */
-    private String code;
+  /**
+   * 编号
+   */
+  private String code;
 
-    /**
-     * 姓名
-     */
-    private String name;
+  /**
+   * 姓名
+   */
+  private String name;
 
-    /**
-     * 邮箱
-     */
-    private String email;
+  /**
+   * 邮箱
+   */
+  private String email;
 
-    /**
-     * 联系电话
-     */
-    private String telephone;
+  /**
+   * 联系电话
+   */
+  private String telephone;
 
-    /**
-     * 性别
-     */
-    private Integer gender;
+  /**
+   * 性别
+   */
+  private Integer gender;
 
-    public UserInfoBo() {
+  public UserInfoBo() {
 
-    }
+  }
 
-    public UserInfoBo(UserInfoDto dto) {
+  public UserInfoBo(UserInfoDto dto) {
 
-        super(dto);
-    }
+    super(dto);
+  }
 }

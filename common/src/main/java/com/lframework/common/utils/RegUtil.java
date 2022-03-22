@@ -1,7 +1,6 @@
 package com.lframework.common.utils;
 
 import cn.hutool.core.util.ReUtil;
-
 import java.util.regex.Pattern;
 
 /**
@@ -11,8 +10,8 @@ import java.util.regex.Pattern;
  */
 public class RegUtil {
 
-    public static boolean isMatch(Pattern pattern, String str) {
+  public static boolean isMatch(Pattern pattern, String str) {
 
-        return ReUtil.isMatch(pattern, str);
-    }
+    return ReUtil.isMatch(pattern, str);
+  }
 }

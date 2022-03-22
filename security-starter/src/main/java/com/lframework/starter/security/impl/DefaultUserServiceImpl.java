@@ -21,118 +21,118 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public class DefaultUserServiceImpl implements IUserService {
 
-    @Autowired
-    private DefaultUserMapper userMapper;
+  @Autowired
+  private DefaultUserMapper userMapper;
 
-    @Autowired
-    private PasswordEncoderWrapper encoderWrapper;
+  @Autowired
+  private PasswordEncoderWrapper encoderWrapper;
 
-    @Cacheable(value = UserInfoDto.CACHE_NAME, key = "#userId", unless = "#result == null")
-    @Override
-    public UserInfoDto getInfo(@NonNull String userId) {
+  @Cacheable(value = UserInfoDto.CACHE_NAME, key = "#userId", unless = "#result == null")
+  @Override
+  public UserInfoDto getInfo(@NonNull String userId) {
 
-        return this.doGetInfo(userId);
+    return this.doGetInfo(userId);
+  }
+
+  @Transactional
+  @Override
+  public void updatePassword(@NonNull String userId, @NonNull String password) {
+
+    this.doUpdatePassword(userId, this.encodePassword(password));
+
+    IUserService thisService = getThis(this.getClass());
+    thisService.cleanCacheByKey(userId);
+
+    ApplicationUtil.publishEvent(new UpdateUserEvent(this, userId));
+  }
+
+  @Transactional
+  @Override
+  public void updateEmail(@NonNull String userId, @NonNull String email) {
+
+    this.doUpdateEmail(userId, email);
+
+    IUserService thisService = getThis(this.getClass());
+    thisService.cleanCacheByKey(userId);
+
+    ApplicationUtil.publishEvent(new UpdateUserEvent(this, userId));
+  }
+
+  @Transactional
+  @Override
+  public void updateTelephone(@NonNull String userId, @NonNull String telephone) {
+
+    this.doUpdateTelephone(userId, telephone);
+
+    IUserService thisService = getThis(this.getClass());
+    thisService.cleanCacheByKey(userId);
+
+    ApplicationUtil.publishEvent(new UpdateUserEvent(this, userId));
+  }
+
+  @Cacheable(value = UserDto.CACHE_NAME, key = "#id", unless = "#result == null")
+  @Override
+  public UserDto getById(String id) {
+
+    if (StringUtil.isBlank(id)) {
+      return null;
     }
 
-    @Transactional
-    @Override
-    public void updatePassword(@NonNull String userId, @NonNull String password) {
+    return this.doGetById(id);
+  }
 
-        this.doUpdatePassword(userId, this.encodePassword(password));
+  @Transactional
+  @Override
+  public void lockById(String id) {
 
-        IUserService thisService = getThis(this.getClass());
-        thisService.cleanCacheByKey(userId);
+    userMapper.lockById(id);
 
-        ApplicationUtil.publishEvent(new UpdateUserEvent(this, userId));
-    }
+    IUserService thisService = getThis(this.getClass());
+    thisService.cleanCacheByKey(id);
+  }
 
-    @Transactional
-    @Override
-    public void updateEmail(@NonNull String userId, @NonNull String email) {
+  @Transactional
+  @Override
+  public void unlockById(String id) {
+    userMapper.unlockById(id);
 
-        this.doUpdateEmail(userId, email);
+    IUserService thisService = getThis(this.getClass());
+    thisService.cleanCacheByKey(id);
+  }
 
-        IUserService thisService = getThis(this.getClass());
-        thisService.cleanCacheByKey(userId);
+  @CacheEvict(value = {UserInfoDto.CACHE_NAME, UserDto.CACHE_NAME}, key = "#key")
+  @Override
+  public void cleanCacheByKey(String key) {
 
-        ApplicationUtil.publishEvent(new UpdateUserEvent(this, userId));
-    }
+  }
 
-    @Transactional
-    @Override
-    public void updateTelephone(@NonNull String userId, @NonNull String telephone) {
+  protected UserInfoDto doGetInfo(@NonNull String userId) {
 
-        this.doUpdateTelephone(userId, telephone);
+    return userMapper.getInfo(userId);
+  }
 
-        IUserService thisService = getThis(this.getClass());
-        thisService.cleanCacheByKey(userId);
+  protected void doUpdatePassword(@NonNull String userId, @NonNull String password) {
 
-        ApplicationUtil.publishEvent(new UpdateUserEvent(this, userId));
-    }
+    userMapper.updatePassword(userId, password);
+  }
 
-    @Cacheable(value = UserDto.CACHE_NAME, key = "#id", unless = "#result == null")
-    @Override
-    public UserDto getById(String id) {
+  protected void doUpdateEmail(@NonNull String userId, @NonNull String email) {
 
-        if (StringUtil.isBlank(id)) {
-            return null;
-        }
+    userMapper.updateEmail(userId, email);
+  }
 
-        return this.doGetById(id);
-    }
+  protected void doUpdateTelephone(@NonNull String userId, @NonNull String telephone) {
 
-    @Transactional
-    @Override
-    public void lockById(String id) {
+    userMapper.updateTelephone(userId, telephone);
+  }
 
-        userMapper.lockById(id);
+  protected UserDto doGetById(String id) {
 
-        IUserService thisService = getThis(this.getClass());
-        thisService.cleanCacheByKey(id);
-    }
+    return userMapper.getById(id);
+  }
 
-    @Transactional
-    @Override
-    public void unlockById(String id) {
-        userMapper.unlockById(id);
+  protected String encodePassword(String password) {
 
-        IUserService thisService = getThis(this.getClass());
-        thisService.cleanCacheByKey(id);
-    }
-
-    @CacheEvict(value = {UserInfoDto.CACHE_NAME, UserDto.CACHE_NAME}, key = "#key")
-    @Override
-    public void cleanCacheByKey(String key) {
-
-    }
-
-    protected UserInfoDto doGetInfo(@NonNull String userId) {
-
-        return userMapper.getInfo(userId);
-    }
-
-    protected void doUpdatePassword(@NonNull String userId, @NonNull String password) {
-
-        userMapper.updatePassword(userId, password);
-    }
-
-    protected void doUpdateEmail(@NonNull String userId, @NonNull String email) {
-
-        userMapper.updateEmail(userId, email);
-    }
-
-    protected void doUpdateTelephone(@NonNull String userId, @NonNull String telephone) {
-
-        userMapper.updateTelephone(userId, telephone);
-    }
-
-    protected UserDto doGetById(String id) {
-
-        return userMapper.getById(id);
-    }
-
-    protected String encodePassword(String password) {
-
-        return encoderWrapper.getEncoder().encode(password);
-    }
+    return encoderWrapper.getEncoder().encode(password);
+  }
 }

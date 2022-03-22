@@ -1,8 +1,7 @@
 package com.lframework.starter.web.dto;
 
-import lombok.Data;
-
 import java.io.Serializable;
+import lombok.Data;
 
 /**
  * 菜单Meta Dto
@@ -12,13 +11,13 @@ import java.io.Serializable;
 @Data
 public class MenuMetaDto implements BaseDto, Serializable {
 
-    /**
-     * 标题
-     */
-    private String title;
+  /**
+   * 标题
+   */
+  private String title;
 
-    /**
-     * 是否缓存
-     */
-    private Boolean noCache;
+  /**
+   * 是否缓存
+   */
+  private Boolean noCache;
 }

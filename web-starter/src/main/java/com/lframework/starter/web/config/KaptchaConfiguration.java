@@ -15,11 +15,11 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties(KaptchaProperties.class)
 public class KaptchaConfiguration {
 
-    @Bean
-    public Producer getProducer(KaptchaProperties properties) {
+  @Bean
+  public Producer getProducer(KaptchaProperties properties) {
 
-        Config config = new Config(properties.props());
+    Config config = new Config(properties.props());
 
-        return config.getProducerImpl();
-    }
+    return config.getProducerImpl();
+  }
 }

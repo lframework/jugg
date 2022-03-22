@@ -9,14 +9,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class CreateColumnConfigListener implements ApplicationListener<DataObjectDeleteEvent> {
 
-    @Autowired
-    private IGenCreateColumnConfigService genCreateColumnConfigService;
+  @Autowired
+  private IGenCreateColumnConfigService genCreateColumnConfigService;
 
-    @Override
-    public void onApplicationEvent(DataObjectDeleteEvent event) {
+  @Override
+  public void onApplicationEvent(DataObjectDeleteEvent event) {
 
-        for (String columnId : event.getColumnIds()) {
-            genCreateColumnConfigService.deleteById(columnId);
-        }
+    for (String columnId : event.getColumnIds()) {
+      genCreateColumnConfigService.deleteById(columnId);
     }
+  }
 }

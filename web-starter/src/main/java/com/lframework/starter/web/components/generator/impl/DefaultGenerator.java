@@ -14,36 +14,36 @@ import org.springframework.stereotype.Component;
 @Component
 public class DefaultGenerator extends AbstractSnowFlakeGenerator implements Generator {
 
-    @Value("${default-setting.generator-type:'SNOW_FLAKE'}")
-    private GeneratorType generatorType;
+  @Value("${default-setting.generator-type:'SNOW_FLAKE'}")
+  private GeneratorType generatorType;
 
-    @Autowired
-    private DefaultFlowGenerator defaultFlowGenerator;
+  @Autowired
+  private DefaultFlowGenerator defaultFlowGenerator;
 
-    @Autowired
-    private DefaultSnowFlakeGenerator defaultSnowFlakeGenerator;
+  @Autowired
+  private DefaultSnowFlakeGenerator defaultSnowFlakeGenerator;
 
-    @Override
-    public GenerateCodeType getType() {
+  @Override
+  public GenerateCodeType getType() {
 
-        return GenerateCodeType.DEFAULT;
+    return GenerateCodeType.DEFAULT;
+  }
+
+  @Override
+  public String generate() {
+    if (this.generatorType == GeneratorType.FLOW) {
+      return defaultFlowGenerator.generate();
+    } else {
+      return defaultSnowFlakeGenerator.generate();
     }
+  }
 
-    @Override
-    public String generate() {
-        if (this.generatorType == GeneratorType.FLOW) {
-            return defaultFlowGenerator.generate();
-        } else {
-            return defaultSnowFlakeGenerator.generate();
-        }
-    }
+  public enum GeneratorType {
+    FLOW, SNOW_FLAKE
+  }
 
-    public enum GeneratorType {
-        FLOW, SNOW_FLAKE
-    }
-
-    @Override
-    public boolean isSpecial() {
-        return true;
-    }
+  @Override
+  public boolean isSpecial() {
+    return true;
+  }
 }

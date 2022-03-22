@@ -5,7 +5,6 @@ import com.lframework.starter.security.vo.system.menu.CreateSysMenuVo;
 import com.lframework.starter.security.vo.system.menu.SysMenuSelectorVo;
 import com.lframework.starter.security.vo.system.menu.UpdateSysMenuVo;
 import com.lframework.starter.web.service.BaseService;
-
 import java.util.List;
 
 /**
@@ -18,61 +17,70 @@ import java.util.List;
  */
 public interface ISysMenuService extends BaseService {
 
-    /**
-     * 系统菜单列表
-     * @return
-     */
-    List<DefaultSysMenuDto> query();
+  /**
+   * 系统菜单列表
+   *
+   * @return
+   */
+  List<DefaultSysMenuDto> query();
 
-    /**
-     * 根据角色ID查询已授权的菜单
-     * @param roleId
-     * @return
-     */
-    List<DefaultSysMenuDto> getByRoleId(String roleId);
+  /**
+   * 根据角色ID查询已授权的菜单
+   *
+   * @param roleId
+   * @return
+   */
+  List<DefaultSysMenuDto> getByRoleId(String roleId);
 
-    /**
-     * 根据ID查询
-     * @param id
-     * @return
-     */
-    DefaultSysMenuDto getById(String id);
+  /**
+   * 根据ID查询
+   *
+   * @param id
+   * @return
+   */
+  DefaultSysMenuDto getById(String id);
 
-    /**
-     * 创建系统菜单
-     * @param vo
-     */
-    String create(CreateSysMenuVo vo);
+  /**
+   * 创建系统菜单
+   *
+   * @param vo
+   */
+  String create(CreateSysMenuVo vo);
 
-    /**
-     * 修改系统菜单
-     * @param vo
-     */
-    void update(UpdateSysMenuVo vo);
+  /**
+   * 修改系统菜单
+   *
+   * @param vo
+   */
+  void update(UpdateSysMenuVo vo);
 
-    /**
-     * 根据ID删除
-     * @param id
-     */
-    void deleteById(String id);
+  /**
+   * 根据ID删除
+   *
+   * @param id
+   */
+  void deleteById(String id);
 
-    /**
-     * 系统菜单选择器数据
-     * @return
-     */
-    List<DefaultSysMenuDto> selector(SysMenuSelectorVo vo);
+  /**
+   * 系统菜单选择器数据
+   *
+   * @return
+   */
+  List<DefaultSysMenuDto> selector(SysMenuSelectorVo vo);
 
-    /**
-     * 批量启用
-     * @param ids
-     * @param userId
-     */
-    void batchEnable(List<String> ids, String userId);
+  /**
+   * 批量启用
+   *
+   * @param ids
+   * @param userId
+   */
+  void batchEnable(List<String> ids, String userId);
 
-    /**
-     * 批量停用
-     * @param ids
-     * @param userId
-     */
-    void batchUnable(List<String> ids, String userId);
+  /**
+   * 批量停用
+   *
+   * @param ids
+   * @param userId
+   */
+  void batchUnable(List<String> ids, String userId);
 }

@@ -10,8 +10,8 @@ import com.lframework.common.exceptions.ClientException;
  */
 public class DefaultClientException extends ClientException {
 
-    public DefaultClientException(String msg) {
+  public DefaultClientException(String msg) {
 
-        super(ResponseConstants.INVOKE_RESULT_FAIL_CODE, msg);
-    }
+    super(ResponseConstants.INVOKE_RESULT_FAIL_CODE, msg);
+  }
 }

@@ -5,7 +5,7 @@ import com.lframework.starter.security.entity.DefaultSysRoleMenu;
 
 /**
  * <p>
- *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author zmj

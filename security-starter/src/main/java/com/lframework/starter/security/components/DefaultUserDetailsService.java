@@ -11,14 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class DefaultUserDetailsService extends AbstractUserDetailsService {
 
-    @Autowired
-    private DefaultUserDetailsMapper DefaultUserDetailsMapper;
+  @Autowired
+  private DefaultUserDetailsMapper DefaultUserDetailsMapper;
 
-    @Override
-    public AbstractUserDetails findByUsername(String username) {
+  @Override
+  public AbstractUserDetails findByUsername(String username) {
 
-        AbstractUserDetails user = DefaultUserDetailsMapper.findByUsername(username);
+    AbstractUserDetails user = DefaultUserDetailsMapper.findByUsername(username);
 
-        return user;
-    }
+    return user;
+  }
 }

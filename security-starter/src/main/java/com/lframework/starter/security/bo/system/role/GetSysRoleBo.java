@@ -9,42 +9,42 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class GetSysRoleBo extends BaseBo<DefaultSysRoleDto> {
 
-    /**
-     * ID
-     */
-    private String id;
+  /**
+   * ID
+   */
+  private String id;
 
-    /**
-     * 岗位编号
-     */
-    private String code;
+  /**
+   * 岗位编号
+   */
+  private String code;
 
-    /**
-     * 岗位名称
-     */
-    private String name;
+  /**
+   * 岗位名称
+   */
+  private String name;
 
-    /**
-     * 权限
-     */
-    private String permission;
+  /**
+   * 权限
+   */
+  private String permission;
 
-    /**
-     * 状态
-     */
-    private Boolean available;
+  /**
+   * 状态
+   */
+  private Boolean available;
 
-    /**
-     * 备注
-     */
-    private String description;
+  /**
+   * 备注
+   */
+  private String description;
 
-    public GetSysRoleBo() {
+  public GetSysRoleBo() {
 
-    }
+  }
 
-    public GetSysRoleBo(DefaultSysRoleDto dto) {
+  public GetSysRoleBo(DefaultSysRoleDto dto) {
 
-        super(dto);
-    }
+    super(dto);
+  }
 }

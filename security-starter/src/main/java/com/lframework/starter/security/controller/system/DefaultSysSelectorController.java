@@ -14,24 +14,27 @@ import com.lframework.starter.security.dto.system.menu.DefaultSysMenuDto;
 import com.lframework.starter.security.dto.system.position.DefaultSysPositionDto;
 import com.lframework.starter.security.dto.system.role.DefaultSysRoleDto;
 import com.lframework.starter.security.dto.system.user.DefaultSysUserDto;
-import com.lframework.starter.security.service.system.*;
+import com.lframework.starter.security.service.system.ISysDeptService;
+import com.lframework.starter.security.service.system.ISysMenuService;
+import com.lframework.starter.security.service.system.ISysPositionService;
+import com.lframework.starter.security.service.system.ISysRoleService;
+import com.lframework.starter.security.service.system.ISysUserService;
 import com.lframework.starter.security.vo.system.menu.SysMenuSelectorVo;
 import com.lframework.starter.security.vo.system.position.SysPositionSelectorVo;
 import com.lframework.starter.security.vo.system.role.SysRoleSelectorVo;
 import com.lframework.starter.security.vo.system.user.SysUserSelectorVo;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 数据选择器
@@ -44,93 +47,97 @@ import java.util.stream.Collectors;
 @ConditionalOnProperty(value = "default-setting.sys-function.enabled", matchIfMissing = true)
 public class DefaultSysSelectorController extends DefaultBaseController {
 
-    @Autowired
-    private ISysUserService sysUserService;
+  @Autowired
+  private ISysUserService sysUserService;
 
-    @Autowired
-    private ISysMenuService sysMenuService;
+  @Autowired
+  private ISysMenuService sysMenuService;
 
-    @Autowired
-    private ISysDeptService sysDeptService;
+  @Autowired
+  private ISysDeptService sysDeptService;
 
-    @Autowired
-    private ISysPositionService sysPositionService;
+  @Autowired
+  private ISysPositionService sysPositionService;
 
-    @Autowired
-    private ISysRoleService sysRoleService;
+  @Autowired
+  private ISysRoleService sysRoleService;
 
-    /**
-     * 系统菜单
-     */
-    @GetMapping("/menu")
-    public InvokeResult menu(@Valid SysMenuSelectorVo vo) {
+  /**
+   * 系统菜单
+   */
+  @GetMapping("/menu")
+  public InvokeResult menu(@Valid SysMenuSelectorVo vo) {
 
-        List<SysMenuSelectorBo> results = Collections.EMPTY_LIST;
-        List<DefaultSysMenuDto> datas = sysMenuService.selector(vo);
-        if (CollectionUtil.isNotEmpty(datas)) {
-            results = datas.stream().map(SysMenuSelectorBo::new).collect(Collectors.toList());
-        }
-
-        return InvokeResultBuilder.success(results);
+    List<SysMenuSelectorBo> results = Collections.EMPTY_LIST;
+    List<DefaultSysMenuDto> datas = sysMenuService.selector(vo);
+    if (CollectionUtil.isNotEmpty(datas)) {
+      results = datas.stream().map(SysMenuSelectorBo::new).collect(Collectors.toList());
     }
 
-    @GetMapping("/dept")
-    public InvokeResult dept() {
+    return InvokeResultBuilder.success(results);
+  }
 
-        List<SysDeptSelectorBo> results = Collections.EMPTY_LIST;
-        List<DefaultSysDeptDto> datas = sysDeptService.selector();
-        if (CollectionUtil.isNotEmpty(datas)) {
-            results = datas.stream().map(SysDeptSelectorBo::new).collect(Collectors.toList());
-        }
+  @GetMapping("/dept")
+  public InvokeResult dept() {
 
-        return InvokeResultBuilder.success(results);
+    List<SysDeptSelectorBo> results = Collections.EMPTY_LIST;
+    List<DefaultSysDeptDto> datas = sysDeptService.selector();
+    if (CollectionUtil.isNotEmpty(datas)) {
+      results = datas.stream().map(SysDeptSelectorBo::new).collect(Collectors.toList());
     }
 
-    @GetMapping("/role")
-    public InvokeResult role(@Valid SysRoleSelectorVo vo) {
+    return InvokeResultBuilder.success(results);
+  }
 
-        PageResult<DefaultSysRoleDto> pageResult = sysRoleService.selector(getPageIndex(vo), getPageSize(vo), vo);
-        List<DefaultSysRoleDto> datas = pageResult.getDatas();
-        if (CollectionUtil.isNotEmpty(datas)) {
-            List<SysRoleSelectorBo> results = datas.stream().map(SysRoleSelectorBo::new).collect(Collectors.toList());
-            PageResultUtil.rebuild(pageResult, results);
-        }
+  @GetMapping("/role")
+  public InvokeResult role(@Valid SysRoleSelectorVo vo) {
 
-        return InvokeResultBuilder.success(pageResult);
+    PageResult<DefaultSysRoleDto> pageResult = sysRoleService
+        .selector(getPageIndex(vo), getPageSize(vo), vo);
+    List<DefaultSysRoleDto> datas = pageResult.getDatas();
+    if (CollectionUtil.isNotEmpty(datas)) {
+      List<SysRoleSelectorBo> results = datas.stream().map(SysRoleSelectorBo::new)
+          .collect(Collectors.toList());
+      PageResultUtil.rebuild(pageResult, results);
     }
 
-    /**
-     * 用户
-     */
-    @GetMapping("/user")
-    public InvokeResult user(@Valid SysUserSelectorVo vo) {
+    return InvokeResultBuilder.success(pageResult);
+  }
 
-        PageResult<DefaultSysUserDto> pageResult = sysUserService.selector(getPageIndex(vo), getPageSize(vo), vo);
-        List<DefaultSysUserDto> datas = pageResult.getDatas();
+  /**
+   * 用户
+   */
+  @GetMapping("/user")
+  public InvokeResult user(@Valid SysUserSelectorVo vo) {
 
-        if (!CollectionUtil.isEmpty(datas)) {
-            List<SysUserSelectorBo> results = datas.stream().map(SysUserSelectorBo::new).collect(Collectors.toList());
+    PageResult<DefaultSysUserDto> pageResult = sysUserService
+        .selector(getPageIndex(vo), getPageSize(vo), vo);
+    List<DefaultSysUserDto> datas = pageResult.getDatas();
 
-            PageResultUtil.rebuild(pageResult, results);
-        }
+    if (!CollectionUtil.isEmpty(datas)) {
+      List<SysUserSelectorBo> results = datas.stream().map(SysUserSelectorBo::new)
+          .collect(Collectors.toList());
 
-        return InvokeResultBuilder.success(pageResult);
+      PageResultUtil.rebuild(pageResult, results);
     }
 
-    @GetMapping("/position")
-    public InvokeResult position(@Valid SysPositionSelectorVo vo) {
+    return InvokeResultBuilder.success(pageResult);
+  }
 
-        PageResult<DefaultSysPositionDto> pageResult = sysPositionService
-                .selector(getPageIndex(vo), getPageSize(vo), vo);
-        List<DefaultSysPositionDto> datas = pageResult.getDatas();
+  @GetMapping("/position")
+  public InvokeResult position(@Valid SysPositionSelectorVo vo) {
 
-        if (!CollectionUtil.isEmpty(datas)) {
-            List<SysPositionSelectorBo> results = datas.stream().map(SysPositionSelectorBo::new)
-                    .collect(Collectors.toList());
+    PageResult<DefaultSysPositionDto> pageResult = sysPositionService
+        .selector(getPageIndex(vo), getPageSize(vo), vo);
+    List<DefaultSysPositionDto> datas = pageResult.getDatas();
 
-            PageResultUtil.rebuild(pageResult, results);
-        }
+    if (!CollectionUtil.isEmpty(datas)) {
+      List<SysPositionSelectorBo> results = datas.stream().map(SysPositionSelectorBo::new)
+          .collect(Collectors.toList());
 
-        return InvokeResultBuilder.success(pageResult);
+      PageResultUtil.rebuild(pageResult, results);
     }
+
+    return InvokeResultBuilder.success(pageResult);
+  }
 }

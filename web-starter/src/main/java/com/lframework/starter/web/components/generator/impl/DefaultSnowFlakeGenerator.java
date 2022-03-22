@@ -12,14 +12,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class DefaultSnowFlakeGenerator extends AbstractSnowFlakeGenerator implements Generator {
 
-    @Override
-    public GenerateCodeType getType() {
+  @Override
+  public GenerateCodeType getType() {
 
-        return GenerateCodeType.SNOW_FLAKE;
-    }
+    return GenerateCodeType.SNOW_FLAKE;
+  }
 
-    @Override
-    public boolean isSpecial() {
-        return true;
-    }
+  @Override
+  public boolean isSpecial() {
+    return true;
+  }
 }

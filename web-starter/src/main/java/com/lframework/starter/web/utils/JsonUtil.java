@@ -6,105 +6,104 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.lframework.common.exceptions.impl.DefaultSysException;
 import com.lframework.common.utils.StringUtil;
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class JsonUtil {
 
-    private static final ObjectMapper OBJECT_MAPPER = ApplicationUtil.getBean(ObjectMapper.class);
+  private static final ObjectMapper OBJECT_MAPPER = ApplicationUtil.getBean(ObjectMapper.class);
 
-    public static String toJsonString(Object obj) {
+  public static String toJsonString(Object obj) {
 
-        if (obj == null) {
-            return null;
-        }
-        try {
-            return OBJECT_MAPPER.writer().writeValueAsString(obj);
-        } catch (JsonProcessingException e) {
-            log.error(e.getMessage(), e);
-            throw new DefaultSysException(e.getMessage());
-        }
+    if (obj == null) {
+      return null;
+    }
+    try {
+      return OBJECT_MAPPER.writer().writeValueAsString(obj);
+    } catch (JsonProcessingException e) {
+      log.error(e.getMessage(), e);
+      throw new DefaultSysException(e.getMessage());
+    }
+  }
+
+  public static <T> T parseObject(String jsonStr, Class<T> clazz) {
+
+    if (StringUtil.isEmpty(jsonStr) || clazz == null) {
+      return null;
     }
 
-    public static <T> T parseObject(String jsonStr, Class<T> clazz) {
+    try {
+      return OBJECT_MAPPER.readValue(jsonStr, clazz);
+    } catch (JsonProcessingException e) {
+      log.error(e.getMessage(), e);
+      throw new DefaultSysException(e.getMessage());
+    }
+  }
 
-        if (StringUtil.isEmpty(jsonStr) || clazz == null) {
-            return null;
-        }
+  public static <T> List<T> parseList(String jsonStr, Class<T> clazz) {
 
-        try {
-            return OBJECT_MAPPER.readValue(jsonStr, clazz);
-        } catch (JsonProcessingException e) {
-            log.error(e.getMessage(), e);
-            throw new DefaultSysException(e.getMessage());
-        }
+    if (StringUtil.isEmpty(jsonStr) || clazz == null) {
+      return null;
     }
 
-    public static <T> List<T> parseList(String jsonStr, Class<T> clazz) {
+    try {
+      return OBJECT_MAPPER.readValue(jsonStr,
+          OBJECT_MAPPER.getTypeFactory().constructCollectionType(List.class, String.class));
+    } catch (JsonProcessingException e) {
+      log.error(e.getMessage(), e);
+      throw new DefaultSysException(e.getMessage());
+    }
+  }
 
-        if (StringUtil.isEmpty(jsonStr) || clazz == null) {
-            return null;
-        }
+  public static <T> T convert(Object obj, Class<T> clazz) {
 
-        try {
-            return OBJECT_MAPPER.readValue(jsonStr,
-                    OBJECT_MAPPER.getTypeFactory().constructCollectionType(List.class, String.class));
-        } catch (JsonProcessingException e) {
-            log.error(e.getMessage(), e);
-            throw new DefaultSysException(e.getMessage());
-        }
+    if (obj == null || clazz == null) {
+      return null;
     }
 
-    public static <T> T convert(Object obj, Class<T> clazz) {
+    return OBJECT_MAPPER.convertValue(obj, clazz);
+  }
 
-        if (obj == null || clazz == null) {
-            return null;
-        }
+  public static boolean isJsonObject(String jsonStr) {
 
-        return OBJECT_MAPPER.convertValue(obj, clazz);
+    if (StringUtil.isBlank(jsonStr)) {
+      return false;
     }
 
-    public static boolean isJsonObject(String jsonStr) {
+    try {
+      JsonNode jsonNode = OBJECT_MAPPER.readTree(jsonStr);
+      return jsonNode.getNodeType() != JsonNodeType.ARRAY;
+    } catch (JsonProcessingException e) {
+      return false;
+    }
+  }
 
-        if (StringUtil.isBlank(jsonStr)) {
-            return false;
-        }
+  public static boolean isJsonArray(String jsonStr) {
 
-        try {
-            JsonNode jsonNode = OBJECT_MAPPER.readTree(jsonStr);
-            return jsonNode.getNodeType() != JsonNodeType.ARRAY;
-        } catch (JsonProcessingException e) {
-            return false;
-        }
+    if (StringUtil.isBlank(jsonStr)) {
+      return false;
     }
 
-    public static boolean isJsonArray(String jsonStr) {
+    try {
+      JsonNode jsonNode = OBJECT_MAPPER.readTree(jsonStr);
+      return jsonNode.getNodeType() == JsonNodeType.ARRAY;
+    } catch (JsonProcessingException e) {
+      return false;
+    }
+  }
 
-        if (StringUtil.isBlank(jsonStr)) {
-            return false;
-        }
-
-        try {
-            JsonNode jsonNode = OBJECT_MAPPER.readTree(jsonStr);
-            return jsonNode.getNodeType() == JsonNodeType.ARRAY;
-        } catch (JsonProcessingException e) {
-            return false;
-        }
+  public static boolean isJson(String jsonStr) {
+    if (StringUtil.isBlank(jsonStr)) {
+      return false;
     }
 
-    public static boolean isJson(String jsonStr) {
-        if (StringUtil.isBlank(jsonStr)) {
-            return false;
-        }
-
-        try {
-            OBJECT_MAPPER.readTree(jsonStr);
-        } catch (JsonProcessingException e) {
-            return false;
-        }
-
-        return true;
+    try {
+      OBJECT_MAPPER.readTree(jsonStr);
+    } catch (JsonProcessingException e) {
+      return false;
     }
+
+    return true;
+  }
 }

@@ -15,17 +15,22 @@ import com.lframework.starter.security.vo.system.user.UpdateSysUserVo;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
 import com.lframework.starter.web.service.IUserService;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 用户管理
@@ -38,103 +43,107 @@ import java.util.stream.Collectors;
 @ConditionalOnProperty(value = "default-setting.sys-function.enabled", matchIfMissing = true)
 public class SysUserController extends DefaultBaseController {
 
-    @Autowired
-    private ISysUserService sysUserService;
+  @Autowired
+  private ISysUserService sysUserService;
 
-    @Autowired
-    private IUserService userService;
+  @Autowired
+  private IUserService userService;
 
-    /**
-     * 用户列表
-     */
-    @PreAuthorize("@permission.valid('system:user:query','system:user:add','system:user:modify')")
-    @GetMapping("/query")
-    public InvokeResult query(@Valid QuerySysUserVo vo) {
+  /**
+   * 用户列表
+   */
+  @PreAuthorize("@permission.valid('system:user:query','system:user:add','system:user:modify')")
+  @GetMapping("/query")
+  public InvokeResult query(@Valid QuerySysUserVo vo) {
 
-        PageResult<DefaultSysUserDto> pageResult = sysUserService.query(getPageIndex(vo), getPageSize(vo), vo);
+    PageResult<DefaultSysUserDto> pageResult = sysUserService
+        .query(getPageIndex(vo), getPageSize(vo), vo);
 
-        List<DefaultSysUserDto> datas = pageResult.getDatas();
+    List<DefaultSysUserDto> datas = pageResult.getDatas();
 
-        if (!CollectionUtil.isEmpty(datas)) {
-            List<QuerySysUserBo> results = datas.stream().map(QuerySysUserBo::new).collect(Collectors.toList());
+    if (!CollectionUtil.isEmpty(datas)) {
+      List<QuerySysUserBo> results = datas.stream().map(QuerySysUserBo::new)
+          .collect(Collectors.toList());
 
-            PageResultUtil.rebuild(pageResult, results);
-        }
-
-        return InvokeResultBuilder.success(pageResult);
+      PageResultUtil.rebuild(pageResult, results);
     }
 
-    /**
-     * 查询用户
-     */
-    @PreAuthorize("@permission.valid('system:user:query','system:user:add','system:user:modify')")
-    @GetMapping
-    public InvokeResult get(@NotBlank(message = "ID不能为空！") String id) {
+    return InvokeResultBuilder.success(pageResult);
+  }
 
-        DefaultSysUserDto data = sysUserService.getById(id);
-        if (data == null) {
-            throw new DefaultClientException("用户不存在！");
-        }
+  /**
+   * 查询用户
+   */
+  @PreAuthorize("@permission.valid('system:user:query','system:user:add','system:user:modify')")
+  @GetMapping
+  public InvokeResult get(@NotBlank(message = "ID不能为空！") String id) {
 
-        GetSysUserBo result = new GetSysUserBo(data);
-
-        return InvokeResultBuilder.success(result);
+    DefaultSysUserDto data = sysUserService.getById(id);
+    if (data == null) {
+      throw new DefaultClientException("用户不存在！");
     }
 
-    /**
-     * 批量停用用户
-     */
-    @PreAuthorize("@permission.valid('system:user:modify')")
-    @PatchMapping("/unable/batch")
-    public InvokeResult batchUnable(@NotEmpty(message = "请选择需要停用的用户！") @RequestBody List<String> ids) {
+    GetSysUserBo result = new GetSysUserBo(data);
 
-        sysUserService.batchUnable(ids);
-        return InvokeResultBuilder.success();
-    }
+    return InvokeResultBuilder.success(result);
+  }
 
-    /**
-     * 批量启用用户
-     */
-    @PreAuthorize("@permission.valid('system:user:modify')")
-    @PatchMapping("/enable/batch")
-    public InvokeResult batchEnable(@NotEmpty(message = "请选择需要启用的用户！") @RequestBody List<String> ids) {
+  /**
+   * 批量停用用户
+   */
+  @PreAuthorize("@permission.valid('system:user:modify')")
+  @PatchMapping("/unable/batch")
+  public InvokeResult batchUnable(
+      @NotEmpty(message = "请选择需要停用的用户！") @RequestBody List<String> ids) {
 
-        sysUserService.batchEnable(ids);
-        return InvokeResultBuilder.success();
-    }
+    sysUserService.batchUnable(ids);
+    return InvokeResultBuilder.success();
+  }
 
-    /**
-     * 新增用户
-     */
-    @PreAuthorize("@permission.valid('system:user:add')")
-    @PostMapping
-    public InvokeResult create(@Valid CreateSysUserVo vo) {
+  /**
+   * 批量启用用户
+   */
+  @PreAuthorize("@permission.valid('system:user:modify')")
+  @PatchMapping("/enable/batch")
+  public InvokeResult batchEnable(
+      @NotEmpty(message = "请选择需要启用的用户！") @RequestBody List<String> ids) {
 
-        sysUserService.create(vo);
+    sysUserService.batchEnable(ids);
+    return InvokeResultBuilder.success();
+  }
 
-        return InvokeResultBuilder.success();
-    }
+  /**
+   * 新增用户
+   */
+  @PreAuthorize("@permission.valid('system:user:add')")
+  @PostMapping
+  public InvokeResult create(@Valid CreateSysUserVo vo) {
 
-    /**
-     * 修改用户
-     */
-    @PreAuthorize("@permission.valid('system:user:modify')")
-    @PutMapping
-    public InvokeResult update(@Valid UpdateSysUserVo vo) {
+    sysUserService.create(vo);
 
-        sysUserService.update(vo);
+    return InvokeResultBuilder.success();
+  }
 
-        return InvokeResultBuilder.success();
-    }
+  /**
+   * 修改用户
+   */
+  @PreAuthorize("@permission.valid('system:user:modify')")
+  @PutMapping
+  public InvokeResult update(@Valid UpdateSysUserVo vo) {
 
-    /**
-     * 修改用户
-     */
-    @PreAuthorize("@permission.valid('system:user:modify')")
-    @PatchMapping("unlock")
-    public InvokeResult unlock(@NotBlank(message = "ID不能为空！") String id) {
-        userService.unlockById(id);
+    sysUserService.update(vo);
 
-        return InvokeResultBuilder.success();
-    }
+    return InvokeResultBuilder.success();
+  }
+
+  /**
+   * 修改用户
+   */
+  @PreAuthorize("@permission.valid('system:user:modify')")
+  @PatchMapping("unlock")
+  public InvokeResult unlock(@NotBlank(message = "ID不能为空！") String id) {
+    userService.unlockById(id);
+
+    return InvokeResultBuilder.success();
+  }
 }

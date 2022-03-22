@@ -7,12 +7,13 @@ package com.lframework.common.utils;
  */
 public class IdUtil {
 
-    /**
-     * 获取ID（UUID）
-     * @return
-     */
-    public static String getId() {
+  /**
+   * 获取ID（UUID）
+   *
+   * @return
+   */
+  public static String getId() {
 
-        return cn.hutool.core.util.IdUtil.fastSimpleUUID();
-    }
+    return cn.hutool.core.util.IdUtil.fastSimpleUUID();
+  }
 }

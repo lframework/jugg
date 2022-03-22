@@ -5,10 +5,9 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lframework.gen.enums.GenConvertType;
 import com.lframework.starter.mybatis.entity.BaseEntity;
+import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -23,44 +22,43 @@ import java.time.LocalDateTime;
 @TableName("gen_simple_table")
 public class GenSimpleTable extends BaseEntity {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    private String id;
+  private String id;
 
-    /**
-     * 数据表所属的数据库名
-     */
-    private String tableSchema;
+  /**
+   * 数据表所属的数据库名
+   */
+  private String tableSchema;
 
-    /**
-     * 数据库表名
-     */
-    private String tableName;
+  /**
+   * 数据库表名
+   */
+  private String tableName;
 
-    /**
-     * 数据库引擎
-     */
-    private String engine;
+  /**
+   * 数据库引擎
+   */
+  private String engine;
 
-    /**
-     * 字符校验编码集
-     */
-    private String tableCollation;
+  /**
+   * 字符校验编码集
+   */
+  private String tableCollation;
 
-    /**
-     * 备注
-     */
-    private String tableComment;
+  /**
+   * 备注
+   */
+  private String tableComment;
 
-    /**
-     * 转换方式
-     */
-    private GenConvertType convertType;
+  /**
+   * 转换方式
+   */
+  private GenConvertType convertType;
 
-    /**
-     * 创建时间
-     * 新增时赋值
-     */
-    @TableField(fill = FieldFill.INSERT)
-    private LocalDateTime createTime;
+  /**
+   * 创建时间 新增时赋值
+   */
+  @TableField(fill = FieldFill.INSERT)
+  private LocalDateTime createTime;
 }

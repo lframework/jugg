@@ -9,39 +9,39 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class GenUpdateColumnConfigBo extends BaseBo<GenUpdateColumnConfigDto> {
 
-    /**
-     * ID
-     */
-    private String id;
+  /**
+   * ID
+   */
+  private String id;
 
-    /**
-     * 是否必填
-     */
-    private Boolean required;
+  /**
+   * 是否必填
+   */
+  private Boolean required;
 
-    /**
-     * 排序编号
-     */
-    private Integer orderNo;
+  /**
+   * 排序编号
+   */
+  private Integer orderNo;
 
-    public GenUpdateColumnConfigBo() {
+  public GenUpdateColumnConfigBo() {
 
-    }
+  }
 
-    public GenUpdateColumnConfigBo(GenUpdateColumnConfigDto dto) {
+  public GenUpdateColumnConfigBo(GenUpdateColumnConfigDto dto) {
 
-        super(dto);
-    }
+    super(dto);
+  }
 
-    @Override
-    public <A> BaseBo<GenUpdateColumnConfigDto> convert(GenUpdateColumnConfigDto dto) {
+  @Override
+  public <A> BaseBo<GenUpdateColumnConfigDto> convert(GenUpdateColumnConfigDto dto) {
 
-        return super.convert(dto);
-    }
+    return super.convert(dto);
+  }
 
-    @Override
-    protected void afterInit(GenUpdateColumnConfigDto dto) {
+  @Override
+  protected void afterInit(GenUpdateColumnConfigDto dto) {
 
-        super.afterInit(dto);
-    }
+    super.afterInit(dto);
+  }
 }

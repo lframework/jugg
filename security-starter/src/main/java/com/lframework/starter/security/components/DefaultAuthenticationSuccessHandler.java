@@ -6,14 +6,13 @@ import com.lframework.starter.web.dto.LoginDto;
 import com.lframework.starter.web.utils.ApplicationUtil;
 import com.lframework.starter.web.utils.ResponseUtil;
 import com.lframework.starter.web.utils.SecurityUtil;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.stereotype.Component;
-
+import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
 
 /**
  * 用户认证成功处理器
@@ -23,15 +22,16 @@ import java.io.IOException;
 @Component
 public class DefaultAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
-    @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-            Authentication authentication) throws IOException, ServletException {
+  @Override
+  public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+      Authentication authentication) throws IOException, ServletException {
 
-        AbstractUserDetails user = SecurityUtil.getCurrentUser();
-        LoginDto dto = new LoginDto(request.getSession(false).getId(), user.getName(), user.getPermissions());
+    AbstractUserDetails user = SecurityUtil.getCurrentUser();
+    LoginDto dto = new LoginDto(request.getSession(false).getId(), user.getName(),
+        user.getPermissions());
 
-        ApplicationUtil.publishEvent(new LoginEvent(this));
+    ApplicationUtil.publishEvent(new LoginEvent(this));
 
-        ResponseUtil.respSuccessJson(response, dto);
-    }
+    ResponseUtil.respSuccessJson(response, dto);
+  }
 }

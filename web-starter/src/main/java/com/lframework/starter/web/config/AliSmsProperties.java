@@ -7,12 +7,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "sms.ali")
 public class AliSmsProperties {
 
-    /**
-     * 地域
-     */
-    private String region;
+  /**
+   * 地域
+   */
+  private String region;
 
-    private String accessKeyId;
+  private String accessKeyId;
 
-    private String accessKeySecret;
+  private String accessKeySecret;
 }

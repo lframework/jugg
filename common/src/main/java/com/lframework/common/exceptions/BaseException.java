@@ -7,31 +7,31 @@ package com.lframework.common.exceptions;
  */
 public abstract class BaseException extends RuntimeException {
 
-    /**
-     * 响应码
-     */
-    private Integer code;
+  /**
+   * 响应码
+   */
+  private Integer code;
 
-    /**
-     * 响应信息
-     */
-    private String msg;
+  /**
+   * 响应信息
+   */
+  private String msg;
 
-    public BaseException(Integer code, String msg) {
+  public BaseException(Integer code, String msg) {
 
-        super(msg);
+    super(msg);
 
-        this.code = code;
-        this.msg = msg;
-    }
+    this.code = code;
+    this.msg = msg;
+  }
 
-    public Integer getCode() {
+  public Integer getCode() {
 
-        return code;
-    }
+    return code;
+  }
 
-    public String getMsg() {
+  public String getMsg() {
 
-        return msg;
-    }
+    return msg;
+  }
 }

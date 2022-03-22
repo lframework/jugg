@@ -4,93 +4,92 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lframework.common.constants.StringPool;
 import com.lframework.gen.dto.dataobj.DataObjectDto;
 import com.lframework.starter.web.bo.BaseBo;
+import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.time.LocalDateTime;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class QueryDataObjectBo extends BaseBo<DataObjectDto> {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    /**
-     * ID
-     */
-    private String id;
+  /**
+   * ID
+   */
+  private String id;
 
-    /**
-     * 编号
-     */
-    private String code;
+  /**
+   * 编号
+   */
+  private String code;
 
-    /**
-     * 名称
-     */
-    private String name;
+  /**
+   * 名称
+   */
+  private String name;
 
-    /**
-     * 类型 1 数据库单表
-     */
-    private Integer type;
+  /**
+   * 类型 1 数据库单表
+   */
+  private Integer type;
 
-    /**
-     * 状态
-     */
-    private Boolean available;
+  /**
+   * 状态
+   */
+  private Boolean available;
 
-    /**
-     * 状态
-     */
-    private Integer genStatus;
+  /**
+   * 状态
+   */
+  private Integer genStatus;
 
-    /**
-     * 备注
-     */
-    private String description;
+  /**
+   * 备注
+   */
+  private String description;
 
-    /**
-     * 创建人ID
-     */
-    private String createBy;
+  /**
+   * 创建人ID
+   */
+  private String createBy;
 
-    /**
-     * 创建时间
-     */
-    @JsonFormat(pattern = StringPool.DATE_TIME_PATTERN)
-    private LocalDateTime createTime;
+  /**
+   * 创建时间
+   */
+  @JsonFormat(pattern = StringPool.DATE_TIME_PATTERN)
+  private LocalDateTime createTime;
 
-    /**
-     * 修改人ID
-     */
-    private String updateBy;
+  /**
+   * 修改人ID
+   */
+  private String updateBy;
 
-    /**
-     * 修改时间
-     */
-    @JsonFormat(pattern = StringPool.DATE_TIME_PATTERN)
-    private LocalDateTime updateTime;
+  /**
+   * 修改时间
+   */
+  @JsonFormat(pattern = StringPool.DATE_TIME_PATTERN)
+  private LocalDateTime updateTime;
 
-    public QueryDataObjectBo() {
+  public QueryDataObjectBo() {
 
-    }
+  }
 
-    public QueryDataObjectBo(DataObjectDto dto) {
+  public QueryDataObjectBo(DataObjectDto dto) {
 
-        super(dto);
-    }
+    super(dto);
+  }
 
-    @Override
-    public <A> BaseBo<DataObjectDto> convert(DataObjectDto dto) {
+  @Override
+  public <A> BaseBo<DataObjectDto> convert(DataObjectDto dto) {
 
-        return super.convert(dto, QueryDataObjectBo::getType, QueryDataObjectBo::getGenStatus);
-    }
+    return super.convert(dto, QueryDataObjectBo::getType, QueryDataObjectBo::getGenStatus);
+  }
 
-    @Override
-    protected void afterInit(DataObjectDto dto) {
+  @Override
+  protected void afterInit(DataObjectDto dto) {
 
-        this.type = dto.getType().getCode();
-        this.genStatus = dto.getGenStatus().getCode();
-    }
+    this.type = dto.getType().getCode();
+    this.genStatus = dto.getGenStatus().getCode();
+  }
 }

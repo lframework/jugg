@@ -6,7 +6,7 @@ import com.lframework.starter.mybatis.mapper.BaseMapper;
 
 /**
  * <p>
- *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author zmj
@@ -14,10 +14,11 @@ import com.lframework.starter.mybatis.mapper.BaseMapper;
  */
 public interface GenGenerateInfoMapper extends BaseMapper<GenGenerateInfo> {
 
-    /**
-     * 根据数据对象ID查询
-     * @param dataObjId
-     * @return
-     */
-    GenGenerateInfoDto getByDataObjId(String dataObjId);
+  /**
+   * 根据数据对象ID查询
+   *
+   * @param dataObjId
+   * @return
+   */
+  GenGenerateInfoDto getByDataObjId(String dataObjId);
 }

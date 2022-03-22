@@ -9,32 +9,32 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class SysDeptTreeBo extends BaseBo<DefaultSysDeptDto> {
 
-    /**
-     * ID
-     */
-    private String id;
+  /**
+   * ID
+   */
+  private String id;
 
-    /**
-     * 名称
-     */
-    private String name;
+  /**
+   * 名称
+   */
+  private String name;
 
-    /**
-     * 父级ID
-     */
-    private String parentId;
+  /**
+   * 父级ID
+   */
+  private String parentId;
 
-    /**
-     * 状态
-     */
-    private Boolean available;
+  /**
+   * 状态
+   */
+  private Boolean available;
 
-    public SysDeptTreeBo() {
+  public SysDeptTreeBo() {
 
-    }
+  }
 
-    public SysDeptTreeBo(DefaultSysDeptDto dto) {
+  public SysDeptTreeBo(DefaultSysDeptDto dto) {
 
-        super(dto);
-    }
+    super(dto);
+  }
 }

@@ -9,32 +9,32 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class SysRoleSelectorBo extends BaseBo<DefaultSysRoleDto> {
 
-    /**
-     * ID
-     */
-    private String id;
+  /**
+   * ID
+   */
+  private String id;
 
-    /**
-     * 编号
-     */
-    private String code;
+  /**
+   * 编号
+   */
+  private String code;
 
-    /**
-     * 名称
-     */
-    private String name;
+  /**
+   * 名称
+   */
+  private String name;
 
-    /**
-     * 状态
-     */
-    private Boolean available;
+  /**
+   * 状态
+   */
+  private Boolean available;
 
-    public SysRoleSelectorBo() {
+  public SysRoleSelectorBo() {
 
-    }
+  }
 
-    public SysRoleSelectorBo(DefaultSysRoleDto dto) {
+  public SysRoleSelectorBo(DefaultSysRoleDto dto) {
 
-        super(dto);
-    }
+    super(dto);
+  }
 }

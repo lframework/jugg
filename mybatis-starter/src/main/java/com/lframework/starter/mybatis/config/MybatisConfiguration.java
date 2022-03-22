@@ -9,10 +9,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MybatisConfiguration {
 
-    @Bean
-    @ConditionalOnMissingBean(MetaObjectHandler.class)
-    public MetaObjectHandler getMetaObjectHandler() {
+  @Bean
+  @ConditionalOnMissingBean(MetaObjectHandler.class)
+  public MetaObjectHandler getMetaObjectHandler() {
 
-        return new DefaultBaseEntityFillHandler();
-    }
+    return new DefaultBaseEntityFillHandler();
+  }
 }

@@ -7,6 +7,6 @@ package com.lframework.starter.web.components.code;
  */
 public class DefaultGenerateCodeType implements GenerateCodeType {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
 }

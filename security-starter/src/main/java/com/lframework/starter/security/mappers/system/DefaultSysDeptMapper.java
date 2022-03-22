@@ -3,12 +3,11 @@ package com.lframework.starter.security.mappers.system;
 import com.lframework.starter.mybatis.mapper.BaseMapper;
 import com.lframework.starter.security.dto.system.dept.DefaultSysDeptDto;
 import com.lframework.starter.security.entity.DefaultSysDept;
-
 import java.util.List;
 
 /**
  * <p>
- *  部门 Mapper 接口
+ * 部门 Mapper 接口
  * </p>
  *
  * @author zmj
@@ -16,16 +15,18 @@ import java.util.List;
  */
 public interface DefaultSysDeptMapper extends BaseMapper<DefaultSysDept> {
 
-    /**
-     * 选择器
-     * @return
-     */
-    List<DefaultSysDeptDto> selector();
+  /**
+   * 选择器
+   *
+   * @return
+   */
+  List<DefaultSysDeptDto> selector();
 
-    /**
-     * 根据ID查询
-     * @param id
-     * @return
-     */
-    DefaultSysDeptDto getById(String id);
+  /**
+   * 根据ID查询
+   *
+   * @param id
+   * @return
+   */
+  DefaultSysDeptDto getById(String id);
 }

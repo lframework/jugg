@@ -17,20 +17,21 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_user_dept")
 public class DefaultSysUserDept extends BaseEntity {
-    private static final long serialVersionUID = 1L;
 
-    /**
-     * ID
-     */
-    private String id;
+  private static final long serialVersionUID = 1L;
 
-    /**
-     * 用户ID
-     */
-    private String userId;
+  /**
+   * ID
+   */
+  private String id;
 
-    /**
-     * 部门ID
-     */
-    private String deptId;
+  /**
+   * 用户ID
+   */
+  private String userId;
+
+  /**
+   * 部门ID
+   */
+  private String deptId;
 }

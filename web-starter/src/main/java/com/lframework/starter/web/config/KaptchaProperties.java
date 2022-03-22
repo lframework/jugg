@@ -1,9 +1,8 @@
 package com.lframework.starter.web.config;
 
 import com.google.code.kaptcha.Constants;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
 import java.util.Properties;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * 验证码配置信息
@@ -13,313 +12,313 @@ import java.util.Properties;
 @ConfigurationProperties(prefix = "kaptcha")
 public class KaptchaProperties {
 
-    private static final int DEFAULT_EXPIRE_TIME = 5;
+  private static final int DEFAULT_EXPIRE_TIME = 5;
 
-    private Integer expireTime = DEFAULT_EXPIRE_TIME;
+  private Integer expireTime = DEFAULT_EXPIRE_TIME;
 
-    private String sessionConfigKey = Constants.KAPTCHA_SESSION_KEY;
+  private String sessionConfigKey = Constants.KAPTCHA_SESSION_KEY;
 
-    private String sessionConfigDate = Constants.KAPTCHA_SESSION_DATE;
+  private String sessionConfigDate = Constants.KAPTCHA_SESSION_DATE;
 
-    private Boolean border = true;
+  private Boolean border = true;
 
-    private String borderColor = "black";
+  private String borderColor = "black";
 
-    private String borderThickness = "1";
+  private String borderThickness = "1";
 
-    private String noiseColor = "black";
+  private String noiseColor = "black";
 
-    private String noiseImpl = "com.google.code.kaptcha.impl.DefaultNoise";
+  private String noiseImpl = "com.google.code.kaptcha.impl.DefaultNoise";
 
-    private String obscurificatorImpl = "com.google.code.kaptcha.impl.WaterRipple";
+  private String obscurificatorImpl = "com.google.code.kaptcha.impl.WaterRipple";
 
-    private String producerImpl = "com.google.code.kaptcha.impl.DefaultKaptcha";
+  private String producerImpl = "com.google.code.kaptcha.impl.DefaultKaptcha";
 
-    private String textProducerImpl = "com.google.code.kaptcha.text.impl.DefaultTextCreator";
+  private String textProducerImpl = "com.google.code.kaptcha.text.impl.DefaultTextCreator";
 
-    private String textProducerCharString = "abcde2345678gfynmnpwx";
+  private String textProducerCharString = "abcde2345678gfynmnpwx";
 
-    private String textProducerCharLength = "5";
+  private String textProducerCharLength = "5";
 
-    private String textProducerFontNames = "Arial,Courier";
+  private String textProducerFontNames = "Arial,Courier";
 
-    private String textProducerFontColor = "black";
+  private String textProducerFontColor = "black";
 
-    private String textProducerFontSize = "40";
+  private String textProducerFontSize = "40";
 
-    private String textProducerCharSpace = "2";
+  private String textProducerCharSpace = "2";
 
-    private String wordRenderImpl = "com.google.code.kaptcha.text.impl.DefaultWordRenderer";
+  private String wordRenderImpl = "com.google.code.kaptcha.text.impl.DefaultWordRenderer";
 
-    private String backGroundImpl = "com.google.code.kaptcha.impl.DefaultBackground";
+  private String backGroundImpl = "com.google.code.kaptcha.impl.DefaultBackground";
 
-    private String backGroundClrFrom = "lightGray";
+  private String backGroundClrFrom = "lightGray";
 
-    private String backGroundClrTo = "white";
+  private String backGroundClrTo = "white";
 
-    private String imageWidth = "200";
+  private String imageWidth = "200";
 
-    private String imageHeight = "50";
+  private String imageHeight = "50";
 
-    public Properties props() {
+  public Properties props() {
 
-        Properties properties = new Properties();
-        properties.put(Constants.KAPTCHA_SESSION_CONFIG_KEY, this.getSessionConfigKey());
-        properties.put(Constants.KAPTCHA_SESSION_CONFIG_DATE, this.getSessionConfigDate());
-        properties.put(Constants.KAPTCHA_BORDER, this.getBorder());
-        properties.put(Constants.KAPTCHA_BORDER_COLOR, this.getBorderColor());
-        properties.put(Constants.KAPTCHA_BORDER_THICKNESS, this.getBorderThickness());
-        properties.put(Constants.KAPTCHA_NOISE_COLOR, this.getNoiseColor());
-        properties.put(Constants.KAPTCHA_NOISE_IMPL, this.getNoiseImpl());
-        properties.put(Constants.KAPTCHA_OBSCURIFICATOR_IMPL, this.getObscurificatorImpl());
-        properties.put(Constants.KAPTCHA_PRODUCER_IMPL, this.getProducerImpl());
-        properties.put(Constants.KAPTCHA_TEXTPRODUCER_IMPL, this.getTextProducerImpl());
-        properties.put(Constants.KAPTCHA_TEXTPRODUCER_CHAR_STRING, this.getTextProducerCharString());
-        properties.put(Constants.KAPTCHA_TEXTPRODUCER_CHAR_LENGTH, this.getTextProducerCharLength());
-        properties.put(Constants.KAPTCHA_TEXTPRODUCER_FONT_NAMES, this.getTextProducerFontNames());
-        properties.put(Constants.KAPTCHA_TEXTPRODUCER_FONT_COLOR, this.getTextProducerFontColor());
-        properties.put(Constants.KAPTCHA_TEXTPRODUCER_FONT_SIZE, this.getTextProducerFontSize());
-        properties.put(Constants.KAPTCHA_TEXTPRODUCER_CHAR_SPACE, this.getTextProducerCharSpace());
-        properties.put(Constants.KAPTCHA_WORDRENDERER_IMPL, this.getWordRenderImpl());
-        properties.put(Constants.KAPTCHA_BACKGROUND_IMPL, this.getBackGroundImpl());
-        properties.put(Constants.KAPTCHA_BACKGROUND_CLR_FROM, this.getBackGroundClrFrom());
-        properties.put(Constants.KAPTCHA_BACKGROUND_CLR_TO, this.getBackGroundClrTo());
-        properties.put(Constants.KAPTCHA_IMAGE_WIDTH, this.getImageWidth());
-        properties.put(Constants.KAPTCHA_IMAGE_HEIGHT, this.getImageHeight());
+    Properties properties = new Properties();
+    properties.put(Constants.KAPTCHA_SESSION_CONFIG_KEY, this.getSessionConfigKey());
+    properties.put(Constants.KAPTCHA_SESSION_CONFIG_DATE, this.getSessionConfigDate());
+    properties.put(Constants.KAPTCHA_BORDER, this.getBorder());
+    properties.put(Constants.KAPTCHA_BORDER_COLOR, this.getBorderColor());
+    properties.put(Constants.KAPTCHA_BORDER_THICKNESS, this.getBorderThickness());
+    properties.put(Constants.KAPTCHA_NOISE_COLOR, this.getNoiseColor());
+    properties.put(Constants.KAPTCHA_NOISE_IMPL, this.getNoiseImpl());
+    properties.put(Constants.KAPTCHA_OBSCURIFICATOR_IMPL, this.getObscurificatorImpl());
+    properties.put(Constants.KAPTCHA_PRODUCER_IMPL, this.getProducerImpl());
+    properties.put(Constants.KAPTCHA_TEXTPRODUCER_IMPL, this.getTextProducerImpl());
+    properties.put(Constants.KAPTCHA_TEXTPRODUCER_CHAR_STRING, this.getTextProducerCharString());
+    properties.put(Constants.KAPTCHA_TEXTPRODUCER_CHAR_LENGTH, this.getTextProducerCharLength());
+    properties.put(Constants.KAPTCHA_TEXTPRODUCER_FONT_NAMES, this.getTextProducerFontNames());
+    properties.put(Constants.KAPTCHA_TEXTPRODUCER_FONT_COLOR, this.getTextProducerFontColor());
+    properties.put(Constants.KAPTCHA_TEXTPRODUCER_FONT_SIZE, this.getTextProducerFontSize());
+    properties.put(Constants.KAPTCHA_TEXTPRODUCER_CHAR_SPACE, this.getTextProducerCharSpace());
+    properties.put(Constants.KAPTCHA_WORDRENDERER_IMPL, this.getWordRenderImpl());
+    properties.put(Constants.KAPTCHA_BACKGROUND_IMPL, this.getBackGroundImpl());
+    properties.put(Constants.KAPTCHA_BACKGROUND_CLR_FROM, this.getBackGroundClrFrom());
+    properties.put(Constants.KAPTCHA_BACKGROUND_CLR_TO, this.getBackGroundClrTo());
+    properties.put(Constants.KAPTCHA_IMAGE_WIDTH, this.getImageWidth());
+    properties.put(Constants.KAPTCHA_IMAGE_HEIGHT, this.getImageHeight());
 
-        return properties;
+    return properties;
+  }
+
+  public Integer getExpireTime() {
+
+    return expireTime;
+  }
+
+  public void setExpireTime(Integer expireTime) {
+
+    if (expireTime < 0) {
+      expireTime = DEFAULT_EXPIRE_TIME;
     }
+    this.expireTime = expireTime;
+  }
 
-    public Integer getExpireTime() {
+  public String getSessionConfigKey() {
 
-        return expireTime;
-    }
+    return sessionConfigKey;
+  }
 
-    public void setExpireTime(Integer expireTime) {
+  public void setSessionConfigKey(String sessionConfigKey) {
 
-        if (expireTime < 0) {
-            expireTime = DEFAULT_EXPIRE_TIME;
-        }
-        this.expireTime = expireTime;
-    }
+    this.sessionConfigKey = sessionConfigKey;
+  }
 
-    public String getSessionConfigKey() {
+  public String getSessionConfigDate() {
 
-        return sessionConfigKey;
-    }
+    return sessionConfigDate;
+  }
 
-    public void setSessionConfigKey(String sessionConfigKey) {
+  public void setSessionConfigDate(String sessionConfigDate) {
 
-        this.sessionConfigKey = sessionConfigKey;
-    }
+    this.sessionConfigDate = sessionConfigDate;
+  }
 
-    public String getSessionConfigDate() {
+  public Boolean getBorder() {
 
-        return sessionConfigDate;
-    }
+    return border;
+  }
 
-    public void setSessionConfigDate(String sessionConfigDate) {
+  public void setBorder(Boolean border) {
 
-        this.sessionConfigDate = sessionConfigDate;
-    }
+    this.border = border;
+  }
 
-    public Boolean getBorder() {
+  public String getBorderColor() {
 
-        return border;
-    }
+    return borderColor;
+  }
 
-    public void setBorder(Boolean border) {
+  public void setBorderColor(String borderColor) {
 
-        this.border = border;
-    }
+    this.borderColor = borderColor;
+  }
 
-    public String getBorderColor() {
+  public String getBorderThickness() {
 
-        return borderColor;
-    }
+    return borderThickness;
+  }
 
-    public void setBorderColor(String borderColor) {
+  public void setBorderThickness(String borderThickness) {
 
-        this.borderColor = borderColor;
-    }
+    this.borderThickness = borderThickness;
+  }
 
-    public String getBorderThickness() {
+  public String getNoiseColor() {
 
-        return borderThickness;
-    }
+    return noiseColor;
+  }
 
-    public void setBorderThickness(String borderThickness) {
+  public void setNoiseColor(String noiseColor) {
 
-        this.borderThickness = borderThickness;
-    }
+    this.noiseColor = noiseColor;
+  }
 
-    public String getNoiseColor() {
+  public String getNoiseImpl() {
 
-        return noiseColor;
-    }
+    return noiseImpl;
+  }
 
-    public void setNoiseColor(String noiseColor) {
+  public void setNoiseImpl(String noiseImpl) {
 
-        this.noiseColor = noiseColor;
-    }
+    this.noiseImpl = noiseImpl;
+  }
 
-    public String getNoiseImpl() {
+  public String getObscurificatorImpl() {
 
-        return noiseImpl;
-    }
+    return obscurificatorImpl;
+  }
 
-    public void setNoiseImpl(String noiseImpl) {
+  public void setObscurificatorImpl(String obscurificatorImpl) {
 
-        this.noiseImpl = noiseImpl;
-    }
+    this.obscurificatorImpl = obscurificatorImpl;
+  }
 
-    public String getObscurificatorImpl() {
+  public String getProducerImpl() {
 
-        return obscurificatorImpl;
-    }
+    return producerImpl;
+  }
 
-    public void setObscurificatorImpl(String obscurificatorImpl) {
+  public void setProducerImpl(String producerImpl) {
 
-        this.obscurificatorImpl = obscurificatorImpl;
-    }
+    this.producerImpl = producerImpl;
+  }
 
-    public String getProducerImpl() {
+  public String getTextProducerImpl() {
 
-        return producerImpl;
-    }
+    return textProducerImpl;
+  }
 
-    public void setProducerImpl(String producerImpl) {
+  public void setTextProducerImpl(String textProducerImpl) {
 
-        this.producerImpl = producerImpl;
-    }
+    this.textProducerImpl = textProducerImpl;
+  }
 
-    public String getTextProducerImpl() {
+  public String getTextProducerCharString() {
 
-        return textProducerImpl;
-    }
+    return textProducerCharString;
+  }
 
-    public void setTextProducerImpl(String textProducerImpl) {
+  public void setTextProducerCharString(String textProducerCharString) {
 
-        this.textProducerImpl = textProducerImpl;
-    }
+    this.textProducerCharString = textProducerCharString;
+  }
 
-    public String getTextProducerCharString() {
+  public String getTextProducerCharLength() {
 
-        return textProducerCharString;
-    }
+    return textProducerCharLength;
+  }
 
-    public void setTextProducerCharString(String textProducerCharString) {
+  public void setTextProducerCharLength(String textProducerCharLength) {
 
-        this.textProducerCharString = textProducerCharString;
-    }
+    this.textProducerCharLength = textProducerCharLength;
+  }
 
-    public String getTextProducerCharLength() {
+  public String getTextProducerFontNames() {
 
-        return textProducerCharLength;
-    }
+    return textProducerFontNames;
+  }
 
-    public void setTextProducerCharLength(String textProducerCharLength) {
+  public void setTextProducerFontNames(String textProducerFontNames) {
 
-        this.textProducerCharLength = textProducerCharLength;
-    }
+    this.textProducerFontNames = textProducerFontNames;
+  }
 
-    public String getTextProducerFontNames() {
+  public String getTextProducerFontColor() {
 
-        return textProducerFontNames;
-    }
+    return textProducerFontColor;
+  }
 
-    public void setTextProducerFontNames(String textProducerFontNames) {
+  public void setTextProducerFontColor(String textProducerFontColor) {
 
-        this.textProducerFontNames = textProducerFontNames;
-    }
+    this.textProducerFontColor = textProducerFontColor;
+  }
 
-    public String getTextProducerFontColor() {
+  public String getTextProducerFontSize() {
 
-        return textProducerFontColor;
-    }
+    return textProducerFontSize;
+  }
 
-    public void setTextProducerFontColor(String textProducerFontColor) {
+  public void setTextProducerFontSize(String textProducerFontSize) {
 
-        this.textProducerFontColor = textProducerFontColor;
-    }
+    this.textProducerFontSize = textProducerFontSize;
+  }
 
-    public String getTextProducerFontSize() {
+  public String getTextProducerCharSpace() {
 
-        return textProducerFontSize;
-    }
+    return textProducerCharSpace;
+  }
 
-    public void setTextProducerFontSize(String textProducerFontSize) {
+  public void setTextProducerCharSpace(String textProducerCharSpace) {
 
-        this.textProducerFontSize = textProducerFontSize;
-    }
+    this.textProducerCharSpace = textProducerCharSpace;
+  }
 
-    public String getTextProducerCharSpace() {
+  public String getWordRenderImpl() {
 
-        return textProducerCharSpace;
-    }
+    return wordRenderImpl;
+  }
 
-    public void setTextProducerCharSpace(String textProducerCharSpace) {
+  public void setWordRenderImpl(String wordRenderImpl) {
 
-        this.textProducerCharSpace = textProducerCharSpace;
-    }
+    this.wordRenderImpl = wordRenderImpl;
+  }
 
-    public String getWordRenderImpl() {
+  public String getBackGroundImpl() {
 
-        return wordRenderImpl;
-    }
+    return backGroundImpl;
+  }
 
-    public void setWordRenderImpl(String wordRenderImpl) {
+  public void setBackGroundImpl(String backGroundImpl) {
 
-        this.wordRenderImpl = wordRenderImpl;
-    }
+    this.backGroundImpl = backGroundImpl;
+  }
 
-    public String getBackGroundImpl() {
+  public String getBackGroundClrFrom() {
 
-        return backGroundImpl;
-    }
+    return backGroundClrFrom;
+  }
 
-    public void setBackGroundImpl(String backGroundImpl) {
+  public void setBackGroundClrFrom(String backGroundClrFrom) {
 
-        this.backGroundImpl = backGroundImpl;
-    }
+    this.backGroundClrFrom = backGroundClrFrom;
+  }
 
-    public String getBackGroundClrFrom() {
+  public String getBackGroundClrTo() {
 
-        return backGroundClrFrom;
-    }
+    return backGroundClrTo;
+  }
 
-    public void setBackGroundClrFrom(String backGroundClrFrom) {
+  public void setBackGroundClrTo(String backGroundClrTo) {
 
-        this.backGroundClrFrom = backGroundClrFrom;
-    }
+    this.backGroundClrTo = backGroundClrTo;
+  }
 
-    public String getBackGroundClrTo() {
+  public String getImageWidth() {
 
-        return backGroundClrTo;
-    }
+    return imageWidth;
+  }
 
-    public void setBackGroundClrTo(String backGroundClrTo) {
+  public void setImageWidth(String imageWidth) {
 
-        this.backGroundClrTo = backGroundClrTo;
-    }
+    this.imageWidth = imageWidth;
+  }
 
-    public String getImageWidth() {
+  public String getImageHeight() {
 
-        return imageWidth;
-    }
+    return imageHeight;
+  }
 
-    public void setImageWidth(String imageWidth) {
+  public void setImageHeight(String imageHeight) {
 
-        this.imageWidth = imageWidth;
-    }
-
-    public String getImageHeight() {
-
-        return imageHeight;
-    }
-
-    public void setImageHeight(String imageHeight) {
-
-        this.imageHeight = imageHeight;
-    }
+    this.imageHeight = imageHeight;
+  }
 }

@@ -18,22 +18,22 @@ import lombok.EqualsAndHashCode;
 @TableName("gen_update_column_config")
 public class GenUpdateColumnConfig extends BaseEntity {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    /**
-     * ID
-     */
-    private String id;
+  /**
+   * ID
+   */
+  private String id;
 
-    /**
-     * 是否必填
-     */
-    private Boolean required;
+  /**
+   * 是否必填
+   */
+  private Boolean required;
 
-    /**
-     * 排序编号
-     */
-    private Integer orderNo;
+  /**
+   * 排序编号
+   */
+  private Integer orderNo;
 
 
 }

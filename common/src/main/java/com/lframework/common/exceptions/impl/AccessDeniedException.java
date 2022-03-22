@@ -10,14 +10,14 @@ import com.lframework.common.exceptions.ClientException;
  */
 public class AccessDeniedException extends ClientException {
 
-    public AccessDeniedException() {
+  public AccessDeniedException() {
 
-        super(ResponseConstants.INVOKE_RESULT_FAIL_CODE_ACCESS_DENIED,
-                ResponseConstants.INVOKE_RESULT_ERROR_MSG_ACCESS_DENIED);
-    }
+    super(ResponseConstants.INVOKE_RESULT_FAIL_CODE_ACCESS_DENIED,
+        ResponseConstants.INVOKE_RESULT_ERROR_MSG_ACCESS_DENIED);
+  }
 
-    public AccessDeniedException(String msg) {
+  public AccessDeniedException(String msg) {
 
-        super(ResponseConstants.INVOKE_RESULT_FAIL_CODE_ACCESS_DENIED, msg);
-    }
+    super(ResponseConstants.INVOKE_RESULT_FAIL_CODE_ACCESS_DENIED, msg);
+  }
 }

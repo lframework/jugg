@@ -10,14 +10,14 @@ import com.lframework.common.exceptions.ClientException;
  */
 public class InputErrorException extends ClientException {
 
-    public InputErrorException() {
+  public InputErrorException() {
 
-        super(ResponseConstants.INVOKE_RESULT_FAIL_CODE_INPUT_ERROR,
-                ResponseConstants.INVOKE_RESULT_ERROR_MSG_INPUT_ERROR);
-    }
+    super(ResponseConstants.INVOKE_RESULT_FAIL_CODE_INPUT_ERROR,
+        ResponseConstants.INVOKE_RESULT_ERROR_MSG_INPUT_ERROR);
+  }
 
-    public InputErrorException(String msg) {
+  public InputErrorException(String msg) {
 
-        super(ResponseConstants.INVOKE_RESULT_FAIL_CODE_INPUT_ERROR, msg);
-    }
+    super(ResponseConstants.INVOKE_RESULT_FAIL_CODE_INPUT_ERROR, msg);
+  }
 }

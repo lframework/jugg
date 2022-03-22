@@ -10,9 +10,9 @@ import com.lframework.common.exceptions.ClientException;
  */
 public class RepeatRequestException extends ClientException {
 
-    public RepeatRequestException() {
+  public RepeatRequestException() {
 
-        super(ResponseConstants.INVOKE_RESULT_FAIL_CODE_REPEAT_REQUEST,
-                ResponseConstants.INVOKE_RESULT_ERROR_MSG_REPEAT_REQUEST);
-    }
+    super(ResponseConstants.INVOKE_RESULT_FAIL_CODE_REPEAT_REQUEST,
+        ResponseConstants.INVOKE_RESULT_ERROR_MSG_REPEAT_REQUEST);
+  }
 }

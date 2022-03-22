@@ -9,13 +9,13 @@ import org.springframework.security.authentication.AccountStatusException;
  */
 public class NoPermissionException extends AccountStatusException {
 
-    public NoPermissionException(String msg) {
+  public NoPermissionException(String msg) {
 
-        super(msg);
-    }
+    super(msg);
+  }
 
-    public NoPermissionException(String msg, Throwable t) {
+  public NoPermissionException(String msg, Throwable t) {
 
-        super(msg, t);
-    }
+    super(msg, t);
+  }
 }

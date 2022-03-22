@@ -10,12 +10,15 @@ import com.lframework.starter.web.dto.MenuDto;
 import com.lframework.starter.web.service.IMenuService;
 import com.lframework.starter.web.utils.ApplicationUtil;
 import com.lframework.starter.web.utils.SpelUtil;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
+import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.servlet.http.HttpSession;
-import java.util.*;
-import java.util.regex.Pattern;
 
 /**
  * 默认MenuService实现
@@ -24,116 +27,117 @@ import java.util.regex.Pattern;
  */
 public class DefaultMenuServiceImpl implements IMenuService {
 
-    @Autowired
-    private DefaultMenuMapper defaultMenuMapper;
+  @Autowired
+  private DefaultMenuMapper defaultMenuMapper;
 
-    @Override
-    public List<MenuDto> getMenuByUserId(String userId, boolean isAdmin) {
+  @Override
+  public List<MenuDto> getMenuByUserId(String userId, boolean isAdmin) {
 
-        List<MenuDto> menus = this.doGetMenus(userId, isAdmin);
+    List<MenuDto> menus = this.doGetMenus(userId, isAdmin);
 
-        List<String> collectionMenuIds = this.doGetCollectMenuIds(userId);
+    List<String> collectionMenuIds = this.doGetCollectMenuIds(userId);
 
-        if (!CollectionUtil.isEmpty(menus)) {
-            menus.stream().forEach(menu -> {
-                menu.setPath(ApplicationUtil.resolvePlaceholders(menu.getPath()));
-            });
+    if (!CollectionUtil.isEmpty(menus)) {
+      menus.stream().forEach(menu -> {
+        menu.setPath(ApplicationUtil.resolvePlaceholders(menu.getPath()));
+      });
 
-            Map<String, Object> vars = getDefaultVars();
-            menus.stream().filter(menu -> this.hasSpecExpression(menu.getPath())).forEach(menu -> {
-                List<String> expressions = this.getAllExpressions(menu.getPath());
-                if (!CollectionUtil.isEmpty(expressions)) {
-                    String oriPath = menu.getPath();
-                    for (String expression : expressions) {
-                        Object parsed = SpelUtil.parse(expression.replaceAll("\\{", "").replaceAll("}", ""), vars);
-                        oriPath = oriPath.replace(expression, parsed == null ? "" : String.valueOf(parsed));
-                    }
+      Map<String, Object> vars = getDefaultVars();
+      menus.stream().filter(menu -> this.hasSpecExpression(menu.getPath())).forEach(menu -> {
+        List<String> expressions = this.getAllExpressions(menu.getPath());
+        if (!CollectionUtil.isEmpty(expressions)) {
+          String oriPath = menu.getPath();
+          for (String expression : expressions) {
+            Object parsed = SpelUtil
+                .parse(expression.replaceAll("\\{", "").replaceAll("}", ""), vars);
+            oriPath = oriPath.replace(expression, parsed == null ? "" : String.valueOf(parsed));
+          }
 
-                    menu.setPath(oriPath);
-                }
-            });
-
-            if (!CollectionUtil.isEmpty(collectionMenuIds)) {
-                menus.stream().forEach(menu -> {
-                    menu.setIsCollect(collectionMenuIds.contains(menu.getId()));
-                });
-            }
+          menu.setPath(oriPath);
         }
+      });
 
-        return menus;
+      if (!CollectionUtil.isEmpty(collectionMenuIds)) {
+        menus.stream().forEach(menu -> {
+          menu.setIsCollect(collectionMenuIds.contains(menu.getId()));
+        });
+      }
     }
 
-    @Override
-    public Set<String> getPermissionsByUserId(String userId) {
+    return menus;
+  }
 
-        return defaultMenuMapper.getPermissionsByUserId(userId);
+  @Override
+  public Set<String> getPermissionsByUserId(String userId) {
+
+    return defaultMenuMapper.getPermissionsByUserId(userId);
+  }
+
+  @Transactional
+  @Override
+  public void collect(String userId, String menuId) {
+
+    if (StringUtil.isBlank(userId) || StringUtil.isBlank(menuId)) {
+      return;
     }
 
-    @Transactional
-    @Override
-    public void collect(String userId, String menuId) {
+    this.cancelCollect(userId, menuId);
 
-        if (StringUtil.isBlank(userId) || StringUtil.isBlank(menuId)) {
-            return;
-        }
+    defaultMenuMapper.collectMenu(IdUtil.getId(), userId, menuId);
+  }
 
-        this.cancelCollect(userId, menuId);
+  @Transactional
+  @Override
+  public void cancelCollect(String userId, String menuId) {
 
-        defaultMenuMapper.collectMenu(IdUtil.getId(), userId, menuId);
+    if (StringUtil.isBlank(userId) || StringUtil.isBlank(menuId)) {
+      return;
     }
 
-    @Transactional
-    @Override
-    public void cancelCollect(String userId, String menuId) {
+    defaultMenuMapper.cancelCollectMenu(userId, menuId);
+  }
 
-        if (StringUtil.isBlank(userId) || StringUtil.isBlank(menuId)) {
-            return;
-        }
+  private List<String> getAllExpressions(String s) {
 
-        defaultMenuMapper.cancelCollectMenu(userId, menuId);
+    if (!this.hasSpecExpression(s)) {
+      return null;
     }
 
-    private List<String> getAllExpressions(String s) {
-
-        if (!this.hasSpecExpression(s)) {
-            return null;
-        }
-
-        List<String> results = new ArrayList<>();
-        String[] arr = s.split("#\\{");
-        for (int i = 1; i < arr.length; i++) {
-            if (arr[i].indexOf("}") < 0) {
-                continue;
-            }
-            results.add("#{" + arr[i].substring(0, arr[i].indexOf("}")) + "}");
-        }
-
-        return results;
+    List<String> results = new ArrayList<>();
+    String[] arr = s.split("#\\{");
+    for (int i = 1; i < arr.length; i++) {
+      if (arr[i].indexOf("}") < 0) {
+        continue;
+      }
+      results.add("#{" + arr[i].substring(0, arr[i].indexOf("}")) + "}");
     }
 
-    private boolean hasSpecExpression(String s) {
+    return results;
+  }
 
-        return RegUtil.isMatch(Pattern.compile("^.*#\\{.*}.*$"), s);
+  private boolean hasSpecExpression(String s) {
+
+    return RegUtil.isMatch(Pattern.compile("^.*#\\{.*}.*$"), s);
+  }
+
+  private Map<String, Object> getDefaultVars() {
+
+    Map<String, Object> vars = new HashMap<>();
+    HttpSession session = SessionUtil.getSession();
+    if (session != null) {
+      vars.put("_sessionId", session.getId());
     }
 
-    private Map<String, Object> getDefaultVars() {
+    return vars;
+  }
 
-        Map<String, Object> vars = new HashMap<>();
-        HttpSession session = SessionUtil.getSession();
-        if (session != null) {
-            vars.put("_sessionId", session.getId());
-        }
+  protected List<MenuDto> doGetMenus(String userId, boolean isAdmin) {
 
-        return vars;
-    }
+    return defaultMenuMapper.getMenuByUserId(userId, isAdmin);
+  }
 
-    protected List<MenuDto> doGetMenus(String userId, boolean isAdmin) {
+  protected List<String> doGetCollectMenuIds(String userId) {
 
-        return defaultMenuMapper.getMenuByUserId(userId, isAdmin);
-    }
-
-    protected List<String> doGetCollectMenuIds(String userId) {
-
-        return defaultMenuMapper.getCollectMenuIds(userId);
-    }
+    return defaultMenuMapper.getCollectMenuIds(userId);
+  }
 }

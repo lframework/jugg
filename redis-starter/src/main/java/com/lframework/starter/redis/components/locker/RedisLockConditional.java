@@ -6,10 +6,10 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 
 public class RedisLockConditional implements Condition {
 
-    @Override
-    public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+  @Override
+  public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
 
-        String lockerType = context.getEnvironment().getProperty("locker-type");
-        return "redis".equalsIgnoreCase(lockerType);
-    }
+    String lockerType = context.getEnvironment().getProperty("locker-type");
+    return "redis".equalsIgnoreCase(lockerType);
+  }
 }

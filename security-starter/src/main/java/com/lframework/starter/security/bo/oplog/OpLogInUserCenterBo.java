@@ -4,59 +4,58 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lframework.common.constants.StringPool;
 import com.lframework.starter.mybatis.dto.DefaultOpLogsDto;
 import com.lframework.starter.web.bo.BaseBo;
+import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.time.LocalDateTime;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class OpLogInUserCenterBo extends BaseBo<DefaultOpLogsDto> {
 
-    /**
-     * ID
-     */
-    private String id;
+  /**
+   * ID
+   */
+  private String id;
 
-    /**
-     * 日志名称
-     */
-    private String name;
+  /**
+   * 日志名称
+   */
+  private String name;
 
-    /**
-     * 类别
-     */
-    private Integer logType;
+  /**
+   * 类别
+   */
+  private Integer logType;
 
-    /**
-     * IP地址
-     */
-    private String ip;
+  /**
+   * IP地址
+   */
+  private String ip;
 
-    /**
-     * 创建时间
-     */
-    @JsonFormat(pattern = StringPool.DATE_TIME_PATTERN)
-    private LocalDateTime createTime;
+  /**
+   * 创建时间
+   */
+  @JsonFormat(pattern = StringPool.DATE_TIME_PATTERN)
+  private LocalDateTime createTime;
 
-    public OpLogInUserCenterBo() {
+  public OpLogInUserCenterBo() {
 
-    }
+  }
 
-    public OpLogInUserCenterBo(DefaultOpLogsDto dto) {
+  public OpLogInUserCenterBo(DefaultOpLogsDto dto) {
 
-        super(dto);
-    }
+    super(dto);
+  }
 
-    @Override
-    public BaseBo<DefaultOpLogsDto> convert(DefaultOpLogsDto dto) {
+  @Override
+  public BaseBo<DefaultOpLogsDto> convert(DefaultOpLogsDto dto) {
 
-        return super.convert(dto, OpLogInUserCenterBo::getLogType);
-    }
+    return super.convert(dto, OpLogInUserCenterBo::getLogType);
+  }
 
-    @Override
-    protected void afterInit(DefaultOpLogsDto dto) {
+  @Override
+  protected void afterInit(DefaultOpLogsDto dto) {
 
-        this.logType = dto.getLogType().getCode();
-    }
+    this.logType = dto.getLogType().getCode();
+  }
 }

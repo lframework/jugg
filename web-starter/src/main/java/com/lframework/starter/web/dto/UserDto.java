@@ -1,8 +1,7 @@
 package com.lframework.starter.web.dto;
 
-import lombok.Data;
-
 import java.io.Serializable;
+import lombok.Data;
 
 /**
  * 用户Dto
@@ -12,17 +11,17 @@ import java.io.Serializable;
 @Data
 public class UserDto implements Serializable {
 
-    public static final String CACHE_NAME = "UserDto";
+  public static final String CACHE_NAME = "UserDto";
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    /**
-     * ID
-     */
-    private String id;
+  /**
+   * ID
+   */
+  private String id;
 
-    /**
-     * 姓名
-     */
-    private String name;
+  /**
+   * 姓名
+   */
+  private String name;
 }

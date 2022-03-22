@@ -11,12 +11,13 @@ import com.lframework.starter.web.utils.SecurityUtil;
  */
 public abstract class SecurityController extends BaseController {
 
-    /**
-     * 获取当前登录用户信息
-     * @return
-     */
-    public AbstractUserDetails getCurrentUser() {
+  /**
+   * 获取当前登录用户信息
+   *
+   * @return
+   */
+  public AbstractUserDetails getCurrentUser() {
 
-        return SecurityUtil.getCurrentUser();
-    }
+    return SecurityUtil.getCurrentUser();
+  }
 }

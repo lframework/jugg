@@ -9,31 +9,31 @@ import org.springframework.stereotype.Component;
 @Component
 public class LockFactory {
 
-    /**
-     * 默认获取锁等待时间 毫秒
-     */
-    public static final long DEFAULT_WAIT_TIME = 5000L;
+  /**
+   * 默认获取锁等待时间 毫秒
+   */
+  public static final long DEFAULT_WAIT_TIME = 5000L;
 
-    /**
-     * 默认锁过期时间 毫秒
-     */
-    public static final long DEFAULT_EXPIRE_TIME = 30000L;
+  /**
+   * 默认锁过期时间 毫秒
+   */
+  public static final long DEFAULT_EXPIRE_TIME = 30000L;
 
-    public static Locker getLocker(String lockName) {
+  public static Locker getLocker(String lockName) {
 
-        return getLocker(lockName, DEFAULT_EXPIRE_TIME, DEFAULT_WAIT_TIME);
-    }
+    return getLocker(lockName, DEFAULT_EXPIRE_TIME, DEFAULT_WAIT_TIME);
+  }
 
-    public static Locker getLocker(String lockName, long expireTime) {
+  public static Locker getLocker(String lockName, long expireTime) {
 
-        return getLocker(lockName, expireTime, DEFAULT_WAIT_TIME);
-    }
+    return getLocker(lockName, expireTime, DEFAULT_WAIT_TIME);
+  }
 
-    public static Locker getLocker(String lockName, long expireTime, long waitTime) {
+  public static Locker getLocker(String lockName, long expireTime, long waitTime) {
 
-        Assert.greaterThanZero(expireTime);
-        Assert.greaterThanZero(waitTime);
+    Assert.greaterThanZero(expireTime);
+    Assert.greaterThanZero(waitTime);
 
-        return ApplicationUtil.getBean(LockBuilder.class).buildLocker(lockName, expireTime, waitTime);
-    }
+    return ApplicationUtil.getBean(LockBuilder.class).buildLocker(lockName, expireTime, waitTime);
+  }
 }

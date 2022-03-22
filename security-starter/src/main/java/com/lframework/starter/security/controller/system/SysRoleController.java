@@ -14,17 +14,22 @@ import com.lframework.starter.security.vo.system.role.QuerySysRoleVo;
 import com.lframework.starter.security.vo.system.role.UpdateSysRoleVo;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 角色管理
@@ -37,89 +42,93 @@ import java.util.stream.Collectors;
 @ConditionalOnProperty(value = "default-setting.sys-function.enabled", matchIfMissing = true)
 public class SysRoleController extends DefaultBaseController {
 
-    @Autowired
-    private ISysRoleService sysRoleService;
+  @Autowired
+  private ISysRoleService sysRoleService;
 
-    /**
-     * 角色列表
-     */
-    @PreAuthorize("@permission.valid('system:role:query','system:role:add','system:role:modify')")
-    @GetMapping("/query")
-    public InvokeResult query(@Valid QuerySysRoleVo vo) {
+  /**
+   * 角色列表
+   */
+  @PreAuthorize("@permission.valid('system:role:query','system:role:add','system:role:modify')")
+  @GetMapping("/query")
+  public InvokeResult query(@Valid QuerySysRoleVo vo) {
 
-        PageResult<DefaultSysRoleDto> pageResult = sysRoleService.query(getPageIndex(vo), getPageSize(vo), vo);
+    PageResult<DefaultSysRoleDto> pageResult = sysRoleService
+        .query(getPageIndex(vo), getPageSize(vo), vo);
 
-        List<DefaultSysRoleDto> datas = pageResult.getDatas();
+    List<DefaultSysRoleDto> datas = pageResult.getDatas();
 
-        if (!CollectionUtil.isEmpty(datas)) {
-            List<QuerySysRoleBo> results = datas.stream().map(QuerySysRoleBo::new).collect(Collectors.toList());
+    if (!CollectionUtil.isEmpty(datas)) {
+      List<QuerySysRoleBo> results = datas.stream().map(QuerySysRoleBo::new)
+          .collect(Collectors.toList());
 
-            PageResultUtil.rebuild(pageResult, results);
-        }
-
-        return InvokeResultBuilder.success(pageResult);
+      PageResultUtil.rebuild(pageResult, results);
     }
 
-    /**
-     * 查询角色
-     */
-    @PreAuthorize("@permission.valid('system:role:query','system:role:add','system:role:modify')")
-    @GetMapping
-    public InvokeResult get(@NotBlank(message = "ID不能为空！") String id) {
+    return InvokeResultBuilder.success(pageResult);
+  }
 
-        DefaultSysRoleDto data = sysRoleService.getById(id);
-        if (data == null) {
-            throw new DefaultClientException("角色不存在！");
-        }
+  /**
+   * 查询角色
+   */
+  @PreAuthorize("@permission.valid('system:role:query','system:role:add','system:role:modify')")
+  @GetMapping
+  public InvokeResult get(@NotBlank(message = "ID不能为空！") String id) {
 
-        GetSysRoleBo result = new GetSysRoleBo(data);
-
-        return InvokeResultBuilder.success(result);
+    DefaultSysRoleDto data = sysRoleService.getById(id);
+    if (data == null) {
+      throw new DefaultClientException("角色不存在！");
     }
 
-    /**
-     * 批量停用角色
-     */
-    @PreAuthorize("@permission.valid('system:role:modify')")
-    @PatchMapping("/unable/batch")
-    public InvokeResult batchUnable(@NotEmpty(message = "请选择需要停用的角色！") @RequestBody List<String> ids) {
+    GetSysRoleBo result = new GetSysRoleBo(data);
 
-        sysRoleService.batchUnable(ids);
-        return InvokeResultBuilder.success();
-    }
+    return InvokeResultBuilder.success(result);
+  }
 
-    /**
-     * 批量启用角色
-     */
-    @PreAuthorize("@permission.valid('system:role:modify')")
-    @PatchMapping("/enable/batch")
-    public InvokeResult batchEnable(@NotEmpty(message = "请选择需要启用的角色！") @RequestBody List<String> ids) {
+  /**
+   * 批量停用角色
+   */
+  @PreAuthorize("@permission.valid('system:role:modify')")
+  @PatchMapping("/unable/batch")
+  public InvokeResult batchUnable(
+      @NotEmpty(message = "请选择需要停用的角色！") @RequestBody List<String> ids) {
 
-        sysRoleService.batchEnable(ids);
-        return InvokeResultBuilder.success();
-    }
+    sysRoleService.batchUnable(ids);
+    return InvokeResultBuilder.success();
+  }
 
-    /**
-     * 新增角色
-     */
-    @PreAuthorize("@permission.valid('system:role:add')")
-    @PostMapping
-    public InvokeResult create(@Valid CreateSysRoleVo vo) {
+  /**
+   * 批量启用角色
+   */
+  @PreAuthorize("@permission.valid('system:role:modify')")
+  @PatchMapping("/enable/batch")
+  public InvokeResult batchEnable(
+      @NotEmpty(message = "请选择需要启用的角色！") @RequestBody List<String> ids) {
 
-        sysRoleService.create(vo);
+    sysRoleService.batchEnable(ids);
+    return InvokeResultBuilder.success();
+  }
 
-        return InvokeResultBuilder.success();
-    }
+  /**
+   * 新增角色
+   */
+  @PreAuthorize("@permission.valid('system:role:add')")
+  @PostMapping
+  public InvokeResult create(@Valid CreateSysRoleVo vo) {
 
-    /**
-     * 修改角色
-     */
-    @PreAuthorize("@permission.valid('system:role:modify')")
-    @PutMapping
-    public InvokeResult update(@Valid UpdateSysRoleVo vo) {
+    sysRoleService.create(vo);
 
-        sysRoleService.update(vo);
+    return InvokeResultBuilder.success();
+  }
 
-        return InvokeResultBuilder.success();
-    }
+  /**
+   * 修改角色
+   */
+  @PreAuthorize("@permission.valid('system:role:modify')")
+  @PutMapping
+  public InvokeResult update(@Valid UpdateSysRoleVo vo) {
+
+    sysRoleService.update(vo);
+
+    return InvokeResultBuilder.success();
+  }
 }

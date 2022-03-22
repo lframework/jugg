@@ -18,20 +18,20 @@ import lombok.EqualsAndHashCode;
 @TableName("sys_user_role")
 public class DefaultSysUserRole extends BaseEntity {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    /**
-     * ID
-     */
-    private String id;
+  /**
+   * ID
+   */
+  private String id;
 
-    /**
-     * 用户ID
-     */
-    private String userId;
+  /**
+   * 用户ID
+   */
+  private String userId;
 
-    /**
-     * 角色ID
-     */
-    private String roleId;
+  /**
+   * 角色ID
+   */
+  private String roleId;
 }

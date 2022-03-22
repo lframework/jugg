@@ -9,24 +9,24 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class SimpleDBSelectorBo extends BaseBo<SimpleDBDto> {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    /**
-     * 库名
-     */
-    private String tableSchema;
+  /**
+   * 库名
+   */
+  private String tableSchema;
 
-    /**
-     * 表名
-     */
-    private String tableName;
+  /**
+   * 表名
+   */
+  private String tableName;
 
-    public SimpleDBSelectorBo() {
+  public SimpleDBSelectorBo() {
 
-    }
+  }
 
-    public SimpleDBSelectorBo(SimpleDBDto dto) {
+  public SimpleDBSelectorBo(SimpleDBDto dto) {
 
-        super(dto);
-    }
+    super(dto);
+  }
 }

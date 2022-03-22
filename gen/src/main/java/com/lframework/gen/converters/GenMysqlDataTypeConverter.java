@@ -7,15 +7,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class GenMysqlDataTypeConverter {
 
-    public GenMySqlDataType convert(GenDataType dataType) {
+  public GenMySqlDataType convert(GenDataType dataType) {
 
-        GenMySqlDataType[] mySqlDataTypes = GenMySqlDataType.values();
-        for (GenMySqlDataType mySqlDataType : mySqlDataTypes) {
-            if (mySqlDataType.getDataType() == dataType) {
-                return mySqlDataType;
-            }
-        }
-
-        return null;
+    GenMySqlDataType[] mySqlDataTypes = GenMySqlDataType.values();
+    for (GenMySqlDataType mySqlDataType : mySqlDataTypes) {
+      if (mySqlDataType.getDataType() == dataType) {
+        return mySqlDataType;
+      }
     }
+
+    return null;
+  }
 }

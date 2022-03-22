@@ -4,8 +4,8 @@ import com.lframework.starter.web.components.generator.Generator;
 
 public abstract class AbstractGenerator implements Generator {
 
-    @Override
-    public boolean isSpecial() {
-        return false;
-    }
+  @Override
+  public boolean isSpecial() {
+    return false;
+  }
 }

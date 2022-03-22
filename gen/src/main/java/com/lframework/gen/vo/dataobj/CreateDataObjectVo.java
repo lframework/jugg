@@ -3,11 +3,10 @@ package com.lframework.gen.vo.dataobj;
 import com.lframework.gen.enums.DataObjectType;
 import com.lframework.starter.web.components.validation.IsEnum;
 import com.lframework.starter.web.vo.BaseVo;
-import lombok.Data;
-
+import java.io.Serializable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
+import lombok.Data;
 
 /**
  * 创建数据对象Vo
@@ -15,29 +14,29 @@ import java.io.Serializable;
 @Data
 public class CreateDataObjectVo implements BaseVo, Serializable {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    /**
-     * 编号
-     */
-    @NotBlank(message = "请输入编号！")
-    private String code;
+  /**
+   * 编号
+   */
+  @NotBlank(message = "请输入编号！")
+  private String code;
 
-    /**
-     * 名称
-     */
-    @NotBlank(message = "请输入名称！")
-    private String name;
+  /**
+   * 名称
+   */
+  @NotBlank(message = "请输入名称！")
+  private String name;
 
-    /**
-     * 类型
-     */
-    @NotNull(message = "请选择类型！")
-    @IsEnum(message = "请选择类型！", enumClass = DataObjectType.class)
-    private Integer type;
+  /**
+   * 类型
+   */
+  @NotNull(message = "请选择类型！")
+  @IsEnum(message = "请选择类型！", enumClass = DataObjectType.class)
+  private Integer type;
 
-    /**
-     * 备注
-     */
-    private String description;
+  /**
+   * 备注
+   */
+  private String description;
 }

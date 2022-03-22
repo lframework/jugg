@@ -7,68 +7,67 @@ import com.lframework.starter.web.bo.BaseBo;
 import com.lframework.starter.web.dto.UserDto;
 import com.lframework.starter.web.service.IUserService;
 import com.lframework.starter.web.utils.ApplicationUtil;
+import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.time.LocalDateTime;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class QueryOpLogBo extends BaseBo<DefaultOpLogsDto> {
 
-    /**
-     * ID
-     */
-    private String id;
+  /**
+   * ID
+   */
+  private String id;
 
-    /**
-     * 日志名称
-     */
-    private String name;
+  /**
+   * 日志名称
+   */
+  private String name;
 
-    /**
-     * 类别
-     */
-    private Integer logType;
+  /**
+   * 类别
+   */
+  private Integer logType;
 
-    /**
-     * IP地址
-     */
-    private String ip;
+  /**
+   * IP地址
+   */
+  private String ip;
 
-    /**
-     * 创建人
-     */
-    private String createBy;
+  /**
+   * 创建人
+   */
+  private String createBy;
 
-    /**
-     * 创建时间
-     */
-    @JsonFormat(pattern = StringPool.DATE_TIME_PATTERN)
-    private LocalDateTime createTime;
+  /**
+   * 创建时间
+   */
+  @JsonFormat(pattern = StringPool.DATE_TIME_PATTERN)
+  private LocalDateTime createTime;
 
-    public QueryOpLogBo() {
+  public QueryOpLogBo() {
 
-    }
+  }
 
-    public QueryOpLogBo(DefaultOpLogsDto dto) {
+  public QueryOpLogBo(DefaultOpLogsDto dto) {
 
-        super(dto);
-    }
+    super(dto);
+  }
 
-    @Override
-    public BaseBo<DefaultOpLogsDto> convert(DefaultOpLogsDto dto) {
+  @Override
+  public BaseBo<DefaultOpLogsDto> convert(DefaultOpLogsDto dto) {
 
-        return super.convert(dto, QueryOpLogBo::getLogType);
-    }
+    return super.convert(dto, QueryOpLogBo::getLogType);
+  }
 
-    @Override
-    protected void afterInit(DefaultOpLogsDto dto) {
+  @Override
+  protected void afterInit(DefaultOpLogsDto dto) {
 
-        this.logType = dto.getLogType().getCode();
+    this.logType = dto.getLogType().getCode();
 
-        IUserService userService = ApplicationUtil.getBean(IUserService.class);
-        UserDto createBy = userService.getById(dto.getCreateBy());
-        this.createBy = createBy.getName();
-    }
+    IUserService userService = ApplicationUtil.getBean(IUserService.class);
+    UserDto createBy = userService.getById(dto.getCreateBy());
+    this.createBy = createBy.getName();
+  }
 }

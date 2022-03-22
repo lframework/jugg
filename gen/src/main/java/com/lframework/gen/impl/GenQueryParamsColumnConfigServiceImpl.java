@@ -10,68 +10,69 @@ import com.lframework.gen.service.IDataObjectColumnService;
 import com.lframework.gen.service.IGenQueryParamsColumnConfigService;
 import com.lframework.gen.vo.dataobj.UpdateQueryParamsColumnConfigVo;
 import com.lframework.starter.web.utils.EnumUtil;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 public class GenQueryParamsColumnConfigServiceImpl implements IGenQueryParamsColumnConfigService {
 
-    @Autowired
-    private IDataObjectColumnService dataObjectColumnService;
+  @Autowired
+  private IDataObjectColumnService dataObjectColumnService;
 
-    @Autowired
-    private GenQueryParamsColumnConfigMapper genQueryParamsColumnConfigMapper;
+  @Autowired
+  private GenQueryParamsColumnConfigMapper genQueryParamsColumnConfigMapper;
 
-    @Override
-    public List<GenQueryParamsColumnConfigDto> getByDataObjId(String dataObjId) {
+  @Override
+  public List<GenQueryParamsColumnConfigDto> getByDataObjId(String dataObjId) {
 
-        List<GenDataObjectColumnDto> columns = dataObjectColumnService.getByDataObjId(dataObjId);
-        if (CollectionUtil.isEmpty(columns)) {
-            return Collections.EMPTY_LIST;
-        }
-
-        return genQueryParamsColumnConfigMapper
-                .getByIds(columns.stream().map(GenDataObjectColumnDto::getId).collect(Collectors.toList()));
+    List<GenDataObjectColumnDto> columns = dataObjectColumnService.getByDataObjId(dataObjId);
+    if (CollectionUtil.isEmpty(columns)) {
+      return Collections.EMPTY_LIST;
     }
 
-    @Transactional
-    @Override
-    public void updateGenerate(String dataObjId, List<UpdateQueryParamsColumnConfigVo> vo) {
+    return genQueryParamsColumnConfigMapper
+        .getByIds(columns.stream().map(GenDataObjectColumnDto::getId).collect(Collectors.toList()));
+  }
 
-        List<GenDataObjectColumnDto> columns = dataObjectColumnService.getByDataObjId(dataObjId);
-        if (!CollectionUtil.isEmpty(columns)) {
-            genQueryParamsColumnConfigMapper
-                    .deleteBatchIds(columns.stream().map(GenDataObjectColumnDto::getId).collect(Collectors.toList()));
-        }
+  @Transactional
+  @Override
+  public void updateGenerate(String dataObjId, List<UpdateQueryParamsColumnConfigVo> vo) {
 
-        if (!CollectionUtil.isEmpty(vo)) {
-            int orderNo = 1;
-            for (UpdateQueryParamsColumnConfigVo updateQueryParamsColumnConfigVo : vo) {
-                GenQueryParamsColumnConfig record = new GenQueryParamsColumnConfig();
-                record.setId(updateQueryParamsColumnConfigVo.getId());
-                record.setQueryType(EnumUtil.getByCode(GenQueryType.class, updateQueryParamsColumnConfigVo.getQueryType()));
-                record.setOrderNo(orderNo++);
-
-                genQueryParamsColumnConfigMapper.insert(record);
-            }
-        }
+    List<GenDataObjectColumnDto> columns = dataObjectColumnService.getByDataObjId(dataObjId);
+    if (!CollectionUtil.isEmpty(columns)) {
+      genQueryParamsColumnConfigMapper
+          .deleteBatchIds(
+              columns.stream().map(GenDataObjectColumnDto::getId).collect(Collectors.toList()));
     }
 
-    @Override
-    public GenQueryParamsColumnConfigDto getById(String id) {
+    if (!CollectionUtil.isEmpty(vo)) {
+      int orderNo = 1;
+      for (UpdateQueryParamsColumnConfigVo updateQueryParamsColumnConfigVo : vo) {
+        GenQueryParamsColumnConfig record = new GenQueryParamsColumnConfig();
+        record.setId(updateQueryParamsColumnConfigVo.getId());
+        record.setQueryType(
+            EnumUtil.getByCode(GenQueryType.class, updateQueryParamsColumnConfigVo.getQueryType()));
+        record.setOrderNo(orderNo++);
 
-        return genQueryParamsColumnConfigMapper.getById(id);
+        genQueryParamsColumnConfigMapper.insert(record);
+      }
     }
+  }
 
-    @Transactional
-    @Override
-    public void deleteById(String id) {
+  @Override
+  public GenQueryParamsColumnConfigDto getById(String id) {
 
-        genQueryParamsColumnConfigMapper.deleteById(id);
-    }
+    return genQueryParamsColumnConfigMapper.getById(id);
+  }
+
+  @Transactional
+  @Override
+  public void deleteById(String id) {
+
+    genQueryParamsColumnConfigMapper.deleteById(id);
+  }
 }

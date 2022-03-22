@@ -6,19 +6,22 @@ import com.lframework.starter.web.service.BaseService;
 
 /**
  * 系统设置 Service
+ *
  * @author zmj
  */
 public interface ISysConfigService extends BaseService {
 
-    /**
-     * 根据ID查询
-     * @return
-     */
-    SysConfigDto get();
+  /**
+   * 根据ID查询
+   *
+   * @return
+   */
+  SysConfigDto get();
 
-    /**
-     * 修改
-     * @param vo
-     */
-    void update(UpdateSysConfigVo vo);
+  /**
+   * 修改
+   *
+   * @param vo
+   */
+  void update(UpdateSysConfigVo vo);
 }

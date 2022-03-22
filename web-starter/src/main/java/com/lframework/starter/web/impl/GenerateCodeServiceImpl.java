@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class GenerateCodeServiceImpl implements IGenerateCodeService {
 
-    @Override
-    public String generate(GenerateCodeType type) {
+  @Override
+  public String generate(GenerateCodeType type) {
 
-        return GenerateCodeFactory.getInstance(type).generate();
-    }
+    return GenerateCodeFactory.getInstance(type).generate();
+  }
 }

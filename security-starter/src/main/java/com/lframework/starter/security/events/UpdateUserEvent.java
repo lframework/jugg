@@ -9,19 +9,19 @@ import org.springframework.context.ApplicationEvent;
  */
 public class UpdateUserEvent extends ApplicationEvent {
 
-    /**
-     * 用户ID
-     */
-    private String id;
+  /**
+   * 用户ID
+   */
+  private String id;
 
-    public UpdateUserEvent(Object source, String id) {
+  public UpdateUserEvent(Object source, String id) {
 
-        super(source);
-        this.id = id;
-    }
+    super(source);
+    this.id = id;
+  }
 
-    public String getId() {
+  public String getId() {
 
-        return id;
-    }
+    return id;
+  }
 }

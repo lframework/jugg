@@ -1,9 +1,8 @@
 package com.lframework.gen.generate.templates;
 
-import lombok.Data;
-
 import java.util.List;
 import java.util.Set;
+import lombok.Data;
 
 /**
  * 修改功能Template
@@ -11,159 +10,156 @@ import java.util.Set;
 @Data
 public class UpdateTemplate {
 
-    /**
-     * 包名
-     */
-    private String packageName;
+  /**
+   * 包名
+   */
+  private String packageName;
+
+  /**
+   * 类名
+   */
+  private String className;
+
+  /**
+   * 模块名称
+   */
+  private String moduleName;
+
+  /**
+   * 业务名称
+   */
+  private String bizName;
+
+  /**
+   * 类描述
+   */
+  private String classDescription;
+
+  /**
+   * 作者
+   */
+  private String author;
+
+  /**
+   * 字段
+   */
+  private List<Column> columns;
+
+  /**
+   * 需要import的包
+   */
+  private Set<String> importPackages;
+
+  /**
+   * 主键
+   */
+  private List<Key> keys;
+
+  @Data
+  public static class Key {
 
     /**
-     * 类名
+     * 字段类型
      */
-    private String className;
+    private String type;
 
     /**
-     * 模块名称
+     * 字段名称
      */
-    private String moduleName;
+    private String name;
 
     /**
-     * 业务名称
+     * 字段名称（首字母大写）
      */
-    private String bizName;
+    private String nameProperty;
 
     /**
-     * 类描述
+     * 字段名
      */
-    private String classDescription;
+    private String columnName;
 
     /**
-     * 作者
+     * 字段备注
      */
-    private String author;
+    private String description;
+  }
+
+  @Data
+  public static class Column {
 
     /**
-     * 字段
+     * 是否主键
      */
-    private List<Column> columns;
+    private Boolean isKey;
 
     /**
-     * 需要import的包
+     * 是否必填
      */
-    private Set<String> importPackages;
+    private Boolean required;
 
     /**
-     * 主键
+     * 验证注解
      */
-    private List<Key> keys;
+    private String validateAnno;
 
-    @Data
-    public static class Key {
+    /**
+     * 验证信息 当required == true时生效
+     */
+    private String validateMsg;
 
-        /**
-         * 字段类型
-         */
-        private String type;
+    /**
+     * 是否内置枚举
+     */
+    private Boolean fixEnum;
 
-        /**
-         * 字段名称
-         */
-        private String name;
+    /**
+     * 枚举的Code的类型 当fixEnum == true时生效
+     */
+    private String enumCodeType;
 
-        /**
-         * 字段名称（首字母大写）
-         */
-        private String nameProperty;
+    /**
+     * 字段类型
+     */
+    private String type;
 
-        /**
-         * 字段名
-         */
-        private String columnName;
+    /**
+     * 前端字段类型 只有字段是枚举时生效，此值为前端枚举类型
+     */
+    private String frontType;
 
-        /**
-         * 字段备注
-         */
-        private String description;
-    }
+    /**
+     * 显示类型
+     */
+    private Integer viewType;
 
-    @Data
-    public static class Column {
+    /**
+     * 字段名称
+     */
+    private String name;
 
-        /**
-         * 是否主键
-         */
-        private Boolean isKey;
+    /**
+     * 字段名称（首字母大写）
+     */
+    private String nameProperty;
 
-        /**
-         * 是否必填
-         */
-        private Boolean required;
+    /**
+     * 字段名
+     */
+    private String columnName;
 
-        /**
-         * 验证注解
-         */
-        private String validateAnno;
+    /**
+     * 正则表达式
+     */
+    private String regularExpression;
 
-        /**
-         * 验证信息
-         * 当required == true时生效
-         */
-        private String validateMsg;
+    /**
+     * 字段备注
+     */
+    private String description;
 
-        /**
-         * 是否内置枚举
-         */
-        private Boolean fixEnum;
-
-        /**
-         * 枚举的Code的类型
-         * 当fixEnum == true时生效
-         */
-        private String enumCodeType;
-
-        /**
-         * 字段类型
-         */
-        private String type;
-
-        /**
-         * 前端字段类型
-         * 只有字段是枚举时生效，此值为前端枚举类型
-         */
-        private String frontType;
-
-        /**
-         * 显示类型
-         */
-        private Integer viewType;
-
-        /**
-         * 字段名称
-         */
-        private String name;
-
-        /**
-         * 字段名称（首字母大写）
-         */
-        private String nameProperty;
-
-        /**
-         * 字段名
-         */
-        private String columnName;
-
-        /**
-         * 正则表达式
-         */
-        private String regularExpression;
-
-        /**
-         * 字段备注
-         */
-        private String description;
-
-        /**
-         * 是否包含状态Tag
-         */
-        private Boolean hasAvailableTag = Boolean.FALSE;
-    }
+    /**
+     * 是否包含状态Tag
+     */
+    private Boolean hasAvailableTag = Boolean.FALSE;
+  }
 }

@@ -7,10 +7,11 @@ package com.lframework.starter.security.components;
  */
 public interface CheckPermissionHandler {
 
-    /**
-     * 验证权限
-     * @param permissions
-     * @return
-     */
-    boolean valid(String... permissions);
+  /**
+   * 验证权限
+   *
+   * @param permissions
+   * @return
+   */
+  boolean valid(String... permissions);
 }

@@ -19,32 +19,32 @@ import lombok.EqualsAndHashCode;
 @TableName("gen_query_column_config")
 public class GenQueryColumnConfig extends BaseEntity {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    /**
-     * ID
-     */
-    private String id;
+  /**
+   * ID
+   */
+  private String id;
 
-    /**
-     * 宽度类型
-     */
-    private GenQueryWidthType widthType;
+  /**
+   * 宽度类型
+   */
+  private GenQueryWidthType widthType;
 
-    /**
-     * 宽度
-     */
-    private Integer width;
+  /**
+   * 宽度
+   */
+  private Integer width;
 
-    /**
-     * 是否页面排序
-     */
-    private Boolean sortable;
+  /**
+   * 是否页面排序
+   */
+  private Boolean sortable;
 
-    /**
-     * 排序编号
-     */
-    private Integer orderNo;
+  /**
+   * 排序编号
+   */
+  private Integer orderNo;
 
 
 }

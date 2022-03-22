@@ -1,45 +1,45 @@
 package com.lframework.gen.events;
 
-import org.springframework.context.ApplicationEvent;
-
 import java.util.List;
+import org.springframework.context.ApplicationEvent;
 
 public class DataObjectDeleteEvent extends ApplicationEvent {
 
-    /**
-     * 数据对象ID
-     */
-    private String id;
+  /**
+   * 数据对象ID
+   */
+  private String id;
 
-    private List<String> columnIds;
+  private List<String> columnIds;
 
-    /**
-     * Create a new {@code ApplicationEvent}.
-     * @param source the object on which the event initially occurred or with
-     * which the event is associated (never {@code null})
-     */
-    public DataObjectDeleteEvent(Object source) {
+  /**
+   * Create a new {@code ApplicationEvent}.
+   *
+   * @param source the object on which the event initially occurred or with which the event is
+   *               associated (never {@code null})
+   */
+  public DataObjectDeleteEvent(Object source) {
 
-        super(source);
-    }
+    super(source);
+  }
 
-    public String getId() {
+  public String getId() {
 
-        return id;
-    }
+    return id;
+  }
 
-    public void setId(String id) {
+  public void setId(String id) {
 
-        this.id = id;
-    }
+    this.id = id;
+  }
 
-    public List<String> getColumnIds() {
+  public List<String> getColumnIds() {
 
-        return columnIds;
-    }
+    return columnIds;
+  }
 
-    public void setColumnIds(List<String> columnIds) {
+  public void setColumnIds(List<String> columnIds) {
 
-        this.columnIds = columnIds;
-    }
+    this.columnIds = columnIds;
+  }
 }

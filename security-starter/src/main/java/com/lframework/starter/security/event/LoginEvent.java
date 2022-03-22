@@ -9,13 +9,14 @@ import org.springframework.context.ApplicationEvent;
  */
 public class LoginEvent extends ApplicationEvent {
 
-    /**
-     * Create a new {@code ApplicationEvent}.
-     * @param source the object on which the event initially occurred or with
-     * which the event is associated (never {@code null})
-     */
-    public LoginEvent(Object source) {
+  /**
+   * Create a new {@code ApplicationEvent}.
+   *
+   * @param source the object on which the event initially occurred or with which the event is
+   *               associated (never {@code null})
+   */
+  public LoginEvent(Object source) {
 
-        super(source);
-    }
+    super(source);
+  }
 }

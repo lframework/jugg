@@ -1,7 +1,6 @@
 package com.lframework.starter.session.utils;
 
 import com.lframework.starter.web.utils.RequestUtil;
-
 import javax.servlet.http.HttpSession;
 
 /**
@@ -11,8 +10,8 @@ import javax.servlet.http.HttpSession;
  */
 public class SessionUtil {
 
-    public static HttpSession getSession() {
+  public static HttpSession getSession() {
 
-        return RequestUtil.getRequest().getSession(false);
-    }
+    return RequestUtil.getRequest().getSession(false);
+  }
 }

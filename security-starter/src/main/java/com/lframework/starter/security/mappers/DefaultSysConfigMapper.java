@@ -13,8 +13,8 @@ import com.lframework.starter.security.entity.SysConfig;
  */
 public interface DefaultSysConfigMapper extends BaseMapper<SysConfig> {
 
-    /**
-     * 根据ID查询
-     */
-    SysConfigDto get();
+  /**
+   * 根据ID查询
+   */
+  SysConfigDto get();
 }

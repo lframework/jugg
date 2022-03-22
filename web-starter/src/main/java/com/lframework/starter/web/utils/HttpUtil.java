@@ -2,6 +2,15 @@ package com.lframework.starter.web.utils;
 
 import com.lframework.common.utils.StringUtil;
 import com.lframework.common.utils.XmlUtil;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.KeyStore;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
 import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
@@ -24,304 +33,307 @@ import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.KeyStore;
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 /**
  * 基于 httpclient 4.5版本的 http工具类
  */
 @Slf4j
 public class HttpUtil {
 
-    public static final String CHARSET = "UTF-8";
+  public static final String CHARSET = "UTF-8";
 
-    public static String doGet(String url, Map<String, Object> params) throws IOException {
+  public static String doGet(String url, Map<String, Object> params) throws IOException {
 
-        return doGet(url, params, CHARSET, null, null);
+    return doGet(url, params, CHARSET, null, null);
+  }
+
+  public static String doPost(String url, Map<String, Object> params) throws IOException {
+
+    return doPost(url, params, CHARSET, null, null);
+  }
+
+  public static String doPostJson(String url, Map<String, Object> params) throws IOException {
+
+    return doPostJson(url, params, CHARSET, null, null);
+  }
+
+  public static String doPostXml(String url, Map<String, Object> params) throws IOException {
+
+    return doPostXml(url, params, CHARSET, null, null);
+  }
+
+  public static String doGet(String url, Map<String, Object> params, InputStream certStream,
+      String certPsw)
+      throws IOException {
+
+    return doGet(url, params, CHARSET, certStream, certPsw);
+  }
+
+  public static String doPost(String url, Map<String, Object> params, InputStream certStream,
+      String certPsw)
+      throws IOException {
+
+    return doPost(url, params, CHARSET, certStream, certPsw);
+  }
+
+  public static String doPostJson(String url, Map<String, Object> params, InputStream certStream,
+      String certPsw)
+      throws IOException {
+
+    return doPostJson(url, params, CHARSET, certStream, certPsw);
+  }
+
+  public static String doPostXml(String url, Map<String, Object> params, InputStream certStream,
+      String certPsw)
+      throws IOException {
+
+    return doPostXml(url, params, CHARSET, certStream, certPsw);
+  }
+
+  /**
+   * HTTP Get 获取内容
+   *
+   * @param url           请求的url地址 ?之前的地址
+   * @param requestParams 请求的参数
+   * @param charset       编码格式
+   * @return 页面内容
+   */
+  public static String doGet(String url, Map<String, Object> requestParams, String charset,
+      InputStream certStream,
+      String certPsw) throws IOException {
+
+    SimpleMap<String, Object> params = new SimpleMap<>(requestParams);
+    if (StringUtil.isBlank(url)) {
+      throw new IllegalArgumentException("url不能为空！");
+    }
+    if (params != null && !params.isEmpty()) {
+      List<NameValuePair> pairs = new ArrayList<NameValuePair>(params.size());
+      for (String key : params.keySet()) {
+        String value = params.getString(key);
+        if (value != null) {
+          pairs.add(new BasicNameValuePair(key, value));
+        }
+      }
+      // 将请求参数和url进行拼接
+      url += "?" + EntityUtils.toString(new UrlEncodedFormEntity(pairs, charset));
     }
 
-    public static String doPost(String url, Map<String, Object> params) throws IOException {
-
-        return doPost(url, params, CHARSET, null, null);
+    if (log.isDebugEnabled()) {
+      log.debug("http-get url：{}", url);
     }
 
-    public static String doPostJson(String url, Map<String, Object> params) throws IOException {
+    HttpGet httpGet = new HttpGet(url);
 
-        return doPostJson(url, params, CHARSET, null, null);
+    CloseableHttpClient httpClient = buildHttpClient(certStream, certPsw);
+
+    @Cleanup CloseableHttpResponse response = httpClient.execute(httpGet);
+    int statusCode = response.getStatusLine().getStatusCode();
+
+    if (statusCode != HttpStatus.SC_OK) {
+      httpGet.abort();
+      throw new RuntimeException("HttpClient,error status code :" + statusCode);
+    }
+    HttpEntity entity = response.getEntity();
+    String result = null;
+    if (entity != null) {
+      result = EntityUtils.toString(entity, "utf-8");
     }
 
-    public static String doPostXml(String url, Map<String, Object> params) throws IOException {
-
-        return doPostXml(url, params, CHARSET, null, null);
+    if (log.isDebugEnabled()) {
+      log.debug("http-get 响应消息：{}", result == null ? "无" : result);
     }
 
-    public static String doGet(String url, Map<String, Object> params, InputStream certStream, String certPsw)
-            throws IOException {
+    EntityUtils.consume(entity);
 
-        return doGet(url, params, CHARSET, certStream, certPsw);
+    return result;
+  }
+
+  /**
+   * HTTP Post 获取内容
+   *
+   * @param url           请求的url地址 ?之前的地址
+   * @param requestParams 请求的参数
+   * @param charset       编码格式
+   * @return 页面内容
+   * @throws IOException
+   */
+  public static String doPost(String url, Map<String, Object> requestParams, String charset,
+      InputStream certStream,
+      String certPsw) throws IOException {
+
+    SimpleMap<String, Object> params = new SimpleMap<>(requestParams);
+    if (StringUtil.isBlank(url)) {
+      return null;
+    }
+    List<NameValuePair> pairs = null;
+    if (params != null && !params.isEmpty()) {
+      pairs = new ArrayList<NameValuePair>(params.size());
+      for (String key : params.keySet()) {
+        String value = params.getString(key);
+        if (value != null) {
+          pairs.add(new BasicNameValuePair(key, value));
+        }
+      }
+    }
+    HttpPost httpPost = new HttpPost(url);
+    httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
+    if (pairs != null && pairs.size() > 0) {
+      httpPost.setEntity(new UrlEncodedFormEntity(pairs, charset));
     }
 
-    public static String doPost(String url, Map<String, Object> params, InputStream certStream, String certPsw)
-            throws IOException {
-
-        return doPost(url, params, CHARSET, certStream, certPsw);
+    if (log.isDebugEnabled()) {
+      log.debug("http-post url={}, params={}", url, JsonUtil.toJsonString(params));
     }
 
-    public static String doPostJson(String url, Map<String, Object> params, InputStream certStream, String certPsw)
-            throws IOException {
+    CloseableHttpClient httpClient = buildHttpClient(certStream, certPsw);
 
-        return doPostJson(url, params, CHARSET, certStream, certPsw);
+    @Cleanup CloseableHttpResponse response = httpClient.execute(httpPost);
+
+    int statusCode = response.getStatusLine().getStatusCode();
+    if (statusCode != HttpStatus.SC_OK) {
+      httpPost.abort();
+      throw new RuntimeException("HttpClient,error status code :" + statusCode);
+    }
+    HttpEntity entity = response.getEntity();
+    String result = null;
+    if (entity != null) {
+      result = EntityUtils.toString(entity, charset);
     }
 
-    public static String doPostXml(String url, Map<String, Object> params, InputStream certStream, String certPsw)
-            throws IOException {
-
-        return doPostXml(url, params, CHARSET, certStream, certPsw);
+    if (log.isDebugEnabled()) {
+      log.debug("http-post 响应消息：{}", result == null ? "无" : result);
     }
 
-    /**
-     * HTTP Get 获取内容
-     *
-     * @param url     请求的url地址 ?之前的地址
-     * @param requestParams  请求的参数
-     * @param charset 编码格式
-     * @return 页面内容
-     */
-    public static String doGet(String url, Map<String, Object> requestParams, String charset, InputStream certStream,
-            String certPsw) throws IOException {
+    EntityUtils.consume(entity);
+    return result;
+  }
 
-        SimpleMap<String, Object> params = new SimpleMap<>(requestParams);
-        if (StringUtil.isBlank(url)) {
-            throw new IllegalArgumentException("url不能为空！");
-        }
-        if (params != null && !params.isEmpty()) {
-            List<NameValuePair> pairs = new ArrayList<NameValuePair>(params.size());
-            for (String key : params.keySet()) {
-                String value = params.getString(key);
-                if (value != null) {
-                    pairs.add(new BasicNameValuePair(key, value));
-                }
-            }
-            // 将请求参数和url进行拼接
-            url += "?" + EntityUtils.toString(new UrlEncodedFormEntity(pairs, charset));
-        }
+  public static String doPostJson(String url, Map<String, Object> params, String charset,
+      InputStream certStream,
+      String certPsw) throws IOException {
 
-        if (log.isDebugEnabled()) {
-            log.debug("http-get url：{}", url);
-        }
-
-        HttpGet httpGet = new HttpGet(url);
-
-        CloseableHttpClient httpClient = buildHttpClient(certStream, certPsw);
-
-        @Cleanup CloseableHttpResponse response = httpClient.execute(httpGet);
-        int statusCode = response.getStatusLine().getStatusCode();
-
-        if (statusCode != HttpStatus.SC_OK) {
-            httpGet.abort();
-            throw new RuntimeException("HttpClient,error status code :" + statusCode);
-        }
-        HttpEntity entity = response.getEntity();
-        String result = null;
-        if (entity != null) {
-            result = EntityUtils.toString(entity, "utf-8");
-        }
-
-        if (log.isDebugEnabled()) {
-            log.debug("http-get 响应消息：{}", result == null ? "无" : result);
-        }
-
-        EntityUtils.consume(entity);
-
-        return result;
+    if (StringUtil.isBlank(url)) {
+      throw new IllegalArgumentException("url不能为空！");
     }
 
-    /**
-     * HTTP Post 获取内容
-     *
-     * @param url     请求的url地址 ?之前的地址
-     * @param requestParams  请求的参数
-     * @param charset 编码格式
-     * @return 页面内容
-     * @throws IOException
-     */
-    public static String doPost(String url, Map<String, Object> requestParams, String charset, InputStream certStream,
-            String certPsw) throws IOException {
+    String jsonParams = JsonUtil.toJsonString(params);
+    StringEntity requestEntity = new StringEntity(jsonParams, charset);
+    HttpPost httpPost = new HttpPost(url);
+    httpPost.setHeader("Content-type", "application/json");
+    httpPost.setEntity(requestEntity);
 
-        SimpleMap<String, Object> params = new SimpleMap<>(requestParams);
-        if (StringUtil.isBlank(url)) {
-            return null;
-        }
-        List<NameValuePair> pairs = null;
-        if (params != null && !params.isEmpty()) {
-            pairs = new ArrayList<NameValuePair>(params.size());
-            for (String key : params.keySet()) {
-                String value = params.getString(key);
-                if (value != null) {
-                    pairs.add(new BasicNameValuePair(key, value));
-                }
-            }
-        }
-        HttpPost httpPost = new HttpPost(url);
-        httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
-        if (pairs != null && pairs.size() > 0) {
-            httpPost.setEntity(new UrlEncodedFormEntity(pairs, charset));
-        }
-
-        if (log.isDebugEnabled()) {
-            log.debug("http-post url={}, params={}", url, JsonUtil.toJsonString(params));
-        }
-
-        CloseableHttpClient httpClient = buildHttpClient(certStream, certPsw);
-
-        @Cleanup CloseableHttpResponse response = httpClient.execute(httpPost);
-
-        int statusCode = response.getStatusLine().getStatusCode();
-        if (statusCode != HttpStatus.SC_OK) {
-            httpPost.abort();
-            throw new RuntimeException("HttpClient,error status code :" + statusCode);
-        }
-        HttpEntity entity = response.getEntity();
-        String result = null;
-        if (entity != null) {
-            result = EntityUtils.toString(entity, charset);
-        }
-
-        if (log.isDebugEnabled()) {
-            log.debug("http-post 响应消息：{}", result == null ? "无" : result);
-        }
-
-        EntityUtils.consume(entity);
-        return result;
+    if (log.isDebugEnabled()) {
+      log.debug("http-post-json url={}, params={}", url, jsonParams);
     }
 
-    public static String doPostJson(String url, Map<String, Object> params, String charset, InputStream certStream,
-            String certPsw) throws IOException {
+    CloseableHttpClient httpClient = buildHttpClient(certStream, certPsw);
 
-        if (StringUtil.isBlank(url)) {
-            throw new IllegalArgumentException("url不能为空！");
-        }
+    @Cleanup CloseableHttpResponse response = httpClient.execute(httpPost);
 
-        String jsonParams = JsonUtil.toJsonString(params);
-        StringEntity requestEntity = new StringEntity(jsonParams, charset);
-        HttpPost httpPost = new HttpPost(url);
-        httpPost.setHeader("Content-type", "application/json");
-        httpPost.setEntity(requestEntity);
-
-        if (log.isDebugEnabled()) {
-            log.debug("http-post-json url={}, params={}", url, jsonParams);
-        }
-
-        CloseableHttpClient httpClient = buildHttpClient(certStream, certPsw);
-
-        @Cleanup CloseableHttpResponse response = httpClient.execute(httpPost);
-
-        int statusCode = response.getStatusLine().getStatusCode();
-        if (statusCode != HttpStatus.SC_OK) {
-            httpPost.abort();
-            throw new RuntimeException("HttpClient,error status code :" + statusCode);
-        }
-        HttpEntity entity = response.getEntity();
-        String result = null;
-        if (entity != null) {
-            result = EntityUtils.toString(entity, charset);
-        }
-
-        if (log.isDebugEnabled()) {
-            log.debug("http-post-json 响应消息：{}", result == null ? "无" : result);
-        }
-
-        EntityUtils.consume(entity);
-        return result;
+    int statusCode = response.getStatusLine().getStatusCode();
+    if (statusCode != HttpStatus.SC_OK) {
+      httpPost.abort();
+      throw new RuntimeException("HttpClient,error status code :" + statusCode);
+    }
+    HttpEntity entity = response.getEntity();
+    String result = null;
+    if (entity != null) {
+      result = EntityUtils.toString(entity, charset);
     }
 
-    public static String doPostXml(String url, Map<String, Object> params, String charset, InputStream certStream,
-            String certPsw) throws IOException {
-
-        if (StringUtil.isBlank(url)) {
-            throw new IllegalArgumentException("url不能为空！");
-        }
-
-        String xmlParams = XmlUtil.formatXml(XmlUtil.map2xml(params, "xml"));
-
-        StringEntity requestEntity = new StringEntity(xmlParams, charset);
-        HttpPost httpPost = new HttpPost(url);
-        httpPost.setHeader("Content-type", "application/xml");
-        httpPost.setEntity(requestEntity);
-
-        if (log.isDebugEnabled()) {
-            log.debug("http-post-xml url={}, params={}", url, xmlParams);
-        }
-
-
-        CloseableHttpClient httpClient = buildHttpClient(certStream, certPsw);
-
-        @Cleanup CloseableHttpResponse response = httpClient.execute(httpPost);
-
-        int statusCode = response.getStatusLine().getStatusCode();
-        if (statusCode != HttpStatus.SC_OK) {
-            httpPost.abort();
-            throw new RuntimeException("HttpClient,error status code :" + statusCode);
-        }
-        HttpEntity entity = response.getEntity();
-        String result = null;
-        if (entity != null) {
-            result = EntityUtils.toString(entity, charset);
-        }
-
-        if (log.isDebugEnabled()) {
-            log.debug("http-post-xml 响应消息：{}", result == null ? "无" : result);
-        }
-
-        EntityUtils.consume(entity);
-        return result;
+    if (log.isDebugEnabled()) {
+      log.debug("http-post-json 响应消息：{}", result == null ? "无" : result);
     }
 
-    private static CloseableHttpClient buildHttpClient(InputStream certStream, String certPsw) {
+    EntityUtils.consume(entity);
+    return result;
+  }
 
-        try {
-            BasicHttpClientConnectionManager connManager;
-            if (certStream != null) {
-                char[] password = certPsw.toCharArray();
-                KeyStore ks = KeyStore.getInstance("PKCS12");
-                ks.load(certStream, password);
+  public static String doPostXml(String url, Map<String, Object> params, String charset,
+      InputStream certStream,
+      String certPsw) throws IOException {
 
-                // 实例化密钥库 & 初始化密钥工厂
-                KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-                kmf.init(ks, password);
-
-                // 创建 SSLContext
-                SSLContext sslContext = SSLContext.getInstance("TLS");
-                sslContext.init(kmf.getKeyManagers(), null, new SecureRandom());
-
-                SSLConnectionSocketFactory sslConnectionSocketFactory = new SSLConnectionSocketFactory(sslContext,
-                        new String[]{"TLSv1"}, null, new DefaultHostnameVerifier());
-
-                connManager = new BasicHttpClientConnectionManager(RegistryBuilder.<ConnectionSocketFactory>create()
-                        .register("http", PlainConnectionSocketFactory.getSocketFactory())
-                        .register("https", sslConnectionSocketFactory).build(), null, null, null);
-            } else {
-                connManager = new BasicHttpClientConnectionManager(RegistryBuilder.<ConnectionSocketFactory>create()
-                        .register("http", PlainConnectionSocketFactory.getSocketFactory())
-                        .register("https", SSLConnectionSocketFactory.getSocketFactory()).build(), null, null, null);
-            }
-
-            RequestConfig config = RequestConfig.custom().setConnectTimeout(60000).setSocketTimeout(15000).build();
-            CloseableHttpClient httpClient = HttpClientBuilder.create().setDefaultRequestConfig(config)
-                    .setConnectionManager(connManager).build();
-
-            return httpClient;
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new IllegalStateException("无法构建HttpClient！");
-        }
+    if (StringUtil.isBlank(url)) {
+      throw new IllegalArgumentException("url不能为空！");
     }
+
+    String xmlParams = XmlUtil.formatXml(XmlUtil.map2xml(params, "xml"));
+
+    StringEntity requestEntity = new StringEntity(xmlParams, charset);
+    HttpPost httpPost = new HttpPost(url);
+    httpPost.setHeader("Content-type", "application/xml");
+    httpPost.setEntity(requestEntity);
+
+    if (log.isDebugEnabled()) {
+      log.debug("http-post-xml url={}, params={}", url, xmlParams);
+    }
+
+    CloseableHttpClient httpClient = buildHttpClient(certStream, certPsw);
+
+    @Cleanup CloseableHttpResponse response = httpClient.execute(httpPost);
+
+    int statusCode = response.getStatusLine().getStatusCode();
+    if (statusCode != HttpStatus.SC_OK) {
+      httpPost.abort();
+      throw new RuntimeException("HttpClient,error status code :" + statusCode);
+    }
+    HttpEntity entity = response.getEntity();
+    String result = null;
+    if (entity != null) {
+      result = EntityUtils.toString(entity, charset);
+    }
+
+    if (log.isDebugEnabled()) {
+      log.debug("http-post-xml 响应消息：{}", result == null ? "无" : result);
+    }
+
+    EntityUtils.consume(entity);
+    return result;
+  }
+
+  private static CloseableHttpClient buildHttpClient(InputStream certStream, String certPsw) {
+
+    try {
+      BasicHttpClientConnectionManager connManager;
+      if (certStream != null) {
+        char[] password = certPsw.toCharArray();
+        KeyStore ks = KeyStore.getInstance("PKCS12");
+        ks.load(certStream, password);
+
+        // 实例化密钥库 & 初始化密钥工厂
+        KeyManagerFactory kmf = KeyManagerFactory
+            .getInstance(KeyManagerFactory.getDefaultAlgorithm());
+        kmf.init(ks, password);
+
+        // 创建 SSLContext
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(kmf.getKeyManagers(), null, new SecureRandom());
+
+        SSLConnectionSocketFactory sslConnectionSocketFactory = new SSLConnectionSocketFactory(
+            sslContext,
+            new String[]{"TLSv1"}, null, new DefaultHostnameVerifier());
+
+        connManager = new BasicHttpClientConnectionManager(
+            RegistryBuilder.<ConnectionSocketFactory>create()
+                .register("http", PlainConnectionSocketFactory.getSocketFactory())
+                .register("https", sslConnectionSocketFactory).build(), null, null, null);
+      } else {
+        connManager = new BasicHttpClientConnectionManager(
+            RegistryBuilder.<ConnectionSocketFactory>create()
+                .register("http", PlainConnectionSocketFactory.getSocketFactory())
+                .register("https", SSLConnectionSocketFactory.getSocketFactory()).build(), null,
+            null, null);
+      }
+
+      RequestConfig config = RequestConfig.custom().setConnectTimeout(60000).setSocketTimeout(15000)
+          .build();
+      CloseableHttpClient httpClient = HttpClientBuilder.create().setDefaultRequestConfig(config)
+          .setConnectionManager(connManager).build();
+
+      return httpClient;
+    } catch (Exception e) {
+      log.error(e.getMessage(), e);
+      throw new IllegalStateException("无法构建HttpClient！");
+    }
+  }
 }
 

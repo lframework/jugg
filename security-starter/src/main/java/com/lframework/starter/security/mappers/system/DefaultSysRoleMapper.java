@@ -5,13 +5,12 @@ import com.lframework.starter.security.dto.system.role.DefaultSysRoleDto;
 import com.lframework.starter.security.entity.DefaultSysRole;
 import com.lframework.starter.security.vo.system.role.QuerySysRoleVo;
 import com.lframework.starter.security.vo.system.role.SysRoleSelectorVo;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
- *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author zmj
@@ -19,31 +18,35 @@ import java.util.List;
  */
 public interface DefaultSysRoleMapper extends BaseMapper<DefaultSysRole> {
 
-    /**
-     * 查询列表
-     * @param vo
-     * @return
-     */
-    List<DefaultSysRoleDto> query(@Param("vo") QuerySysRoleVo vo);
+  /**
+   * 查询列表
+   *
+   * @param vo
+   * @return
+   */
+  List<DefaultSysRoleDto> query(@Param("vo") QuerySysRoleVo vo);
 
-    /**
-     * 根据ID查询
-     * @param id
-     * @return
-     */
-    DefaultSysRoleDto getById(String id);
+  /**
+   * 根据ID查询
+   *
+   * @param id
+   * @return
+   */
+  DefaultSysRoleDto getById(String id);
 
-    /**
-     * 根据用户ID查询
-     * @param userId
-     * @return
-     */
-    List<DefaultSysRoleDto> getByUserId(String userId);
+  /**
+   * 根据用户ID查询
+   *
+   * @param userId
+   * @return
+   */
+  List<DefaultSysRoleDto> getByUserId(String userId);
 
-    /**
-     * 选择器
-     * @param vo
-     * @return
-     */
-    List<DefaultSysRoleDto> selector(@Param("vo") SysRoleSelectorVo vo);
+  /**
+   * 选择器
+   *
+   * @param vo
+   * @return
+   */
+  List<DefaultSysRoleDto> selector(@Param("vo") SysRoleSelectorVo vo);
 }

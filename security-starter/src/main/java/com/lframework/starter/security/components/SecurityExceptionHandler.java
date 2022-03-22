@@ -21,32 +21,32 @@ import org.springframework.web.method.HandlerMethod;
 @RestControllerAdvice
 public class SecurityExceptionHandler extends WebExceptionHandler {
 
-    /**
-     * 处理无权限异常
-     *
-     * @param e
-     * @return
-     */
-    @ExceptionHandler(AccessDeniedException.class)
-    public Response handle(AccessDeniedException e, HandlerMethod method) {
+  /**
+   * 处理无权限异常
+   *
+   * @param e
+   * @return
+   */
+  @ExceptionHandler(AccessDeniedException.class)
+  public Response handle(AccessDeniedException e, HandlerMethod method) {
 
-        this.logException(e, method);
+    this.logException(e, method);
 
-        BaseException ex = new AccessDeniedException();
-        this.setResponseCode(ex);
+    BaseException ex = new AccessDeniedException();
+    this.setResponseCode(ex);
 
-        return InvokeResultBuilder.fail(ex);
-    }
+    return InvokeResultBuilder.fail(ex);
+  }
 
-    @ExceptionHandler(BadCredentialsException.class)
-    public Response badCredentialsException(BadCredentialsException e, HandlerMethod method) {
+  @ExceptionHandler(BadCredentialsException.class)
+  public Response badCredentialsException(BadCredentialsException e, HandlerMethod method) {
 
-        this.logException(e, method);
+    this.logException(e, method);
 
-        BaseException ex = new InputErrorException("登录名或密码错误！");
+    BaseException ex = new InputErrorException("登录名或密码错误！");
 
-        this.setResponseCode(ex);
+    this.setResponseCode(ex);
 
-        return InvokeResultBuilder.fail(ex);
-    }
+    return InvokeResultBuilder.fail(ex);
+  }
 }

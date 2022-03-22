@@ -10,13 +10,13 @@ import com.lframework.common.exceptions.SysException;
  */
 public class DefaultSysException extends SysException {
 
-    public DefaultSysException() {
+  public DefaultSysException() {
 
-        super(ResponseConstants.INVOKE_RESULT_FAIL_CODE, ResponseConstants.INVOKE_RESULT_ERROR_MSG);
-    }
+    super(ResponseConstants.INVOKE_RESULT_FAIL_CODE, ResponseConstants.INVOKE_RESULT_ERROR_MSG);
+  }
 
-    public DefaultSysException(String msg) {
+  public DefaultSysException(String msg) {
 
-        super(ResponseConstants.INVOKE_RESULT_FAIL_CODE, msg);
-    }
+    super(ResponseConstants.INVOKE_RESULT_FAIL_CODE, msg);
+  }
 }

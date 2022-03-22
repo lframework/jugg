@@ -16,53 +16,53 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class GenerateInfoServiceImpl implements IGenerateInfoService {
 
-    @Autowired
-    private GenGenerateInfoMapper genGenerateInfoMapper;
+  @Autowired
+  private GenGenerateInfoMapper genGenerateInfoMapper;
 
-    @Override
-    public GenGenerateInfoDto getByDataObjId(String dataObjId) {
+  @Override
+  public GenGenerateInfoDto getByDataObjId(String dataObjId) {
 
-        return genGenerateInfoMapper.getByDataObjId(dataObjId);
+    return genGenerateInfoMapper.getByDataObjId(dataObjId);
+  }
+
+  @Transactional
+  @Override
+  public void updateGenerate(String dataObjId, UpdateGenerateInfoVo vo) {
+
+    GenGenerateInfo data = genGenerateInfoMapper.selectById(dataObjId);
+    if (data != null) {
+      genGenerateInfoMapper.deleteById(data.getId());
+    } else {
+      data = new GenGenerateInfo();
     }
-
-    @Transactional
-    @Override
-    public void updateGenerate(String dataObjId, UpdateGenerateInfoVo vo) {
-
-        GenGenerateInfo data = genGenerateInfoMapper.selectById(dataObjId);
-        if (data != null) {
-            genGenerateInfoMapper.deleteById(data.getId());
-        } else {
-            data = new GenGenerateInfo();
-        }
-        data.setId(dataObjId);
-        data.setTemplateType(EnumUtil.getByCode(GenTemplateType.class, vo.getTemplateType()));
-        data.setPackageName(vo.getPackageName());
-        data.setModuleName(vo.getModuleName());
-        data.setBizName(vo.getBizName());
-        data.setClassName(vo.getClassName());
-        data.setClassDescription(vo.getClassDescription());
-        if (!StringUtil.isBlank(vo.getParentMenuId())) {
-            data.setParentMenuId(vo.getParentMenuId());
-        }
-        data.setKeyType(EnumUtil.getByCode(GenKeyType.class, vo.getKeyType()));
-
-        if (!StringUtil.isBlank(vo.getAuthor())) {
-            data.setAuthor(vo.getAuthor());
-        }
-        data.setMenuCode(vo.getMenuCode());
-        data.setMenuName(vo.getMenuName());
-        data.setDetailSpan(vo.getDetailSpan());
-        data.setIsCache(vo.getIsCache());
-        data.setHasDelete(vo.getHasDelete());
-
-        genGenerateInfoMapper.insert(data);
+    data.setId(dataObjId);
+    data.setTemplateType(EnumUtil.getByCode(GenTemplateType.class, vo.getTemplateType()));
+    data.setPackageName(vo.getPackageName());
+    data.setModuleName(vo.getModuleName());
+    data.setBizName(vo.getBizName());
+    data.setClassName(vo.getClassName());
+    data.setClassDescription(vo.getClassDescription());
+    if (!StringUtil.isBlank(vo.getParentMenuId())) {
+      data.setParentMenuId(vo.getParentMenuId());
     }
+    data.setKeyType(EnumUtil.getByCode(GenKeyType.class, vo.getKeyType()));
 
-    @Transactional
-    @Override
-    public void deleteByDataObjId(String dataObjId) {
-
-        genGenerateInfoMapper.deleteById(dataObjId);
+    if (!StringUtil.isBlank(vo.getAuthor())) {
+      data.setAuthor(vo.getAuthor());
     }
+    data.setMenuCode(vo.getMenuCode());
+    data.setMenuName(vo.getMenuName());
+    data.setDetailSpan(vo.getDetailSpan());
+    data.setIsCache(vo.getIsCache());
+    data.setHasDelete(vo.getHasDelete());
+
+    genGenerateInfoMapper.insert(data);
+  }
+
+  @Transactional
+  @Override
+  public void deleteByDataObjId(String dataObjId) {
+
+    genGenerateInfoMapper.deleteById(dataObjId);
+  }
 }

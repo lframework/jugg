@@ -2,7 +2,6 @@ package com.lframework.common.utils;
 
 import cn.hutool.core.date.LocalDateTimeUtil;
 import com.lframework.common.constants.StringPool;
-
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,61 +16,61 @@ import java.util.Date;
  */
 public class DateUtil extends cn.hutool.core.date.DateUtil {
 
-    public static String formatDate(LocalDate localDate) {
+  public static String formatDate(LocalDate localDate) {
 
-        return LocalDateTimeUtil.formatNormal(localDate);
+    return LocalDateTimeUtil.formatNormal(localDate);
+  }
+
+  public static String formatDate(LocalDate localDate, String format) {
+
+    return LocalDateTimeUtil.format(localDate, format);
+  }
+
+  public static Date toDate(LocalDateTime dateTime) {
+
+    if (dateTime == null) {
+      return null;
     }
 
-    public static String formatDate(LocalDate localDate, String format) {
+    return Date.from(dateTime.atZone(ZoneId.systemDefault()).toInstant());
+  }
 
-        return LocalDateTimeUtil.format(localDate, format);
+  public static Date toDate(LocalDate date) {
+
+    if (date == null) {
+      return null;
     }
 
-    public static Date toDate(LocalDateTime dateTime) {
+    return Date.from(date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+  }
 
-        if (dateTime == null) {
-            return null;
-        }
+  public static LocalDateTime toLocalDateTime(LocalDate localDate) {
 
-        return Date.from(dateTime.atZone(ZoneId.systemDefault()).toInstant());
-    }
+    return LocalDateTime.of(localDate, LocalTime.MIN);
+  }
 
-    public static Date toDate(LocalDate date) {
+  public static LocalDateTime toLocalDateTimeMax(LocalDate localDate) {
 
-        if (date == null) {
-            return null;
-        }
+    return LocalDateTime.of(localDate, LocalTime.MAX.withNano(0));
+  }
 
-        return Date.from(date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
-    }
+  public static String formatDateTime(LocalDateTime localDateTime) {
 
-    public static LocalDateTime toLocalDateTime(LocalDate localDate) {
+    return formatDateTime(localDateTime, StringPool.DATE_TIME_PATTERN);
+  }
 
-        return LocalDateTime.of(localDate, LocalTime.MIN);
-    }
+  public static String formatDateTime(LocalDateTime localDateTime, String pattern) {
 
-    public static LocalDateTime toLocalDateTimeMax(LocalDate localDate) {
+    return format(localDateTime, pattern);
+  }
 
-        return LocalDateTime.of(localDate, LocalTime.MAX.withNano(0));
-    }
+  public static long getTime(LocalDateTime localDateTime) {
 
-    public static String formatDateTime(LocalDateTime localDateTime) {
+    return Timestamp.valueOf(localDateTime).getTime();
+  }
 
-        return formatDateTime(localDateTime, StringPool.DATE_TIME_PATTERN);
-    }
+  public static long getTime(LocalDate localDate) {
 
-    public static String formatDateTime(LocalDateTime localDateTime, String pattern) {
-
-        return format(localDateTime, pattern);
-    }
-
-    public static long getTime(LocalDateTime localDateTime) {
-
-        return Timestamp.valueOf(localDateTime).getTime();
-    }
-
-    public static long getTime(LocalDate localDate) {
-
-        return Timestamp.valueOf(toLocalDateTime(localDate)).getTime();
-    }
+    return Timestamp.valueOf(toLocalDateTime(localDate)).getTime();
+  }
 }

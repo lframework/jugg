@@ -9,12 +9,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class GenerateInfoListener implements ApplicationListener<DataObjectDeleteEvent> {
 
-    @Autowired
-    private IGenerateInfoService generateInfoService;
+  @Autowired
+  private IGenerateInfoService generateInfoService;
 
-    @Override
-    public void onApplicationEvent(DataObjectDeleteEvent event) {
+  @Override
+  public void onApplicationEvent(DataObjectDeleteEvent event) {
 
-        generateInfoService.deleteByDataObjId(event.getId());
-    }
+    generateInfoService.deleteByDataObjId(event.getId());
+  }
 }

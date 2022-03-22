@@ -9,16 +9,17 @@ import com.lframework.starter.web.utils.ApplicationUtil;
  */
 public interface BaseService {
 
-    default <T> T getThis(Class<T> clazz) {
+  default <T> T getThis(Class<T> clazz) {
 
-        return ApplicationUtil.getBean(clazz);
-    }
+    return ApplicationUtil.getBean(clazz);
+  }
 
-    /**
-     * 根据Key清除缓存
-     * @param key
-     */
-    default void cleanCacheByKey(String key) {
+  /**
+   * 根据Key清除缓存
+   *
+   * @param key
+   */
+  default void cleanCacheByKey(String key) {
 
-    }
+  }
 }

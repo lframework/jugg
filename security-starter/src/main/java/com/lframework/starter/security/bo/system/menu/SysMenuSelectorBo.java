@@ -9,20 +9,20 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class SysMenuSelectorBo extends BaseBo<DefaultSysMenuDto> {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    private String id;
+  private String id;
 
-    private String title;
+  private String title;
 
-    private String parentId;
+  private String parentId;
 
-    public SysMenuSelectorBo() {
+  public SysMenuSelectorBo() {
 
-    }
+  }
 
-    public SysMenuSelectorBo(DefaultSysMenuDto dto) {
+  public SysMenuSelectorBo(DefaultSysMenuDto dto) {
 
-        super(dto);
-    }
+    super(dto);
+  }
 }

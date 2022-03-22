@@ -2,7 +2,6 @@ package com.lframework.starter.web.components.generator.impl;
 
 import com.lframework.common.utils.IdWorker;
 import com.lframework.starter.web.components.generator.Generator;
-import com.lframework.starter.web.utils.ApplicationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -12,17 +11,17 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public abstract class AbstractSnowFlakeGenerator extends AbstractGenerator implements Generator {
 
-    @Autowired
-    private IdWorker idWorker;
+  @Autowired
+  private IdWorker idWorker;
 
-    @Override
-    public String generate() {
+  @Override
+  public String generate() {
 
-        return getPreffix() + idWorker.nextIdStr();
-    }
+    return getPreffix() + idWorker.nextIdStr();
+  }
 
-    protected String getPreffix() {
+  protected String getPreffix() {
 
-        return "";
-    }
+    return "";
+  }
 }

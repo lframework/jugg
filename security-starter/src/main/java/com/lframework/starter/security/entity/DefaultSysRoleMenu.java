@@ -18,22 +18,22 @@ import lombok.EqualsAndHashCode;
 @TableName("sys_role_menu")
 public class DefaultSysRoleMenu extends BaseEntity {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    /**
-     * ID
-     */
-    private String id;
+  /**
+   * ID
+   */
+  private String id;
 
-    /**
-     * 角色ID
-     */
-    private String roleId;
+  /**
+   * 角色ID
+   */
+  private String roleId;
 
-    /**
-     * 菜单ID
-     */
-    private String menuId;
+  /**
+   * 菜单ID
+   */
+  private String menuId;
 
 
 }

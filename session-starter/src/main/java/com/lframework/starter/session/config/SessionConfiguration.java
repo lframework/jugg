@@ -17,9 +17,9 @@ import org.springframework.session.web.http.HeaderHttpSessionIdResolver;
 @EnableConfigurationProperties(SessionProperties.class)
 public class SessionConfiguration {
 
-    @Bean
-    public HeaderHttpSessionIdResolver headerHttpSessionIdResolver() {
+  @Bean
+  public HeaderHttpSessionIdResolver headerHttpSessionIdResolver() {
 
-        return new HeaderHttpSessionIdResolver(StringPool.HEADER_NAME_SESSION_ID);
-    }
+    return new HeaderHttpSessionIdResolver(StringPool.HEADER_NAME_SESSION_ID);
+  }
 }

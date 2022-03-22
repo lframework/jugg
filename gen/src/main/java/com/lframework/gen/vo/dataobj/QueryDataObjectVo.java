@@ -13,26 +13,26 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class QueryDataObjectVo extends PageVo {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    /**
-     * 编号
-     */
-    private String code;
+  /**
+   * 编号
+   */
+  private String code;
 
-    /**
-     * 名称
-     */
-    private String name;
+  /**
+   * 名称
+   */
+  private String name;
 
-    /**
-     * 类型
-     */
-    @IsEnum(message = "请选择类型！", enumClass = DataObjectType.class)
-    private Integer type;
+  /**
+   * 类型
+   */
+  @IsEnum(message = "请选择类型！", enumClass = DataObjectType.class)
+  private Integer type;
 
-    /**
-     * 状态
-     */
-    private Boolean available;
+  /**
+   * 状态
+   */
+  private Boolean available;
 }

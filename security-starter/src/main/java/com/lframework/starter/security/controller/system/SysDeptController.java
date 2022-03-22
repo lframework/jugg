@@ -11,17 +11,22 @@ import com.lframework.starter.security.vo.system.dept.CreateSysDeptVo;
 import com.lframework.starter.security.vo.system.dept.UpdateSysDeptVo;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 部门管理
@@ -34,86 +39,89 @@ import java.util.stream.Collectors;
 @ConditionalOnProperty(value = "default-setting.sys-function.enabled", matchIfMissing = true)
 public class SysDeptController extends DefaultBaseController {
 
-    @Autowired
-    private ISysDeptService sysDeptService;
+  @Autowired
+  private ISysDeptService sysDeptService;
 
-    /**
-     * 部门树形菜单数据
-     */
-    @PreAuthorize("@permission.valid('system:dept:query','system:dept:add','system:dept:modify')")
-    @GetMapping("/trees")
-    public InvokeResult trees() {
+  /**
+   * 部门树形菜单数据
+   */
+  @PreAuthorize("@permission.valid('system:dept:query','system:dept:add','system:dept:modify')")
+  @GetMapping("/trees")
+  public InvokeResult trees() {
 
-        List<DefaultSysDeptDto> datas = sysDeptService.selector();
-        if (CollectionUtil.isEmpty(datas)) {
-            return InvokeResultBuilder.success();
-        }
-
-        List<SysDeptTreeBo> results = datas.stream().map(SysDeptTreeBo::new).collect(Collectors.toList());
-
-        return InvokeResultBuilder.success(results);
+    List<DefaultSysDeptDto> datas = sysDeptService.selector();
+    if (CollectionUtil.isEmpty(datas)) {
+      return InvokeResultBuilder.success();
     }
 
-    /**
-     * 查询部门
-     */
-    @PreAuthorize("@permission.valid('system:dept:query','system:dept:add','system:dept:modify')")
-    @GetMapping
-    public InvokeResult get(@NotBlank(message = "ID不能为空！") String id) {
+    List<SysDeptTreeBo> results = datas.stream().map(SysDeptTreeBo::new)
+        .collect(Collectors.toList());
 
-        DefaultSysDeptDto data = sysDeptService.getById(id);
-        if (data == null) {
-            throw new DefaultClientException("部门不存在！");
-        }
+    return InvokeResultBuilder.success(results);
+  }
 
-        GetSysDeptBo result = new GetSysDeptBo(data);
+  /**
+   * 查询部门
+   */
+  @PreAuthorize("@permission.valid('system:dept:query','system:dept:add','system:dept:modify')")
+  @GetMapping
+  public InvokeResult get(@NotBlank(message = "ID不能为空！") String id) {
 
-        return InvokeResultBuilder.success(result);
+    DefaultSysDeptDto data = sysDeptService.getById(id);
+    if (data == null) {
+      throw new DefaultClientException("部门不存在！");
     }
 
-    /**
-     * 批量停用部门
-     */
-    @PreAuthorize("@permission.valid('system:dept:modify')")
-    @PatchMapping("/unable/batch")
-    public InvokeResult batchUnable(@NotEmpty(message = "请选择需要停用的部门！") @RequestBody List<String> ids) {
+    GetSysDeptBo result = new GetSysDeptBo(data);
 
-        sysDeptService.batchUnable(ids);
-        return InvokeResultBuilder.success();
-    }
+    return InvokeResultBuilder.success(result);
+  }
 
-    /**
-     * 批量启用部门
-     */
-    @PreAuthorize("@permission.valid('system:dept:modify')")
-    @PatchMapping("/enable/batch")
-    public InvokeResult batchEnable(@NotEmpty(message = "请选择需要启用的部门！") @RequestBody List<String> ids) {
+  /**
+   * 批量停用部门
+   */
+  @PreAuthorize("@permission.valid('system:dept:modify')")
+  @PatchMapping("/unable/batch")
+  public InvokeResult batchUnable(
+      @NotEmpty(message = "请选择需要停用的部门！") @RequestBody List<String> ids) {
 
-        sysDeptService.batchEnable(ids);
-        return InvokeResultBuilder.success();
-    }
+    sysDeptService.batchUnable(ids);
+    return InvokeResultBuilder.success();
+  }
 
-    /**
-     * 新增部门
-     */
-    @PreAuthorize("@permission.valid('system:dept:add')")
-    @PostMapping
-    public InvokeResult create(@Valid CreateSysDeptVo vo) {
+  /**
+   * 批量启用部门
+   */
+  @PreAuthorize("@permission.valid('system:dept:modify')")
+  @PatchMapping("/enable/batch")
+  public InvokeResult batchEnable(
+      @NotEmpty(message = "请选择需要启用的部门！") @RequestBody List<String> ids) {
 
-        sysDeptService.create(vo);
+    sysDeptService.batchEnable(ids);
+    return InvokeResultBuilder.success();
+  }
 
-        return InvokeResultBuilder.success();
-    }
+  /**
+   * 新增部门
+   */
+  @PreAuthorize("@permission.valid('system:dept:add')")
+  @PostMapping
+  public InvokeResult create(@Valid CreateSysDeptVo vo) {
 
-    /**
-     * 修改部门
-     */
-    @PreAuthorize("@permission.valid('system:dept:modify')")
-    @PutMapping
-    public InvokeResult update(@Valid UpdateSysDeptVo vo) {
+    sysDeptService.create(vo);
 
-        sysDeptService.update(vo);
+    return InvokeResultBuilder.success();
+  }
 
-        return InvokeResultBuilder.success();
-    }
+  /**
+   * 修改部门
+   */
+  @PreAuthorize("@permission.valid('system:dept:modify')")
+  @PutMapping
+  public InvokeResult update(@Valid UpdateSysDeptVo vo) {
+
+    sysDeptService.update(vo);
+
+    return InvokeResultBuilder.success();
+  }
 }

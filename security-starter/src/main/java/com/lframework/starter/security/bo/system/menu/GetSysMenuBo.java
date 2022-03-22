@@ -12,101 +12,101 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class GetSysMenuBo extends BaseBo<DefaultSysMenuDto> {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    /**
-     * ID
-     */
-    private String id;
+  /**
+   * ID
+   */
+  private String id;
 
-    /**
-     * 编号
-     */
-    private String code;
+  /**
+   * 编号
+   */
+  private String code;
 
-    /**
-     * 名称（前端使用）
-     */
-    private String name;
+  /**
+   * 名称（前端使用）
+   */
+  private String name;
 
-    /**
-     * 标题
-     */
-    private String title;
+  /**
+   * 标题
+   */
+  private String title;
 
-    /**
-     * 组件（前端使用）
-     */
-    private String component;
+  /**
+   * 组件（前端使用）
+   */
+  private String component;
 
-    /**
-     * 父级ID
-     */
-    private String parentId;
+  /**
+   * 父级ID
+   */
+  private String parentId;
 
-    /**
-     * 父级名称
-     */
-    private String parentName;
+  /**
+   * 父级名称
+   */
+  private String parentName;
 
-    /**
-     * 路由路径（前端使用）
-     */
-    private String path;
+  /**
+   * 路由路径（前端使用）
+   */
+  private String path;
 
-    /**
-     * 是否缓存（前端使用）
-     */
-    private Boolean noCache;
+  /**
+   * 是否缓存（前端使用）
+   */
+  private Boolean noCache;
 
-    /**
-     * 类型 0-目录 1-菜单 2-功能
-     */
-    private Integer display;
+  /**
+   * 类型 0-目录 1-菜单 2-功能
+   */
+  private Integer display;
 
-    /**
-     * 是否隐藏（前端使用）
-     */
-    private Boolean hidden;
+  /**
+   * 是否隐藏（前端使用）
+   */
+  private Boolean hidden;
 
-    /**
-     * 权限
-     */
-    private String permission;
+  /**
+   * 权限
+   */
+  private String permission;
 
-    /**
-     * 状态
-     */
-    private Boolean available;
+  /**
+   * 状态
+   */
+  private Boolean available;
 
-    /**
-     * 备注
-     */
-    private String description;
+  /**
+   * 备注
+   */
+  private String description;
 
-    public GetSysMenuBo() {
+  public GetSysMenuBo() {
 
+  }
+
+  public GetSysMenuBo(DefaultSysMenuDto dto) {
+
+    super(dto);
+  }
+
+  @Override
+  public <A> BaseBo<DefaultSysMenuDto> convert(DefaultSysMenuDto dto) {
+
+    return super.convert(dto, GetSysMenuBo::getDisplay);
+  }
+
+  @Override
+  protected void afterInit(DefaultSysMenuDto dto) {
+
+    this.display = dto.getDisplay().getCode();
+    if (!StringUtil.isBlank(dto.getParentId())) {
+      ISysMenuService sysMenuService = ApplicationUtil.getBean(ISysMenuService.class);
+      this.parentName = sysMenuService.getById(dto.getParentId()).getTitle();
     }
 
-    public GetSysMenuBo(DefaultSysMenuDto dto) {
-
-        super(dto);
-    }
-
-    @Override
-    public <A> BaseBo<DefaultSysMenuDto> convert(DefaultSysMenuDto dto) {
-
-        return super.convert(dto, GetSysMenuBo::getDisplay);
-    }
-
-    @Override
-    protected void afterInit(DefaultSysMenuDto dto) {
-
-        this.display = dto.getDisplay().getCode();
-        if (!StringUtil.isBlank(dto.getParentId())) {
-            ISysMenuService sysMenuService = ApplicationUtil.getBean(ISysMenuService.class);
-            this.parentName = sysMenuService.getById(dto.getParentId()).getTitle();
-        }
-
-    }
+  }
 }

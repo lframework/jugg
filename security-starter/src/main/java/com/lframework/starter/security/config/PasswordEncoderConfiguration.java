@@ -9,10 +9,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 public class PasswordEncoderConfiguration {
 
-    @Bean
-    @ConditionalOnMissingBean(PasswordEncoder.class)
-    public PasswordEncoder getPasswordEncoder() {
+  @Bean
+  @ConditionalOnMissingBean(PasswordEncoder.class)
+  public PasswordEncoder getPasswordEncoder() {
 
-        return new BCryptPasswordEncoder();
-    }
+    return new BCryptPasswordEncoder();
+  }
 }

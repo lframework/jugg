@@ -10,10 +10,11 @@ import com.lframework.starter.web.components.security.DefaultUserDetails;
  */
 public interface DefaultUserDetailsMapper extends BaseMapper {
 
-    /**
-     * 根据登录名查询
-     * @param username
-     * @return
-     */
-    DefaultUserDetails findByUsername(String username);
+  /**
+   * 根据登录名查询
+   *
+   * @param username
+   * @return
+   */
+  DefaultUserDetails findByUsername(String username);
 }

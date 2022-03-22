@@ -9,37 +9,37 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class QueryUserRoleBo extends BaseBo<DefaultSysRoleDto> {
 
-    /**
-     * ID
-     */
-    private String id;
+  /**
+   * ID
+   */
+  private String id;
 
-    /**
-     * 编号
-     */
-    private String code;
+  /**
+   * 编号
+   */
+  private String code;
 
-    /**
-     * 名称
-     */
-    private String name;
+  /**
+   * 名称
+   */
+  private String name;
 
-    /**
-     * 权限
-     */
-    private String permission;
+  /**
+   * 权限
+   */
+  private String permission;
 
-    /**
-     * 是否选中
-     */
-    private Boolean selected = Boolean.FALSE;
+  /**
+   * 是否选中
+   */
+  private Boolean selected = Boolean.FALSE;
 
-    public QueryUserRoleBo() {
+  public QueryUserRoleBo() {
 
-    }
+  }
 
-    public QueryUserRoleBo(DefaultSysRoleDto dto) {
+  public QueryUserRoleBo(DefaultSysRoleDto dto) {
 
-        super(dto);
-    }
+    super(dto);
+  }
 }

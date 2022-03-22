@@ -9,14 +9,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class QueryParamsColumnConfigListener implements ApplicationListener<DataObjectDeleteEvent> {
 
-    @Autowired
-    private IGenQueryParamsColumnConfigService genQueryParamsColumnConfigService;
+  @Autowired
+  private IGenQueryParamsColumnConfigService genQueryParamsColumnConfigService;
 
-    @Override
-    public void onApplicationEvent(DataObjectDeleteEvent event) {
+  @Override
+  public void onApplicationEvent(DataObjectDeleteEvent event) {
 
-        for (String columnId : event.getColumnIds()) {
-            genQueryParamsColumnConfigService.deleteById(columnId);
-        }
+    for (String columnId : event.getColumnIds()) {
+      genQueryParamsColumnConfigService.deleteById(columnId);
     }
+  }
 }

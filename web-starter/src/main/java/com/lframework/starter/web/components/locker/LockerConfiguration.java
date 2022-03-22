@@ -8,10 +8,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class LockerConfiguration {
 
-    @Bean
-    @ConditionalOnMissingBean(LockBuilder.class)
-    public LockBuilder getLockBuilder() {
+  @Bean
+  @ConditionalOnMissingBean(LockBuilder.class)
+  public LockBuilder getLockBuilder() {
 
-        return new DefaultLockBuilder();
-    }
+    return new DefaultLockBuilder();
+  }
 }

@@ -9,10 +9,11 @@ import com.lframework.starter.web.components.code.GenerateCodeType;
  */
 public interface IGenerateCodeService extends BaseService {
 
-    /**
-     * 生成code
-     * @param type
-     * @return
-     */
-    String generate(GenerateCodeType type);
+  /**
+   * 生成code
+   *
+   * @param type
+   * @return
+   */
+  String generate(GenerateCodeType type);
 }

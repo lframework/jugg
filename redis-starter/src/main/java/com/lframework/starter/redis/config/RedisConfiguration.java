@@ -22,33 +22,33 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 @Configuration
 public class RedisConfiguration {
 
-    @Bean
-    public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory factory) {
+  @Bean
+  public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory factory) {
 
-        RedisTemplate<Object, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(factory);
+    RedisTemplate<Object, Object> template = new RedisTemplate<>();
+    template.setConnectionFactory(factory);
 
-        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<Object>(
-                Object.class);
-        ObjectMapper om = new ObjectMapper();
-        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+    Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<Object>(
+        Object.class);
+    ObjectMapper om = new ObjectMapper();
+    om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+    om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
 
-        om.registerModule(new ParameterNamesModule()).registerModule(new Jdk8Module())
-                .registerModule(new JavaTimeModule()); // new module, NOT JSR310Module
-        om.findAndRegisterModules();
+    om.registerModule(new ParameterNamesModule()).registerModule(new Jdk8Module())
+        .registerModule(new JavaTimeModule()); // new module, NOT JSR310Module
+    om.findAndRegisterModules();
 
-        om.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+    om.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
-        jackson2JsonRedisSerializer.setObjectMapper(om);
+    jackson2JsonRedisSerializer.setObjectMapper(om);
 
-        template.setKeySerializer(new GenericToStringSerializer<>(Object.class));
-        template.setHashKeySerializer(new GenericToStringSerializer<>(Object.class));
+    template.setKeySerializer(new GenericToStringSerializer<>(Object.class));
+    template.setHashKeySerializer(new GenericToStringSerializer<>(Object.class));
 
-        template.setValueSerializer(jackson2JsonRedisSerializer);
-        template.setHashValueSerializer(jackson2JsonRedisSerializer);
+    template.setValueSerializer(jackson2JsonRedisSerializer);
+    template.setHashValueSerializer(jackson2JsonRedisSerializer);
 
-        template.afterPropertiesSet();
-        return template;
-    }
+    template.afterPropertiesSet();
+    return template;
+  }
 }

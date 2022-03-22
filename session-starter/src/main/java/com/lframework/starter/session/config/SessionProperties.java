@@ -11,33 +11,33 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "session")
 public class SessionProperties {
 
-    /**
-     * 同一个用户最多同时在线数量
-     */
-    private Integer maximumSessions = 1;
+  /**
+   * 同一个用户最多同时在线数量
+   */
+  private Integer maximumSessions = 1;
 
-    /**
-     * 达到最多用户数后是否保持在线
-     */
-    private Boolean maxSessionsPreventsLogin = false;
+  /**
+   * 达到最多用户数后是否保持在线
+   */
+  private Boolean maxSessionsPreventsLogin = false;
 
-    public Integer getMaximumSessions() {
+  public Integer getMaximumSessions() {
 
-        return maximumSessions;
-    }
+    return maximumSessions;
+  }
 
-    public void setMaximumSessions(Integer maximumSessions) {
+  public void setMaximumSessions(Integer maximumSessions) {
 
-        this.maximumSessions = maximumSessions;
-    }
+    this.maximumSessions = maximumSessions;
+  }
 
-    public Boolean getMaxSessionsPreventsLogin() {
+  public Boolean getMaxSessionsPreventsLogin() {
 
-        return maxSessionsPreventsLogin;
-    }
+    return maxSessionsPreventsLogin;
+  }
 
-    public void setMaxSessionsPreventsLogin(Boolean maxSessionsPreventsLogin) {
+  public void setMaxSessionsPreventsLogin(Boolean maxSessionsPreventsLogin) {
 
-        this.maxSessionsPreventsLogin = maxSessionsPreventsLogin;
-    }
+    this.maxSessionsPreventsLogin = maxSessionsPreventsLogin;
+  }
 }

@@ -2,7 +2,6 @@ package com.lframework.common.utils;
 
 import com.lframework.common.constants.StringPool;
 import com.lframework.common.exceptions.impl.DefaultSysException;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -13,218 +12,231 @@ import java.math.RoundingMode;
  */
 public class NumberUtil {
 
-    /**
-     * 判断 value 是否为 precision 位小数
-     * @param value
-     * @param precision
-     * @return
-     */
-    public static boolean isNumberPrecision(Number value, int precision) {
+  /**
+   * 判断 value 是否为 precision 位小数
+   *
+   * @param value
+   * @param precision
+   * @return
+   */
+  public static boolean isNumberPrecision(Number value, int precision) {
 
-        if (value == null) {
-            return false;
-        }
+    if (value == null) {
+      return false;
+    }
 
-        if (precision < 0) {
-            return false;
-        }
+    if (precision < 0) {
+      return false;
+    }
 
-        String str = BigDecimal.valueOf(value.doubleValue()).toPlainString();
+    String str = BigDecimal.valueOf(value.doubleValue()).toPlainString();
 
-        if (str.contains(StringPool.DECIMAL_POINT)) {
-            while (StringPool.ZERO.equals(str.substring(str.length() - 1))) {
-                // 将数字末尾为0的字符去除
-                str = str.substring(0, str.length() - 1);
-            }
+    if (str.contains(StringPool.DECIMAL_POINT)) {
+      while (StringPool.ZERO.equals(str.substring(str.length() - 1))) {
+        // 将数字末尾为0的字符去除
+        str = str.substring(0, str.length() - 1);
+      }
 
-            if (StringPool.DECIMAL_POINT.equals(str.substring(str.length() - 1, str.length()))) {
-                return true;
-            }
-
-            return str.substring(str.indexOf(StringPool.DECIMAL_POINT)).length() - 1 <= precision;
-        }
-
+      if (StringPool.DECIMAL_POINT.equals(str.substring(str.length() - 1, str.length()))) {
         return true;
+      }
+
+      return str.substring(str.indexOf(StringPool.DECIMAL_POINT)).length() - 1 <= precision;
     }
 
-    /**
-     * 加法
-     * @param numbers
-     * @return
-     */
-    public static BigDecimal add(Number... numbers) {
+    return true;
+  }
 
-        BigDecimal result = new BigDecimal(0);
+  /**
+   * 加法
+   *
+   * @param numbers
+   * @return
+   */
+  public static BigDecimal add(Number... numbers) {
 
-        for (Number number : numbers) {
-            result = result.add(getNumber(number));
-        }
+    BigDecimal result = new BigDecimal(0);
 
-        return result;
+    for (Number number : numbers) {
+      result = result.add(getNumber(number));
     }
 
-    /**
-     * 减法
-     * @param n1 被减数
-     * @param numbers 减数
-     * @return
-     */
-    public static BigDecimal sub(Number n1, Number... numbers) {
+    return result;
+  }
 
-        Assert.notNull(n1);
-        Assert.notEmpty(numbers);
+  /**
+   * 减法
+   *
+   * @param n1      被减数
+   * @param numbers 减数
+   * @return
+   */
+  public static BigDecimal sub(Number n1, Number... numbers) {
 
-        BigDecimal result = getNumber(n1);
+    Assert.notNull(n1);
+    Assert.notEmpty(numbers);
 
-        for (Number number : numbers) {
-            BigDecimal tmp = getNumber(number);
+    BigDecimal result = getNumber(n1);
 
-            result = result.subtract(tmp);
-        }
+    for (Number number : numbers) {
+      BigDecimal tmp = getNumber(number);
 
-        return result;
+      result = result.subtract(tmp);
     }
 
-    /**
-     * 乘法
-     * @param numbers
-     * @return
-     */
-    public static BigDecimal mul(Number... numbers) {
+    return result;
+  }
 
-        BigDecimal result = new BigDecimal(1);
-        for (Number number : numbers) {
-            result = result.multiply(getNumber(number));
-        }
+  /**
+   * 乘法
+   *
+   * @param numbers
+   * @return
+   */
+  public static BigDecimal mul(Number... numbers) {
 
-        return result;
+    BigDecimal result = new BigDecimal(1);
+    for (Number number : numbers) {
+      result = result.multiply(getNumber(number));
     }
 
-    /**
-     * 除法
-     * @param n1 被除数
-     * @param numbers 除数
-     * @return
-     */
-    public static BigDecimal div(Number n1, Number... numbers) {
+    return result;
+  }
 
-        Assert.notNull(n1);
-        Assert.notEmpty(numbers);
+  /**
+   * 除法
+   *
+   * @param n1      被除数
+   * @param numbers 除数
+   * @return
+   */
+  public static BigDecimal div(Number n1, Number... numbers) {
 
-        BigDecimal result = getNumber(n1);
+    Assert.notNull(n1);
+    Assert.notEmpty(numbers);
 
-        for (Number number : numbers) {
-            BigDecimal tmp = getNumber(number);
-            if (equal(tmp, 0)) {
-                throw new DefaultSysException("除数不能等于0");
-            }
+    BigDecimal result = getNumber(n1);
 
-            result = result.divide(tmp, 16, RoundingMode.HALF_UP);
-        }
+    for (Number number : numbers) {
+      BigDecimal tmp = getNumber(number);
+      if (equal(tmp, 0)) {
+        throw new DefaultSysException("除数不能等于0");
+      }
 
-        return result;
+      result = result.divide(tmp, 16, RoundingMode.HALF_UP);
     }
 
-    /**
-     * 判断n1是否大于n2
-     * @param n1
-     * @param n2
-     * @return
-     */
-    public static boolean gt(Number n1, Number n2) {
+    return result;
+  }
 
-        return getNumber(n1).compareTo(getNumber(n2)) > 0;
+  /**
+   * 判断n1是否大于n2
+   *
+   * @param n1
+   * @param n2
+   * @return
+   */
+  public static boolean gt(Number n1, Number n2) {
+
+    return getNumber(n1).compareTo(getNumber(n2)) > 0;
+  }
+
+  /**
+   * 判断n1是否小于n2
+   *
+   * @param n1
+   * @param n2
+   * @return
+   */
+  public static boolean lt(Number n1, Number n2) {
+
+    return getNumber(n1).compareTo(getNumber(n2)) < 0;
+  }
+
+  /**
+   * 判断n1是否大于或等于n2
+   *
+   * @param n1
+   * @param n2
+   * @return
+   */
+  public static boolean ge(Number n1, Number n2) {
+
+    return getNumber(n1).compareTo(getNumber(n2)) >= 0;
+  }
+
+  /**
+   * 判断n1是否小于或等于n2
+   *
+   * @param n1
+   * @param n2
+   * @return
+   */
+  public static boolean le(Number n1, Number n2) {
+
+    return getNumber(n1).compareTo(getNumber(n2)) <= 0;
+  }
+
+  /**
+   * 判断n1是否等于n2
+   *
+   * @param n1
+   * @param n2
+   * @return
+   */
+  public static boolean equal(Number n1, Number n2) {
+
+    return getNumber(n1).compareTo(getNumber(n2)) == 0;
+  }
+
+  /**
+   * 根据无税价格计算含税价格
+   *
+   * @param unTaxPrice
+   * @param taxRate    税率（%）
+   * @return
+   */
+  public static BigDecimal calcTaxPrice(Number unTaxPrice, Number taxRate) {
+
+    return mul(unTaxPrice, add(div(taxRate, 100), BigDecimal.ONE));
+  }
+
+  /**
+   * 根据含税价格计算无税价格
+   *
+   * @param taxPrice
+   * @param taxRate  税率（%）
+   * @return
+   */
+  public static BigDecimal calcUnTaxPrice(Number taxPrice, Number taxRate) {
+
+    return div(taxPrice, add(div(taxRate, 100), BigDecimal.ONE));
+  }
+
+  /**
+   * 保留{precision}位小数
+   *
+   * @param number
+   * @param precision
+   * @return
+   */
+  public static BigDecimal getNumber(Number number, int precision) {
+
+    precision = Math.max(0, precision);
+
+    BigDecimal result = getNumber(number).setScale(precision, BigDecimal.ROUND_HALF_UP);
+
+    return result;
+  }
+
+  private static BigDecimal getNumber(Number number) {
+
+    Assert.notNull(number);
+
+    if (number instanceof BigDecimal) {
+      return (BigDecimal) number;
+    } else {
+      return BigDecimal.valueOf(number.doubleValue());
     }
-
-    /**
-     * 判断n1是否小于n2
-     * @param n1
-     * @param n2
-     * @return
-     */
-    public static boolean lt(Number n1, Number n2) {
-
-        return getNumber(n1).compareTo(getNumber(n2)) < 0;
-    }
-
-    /**
-     * 判断n1是否大于或等于n2
-     * @param n1
-     * @param n2
-     * @return
-     */
-    public static boolean ge(Number n1, Number n2) {
-
-        return getNumber(n1).compareTo(getNumber(n2)) >= 0;
-    }
-
-    /**
-     * 判断n1是否小于或等于n2
-     * @param n1
-     * @param n2
-     * @return
-     */
-    public static boolean le(Number n1, Number n2) {
-
-        return getNumber(n1).compareTo(getNumber(n2)) <= 0;
-    }
-
-    /**
-     * 判断n1是否等于n2
-     * @param n1
-     * @param n2
-     * @return
-     */
-    public static boolean equal(Number n1, Number n2) {
-
-        return getNumber(n1).compareTo(getNumber(n2)) == 0;
-    }
-
-    /**
-     * 根据无税价格计算含税价格
-     * @param unTaxPrice
-     * @param taxRate 税率（%）
-     * @return
-     */
-    public static BigDecimal calcTaxPrice(Number unTaxPrice, Number taxRate) {
-
-        return mul(unTaxPrice, add(div(taxRate, 100), BigDecimal.ONE));
-    }
-
-    /**
-     * 根据含税价格计算无税价格
-     * @param taxPrice
-     * @param taxRate 税率（%）
-     * @return
-     */
-    public static BigDecimal calcUnTaxPrice(Number taxPrice, Number taxRate) {
-
-        return div(taxPrice, add(div(taxRate, 100), BigDecimal.ONE));
-    }
-
-    /**
-     * 保留{precision}位小数
-     * @param number
-     * @param precision
-     * @return
-     */
-    public static BigDecimal getNumber(Number number, int precision) {
-
-        precision = Math.max(0, precision);
-
-        BigDecimal result = getNumber(number).setScale(precision, BigDecimal.ROUND_HALF_UP);
-
-        return result;
-    }
-
-    private static BigDecimal getNumber(Number number) {
-
-        Assert.notNull(number);
-
-        if (number instanceof BigDecimal) {
-            return (BigDecimal) number;
-        } else {
-            return BigDecimal.valueOf(number.doubleValue());
-        }
-    }
+  }
 }

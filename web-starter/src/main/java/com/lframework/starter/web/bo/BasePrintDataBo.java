@@ -6,11 +6,12 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class BasePrintDataBo<T extends BaseDto> extends BaseBo<T>{
-    public BasePrintDataBo() {
-    }
+public class BasePrintDataBo<T extends BaseDto> extends BaseBo<T> {
 
-    public BasePrintDataBo(T dto) {
-        super(dto);
-    }
+  public BasePrintDataBo() {
+  }
+
+  public BasePrintDataBo(T dto) {
+    super(dto);
+  }
 }
