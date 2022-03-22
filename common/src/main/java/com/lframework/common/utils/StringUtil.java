@@ -21,7 +21,7 @@ public class StringUtil extends StrUtil {
             return null;
         }
 
-        return email.substring(0, 1) + "******" + email.split("@")[1];
+        return email.substring(0, 1) + "******" + "@" + email.split("@")[1];
     }
 
     /**
@@ -35,6 +35,6 @@ public class StringUtil extends StrUtil {
             return null;
         }
 
-        return telephone.substring(0, 3) + "******" + telephone.substring(9);
+        return telephone.substring(0, 3) + "****" + telephone.substring(7);
     }
 }

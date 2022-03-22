@@ -26,6 +26,8 @@ public class MailConfiguration {
         account.setPass(properties.getPass());
         account.setFrom(properties.getFrom());
         account.setSslEnable(properties.getSslEnable());
+        account.setTimeout(properties.getTimeOut());
+        account.setConnectionTimeout(properties.getConnectTimeOut());
 
         MailSSLSocketFactory sf = new MailSSLSocketFactory();
         sf.setTrustAllHosts(true);

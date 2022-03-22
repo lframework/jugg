@@ -203,7 +203,7 @@ public class AuthController extends SecurityController {
      * @param username
      * @return
      */
-    @GetMapping("/forget/username")
+    @GetMapping("/auth/forget/username")
     public InvokeResult getByForget(@NotBlank(message = "用户名不能为空！") String username) {
 
         SysConfigDto sysConfig = sysConfigService.get();
@@ -219,6 +219,7 @@ public class AuthController extends SecurityController {
 
         Map<String, String> results = new HashMap<>(2, 1);
 
+        results.put("username", user.getUsername());
         results.put("email", StringUtil.encodeEmail(user.getEmail()));
         results.put("telephone", StringUtil.encodeTelephone(user.getTelephone()));
 
@@ -229,7 +230,7 @@ public class AuthController extends SecurityController {
      * 发送邮箱验证码
      * @return
      */
-    @GetMapping("/forget/mail/code")
+    @GetMapping("/auth/forget/mail/code")
     public InvokeResult sendMailCodeByForget(@NotBlank(message = "用户名不能为空！") String username) {
 
         SysConfigDto sysConfig = sysConfigService.get();
@@ -275,11 +276,11 @@ public class AuthController extends SecurityController {
      * 根据邮箱验证码重置密码
      * @param username
      * @param password
-     * @param code
+     * @param captcha
      * @return
      */
-    @PostMapping("/forget/mail")
-    public InvokeResult updatePswByMail(@NotBlank(message = "用户名不能为空！") String username, @NotBlank(message = "新密码不能为空！") @Pattern(regexp = PatternPool.PATTERN_STR_PASSWORD, message = "密码长度必须为5-16位，只允许包含大写字母、小写字母、数字、下划线") String password, @NotBlank(message = "验证码不能为空！") String code) {
+    @PostMapping("/auth/forget/mail")
+    public InvokeResult updatePswByMail(@NotBlank(message = "用户名不能为空！") String username, @NotBlank(message = "新密码不能为空！") @Pattern(regexp = PatternPool.PATTERN_STR_PASSWORD, message = "密码长度必须为5-16位，只允许包含大写字母、小写字母、数字、下划线") String password, @NotBlank(message = "验证码不能为空！") String captcha) {
 
         SysConfigDto sysConfig = sysConfigService.get();
         if (!sysConfig.getAllowForgetPsw()) {
@@ -298,9 +299,11 @@ public class AuthController extends SecurityController {
             throw new DefaultClientException("验证码已过期，请重新获取！");
         }
 
-        if (!code.equalsIgnoreCase(codeInDb)) {
-            throw new DefaultClientException("验证码不正确，请检查！");
+        if (!captcha.equalsIgnoreCase(codeInDb)) {
+            throw new DefaultClientException("验证码不正确，请重新输入！");
         }
+
+        redisHandler.del(key);
 
         userService.updatePassword(user.getId(), password);
 
@@ -311,7 +314,7 @@ public class AuthController extends SecurityController {
      * 发送短信验证码
      * @return
      */
-    @GetMapping("/forget/sms/code")
+    @GetMapping("/auth/forget/sms/code")
     public InvokeResult sendSmsCodeByForget(@NotBlank(message = "用户名不能为空！") String username) {
 
         SysConfigDto sysConfig = sysConfigService.get();
@@ -336,7 +339,7 @@ public class AuthController extends SecurityController {
         } else {
             redisHandler.set(checkKey, true, 60 * 1000L);
         }
-        
+
         String code = (String) redisHandler.get(key);
         if (code == null) {
             code = producer.createText();
@@ -357,11 +360,11 @@ public class AuthController extends SecurityController {
      * 根据短信验证码重置密码
      * @param username
      * @param password
-     * @param code
+     * @param captcha
      * @return
      */
-    @PostMapping("/forget/sms")
-    public InvokeResult updatePswBySms(@NotBlank(message = "用户名不能为空！") String username, @NotBlank(message = "新密码不能为空！") @Pattern(regexp = PatternPool.PATTERN_STR_PASSWORD, message = "密码长度必须为5-16位，只允许包含大写字母、小写字母、数字、下划线") String password, @NotBlank(message = "验证码不能为空！") String code) {
+    @PostMapping("/auth/forget/sms")
+    public InvokeResult updatePswBySms(@NotBlank(message = "用户名不能为空！") String username, @NotBlank(message = "新密码不能为空！") @Pattern(regexp = PatternPool.PATTERN_STR_PASSWORD, message = "密码长度必须为5-16位，只允许包含大写字母、小写字母、数字、下划线") String password, @NotBlank(message = "验证码不能为空！") String captcha) {
 
         SysConfigDto sysConfig = sysConfigService.get();
         if (!sysConfig.getAllowForgetPsw()) {
@@ -380,9 +383,11 @@ public class AuthController extends SecurityController {
             throw new DefaultClientException("验证码已过期，请重新获取！");
         }
 
-        if (!code.equalsIgnoreCase(codeInDb)) {
-            throw new DefaultClientException("验证码不正确，请检查！");
+        if (!captcha.equalsIgnoreCase(codeInDb)) {
+            throw new DefaultClientException("验证码不正确，请重新输入！");
         }
+
+        redisHandler.del(key);
 
         userService.updatePassword(user.getId(), password);
 

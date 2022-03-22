@@ -39,4 +39,14 @@ public class MailProperties {
      * 使用SSL安全连接
      */
     private Boolean sslEnable;
+
+    /**
+     * SMTP超时时间 默认30s
+     */
+    private Long timeOut = 30000L;
+
+    /**
+     * 连接超时时间 默认1s
+     */
+    private Long connectTimeOut = 1000L;
 }
