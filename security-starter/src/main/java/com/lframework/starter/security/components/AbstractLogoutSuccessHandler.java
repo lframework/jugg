@@ -7,21 +7,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-import org.springframework.stereotype.Component;
 
 /**
  * 用户退出登录成功处理器
  *
  * @author zmj
  */
-@Component
-public class DefaultLogoutSuccessHandler implements LogoutSuccessHandler {
+public abstract class AbstractLogoutSuccessHandler implements LogoutSuccessHandler {
 
   @Override
   public void onLogoutSuccess(HttpServletRequest httpServletRequest,
-      HttpServletResponse httpServletResponse,
-      Authentication authentication) throws IOException, ServletException {
+      HttpServletResponse httpServletResponse, Authentication authentication)
+      throws IOException, ServletException {
+
+    this.doLogoutSuccess(httpServletRequest, httpServletResponse, authentication);
 
     ResponseUtil.respSuccessJson(httpServletResponse, null);
   }
+
+  protected abstract void doLogoutSuccess(HttpServletRequest httpServletRequest,
+      HttpServletResponse httpServletResponse, Authentication authentication);
 }

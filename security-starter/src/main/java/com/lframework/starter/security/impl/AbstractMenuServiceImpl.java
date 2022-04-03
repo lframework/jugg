@@ -5,18 +5,16 @@ import com.lframework.common.utils.IdUtil;
 import com.lframework.common.utils.RegUtil;
 import com.lframework.common.utils.StringUtil;
 import com.lframework.starter.security.mappers.DefaultMenuMapper;
-import com.lframework.starter.session.utils.SessionUtil;
 import com.lframework.starter.web.dto.MenuDto;
 import com.lframework.starter.web.service.IMenuService;
 import com.lframework.starter.web.utils.ApplicationUtil;
 import com.lframework.starter.web.utils.SpelUtil;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
-import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author zmj
  */
-public class DefaultMenuServiceImpl implements IMenuService {
+public abstract class AbstractMenuServiceImpl implements IMenuService {
 
   @Autowired
   private DefaultMenuMapper defaultMenuMapper;
@@ -120,15 +118,9 @@ public class DefaultMenuServiceImpl implements IMenuService {
     return RegUtil.isMatch(Pattern.compile("^.*#\\{.*}.*$"), s);
   }
 
-  private Map<String, Object> getDefaultVars() {
+  protected Map<String, Object> getDefaultVars() {
 
-    Map<String, Object> vars = new HashMap<>();
-    HttpSession session = SessionUtil.getSession();
-    if (session != null) {
-      vars.put("_sessionId", session.getId());
-    }
-
-    return vars;
+    return Collections.EMPTY_MAP;
   }
 
   protected List<MenuDto> doGetMenus(String userId, boolean isAdmin) {

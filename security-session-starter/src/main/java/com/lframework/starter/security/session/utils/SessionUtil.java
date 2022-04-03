@@ -1,4 +1,4 @@
-package com.lframework.starter.session.utils;
+package com.lframework.starter.security.session.utils;
 
 import com.lframework.starter.web.utils.RequestUtil;
 import javax.servlet.http.HttpSession;

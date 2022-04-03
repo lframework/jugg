@@ -1,11 +1,9 @@
 package com.lframework.starter.security.config;
 
 import com.lframework.starter.security.components.DefaultUserDetailsService;
-import com.lframework.starter.security.impl.DefaultMenuServiceImpl;
 import com.lframework.starter.security.impl.DefaultUserServiceImpl;
 import com.lframework.starter.security.impl.system.RecursionMappingServiceImpl;
 import com.lframework.starter.security.service.system.IRecursionMappingService;
-import com.lframework.starter.web.service.IMenuService;
 import com.lframework.starter.web.service.IUserService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -26,14 +24,6 @@ public class DbSecurityConfiguration {
 
     DefaultUserDetailsService userDetailsService = new DefaultUserDetailsService();
     return userDetailsService;
-  }
-
-  @Bean
-  @ConditionalOnMissingBean(IMenuService.class)
-  public IMenuService getMenuService() {
-
-    DefaultMenuServiceImpl menuService = new DefaultMenuServiceImpl();
-    return menuService;
   }
 
   @Bean

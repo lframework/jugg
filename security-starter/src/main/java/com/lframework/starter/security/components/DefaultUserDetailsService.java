@@ -12,12 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class DefaultUserDetailsService extends AbstractUserDetailsService {
 
   @Autowired
-  private DefaultUserDetailsMapper DefaultUserDetailsMapper;
+  private DefaultUserDetailsMapper defaultUserDetailsMapper;
 
   @Override
   public AbstractUserDetails findByUsername(String username) {
 
-    AbstractUserDetails user = DefaultUserDetailsMapper.findByUsername(username);
+    AbstractUserDetails user = defaultUserDetailsMapper.findByUsername(username);
 
     return user;
   }

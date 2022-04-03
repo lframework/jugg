@@ -13,6 +13,7 @@
 
     <groupId>com.lframework</groupId>
     <artifactId>parent</artifactId>
+    <name>Jugg基础框架</name>
     <version>2.0.2</version>
     <modules>
         <module>common</module>
@@ -20,8 +21,9 @@
         <module>web-starter</module>
         <module>mybatis-starter</module>
         <module>security-starter</module>
-        <module>session-starter</module>
         <module>redis-starter</module>
+        <module>security-session-starter</module>
+        <module>security-jwt-starter</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -42,6 +44,7 @@
         <pagehelper-spring-boot-starter.version>1.3.1</pagehelper-spring-boot-starter.version>
         <mybatis-plus-boot-starter.version>3.4.2</mybatis-plus-boot-starter.version>
         <kaptcha.version>2.3.2</kaptcha.version>
+        <jjwt.version>0.9.1</jjwt.version>
         <easyexcel.version>2.2.10</easyexcel.version>
         <httpclient.version>4.5.10</httpclient.version>
         <dom4j.version>1.6.1</dom4j.version>
@@ -79,7 +82,13 @@
 
             <dependency>
                 <groupId>com.lframework</groupId>
-                <artifactId>session-starter</artifactId>
+                <artifactId>security-jwt-starter</artifactId>
+                <version>${platform.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.lframework</groupId>
+                <artifactId>security-session-starter</artifactId>
                 <version>${platform.version}</version>
             </dependency>
 
@@ -160,6 +169,13 @@
                 <groupId>com.github.penggle</groupId>
                 <artifactId>kaptcha</artifactId>
                 <version>${kaptcha.version}</version>
+            </dependency>
+
+            <!-- jwt -->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jjwt.version}</version>
             </dependency>
 
             <!-- easyexcel -->

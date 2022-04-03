@@ -1,4 +1,4 @@
-package com.lframework.starter.session.config;
+package com.lframework.starter.security.config;
 
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -21,6 +21,11 @@ public class SessionProperties {
    */
   private Boolean maxSessionsPreventsLogin = false;
 
+  /**
+   * Token Secret
+   */
+  private String tokenSecret;
+
   public Integer getMaximumSessions() {
 
     return maximumSessions;
@@ -39,5 +44,13 @@ public class SessionProperties {
   public void setMaxSessionsPreventsLogin(Boolean maxSessionsPreventsLogin) {
 
     this.maxSessionsPreventsLogin = maxSessionsPreventsLogin;
+  }
+
+  public String getTokenSecret() {
+    return tokenSecret;
+  }
+
+  public void setTokenSecret(String tokenSecret) {
+    this.tokenSecret = tokenSecret;
   }
 }

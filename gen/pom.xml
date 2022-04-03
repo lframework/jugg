@@ -11,6 +11,7 @@
     </parent>
 
     <artifactId>gen</artifactId>
+    <name>【gen】代码生成器</name>
 
     <dependencies>
         <dependency>

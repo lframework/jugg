@@ -1,14 +1,13 @@
 ### 项目介绍
 Jugg名称来源于Dota游戏中的剑圣。
 Jugg是用来开发业务系统的脚手架，将常用的开发框架整合并配置，以此来简化业务系统的搭建工作。
-#### 注意事项
-目前项目的登录主要是使用session而不是jwt，后续会增加jwt-starter提供更多的选择。
 ### 项目构成
 * common
 * mybatis-starter
 * redis-starter
 * security-starter
-* session-starter
+* security-session-starter（依赖后即可使项目基于Session维护登录态以及权限控制，注：与Jwt互斥）
+* security-jwt-starter（依赖后即可使项目基于Jwt维护登录态以及权限控制，注：与Session互斥）
 * web-starter
 * gen
 

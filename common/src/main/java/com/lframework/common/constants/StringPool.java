@@ -121,4 +121,14 @@ public interface StringPool {
    * 请求ID再Header中的key值
    */
   String HEADER_NAME_REQUEST_ID = "Request-Id";
+
+  /**
+   * Token起始字符串
+   */
+  String TOKEN_START_WITH_STR = "Bearer-";
+
+  /**
+   * 用户Token在redis中的key
+   */
+  String USER_TOKEN_KEY = "user_token_key_{}";
 }

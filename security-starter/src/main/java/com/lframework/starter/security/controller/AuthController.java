@@ -158,7 +158,7 @@ public class AuthController extends SecurityController {
   public InvokeResult info(HttpServletRequest request) {
 
     AbstractUserDetails user = getCurrentUser();
-    LoginDto info = new LoginDto(request.getSession(false).getId(), user.getName(),
+    LoginDto info = new LoginDto(null, user.getName(),
         user.getPermissions());
 
     return InvokeResultBuilder.success(info);

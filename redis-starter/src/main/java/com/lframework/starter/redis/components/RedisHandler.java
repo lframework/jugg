@@ -196,6 +196,18 @@ public class RedisHandler {
   }
 
   /**
+   * HashGetAll
+   *
+   * @param key
+   * @return
+   */
+  public Map<String, Object> hgetAll(String key) {
+    Assert.notNull(key);
+
+    return redisTemplate.opsForHash().entries(key);
+  }
+
+  /**
    * 获取hashKey对应的所有键值
    *
    * @param key
