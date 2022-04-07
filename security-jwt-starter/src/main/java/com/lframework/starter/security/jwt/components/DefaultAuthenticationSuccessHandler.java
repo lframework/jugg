@@ -49,6 +49,8 @@ public class DefaultAuthenticationSuccessHandler extends AbstractAuthenticationS
     LocalDateTime expireTime = now.plusSeconds(timeout);
 
     String token = Jwts.builder().setSubject(user.getUsername()).setIssuedAt(DateUtil.toDate(now))
+        .setIssuer(
+            sessionProperties.getIssuer())
         .signWith(SignatureAlgorithm.HS512, sessionProperties.getTokenSecret())
         .setExpiration(DateUtil.toDate(expireTime)).compact();
 

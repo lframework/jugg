@@ -26,6 +26,11 @@ public class SessionProperties {
    */
   private String tokenSecret;
 
+  /**
+   * Token发行人
+   */
+  private String issuer;
+
   public Integer getMaximumSessions() {
 
     return maximumSessions;
@@ -52,5 +57,13 @@ public class SessionProperties {
 
   public void setTokenSecret(String tokenSecret) {
     this.tokenSecret = tokenSecret;
+  }
+
+  public String getIssuer() {
+    return issuer;
+  }
+
+  public void setIssuer(String issuer) {
+    this.issuer = issuer;
   }
 }
