@@ -14,13 +14,16 @@ import org.springframework.stereotype.Component;
 public class DefaultAuthenticationSuccessHandler extends AbstractAuthenticationSuccessHandler {
 
   @Override
-  protected void doAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+  protected String doAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
       Authentication authentication) {
 
     AbstractUserDetails user = SecurityUtil.getCurrentUser();
-    LoginDto dto = new LoginDto(request.getSession(false).getId(), user.getName(),
+    String token = request.getSession(false).getId();
+    LoginDto dto = new LoginDto(token, user.getName(),
         user.getPermissions());
 
     ResponseUtil.respSuccessJson(response, dto);
+
+    return token;
   }
 }

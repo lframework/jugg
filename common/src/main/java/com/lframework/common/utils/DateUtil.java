@@ -73,4 +73,8 @@ public class DateUtil extends cn.hutool.core.date.DateUtil {
 
     return Timestamp.valueOf(toLocalDateTime(localDate)).getTime();
   }
+
+  public static long getTime(Date date) {
+    return date.getTime();
+  }
 }

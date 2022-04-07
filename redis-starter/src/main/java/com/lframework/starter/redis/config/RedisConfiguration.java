@@ -13,6 +13,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 
 /**
  * redis配置
@@ -45,8 +46,8 @@ public class RedisConfiguration {
     template.setKeySerializer(new GenericToStringSerializer<>(Object.class));
     template.setHashKeySerializer(new GenericToStringSerializer<>(Object.class));
 
-    template.setValueSerializer(jackson2JsonRedisSerializer);
-    template.setHashValueSerializer(jackson2JsonRedisSerializer);
+    template.setValueSerializer(new JdkSerializationRedisSerializer());
+    template.setHashValueSerializer(new JdkSerializationRedisSerializer());
 
     template.afterPropertiesSet();
     return template;

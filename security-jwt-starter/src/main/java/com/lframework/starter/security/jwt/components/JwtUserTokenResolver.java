@@ -5,6 +5,7 @@ import com.lframework.common.utils.ArrayUtil;
 import com.lframework.common.utils.DateUtil;
 import com.lframework.common.utils.StringUtil;
 import com.lframework.starter.redis.components.RedisHandler;
+import com.lframework.starter.security.components.IUserTokenResolver;
 import com.lframework.starter.security.config.SessionProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class UserTokenResolver {
+public class JwtUserTokenResolver implements IUserTokenResolver {
 
   @Autowired
   private RedisHandler redisHandler;
@@ -27,20 +28,9 @@ public class UserTokenResolver {
   @Autowired
   private SessionProperties sessionProperties;
 
-  /**
-   * 从request中解析Token文本
-   *
-   * @param request
-   * @return
-   */
-  public String resolve(HttpServletRequest request) {
-    String header = StringPool.HEADER_NAME_SESSION_ID;
-    // 先尝试从Header中获取token
-    String token = request.getHeader(header);
-    if (StringUtil.isBlank(token)) {
-      // 再尝试从Cookie中获取token
-      token = this.getCookieValue(request, header);
-    }
+  @Override
+  public String getToken(HttpServletRequest request) {
+    String token = getFullToken(request);
 
     if (!StringUtil.isBlank(token)) {
       if (token.startsWith(StringPool.TOKEN_START_WITH_STR)) {
@@ -51,11 +41,32 @@ public class UserTokenResolver {
     return token;
   }
 
+  @Override
+  public String getFullToken(HttpServletRequest request) {
+    if (request == null) {
+      return null;
+    }
+
+    String header = StringPool.HEADER_NAME_SESSION_ID;
+    // 先尝试从Header中获取token
+    String token = request.getHeader(header);
+    if (StringUtil.isBlank(token)) {
+      // 再尝试从Cookie中获取token
+      token = this.getCookieValue(request, header);
+    }
+
+    if (StringUtil.isBlank(token)) {
+      return null;
+    }
+
+    return token;
+  }
+
   public Claims resolveClaims(String token) {
     try {
 
-      return Jwts.parser().setSigningKey(sessionProperties.getTokenSecret())
-          .parseClaimsJws(token).getBody();
+      return Jwts.parser().setSigningKey(sessionProperties.getTokenSecret()).parseClaimsJws(token)
+          .getBody();
     } catch (Exception e) {
       log.warn(e.getMessage(), e);
       return null;

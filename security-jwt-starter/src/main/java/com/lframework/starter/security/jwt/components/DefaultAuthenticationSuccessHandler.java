@@ -38,7 +38,7 @@ public class DefaultAuthenticationSuccessHandler extends AbstractAuthenticationS
   private RedisHandler redisHandler;
 
   @Override
-  protected void doAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+  protected String doAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
       Authentication authentication) {
     AbstractUserDetails user = SecurityUtil.getCurrentUser();
 
@@ -48,11 +48,11 @@ public class DefaultAuthenticationSuccessHandler extends AbstractAuthenticationS
         : springSessionProperties.getTimeout().getSeconds();
     LocalDateTime expireTime = now.plusSeconds(timeout);
 
-    String token = Jwts.builder().setSubject(user.getId()).setIssuedAt(DateUtil.toDate(now))
+    String token = Jwts.builder().setSubject(user.getUsername()).setIssuedAt(DateUtil.toDate(now))
         .signWith(SignatureAlgorithm.HS512, sessionProperties.getTokenSecret())
         .setExpiration(DateUtil.toDate(expireTime)).compact();
 
-    String tokenKey = StringUtil.format(StringPool.USER_TOKEN_KEY, user.getId());
+    String tokenKey = StringUtil.format(StringPool.USER_TOKEN_KEY, user.getUsername());
     redisHandler.hset(tokenKey, DateUtil.formatDateTime(expireTime), token, timeout * 1000L);
 
     String respToken = StringPool.TOKEN_START_WITH_STR + token;
@@ -80,5 +80,7 @@ public class DefaultAuthenticationSuccessHandler extends AbstractAuthenticationS
 
     response.addCookie(new Cookie(StringPool.HEADER_NAME_SESSION_ID, respToken));
     ResponseUtil.respSuccessJson(response, dto);
+
+    return token;
   }
 }

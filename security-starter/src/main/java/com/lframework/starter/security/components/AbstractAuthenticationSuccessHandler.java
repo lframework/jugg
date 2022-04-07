@@ -2,6 +2,7 @@ package com.lframework.starter.security.components;
 
 import com.lframework.starter.security.event.LoginEvent;
 import com.lframework.starter.web.utils.ApplicationUtil;
+import com.lframework.starter.web.utils.SecurityUtil;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -20,12 +21,19 @@ public abstract class AbstractAuthenticationSuccessHandler implements Authentica
   public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
       Authentication authentication) throws IOException, ServletException {
 
-    this.doAuthenticationSuccess(request, response, authentication);
+    String token = this.doAuthenticationSuccess(request, response, authentication);
 
-    ApplicationUtil.publishEvent(new LoginEvent(this));
+    ApplicationUtil.publishEvent(new LoginEvent(this, SecurityUtil.getCurrentUser(), token));
   }
 
-  protected abstract void doAuthenticationSuccess(HttpServletRequest request,
-      HttpServletResponse response,
-      Authentication authentication);
+  /**
+   * 认证成功后置处理
+   *
+   * @param request
+   * @param response
+   * @param authentication
+   * @return token
+   */
+  protected abstract String doAuthenticationSuccess(HttpServletRequest request,
+      HttpServletResponse response, Authentication authentication);
 }

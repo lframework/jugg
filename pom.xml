@@ -24,6 +24,7 @@
         <module>redis-starter</module>
         <module>security-session-starter</module>
         <module>security-jwt-starter</module>
+      <module>bpm-starter</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -93,26 +94,32 @@
             </dependency>
 
             <dependency>
-                <groupId>com.lframework</groupId>
-                <artifactId>redis-starter</artifactId>
-                <version>${platform.version}</version>
+              <groupId>com.lframework</groupId>
+              <artifactId>redis-starter</artifactId>
+              <version>${platform.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>com.lframework</groupId>
-                <artifactId>gen</artifactId>
-                <version>${platform.version}</version>
-            </dependency>
+          <dependency>
+            <groupId>com.lframework</groupId>
+            <artifactId>gen</artifactId>
+            <version>${platform.version}</version>
+          </dependency>
 
-            <!-- lombok -->
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok.version}</version>
-            </dependency>
+          <dependency>
+            <groupId>com.lframework</groupId>
+            <artifactId>bpm-starter</artifactId>
+            <version>${platform.version}</version>
+          </dependency>
 
-            <!-- log -->
-            <dependency>
+          <!-- lombok -->
+          <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+          </dependency>
+
+          <!-- log -->
+          <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.version}</version>

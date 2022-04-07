@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 public class DefaultLogoutSuccessHandler extends AbstractLogoutSuccessHandler {
 
   @Autowired
-  private UserTokenResolver userTokenResolver;
+  private JwtUserTokenResolver jwtUserTokenResolver;
 
   @Autowired
   private RedisHandler redisHandler;
@@ -31,8 +31,8 @@ public class DefaultLogoutSuccessHandler extends AbstractLogoutSuccessHandler {
       HttpServletResponse httpServletResponse, Authentication authentication) {
 
     AbstractUserDetails user = (AbstractUserDetails) authentication.getPrincipal();
-    String token = userTokenResolver.resolve(httpServletRequest);
-    Claims claims = userTokenResolver.resolveClaims(token);
+    String token = jwtUserTokenResolver.getToken(httpServletRequest);
+    Claims claims = jwtUserTokenResolver.resolveClaims(token);
 
     if (user != null && !StringUtil.isBlank(token)) {
       String tokenKey = StringUtil.format(StringPool.USER_TOKEN_KEY, user.getId());

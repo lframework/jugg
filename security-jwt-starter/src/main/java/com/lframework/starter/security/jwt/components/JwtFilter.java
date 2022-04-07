@@ -29,7 +29,7 @@ public class JwtFilter extends OncePerRequestFilter {
   private PermitAllService permitAllService;
 
   @Autowired
-  private UserTokenResolver userTokenResolver;
+  private JwtUserTokenResolver jwtUserTokenResolver;
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -40,11 +40,11 @@ public class JwtFilter extends OncePerRequestFilter {
       return;
     }
 
-    String token = userTokenResolver.resolve(request);
+    String token = jwtUserTokenResolver.getToken(request);
 
     if (!StringUtil.isBlank(token)) {
       // 解析Token
-      String userId = userTokenResolver.resolveToken(token);
+      String userId = jwtUserTokenResolver.resolveToken(token);
       if (!StringUtil.isBlank(userId)) {
         filterChain.doFilter(request, response);
         return;

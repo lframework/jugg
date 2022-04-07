@@ -4,13 +4,15 @@ import com.lframework.common.utils.CollectionUtil;
 import com.lframework.common.utils.IdUtil;
 import com.lframework.common.utils.RegUtil;
 import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.security.components.IUserTokenResolver;
 import com.lframework.starter.security.mappers.DefaultMenuMapper;
 import com.lframework.starter.web.dto.MenuDto;
 import com.lframework.starter.web.service.IMenuService;
 import com.lframework.starter.web.utils.ApplicationUtil;
+import com.lframework.starter.web.utils.RequestUtil;
 import com.lframework.starter.web.utils.SpelUtil;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,6 +29,9 @@ public abstract class AbstractMenuServiceImpl implements IMenuService {
 
   @Autowired
   private DefaultMenuMapper defaultMenuMapper;
+
+  @Autowired
+  private IUserTokenResolver userTokenResolver;
 
   @Override
   public List<MenuDto> getMenuByUserId(String userId, boolean isAdmin) {
@@ -120,7 +125,11 @@ public abstract class AbstractMenuServiceImpl implements IMenuService {
 
   protected Map<String, Object> getDefaultVars() {
 
-    return Collections.EMPTY_MAP;
+    Map<String, Object> vars = new HashMap<>();
+
+    vars.put("_token", userTokenResolver.getToken(RequestUtil.getRequest()));
+
+    return vars;
   }
 
   protected List<MenuDto> doGetMenus(String userId, boolean isAdmin) {

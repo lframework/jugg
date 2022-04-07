@@ -1,7 +1,10 @@
 package com.lframework.starter.web.utils;
 
 import com.lframework.common.utils.ArrayUtil;
+import com.lframework.common.utils.CollectionUtil;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.ServletInputStream;
@@ -25,11 +28,31 @@ public class RequestUtil {
    */
   public static HttpServletRequest getRequest() {
 
-    HttpServletRequest request = ((ServletRequestAttributes) (RequestContextHolder
-        .currentRequestAttributes()))
-        .getRequest();
+    HttpServletRequest request = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getRequest();
 
     return request;
+  }
+
+  /**
+   * 获取所有Request Header
+   *
+   * @return
+   */
+  public static Map<String, String> getHeaders() {
+    HttpServletRequest request = getRequest();
+
+    Enumeration<String> headerNames = request.getHeaderNames();
+    if (CollectionUtil.isEmpty(headerNames)) {
+      return Collections.EMPTY_MAP;
+    }
+
+    Map<String, String> headers = new HashMap<>();
+    while (headerNames.hasMoreElements()) {
+      String headerName = headerNames.nextElement();
+      headers.put(headerName, request.getHeader(headerName));
+    }
+
+    return headers;
   }
 
   /**
