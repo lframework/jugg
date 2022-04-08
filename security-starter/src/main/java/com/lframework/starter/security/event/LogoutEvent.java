@@ -10,16 +10,23 @@ import org.springframework.context.ApplicationEvent;
  */
 public class LogoutEvent extends ApplicationEvent {
 
-  private AbstractUserDetails user;
+  private final AbstractUserDetails user;
 
-  public LogoutEvent(Object source, AbstractUserDetails user) {
+  private final String token;
+
+  public LogoutEvent(Object source, AbstractUserDetails user, String token) {
 
     super(source);
     this.user = user;
+    this.token = token;
   }
 
   public AbstractUserDetails getUser() {
 
     return user;
+  }
+
+  public String getToken() {
+    return token;
   }
 }

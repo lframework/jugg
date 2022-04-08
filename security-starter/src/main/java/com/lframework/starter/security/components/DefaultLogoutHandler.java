@@ -23,12 +23,14 @@ public class DefaultLogoutHandler implements LogoutHandler {
   public void logout(HttpServletRequest request, HttpServletResponse response,
       Authentication authentication) {
 
+    String token = ApplicationUtil.getBean(IUserTokenResolver.class).getToken(request);
+
     AbstractUserDetails currentUser = SecurityUtil.getCurrentUser(authentication);
 
     cookieHandler.deleteCookie(request, StringPool.HEADER_NAME_SESSION_ID);
 
     if (currentUser != null) {
-      ApplicationUtil.publishEvent(new LogoutEvent(this, currentUser));
+      ApplicationUtil.publishEvent(new LogoutEvent(this, currentUser, token));
     }
   }
 }
