@@ -41,6 +41,7 @@ import javax.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.util.FastByteArrayOutputStream;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -77,7 +78,7 @@ public class AuthController extends SecurityController {
   private ISysUserService sysUserService;
 
   @Autowired
-  private AbstractUserDetailsService userDetailsService;
+  private UserDetailsService userDetailsService;
 
   @Autowired
   private IUserService userService;
@@ -158,8 +159,7 @@ public class AuthController extends SecurityController {
   public InvokeResult info(HttpServletRequest request) {
 
     AbstractUserDetails user = getCurrentUser();
-    LoginDto info = new LoginDto(null, user.getName(),
-        user.getPermissions());
+    LoginDto info = new LoginDto(null, user.getName(), user.getPermissions());
 
     return InvokeResultBuilder.success(info);
   }
@@ -214,7 +214,8 @@ public class AuthController extends SecurityController {
       throw new DefaultClientException("系统不允许重置密码！");
     }
 
-    AbstractUserDetails user = userDetailsService.findByUsername(username);
+    AbstractUserDetails user = ((AbstractUserDetailsService) userDetailsService).findByUsername(
+        username);
 
     if (user == null) {
       throw new DefaultClientException("用户名不存在！");
@@ -242,7 +243,8 @@ public class AuthController extends SecurityController {
       throw new DefaultClientException("系统不允许重置密码！");
     }
 
-    AbstractUserDetails user = userDetailsService.findByUsername(username);
+    AbstractUserDetails user = ((AbstractUserDetailsService) userDetailsService).findByUsername(
+        username);
 
     if (user == null) {
       throw new DefaultClientException("用户名不存在！");
@@ -293,7 +295,8 @@ public class AuthController extends SecurityController {
       throw new DefaultClientException("系统不允许重置密码！");
     }
 
-    AbstractUserDetails user = userDetailsService.findByUsername(username);
+    AbstractUserDetails user = ((AbstractUserDetailsService) userDetailsService).findByUsername(
+        username);
 
     if (user == null) {
       throw new DefaultClientException("用户名不存在！");
@@ -329,7 +332,8 @@ public class AuthController extends SecurityController {
       throw new DefaultClientException("系统不允许重置密码！");
     }
 
-    AbstractUserDetails user = userDetailsService.findByUsername(username);
+    AbstractUserDetails user = ((AbstractUserDetailsService) userDetailsService).findByUsername(
+        username);
 
     if (user == null) {
       throw new DefaultClientException("用户名不存在！");
@@ -381,7 +385,8 @@ public class AuthController extends SecurityController {
       throw new DefaultClientException("系统不允许重置密码！");
     }
 
-    AbstractUserDetails user = userDetailsService.findByUsername(username);
+    AbstractUserDetails user = ((AbstractUserDetailsService) userDetailsService).findByUsername(
+        username);
 
     if (user == null) {
       throw new DefaultClientException("用户名不存在！");
