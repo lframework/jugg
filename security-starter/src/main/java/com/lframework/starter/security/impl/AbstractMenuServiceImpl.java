@@ -1,5 +1,6 @@
 package com.lframework.starter.security.impl;
 
+import com.lframework.common.constants.StringPool;
 import com.lframework.common.utils.CollectionUtil;
 import com.lframework.common.utils.IdUtil;
 import com.lframework.common.utils.RegUtil;
@@ -41,10 +42,12 @@ public abstract class AbstractMenuServiceImpl implements IMenuService {
     List<String> collectionMenuIds = this.doGetCollectMenuIds(userId);
 
     if (!CollectionUtil.isEmpty(menus)) {
+      // 用env渲染${xxx}属性
       menus.stream().forEach(menu -> {
         menu.setPath(ApplicationUtil.resolvePlaceholders(menu.getPath()));
       });
 
+      // 渲染spel表达式
       Map<String, Object> vars = getDefaultVars();
       menus.stream().filter(menu -> this.hasSpecExpression(menu.getPath())).forEach(menu -> {
         List<String> expressions = this.getAllExpressions(menu.getPath());
@@ -128,6 +131,8 @@ public abstract class AbstractMenuServiceImpl implements IMenuService {
     Map<String, Object> vars = new HashMap<>();
 
     vars.put("_token", userTokenResolver.getToken(RequestUtil.getRequest()));
+    vars.put("_fullToken", userTokenResolver.getFullToken(RequestUtil.getRequest()));
+    vars.put("_tokenKey", StringPool.HEADER_NAME_SESSION_ID);
 
     return vars;
   }
