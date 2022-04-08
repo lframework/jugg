@@ -1,0 +1,4 @@
+com.lframework.starter.security.config.DbSecurityConfiguration=\
+com.lframework.starter.security.config.DefaultSystemFunctionConfiguration,\
+com.lframework.starter.security.config.PasswordEncoderConfiguration,\
+com.lframework.starter.security.config.SpringSecurityConfiguration

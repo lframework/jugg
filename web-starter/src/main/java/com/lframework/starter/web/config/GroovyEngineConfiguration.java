@@ -3,7 +3,6 @@ package com.lframework.starter.web.config;
 import groovy.lang.Binding;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyShell;
-import java.util.Map;
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -21,10 +20,6 @@ public class GroovyEngineConfiguration implements ApplicationContextAware {
 
     Binding groovyBinding = new Binding();
 
-    Map<String, Object> beanMap = applicationContext.getBeansOfType(Object.class);
-    for (String beanName : beanMap.keySet()) {
-      groovyBinding.setVariable(beanName, beanMap.get(beanName));
-    }
     return groovyBinding;
   }
 
