@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS `op_logs`;
 CREATE TABLE `op_logs`
 (
     `id`          varchar(32)  NOT NULL COMMENT 'ID',
@@ -12,6 +13,7 @@ CREATE TABLE `op_logs`
     KEY           `create_time` (`create_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `recursion_mapping`;
 CREATE TABLE `recursion_mapping`
 (
     `id`        varchar(32) NOT NULL,
@@ -24,6 +26,7 @@ CREATE TABLE `recursion_mapping`
     KEY         `node_type` (`node_type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `sys_dept`;
 CREATE TABLE `sys_dept`
 (
     `id`          varchar(32)  NOT NULL COMMENT 'ID',
@@ -41,6 +44,7 @@ CREATE TABLE `sys_dept`
     UNIQUE KEY `code` (`code`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `sys_menu`;
 CREATE TABLE `sys_menu`
 (
     `id`          varchar(32)  NOT NULL COMMENT 'ID',
@@ -125,6 +129,7 @@ INSERT INTO `sys_menu`
 VALUES ('1000006', '1000006', 'Oplog', '操作日志', '/system/oplog/index', '1000', '/oplog', '0', '1', '0',
         'system:oplog:query', '1', '1', '', '1', '2021-07-05 01:08:40', '1', '2021-07-05 01:08:40');
 
+DROP TABLE IF EXISTS `sys_position`;
 CREATE TABLE `sys_position`
 (
     `id`          varchar(32)  NOT NULL COMMENT 'ID',
@@ -140,6 +145,7 @@ CREATE TABLE `sys_position`
     UNIQUE KEY `code` (`code`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统岗位';
 
+DROP TABLE IF EXISTS `sys_role`;
 CREATE TABLE `sys_role`
 (
     `id`          varchar(32)  NOT NULL COMMENT 'ID',
@@ -156,6 +162,7 @@ CREATE TABLE `sys_role`
     UNIQUE KEY `code` (`code`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `sys_role_menu`;
 CREATE TABLE `sys_role_menu`
 (
     `id`      varchar(32) NOT NULL COMMENT 'ID',
@@ -165,6 +172,7 @@ CREATE TABLE `sys_role_menu`
     UNIQUE KEY `role_id, menu_id` (`role_id`,`menu_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `sys_user`;
 CREATE TABLE `sys_user`
 (
     `id`          varchar(32)  NOT NULL COMMENT 'ID',
@@ -190,6 +198,7 @@ INSERT INTO `sys_user`
 VALUES ('1', '001', '系统管理员', 'admin', '$2a$10$9fLyVGkeUNdrce5d.b34YO3UWTAebuM72eZpdf.xJ4qPisGfzZqjq', 'aaa@a.com',
         '13388888888', '0', '1', '', '1', '2021-04-22 22:00:27', '1', '2021-12-09 19:27:23');
 
+DROP TABLE IF EXISTS `sys_user_dept`;
 CREATE TABLE `sys_user_dept`
 (
     `id`      varchar(32) NOT NULL,
@@ -200,6 +209,7 @@ CREATE TABLE `sys_user_dept`
     KEY       `dept_id` (`dept_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `sys_user_position`;
 CREATE TABLE `sys_user_position`
 (
     `id`          varchar(32) NOT NULL,
@@ -210,6 +220,7 @@ CREATE TABLE `sys_user_position`
     KEY           `position_id` (`position_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `sys_user_role`;
 CREATE TABLE `sys_user_role`
 (
     `id`      varchar(32) NOT NULL COMMENT 'ID',
@@ -218,4 +229,13 @@ CREATE TABLE `sys_user_role`
     PRIMARY KEY (`id`),
     UNIQUE KEY `user_id, role_id` (`user_id`,`role_id`) USING BTREE,
     KEY       `role_id` (`role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `sys_menu_collect`;
+CREATE TABLE `sys_menu_collect` (
+  `id` varchar(32) NOT NULL COMMENT 'ID',
+  `user_id` varchar(32) NOT NULL COMMENT '用户ID',
+  `menu_id` varchar(32) NOT NULL COMMENT '菜单ID',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_id, menu_id` (`user_id`,`menu_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
