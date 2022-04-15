@@ -19,6 +19,7 @@
   </modules>
   <packaging>pom</packaging>
 
+  <url>https://gitee.com/lframework/jugg</url>
   <description>
     Jugg是基于SpringBoot、SpringSecurity、SpringSession、Vue、ElementUI的前后端分离的后台管理系统模板，将常用的开发框架整合并配置，以此来简化后台管理系统的搭建工作。
   </description>
