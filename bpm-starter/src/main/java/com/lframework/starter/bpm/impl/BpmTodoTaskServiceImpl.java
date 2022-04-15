@@ -1,10 +1,9 @@
 package com.lframework.starter.bpm.impl;
 
-import com.lframework.common.constants.StringPool;
-import com.lframework.starter.mybatis.resp.PageResult;
 import com.lframework.starter.mybatis.dto.message.TodoTaskDto;
-import com.lframework.starter.web.components.security.IUserTokenResolver;
+import com.lframework.starter.mybatis.resp.PageResult;
 import com.lframework.starter.mybatis.service.message.ITodoTaskService;
+import com.lframework.starter.web.components.security.IUserTokenResolver;
 import com.lframework.starter.web.utils.HttpUtil;
 import com.lframework.starter.web.utils.JsonUtil;
 import com.lframework.starter.web.utils.RequestUtil;
@@ -15,10 +14,8 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 @Slf4j
-@Service
 public class BpmTodoTaskServiceImpl implements ITodoTaskService {
 
   @Value("${bpm.api-url:''}")
