@@ -4,6 +4,7 @@ import com.lframework.gen.dto.dataobj.GenDetailColumnConfigDto;
 import com.lframework.gen.entity.GenDetailColumnConfig;
 import com.lframework.starter.mybatis.mapper.BaseMapper;
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -21,7 +22,7 @@ public interface GenDetailColumnConfigMapper extends BaseMapper<GenDetailColumnC
    * @param ids
    * @return
    */
-  List<GenDetailColumnConfigDto> getByIds(List<String> ids);
+  List<GenDetailColumnConfigDto> getByIds(@Param("ids") List<String> ids);
 
   /**
    * 根据ID查询

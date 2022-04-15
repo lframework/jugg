@@ -4,6 +4,7 @@ import com.lframework.gen.dto.dataobj.GenUpdateColumnConfigDto;
 import com.lframework.gen.entity.GenUpdateColumnConfig;
 import com.lframework.starter.mybatis.mapper.BaseMapper;
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -21,7 +22,7 @@ public interface GenUpdateColumnConfigMapper extends BaseMapper<GenUpdateColumnC
    * @param ids
    * @return
    */
-  List<GenUpdateColumnConfigDto> getByIds(List<String> ids);
+  List<GenUpdateColumnConfigDto> getByIds(@Param("ids") List<String> ids);
 
   /**
    * 根据ID查询

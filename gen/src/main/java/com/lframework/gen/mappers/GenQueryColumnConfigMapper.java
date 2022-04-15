@@ -4,6 +4,7 @@ import com.lframework.gen.dto.dataobj.GenQueryColumnConfigDto;
 import com.lframework.gen.entity.GenQueryColumnConfig;
 import com.lframework.starter.mybatis.mapper.BaseMapper;
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -21,7 +22,7 @@ public interface GenQueryColumnConfigMapper extends BaseMapper<GenQueryColumnCon
    * @param ids
    * @return
    */
-  List<GenQueryColumnConfigDto> getByIds(List<String> ids);
+  List<GenQueryColumnConfigDto> getByIds(@Param("ids") List<String> ids);
 
   /**
    * 根据ID查询
