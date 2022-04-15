@@ -4,11 +4,10 @@ Jugg是用来开发业务系统的脚手架，将常用的开发框架整合并�
 ### 项目构成
 * common
 * mybatis-starter
-* redis-starter
 * security-starter
-* security-session-starter（依赖后即可使项目基于Session维护登录态以及权限控制，注：与Jwt互斥）
-* security-jwt-starter（依赖后即可使项目基于Jwt维护登录态以及权限控制，注：与Session互斥）
 * web-starter
+* web-common
+* bpm-starter
 * gen
 
 以上是项目中所有的module。
