@@ -4,6 +4,7 @@ import com.lframework.common.functions.SFunction;
 import com.lframework.common.utils.CollectionUtil;
 import com.lframework.gen.dto.dataobj.DataObjectGenerateDto;
 import com.lframework.starter.web.bo.BaseBo;
+import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Data;
@@ -16,36 +17,43 @@ public class DataObjectGenerateBo extends BaseBo<DataObjectGenerateDto> {
   /**
    * 字段信息
    */
+  @ApiModelProperty("字段信息")
   private List<GenDataObjectColumnBo> columns;
 
   /**
    * 基本设置
    */
+  @ApiModelProperty("基本设置")
   private GenGenerateInfoBo generateInfo;
 
   /**
    * 新增配置
    */
+  @ApiModelProperty("新增配置")
   private List<GenCreateColumnConfigBo> createConfigs;
 
   /**
    * 修改配置
    */
+  @ApiModelProperty("修改配置")
   private List<GenUpdateColumnConfigBo> updateConfigs;
 
   /**
    * 查询配置
    */
+  @ApiModelProperty("查询配置")
   private List<GenQueryColumnConfigBo> queryConfigs;
 
   /**
    * 查询参数配置
    */
+  @ApiModelProperty("查询参数配置")
   private List<GenQueryParamsColumnConfigBo> queryParamsConfigs;
 
   /**
    * 详情配置
    */
+  @ApiModelProperty("详情配置")
   private List<GenDetailColumnConfigBo> detailConfigs;
 
   public DataObjectGenerateBo(DataObjectGenerateDto dto) {

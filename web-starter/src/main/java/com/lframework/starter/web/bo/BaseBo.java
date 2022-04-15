@@ -14,7 +14,7 @@ import java.io.Serializable;
  * @param <T>
  * @author zmj
  */
-public abstract class BaseBo<T extends BaseDto> implements Serializable {
+public abstract class BaseBo<T extends BaseDto> implements Serializable, SuperBo {
 
   private static final long serialVersionUID = 1L;
 

@@ -1,7 +1,8 @@
 package com.lframework.starter.security.bo.system.user;
 
-import com.lframework.starter.security.dto.system.user.DefaultSysUserDto;
+import com.lframework.starter.mybatis.dto.system.user.DefaultSysUserDto;
 import com.lframework.starter.web.bo.BaseBo;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -12,21 +13,25 @@ public class SysUserSelectorBo extends BaseBo<DefaultSysUserDto> {
   /**
    * ID
    */
+  @ApiModelProperty("ID")
   private String id;
 
   /**
    * 编号
    */
+  @ApiModelProperty("编号")
   private String code;
 
   /**
    * 姓名
    */
+  @ApiModelProperty("姓名")
   private String name;
 
   /**
-   * 状态 1-在用 0停用
+   * 状态
    */
+  @ApiModelProperty("状态")
   private Boolean available;
 
   public SysUserSelectorBo() {

@@ -47,6 +47,7 @@ import java.util.stream.Collectors;
  * @author ${author}
 </#if>
  */
+@Api(tags = "${classDescription}")
 @Validated
 @RestController
 @RequestMapping("/${moduleName}/${bizName}")
@@ -59,21 +60,21 @@ public class ${className}Controller extends DefaultBaseController {
     /**
      * 查询列表
      */
+    @ApiOperation("查询列表")
     @PreAuthorize("@permission.valid('${moduleName}:${bizName}:query')")
     @GetMapping("/query")
-    public InvokeResult query(@Valid Query${className}Vo vo) {
+    public ${r"InvokeResult<PageResult<"}Query${className}${r"Bo>>"} query(@Valid Query${className}Vo vo) {
 
         PageResult${r"<"}${className}Dto${r">"} pageResult = ${classNameProperty}Service.query(getPageIndex(vo), getPageSize(vo), vo);
 
         List${r"<"}${className}Dto${r">"} datas = pageResult.getDatas();
+        List${r"<"}Query${className}Bo${r">"} results = null;
 
         if (!CollectionUtil.isEmpty(datas)) {
-            List${r"<"}Query${className}Bo${r">"} results = datas.stream().map(Query${className}Bo::new).collect(Collectors.toList());
-
-            PageResultUtil.rebuild(pageResult, results);
+            results = datas.stream().map(Query${className}Bo::new).collect(Collectors.toList());
         }
 
-        return InvokeResultBuilder.success(pageResult);
+        return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
     }
     </#if>
     <#if detail??>
@@ -81,9 +82,11 @@ public class ${className}Controller extends DefaultBaseController {
     /**
      * 根据ID查询
      */
+    @ApiOperation("根据ID查询")
+    @ApiImplicitParam(value = "${keys[0].name}", name = "${keys[0].name}", paramType = "query", required = true)
     @PreAuthorize("@permission.valid('${moduleName}:${bizName}:query')")
     @GetMapping
-    public InvokeResult get(<#if keys[0].type == 'String'>@NotBlank<#else>@NotNull</#if>(message = "${keys[0].name}不能为空！") ${keys[0].type} ${keys[0].name}) {
+    public ${r"InvokeResult<Get"}${className}${r"Bo>"} get(<#if keys[0].type == 'String'>@NotBlank<#else>@NotNull</#if>(message = "${keys[0].name}不能为空！") ${keys[0].type} ${keys[0].name}) {
 
         ${className}Dto data = ${classNameProperty}Service.getById(${keys[0].name});
         if (data == null) {
@@ -100,9 +103,10 @@ public class ${className}Controller extends DefaultBaseController {
     /**
      * 新增
      */
+    @ApiOperation("新增")
     @PreAuthorize("@permission.valid('${moduleName}:${bizName}:add')")
     @PostMapping
-    public InvokeResult create(@Valid Create${className}Vo vo) {
+    public ${r"InvokeResult<Void>"} create(@Valid Create${className}Vo vo) {
 
         ${classNameProperty}Service.create(vo);
 
@@ -114,9 +118,10 @@ public class ${className}Controller extends DefaultBaseController {
     /**
      * 修改
      */
+    @ApiOperation("修改")
     @PreAuthorize("@permission.valid('${moduleName}:${bizName}:modify')")
     @PutMapping
-    public InvokeResult update(@Valid Update${className}Vo vo) {
+    public ${r"InvokeResult<Void>"} update(@Valid Update${className}Vo vo) {
 
         ${classNameProperty}Service.update(vo);
 
@@ -128,9 +133,11 @@ public class ${className}Controller extends DefaultBaseController {
     /**
      * 根据ID删除
      */
+    @ApiOperation("根据ID删除")
+    @ApiImplicitParam(value = "${keys[0].name}", name = "${keys[0].name}", paramType = "query", required = true)
     @PreAuthorize("@permission.valid('${moduleName}:${bizName}:delete')")
     @DeleteMapping
-    public InvokeResult deleteById(<#if keys[0].type == 'String'>@NotBlank<#else>@NotNull</#if>(message = "${keys[0].name}不能为空！") ${keys[0].type} ${keys[0].name}) {
+    public ${r"InvokeResult<Void>"} deleteById(<#if keys[0].type == 'String'>@NotBlank<#else>@NotNull</#if>(message = "${keys[0].name}不能为空！") ${keys[0].type} ${keys[0].name}) {
 
         ${classNameProperty}Service.deleteById(${keys[0].name});
 

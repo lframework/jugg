@@ -1,7 +1,8 @@
 package com.lframework.starter.security.bo.system.menu;
 
-import com.lframework.starter.security.dto.system.menu.DefaultSysMenuDto;
+import com.lframework.starter.mybatis.dto.system.menu.DefaultSysMenuDto;
 import com.lframework.starter.web.bo.BaseBo;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,46 +15,55 @@ public class QuerySysMenuBo extends BaseBo<DefaultSysMenuDto> {
   /**
    * ID
    */
+  @ApiModelProperty("ID")
   private String id;
 
   /**
    * 编号
    */
+  @ApiModelProperty("编号")
   private String code;
 
   /**
    * 标题
    */
+  @ApiModelProperty("标题")
   private String title;
 
   /**
    * 父级ID
    */
+  @ApiModelProperty("父级ID")
   private String parentId;
 
   /**
-   * 类型 0-目录 1-菜单 2-功能
+   * 类型
    */
+  @ApiModelProperty("类型")
   private Integer display;
 
   /**
    * 权限
    */
+  @ApiModelProperty("权限")
   private String permission;
 
   /**
    * 是否特殊菜单
    */
+  @ApiModelProperty("是否特殊菜单")
   private Boolean isSpecial;
 
   /**
    * 状态
    */
+  @ApiModelProperty("状态")
   private Boolean available;
 
   /**
    * 备注
    */
+  @ApiModelProperty("备注")
   private String description;
 
   public QuerySysMenuBo() {

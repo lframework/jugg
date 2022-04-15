@@ -29,12 +29,14 @@ public class Get${className}Bo extends BaseBo${r"<"}${className}Dto${r">"} {
     /**
      * ${keys[0].description}
      */
+    @ApiModelProperty("${keys[0].description}")
     private ${keys[0].type} ${keys[0].name};
 
     <#list columns as column>
     /**
      * ${column.description}
      */
+    @ApiModelProperty("${column.description}")
         <#if column.type == 'LocalDateTime'>
     @JsonFormat(pattern = StringPool.DATE_TIME_PATTERN)
         </#if>

@@ -4,18 +4,20 @@ import com.lframework.common.utils.CollectionUtil;
 import com.lframework.common.utils.StringUtil;
 import com.lframework.starter.security.bo.system.role.QueryRoleMenuBo;
 import com.lframework.starter.security.controller.DefaultBaseController;
-import com.lframework.starter.security.dto.system.menu.DefaultSysMenuDto;
-import com.lframework.starter.security.service.system.ISysMenuService;
-import com.lframework.starter.security.service.system.ISysRoleMenuService;
-import com.lframework.starter.security.vo.system.role.SysRoleMenuSettingVo;
+import com.lframework.starter.mybatis.dto.system.menu.DefaultSysMenuDto;
+import com.lframework.starter.mybatis.service.system.ISysMenuService;
+import com.lframework.starter.mybatis.service.system.ISysRoleMenuService;
+import com.lframework.starter.mybatis.vo.system.role.SysRoleMenuSettingVo;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,10 +31,10 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author zmj
  */
+@Api(tags = "角色授权")
 @Validated
 @RestController
 @RequestMapping("/system/role/menu")
-@ConditionalOnProperty(value = "default-setting.sys-function.enabled", matchIfMissing = true)
 public class SysRoleMenuController extends DefaultBaseController {
 
   @Autowired
@@ -44,9 +46,11 @@ public class SysRoleMenuController extends DefaultBaseController {
   /**
    * 查询角色菜单列表
    */
+  @ApiOperation("查询角色菜单列表")
+  @ApiImplicitParam(value = "角色ID", name = "roleId", paramType = "query")
   @PreAuthorize("@permission.valid('system:role:permission')")
   @GetMapping("/menus")
-  public InvokeResult menus(String roleId) {
+  public InvokeResult<List<QueryRoleMenuBo>> menus(String roleId) {
 
     List<QueryRoleMenuBo> results = Collections.EMPTY_LIST;
     //查询所有菜单
@@ -72,9 +76,10 @@ public class SysRoleMenuController extends DefaultBaseController {
   /**
    * 授权角色菜单
    */
+  @ApiOperation("授权角色菜单")
   @PreAuthorize("@permission.valid('system:role:permission')")
   @PostMapping("/setting")
-  public InvokeResult setting(@Valid @RequestBody SysRoleMenuSettingVo vo) {
+  public InvokeResult<Void> setting(@Valid @RequestBody SysRoleMenuSettingVo vo) {
 
     sysRoleMenuService.setting(vo);
     return InvokeResultBuilder.success();

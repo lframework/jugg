@@ -4,19 +4,22 @@ import com.lframework.common.utils.CollectionUtil;
 import com.lframework.common.utils.StringUtil;
 import com.lframework.starter.security.bo.system.user.QueryUserRoleBo;
 import com.lframework.starter.security.controller.DefaultBaseController;
-import com.lframework.starter.security.dto.system.role.DefaultSysRoleDto;
-import com.lframework.starter.security.service.system.ISysRoleService;
-import com.lframework.starter.security.service.system.ISysUserRoleService;
-import com.lframework.starter.security.vo.system.role.QuerySysRoleVo;
-import com.lframework.starter.security.vo.system.user.SysUserRoleSettingVo;
+import com.lframework.starter.mybatis.dto.system.role.DefaultSysRoleDto;
+import com.lframework.starter.mybatis.service.system.ISysRoleService;
+import com.lframework.starter.mybatis.service.system.ISysUserRoleService;
+import com.lframework.starter.mybatis.vo.system.role.QuerySysRoleVo;
+import com.lframework.starter.mybatis.vo.system.user.SysUserRoleSettingVo;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,10 +33,10 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author zmj
  */
+@Api(tags = "用户授权")
 @Validated
 @RestController
 @RequestMapping("/system/user/role")
-@ConditionalOnProperty(value = "default-setting.sys-function.enabled", matchIfMissing = true)
 public class SysUserRoleController extends DefaultBaseController {
 
   @Autowired
@@ -45,9 +48,13 @@ public class SysUserRoleController extends DefaultBaseController {
   /**
    * 查询角色列表
    */
+  @ApiOperation("查询角色列表")
+  @ApiImplicitParams({
+      @ApiImplicitParam(value = "用户ID", name = "userId", paramType = "query")
+  })
   @PreAuthorize("@permission.valid('system:user:permission')")
   @GetMapping("/roles")
-  public InvokeResult roles(String userId) {
+  public InvokeResult<List<QueryUserRoleBo>> roles(String userId) {
 
     List<QueryUserRoleBo> results = Collections.EMPTY_LIST;
     //查询所有角色
@@ -75,9 +82,10 @@ public class SysUserRoleController extends DefaultBaseController {
   /**
    * 用户授权
    */
+  @ApiOperation("用户授权")
   @PreAuthorize("@permission.valid('system:user:permission')")
   @PostMapping("/setting")
-  public InvokeResult setting(@Valid @RequestBody SysUserRoleSettingVo vo) {
+  public InvokeResult<Void> setting(@Valid @RequestBody SysUserRoleSettingVo vo) {
 
     sysUserRoleService.setting(vo);
 

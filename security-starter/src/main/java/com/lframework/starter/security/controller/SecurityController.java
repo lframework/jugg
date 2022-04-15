@@ -1,8 +1,8 @@
 package com.lframework.starter.security.controller;
 
-import com.lframework.starter.web.components.security.AbstractUserDetails;
+import com.lframework.web.common.security.AbstractUserDetails;
 import com.lframework.starter.web.controller.BaseController;
-import com.lframework.starter.web.utils.SecurityUtil;
+import com.lframework.web.common.security.SecurityUtil;
 
 /**
  * 具有Security能力的BaseController

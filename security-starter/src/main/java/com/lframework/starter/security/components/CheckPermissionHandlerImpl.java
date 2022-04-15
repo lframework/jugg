@@ -2,8 +2,8 @@ package com.lframework.starter.security.components;
 
 import com.lframework.common.utils.ArrayUtil;
 import com.lframework.common.utils.CollectionUtil;
-import com.lframework.starter.web.components.security.AbstractUserDetails;
-import com.lframework.starter.web.utils.SecurityUtil;
+import com.lframework.web.common.security.AbstractUserDetails;
+import com.lframework.web.common.security.SecurityUtil;
 import java.util.Arrays;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +24,9 @@ public class CheckPermissionHandlerImpl implements CheckPermissionHandler {
     }
 
     AbstractUserDetails user = SecurityUtil.getCurrentUser();
+    if (user == null) {
+      return false;
+    }
 
     if (user.isAdmin()) {
       if (log.isDebugEnabled()) {

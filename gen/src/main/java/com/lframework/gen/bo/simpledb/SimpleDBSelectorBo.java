@@ -2,6 +2,7 @@ package com.lframework.gen.bo.simpledb;
 
 import com.lframework.gen.dto.simpledb.SimpleDBDto;
 import com.lframework.starter.web.bo.BaseBo;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,11 +15,13 @@ public class SimpleDBSelectorBo extends BaseBo<SimpleDBDto> {
   /**
    * 库名
    */
+  @ApiModelProperty("库名")
   private String tableSchema;
 
   /**
    * 表名
    */
+  @ApiModelProperty("表名")
   private String tableName;
 
   public SimpleDBSelectorBo() {

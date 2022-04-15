@@ -2,6 +2,7 @@ package com.lframework.gen.bo.dataobj;
 
 import com.lframework.gen.dto.dataobj.GenQueryColumnConfigDto;
 import com.lframework.starter.web.bo.BaseBo;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -12,26 +13,31 @@ public class GenQueryColumnConfigBo extends BaseBo<GenQueryColumnConfigDto> {
   /**
    * ID
    */
+  @ApiModelProperty("ID")
   private String id;
 
   /**
    * 宽度类型
    */
+  @ApiModelProperty("宽度类型")
   private Integer widthType;
 
   /**
    * 宽度
    */
+  @ApiModelProperty("宽度")
   private Integer width;
 
   /**
    * 是否页面排序
    */
+  @ApiModelProperty("是否页面排序")
   private Boolean sortable;
 
   /**
    * 排序编号
    */
+  @ApiModelProperty("排序编号")
   private Integer orderNo;
 
   public GenQueryColumnConfigBo() {

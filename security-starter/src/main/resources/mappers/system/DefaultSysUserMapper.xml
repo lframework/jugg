@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.lframework.starter.security.mappers.system.DefaultSysUserMapper">
-    <resultMap id="SysUserDto" type="com.lframework.starter.security.dto.system.user.DefaultSysUserDto">
+<mapper namespace="com.lframework.starter.mybatis.mappers.system.DefaultSysUserMapper">
+    <resultMap id="SysUserDto" type="com.lframework.starter.mybatis.dto.system.user.DefaultSysUserDto">
         <id column="id" property="id"/>
         <result column="code" property="code"/>
         <result column="name" property="name"/>

@@ -18,6 +18,7 @@ public class Update${className}Vo implements BaseVo, Serializable {
     /**
      * ${keys[0].description}
      */
+    @ApiModelProperty(value = "${keys[0].description}", required = true)
 <#if keys[0].type == 'String'>
     @NotBlank(message = "${keys[0].name}不能为空！")
 <#else>
@@ -29,6 +30,11 @@ public class Update${className}Vo implements BaseVo, Serializable {
     /**
      * ${column.description}
      */
+    <#if column.required>
+    @ApiModelProperty(value = "${column.description}", required = true)
+    <#else>
+    @ApiModelProperty("${column.description}")
+    </#if>
     <#if column.type != 'String'>
     @TypeMismatch(message = "${column.description}格式有误！")
     </#if>

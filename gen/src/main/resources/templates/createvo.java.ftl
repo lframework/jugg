@@ -20,6 +20,11 @@ public class Create${className}Vo implements BaseVo, Serializable {
      * ${column.description}
      */
     <#if column.required>
+    @ApiModelProperty(value = "${column.description}", required = true)
+    <#else>
+    @ApiModelProperty("${column.description}")
+    </#if>
+    <#if column.required>
     @${column.validateAnno}(message = "${column.validateMsg}${column.description}！")
     <#if column.fixEnum>
     @IsEnum(message = "${column.validateMsg}${column.description}！", enumClass = ${column.type}.class)

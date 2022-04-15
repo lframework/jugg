@@ -33,17 +33,22 @@ public class ResponseConstants {
   public static final Integer INVOKE_RESULT_FAIL_CODE_REPEAT_REQUEST = 410;
 
   /**
+   * 响应失败状态码-登录失败
+   */
+  public static final Integer INVOKE_RESULT_FAIL_USER_LOGIN_FAIL = 419;
+
+  /**
    * 响应失败状态码
    */
   public static final Integer INVOKE_RESULT_FAIL_CODE = 500;
 
   /**
-   * 响应成功标识
+   * 响应成功信息
    */
   public static final String INVOKE_RESULT_SUCCESS_MSG = "success";
 
   /**
-   * 响应失败标识
+   * 默认响应失败信息
    */
   public static final String INVOKE_RESULT_FAIL_MSG = "fail";
 

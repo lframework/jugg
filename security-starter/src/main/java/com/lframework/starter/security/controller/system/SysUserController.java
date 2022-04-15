@@ -7,21 +7,24 @@ import com.lframework.starter.mybatis.utils.PageResultUtil;
 import com.lframework.starter.security.bo.system.user.GetSysUserBo;
 import com.lframework.starter.security.bo.system.user.QuerySysUserBo;
 import com.lframework.starter.security.controller.DefaultBaseController;
-import com.lframework.starter.security.dto.system.user.DefaultSysUserDto;
-import com.lframework.starter.security.service.system.ISysUserService;
-import com.lframework.starter.security.vo.system.user.CreateSysUserVo;
-import com.lframework.starter.security.vo.system.user.QuerySysUserVo;
-import com.lframework.starter.security.vo.system.user.UpdateSysUserVo;
+import com.lframework.starter.mybatis.dto.system.user.DefaultSysUserDto;
+import com.lframework.starter.mybatis.service.system.ISysUserService;
+import com.lframework.starter.mybatis.vo.system.user.CreateSysUserVo;
+import com.lframework.starter.mybatis.vo.system.user.QuerySysUserVo;
+import com.lframework.starter.mybatis.vo.system.user.UpdateSysUserVo;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
 import com.lframework.starter.web.service.IUserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,10 +40,10 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author zmj
  */
+@Api(tags = "用户管理")
 @Validated
 @RestController
 @RequestMapping("/system/user")
-@ConditionalOnProperty(value = "default-setting.sys-function.enabled", matchIfMissing = true)
 public class SysUserController extends DefaultBaseController {
 
   @Autowired
@@ -52,31 +55,32 @@ public class SysUserController extends DefaultBaseController {
   /**
    * 用户列表
    */
+  @ApiOperation("用户列表")
   @PreAuthorize("@permission.valid('system:user:query','system:user:add','system:user:modify')")
   @GetMapping("/query")
-  public InvokeResult query(@Valid QuerySysUserVo vo) {
+  public InvokeResult<PageResult<QuerySysUserBo>> query(@Valid QuerySysUserVo vo) {
 
-    PageResult<DefaultSysUserDto> pageResult = sysUserService
-        .query(getPageIndex(vo), getPageSize(vo), vo);
+    PageResult<DefaultSysUserDto> pageResult = sysUserService.query(getPageIndex(vo),
+        getPageSize(vo), vo);
 
     List<DefaultSysUserDto> datas = pageResult.getDatas();
+    List<QuerySysUserBo> results = null;
 
     if (!CollectionUtil.isEmpty(datas)) {
-      List<QuerySysUserBo> results = datas.stream().map(QuerySysUserBo::new)
-          .collect(Collectors.toList());
-
-      PageResultUtil.rebuild(pageResult, results);
+      results = datas.stream().map(QuerySysUserBo::new).collect(Collectors.toList());
     }
 
-    return InvokeResultBuilder.success(pageResult);
+    return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
   }
 
   /**
    * 查询用户
    */
+  @ApiOperation("查询用户")
+  @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
   @PreAuthorize("@permission.valid('system:user:query','system:user:add','system:user:modify')")
   @GetMapping
-  public InvokeResult get(@NotBlank(message = "ID不能为空！") String id) {
+  public InvokeResult<GetSysUserBo> get(@NotBlank(message = "ID不能为空！") String id) {
 
     DefaultSysUserDto data = sysUserService.getById(id);
     if (data == null) {
@@ -91,10 +95,11 @@ public class SysUserController extends DefaultBaseController {
   /**
    * 批量停用用户
    */
+  @ApiOperation("批量停用用户")
   @PreAuthorize("@permission.valid('system:user:modify')")
   @PatchMapping("/unable/batch")
-  public InvokeResult batchUnable(
-      @NotEmpty(message = "请选择需要停用的用户！") @RequestBody List<String> ids) {
+  public InvokeResult<Void> batchUnable(
+      @ApiParam(value = "用户ID", required = true) @NotEmpty(message = "请选择需要停用的用户！") @RequestBody List<String> ids) {
 
     sysUserService.batchUnable(ids);
     return InvokeResultBuilder.success();
@@ -103,10 +108,11 @@ public class SysUserController extends DefaultBaseController {
   /**
    * 批量启用用户
    */
+  @ApiOperation("批量启用用户")
   @PreAuthorize("@permission.valid('system:user:modify')")
   @PatchMapping("/enable/batch")
-  public InvokeResult batchEnable(
-      @NotEmpty(message = "请选择需要启用的用户！") @RequestBody List<String> ids) {
+  public InvokeResult<Void> batchEnable(
+      @ApiParam(value = "用户ID", required = true) @NotEmpty(message = "请选择需要启用的用户！") @RequestBody List<String> ids) {
 
     sysUserService.batchEnable(ids);
     return InvokeResultBuilder.success();
@@ -115,9 +121,10 @@ public class SysUserController extends DefaultBaseController {
   /**
    * 新增用户
    */
+  @ApiOperation("新增用户")
   @PreAuthorize("@permission.valid('system:user:add')")
   @PostMapping
-  public InvokeResult create(@Valid CreateSysUserVo vo) {
+  public InvokeResult<Void> create(@Valid CreateSysUserVo vo) {
 
     sysUserService.create(vo);
 
@@ -127,9 +134,10 @@ public class SysUserController extends DefaultBaseController {
   /**
    * 修改用户
    */
+  @ApiOperation("修改用户")
   @PreAuthorize("@permission.valid('system:user:modify')")
   @PutMapping
-  public InvokeResult update(@Valid UpdateSysUserVo vo) {
+  public InvokeResult<Void> update(@Valid UpdateSysUserVo vo) {
 
     sysUserService.update(vo);
 
@@ -137,11 +145,13 @@ public class SysUserController extends DefaultBaseController {
   }
 
   /**
-   * 修改用户
+   * 解锁用户
    */
+  @ApiOperation("解锁用户")
+  @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
   @PreAuthorize("@permission.valid('system:user:modify')")
   @PatchMapping("unlock")
-  public InvokeResult unlock(@NotBlank(message = "ID不能为空！") String id) {
+  public InvokeResult<Void> unlock(@NotBlank(message = "ID不能为空！") String id) {
     userService.unlockById(id);
 
     return InvokeResultBuilder.success();

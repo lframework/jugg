@@ -9,6 +9,7 @@ import com.lframework.common.exceptions.impl.DefaultSysException;
 import com.lframework.common.utils.CollectionUtil;
 import com.lframework.common.utils.IdUtil;
 import com.lframework.common.utils.IdWorker;
+import com.lframework.common.utils.ObjectUtil;
 import com.lframework.common.utils.StringUtil;
 import com.lframework.gen.builders.DataObjectBuilder;
 import com.lframework.gen.components.DataObject;
@@ -30,6 +31,9 @@ import com.lframework.gen.generate.templates.ServiceTemplate;
 import com.lframework.gen.generate.templates.SqlTemplate;
 import com.lframework.gen.generate.templates.UpdateTemplate;
 import com.lframework.starter.mybatis.constants.MyBatisStringPool;
+import com.lframework.starter.mybatis.utils.OpLogUtil;
+import com.lframework.starter.mybatis.utils.PageHelperUtil;
+import com.lframework.starter.mybatis.utils.PageResultUtil;
 import com.lframework.starter.web.components.validation.IsEnum;
 import com.lframework.starter.web.components.validation.Pattern;
 import com.lframework.starter.web.components.validation.TypeMismatch;
@@ -43,6 +47,11 @@ import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateModelException;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiOperation;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -698,6 +707,7 @@ public class Generator {
     serviceTemplate.setIsCache(dataObject.getGenerateInfo().getIsCache());
     serviceTemplate.setHasDelete(dataObject.getGenerateInfo().getHasDelete());
     Set<String> importPackages = new HashSet<>();
+    importPackages.add(StringUtil.class.getName());
     if (serviceTemplate.getHasDelete()) {
       importPackages.add(Transactional.class.getName());
     }
@@ -763,6 +773,7 @@ public class Generator {
     queryParamsTemplate.setAuthor(dataObject.getGenerateInfo().getAuthor());
     Set<String> importPackages = new HashSet<>();
     importPackages.add(TypeMismatch.class.getName());
+    importPackages.add(ApiModelProperty.class.getName());
     List<QueryParamsTemplate.Column> columns = new ArrayList<>();
     for (DataObjectColumn column : targetColumns) {
       QueryParamsTemplate.Column columnObj = new QueryParamsTemplate.Column();
@@ -823,6 +834,7 @@ public class Generator {
       return null;
     }
     Set<String> importPackages = new HashSet<>();
+    importPackages.add(ApiModelProperty.class.getName());
     CreateTemplate createTemplate = new CreateTemplate();
     createTemplate.setAppointId(dataObject.getGenerateInfo().getKeyType() != GenKeyType.AUTO);
     if (dataObject.getGenerateInfo().getKeyType() == GenKeyType.UUID) {
@@ -964,6 +976,7 @@ public class Generator {
     updateTemplate.setClassDescription(dataObject.getGenerateInfo().getClassDescription());
     updateTemplate.setAuthor(dataObject.getGenerateInfo().getAuthor());
     importPackages.add(TypeMismatch.class.getName());
+    importPackages.add(ApiModelProperty.class.getName());
 
     List<UpdateTemplate.Column> columns = new ArrayList<>();
     for (DataObjectColumn column : targetColumns) {
@@ -1090,6 +1103,7 @@ public class Generator {
 
     Set<String> importPackages = new HashSet<>();
     importPackages.add(TypeMismatch.class.getName());
+    importPackages.add(ApiModelProperty.class.getName());
     List<QueryTemplate.Column> columns = new ArrayList<>();
     for (DataObjectColumn column : targetColumns) {
       QueryTemplate.Column columnObj = new QueryTemplate.Column();
@@ -1179,6 +1193,7 @@ public class Generator {
 
     Set<String> importPackages = new HashSet<>();
     importPackages.add(TypeMismatch.class.getName());
+    importPackages.add(ApiModelProperty.class.getName());
     List<DetailTemplate.Column> columns = new ArrayList<>();
     for (DataObjectColumn column : targetColumns) {
       DetailTemplate.Column columnObj = new DetailTemplate.Column();
@@ -1265,6 +1280,11 @@ public class Generator {
     if (controllerTemplate.getHasDelete()) {
       importPackages.add(DeleteMapping.class.getName());
     }
+    importPackages.add(Api.class.getName());
+    importPackages.add(ApiOperation.class.getName());
+    importPackages.add(ApiImplicitParam.class.getName());
+    importPackages.add(ApiImplicitParams.class.getName());
+
     List<DataObjectColumn> keyColumns = dataObject.getColumns().stream()
         .filter(DataObjectColumn::getIsKey)
         .collect(Collectors.toList());

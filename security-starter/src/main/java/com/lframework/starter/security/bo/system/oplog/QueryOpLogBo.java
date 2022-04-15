@@ -7,6 +7,7 @@ import com.lframework.starter.web.bo.BaseBo;
 import com.lframework.starter.web.dto.UserDto;
 import com.lframework.starter.web.service.IUserService;
 import com.lframework.starter.web.utils.ApplicationUtil;
+import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,31 +19,37 @@ public class QueryOpLogBo extends BaseBo<DefaultOpLogsDto> {
   /**
    * ID
    */
+  @ApiModelProperty("ID")
   private String id;
 
   /**
    * 日志名称
    */
+  @ApiModelProperty("日志名称")
   private String name;
 
   /**
    * 类别
    */
+  @ApiModelProperty("类别")
   private Integer logType;
 
   /**
    * IP地址
    */
+  @ApiModelProperty("IP地址")
   private String ip;
 
   /**
    * 创建人
    */
+  @ApiModelProperty("创建人")
   private String createBy;
 
   /**
    * 创建时间
    */
+  @ApiModelProperty("创建时间")
   @JsonFormat(pattern = StringPool.DATE_TIME_PATTERN)
   private LocalDateTime createTime;
 

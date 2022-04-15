@@ -2,6 +2,7 @@ package com.lframework.gen.bo.dataobj;
 
 import com.lframework.gen.dto.dataobj.GenCreateColumnConfigDto;
 import com.lframework.starter.web.bo.BaseBo;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -12,16 +13,19 @@ public class GenCreateColumnConfigBo extends BaseBo<GenCreateColumnConfigDto> {
   /**
    * ID
    */
+  @ApiModelProperty("ID")
   private String id;
 
   /**
    * 是否必填
    */
+  @ApiModelProperty("是否必填")
   private Boolean required;
 
   /**
    * 排序编号
    */
+  @ApiModelProperty("排序编号")
   private Integer orderNo;
 
   public GenCreateColumnConfigBo() {

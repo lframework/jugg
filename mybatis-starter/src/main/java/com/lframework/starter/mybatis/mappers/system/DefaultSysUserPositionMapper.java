@@ -1,0 +1,25 @@
+package com.lframework.starter.mybatis.mappers.system;
+
+import com.lframework.starter.mybatis.dto.system.position.DefaultSysUserPositionDto;
+import com.lframework.starter.mybatis.entity.DefaultSysUserPosition;
+import com.lframework.starter.mybatis.mapper.BaseMapper;
+import java.util.List;
+
+/**
+ * <p>
+ * Mapper 接口
+ * </p>
+ *
+ * @author zmj
+ * @since 2021-07-04
+ */
+public interface DefaultSysUserPositionMapper extends BaseMapper<DefaultSysUserPosition> {
+
+  /**
+   * 根据用户ID查询
+   *
+   * @param userId
+   * @return
+   */
+  List<DefaultSysUserPositionDto> getByUserId(String userId);
+}

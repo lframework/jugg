@@ -14,19 +14,22 @@ import com.lframework.starter.mybatis.utils.PageResultUtil;
 import com.lframework.starter.mybatis.vo.QueryOpLogsVo;
 import com.lframework.starter.security.bo.oplog.OpLogInUserCenterBo;
 import com.lframework.starter.security.bo.usercenter.UserInfoBo;
-import com.lframework.starter.security.components.PasswordEncoderWrapper;
-import com.lframework.starter.web.components.security.AbstractUserDetails;
+import com.lframework.starter.web.components.security.PasswordEncoderWrapper;
+import com.lframework.web.common.security.AbstractUserDetails;
 import com.lframework.starter.web.dto.UserInfoDto;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
 import com.lframework.starter.web.service.IUserService;
-import com.lframework.starter.web.utils.SecurityUtil;
+import com.lframework.web.common.security.SecurityUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -38,10 +41,10 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author zmj
  */
+@Api(tags = "个人中心")
 @Validated
 @RestController
 @RequestMapping("/center")
-@ConditionalOnProperty(value = "default-setting.controller.enabled", matchIfMissing = true)
 public class DefaultUserCenterController extends DefaultBaseController {
 
   @Autowired
@@ -56,8 +59,9 @@ public class DefaultUserCenterController extends DefaultBaseController {
   /**
    * 获取用户信息
    */
+  @ApiOperation(value = "获取用户信息")
   @GetMapping("/info")
-  public InvokeResult getInfo() {
+  public InvokeResult<UserInfoBo> getInfo() {
 
     String userId = getCurrentUser().getId();
     UserInfoDto info = userService.getInfo(userId);
@@ -68,9 +72,14 @@ public class DefaultUserCenterController extends DefaultBaseController {
   /**
    * 修改密码
    */
+  @ApiOperation("修改密码")
+  @ApiImplicitParams({
+      @ApiImplicitParam(value = "旧密码", name = "oldPsw", paramType = "query", required = true),
+      @ApiImplicitParam(value = "新密码", name = "newPsw", paramType = "query", required = true),
+      @ApiImplicitParam(value = "确认密码", name = "confirmPsw", paramType = "query", required = true)})
   @OpLog(type = OpLogType.AUTH, name = "修改密码，原密码：{}，新密码：{}", params = {"#oldPsw", "#newPsw"})
   @PatchMapping("/password")
-  public InvokeResult updatePassword(@NotBlank(message = "旧密码不能为空！") String oldPsw,
+  public InvokeResult<Void> updatePassword(@NotBlank(message = "旧密码不能为空！") String oldPsw,
       @NotBlank(message = "新密码不能为空！") String newPsw,
       @NotBlank(message = "确认密码不能为空！") String confirmPsw) {
 
@@ -98,9 +107,13 @@ public class DefaultUserCenterController extends DefaultBaseController {
   /**
    * 修改邮箱
    */
+  @ApiOperation("修改邮箱")
+  @ApiImplicitParams({
+      @ApiImplicitParam(value = "新邮箱地址", name = "newEmail", paramType = "query", required = true),
+      @ApiImplicitParam(value = "确认邮箱地址", name = "confirmEmail", paramType = "query", required = true)})
   @OpLog(type = OpLogType.AUTH, name = "修改邮箱，新邮箱：{}", params = "#newEmail")
   @PatchMapping("/email")
-  public InvokeResult updateEmail(@NotBlank(message = "新邮箱地址不能为空！") String newEmail,
+  public InvokeResult<Void> updateEmail(@NotBlank(message = "新邮箱地址不能为空！") String newEmail,
       @NotBlank(message = "确认邮箱地址不能为空！") String confirmEmail) {
 
     AbstractUserDetails user = getCurrentUser();
@@ -121,9 +134,13 @@ public class DefaultUserCenterController extends DefaultBaseController {
   /**
    * 修改联系电话
    */
+  @ApiOperation("修改联系电话")
+  @ApiImplicitParams({
+      @ApiImplicitParam(value = "新联系电话", name = "newTelephone", paramType = "query", required = true),
+      @ApiImplicitParam(value = "确认联系电话", name = "confirmTelephone", paramType = "query", required = true)})
   @OpLog(type = OpLogType.AUTH, name = "修改联系电话，新联系电话：{}", params = "#newTelephone")
   @PatchMapping("/telephone")
-  public InvokeResult updateTelephone(@NotBlank(message = "新联系电话不能为空！") String newTelephone,
+  public InvokeResult<Void> updateTelephone(@NotBlank(message = "新联系电话不能为空！") String newTelephone,
       @NotBlank(message = "确认联系电话不能为空！") String confirmTelephone) {
 
     AbstractUserDetails user = getCurrentUser();
@@ -144,21 +161,21 @@ public class DefaultUserCenterController extends DefaultBaseController {
   /**
    * 查询操作日志
    */
+  @ApiOperation("查询操作日志")
   @GetMapping("/oplog")
-  public InvokeResult oplog(@Valid QueryOpLogsVo vo) {
+  public InvokeResult<PageResult<OpLogInUserCenterBo>> oplog(@Valid QueryOpLogsVo vo) {
 
     vo.setCreateBy(SecurityUtil.getCurrentUser().getId());
 
-    PageResult<DefaultOpLogsDto> pageResult = opLogsService
-        .query(getPageIndex(vo), getPageSize(vo), vo);
+    PageResult<DefaultOpLogsDto> pageResult = opLogsService.query(getPageIndex(vo), getPageSize(vo),
+        vo);
     List<DefaultOpLogsDto> datas = pageResult.getDatas();
-    if (!CollectionUtil.isEmpty(datas)) {
-      List<OpLogInUserCenterBo> results = datas.stream().map(OpLogInUserCenterBo::new)
-          .collect(Collectors.toList());
+    List<OpLogInUserCenterBo> results = null;
 
-      PageResultUtil.rebuild(pageResult, results);
+    if (!CollectionUtil.isEmpty(datas)) {
+      results = datas.stream().map(OpLogInUserCenterBo::new).collect(Collectors.toList());
     }
 
-    return InvokeResultBuilder.success(pageResult);
+    return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
   }
 }

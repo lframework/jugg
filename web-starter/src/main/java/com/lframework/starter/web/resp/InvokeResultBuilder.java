@@ -17,9 +17,9 @@ public class InvokeResultBuilder {
    *
    * @return
    */
-  public static InvokeResult success() {
+  public static InvokeResult<Void> success() {
 
-    InvokeResult invokeResult = new InvokeResult();
+    InvokeResult<Void> invokeResult = new InvokeResult<>();
     invokeResult.setCode(ResponseConstants.INVOKE_RESULT_SUCCESS_CODE);
     invokeResult.setMsg(ResponseConstants.INVOKE_RESULT_SUCCESS_MSG);
 
@@ -32,9 +32,9 @@ public class InvokeResultBuilder {
    * @param data
    * @return
    */
-  public static InvokeResult success(Object data) {
+  public static <T> InvokeResult<T> success(T data) {
 
-    InvokeResult invokeResult = new InvokeResult();
+    InvokeResult<T> invokeResult = new InvokeResult<>();
     invokeResult.setCode(ResponseConstants.INVOKE_RESULT_SUCCESS_CODE);
     invokeResult.setMsg(ResponseConstants.INVOKE_RESULT_SUCCESS_MSG);
     invokeResult.setData(data);
@@ -47,9 +47,9 @@ public class InvokeResultBuilder {
    *
    * @return
    */
-  public static InvokeResult fail() {
+  public static InvokeResult<Void> fail() {
 
-    InvokeResult invokeResult = new InvokeResult();
+    InvokeResult<Void> invokeResult = new InvokeResult<>();
     invokeResult.setCode(ResponseConstants.INVOKE_RESULT_FAIL_CODE);
     invokeResult.setMsg(ResponseConstants.INVOKE_RESULT_FAIL_MSG);
 
@@ -62,11 +62,27 @@ public class InvokeResultBuilder {
    * @param msg
    * @return
    */
-  public static InvokeResult fail(String msg) {
+  public static InvokeResult<Void> fail(String msg) {
 
-    InvokeResult invokeResult = new InvokeResult();
+    InvokeResult<Void> invokeResult = new InvokeResult<>();
     invokeResult.setCode(ResponseConstants.INVOKE_RESULT_FAIL_CODE);
     invokeResult.setMsg(msg);
+
+    return invokeResult;
+  }
+
+  /**
+   * 响应失败-有信息和数据
+   *
+   * @param msg
+   * @return
+   */
+  public static <T> InvokeResult<T> fail(String msg, T data) {
+
+    InvokeResult<T> invokeResult = new InvokeResult<>();
+    invokeResult.setCode(ResponseConstants.INVOKE_RESULT_FAIL_CODE);
+    invokeResult.setMsg(msg);
+    invokeResult.setData(data);
 
     return invokeResult;
   }
@@ -77,9 +93,9 @@ public class InvokeResultBuilder {
    * @param e
    * @return
    */
-  public static InvokeResult fail(BaseException e) {
+  public static InvokeResult<Void> fail(BaseException e) {
 
-    InvokeResult invokeResult = new InvokeResult();
+    InvokeResult<Void> invokeResult = new InvokeResult<>();
     invokeResult.setCode(e.getCode());
     invokeResult.setMsg(e.getMsg());
 

@@ -201,8 +201,8 @@ public class WebExceptionHandler {
 
     BaseException ex = null;
     if (methodParameter != null) {
-      TypeMismatch typeMismatch = methodParameter.getMethod().getParameters()[methodParameter
-          .getParameterIndex()].getAnnotation(TypeMismatch.class);
+      TypeMismatch typeMismatch = methodParameter.getMethod()
+          .getParameters()[methodParameter.getParameterIndex()].getAnnotation(TypeMismatch.class);
       if (typeMismatch != null) {
         ex = new InputErrorException(typeMismatch.message());
       }

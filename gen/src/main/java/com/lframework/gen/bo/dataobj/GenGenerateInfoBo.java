@@ -2,7 +2,7 @@ package com.lframework.gen.bo.dataobj;
 
 import com.lframework.common.utils.StringUtil;
 import com.lframework.gen.dto.dataobj.GenGenerateInfoDto;
-import com.lframework.starter.security.service.system.ISysMenuService;
+import com.lframework.starter.mybatis.service.system.ISysMenuService;
 import com.lframework.starter.web.bo.BaseBo;
 import com.lframework.starter.web.utils.ApplicationUtil;
 import lombok.Data;

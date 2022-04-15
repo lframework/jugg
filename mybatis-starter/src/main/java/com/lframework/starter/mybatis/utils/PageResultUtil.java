@@ -1,9 +1,11 @@
 package com.lframework.starter.mybatis.utils;
 
 import com.github.pagehelper.PageInfo;
+import com.lframework.common.utils.BeanUtil;
 import com.lframework.common.utils.ObjectUtil;
 import com.lframework.starter.mybatis.resp.PageResult;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import lombok.NonNull;
@@ -39,8 +41,17 @@ public class PageResultUtil {
     return pageResult;
   }
 
-  public static <T> void rebuild(PageResult<T> pageResult, List datas) {
+  @SuppressWarnings({"rawtypes", "unchecked"})
+  public static <T, S> PageResult<T> rebuild(@SuppressWarnings("rawtypes") PageResult pageResult,
+      List<T> datas) {
+
+    PageResult<T> result = new PageResult<>();
+    BeanUtil.copyProperties(pageResult, result, "datas");
+
+    result.setDatas(datas == null ? Collections.EMPTY_LIST : datas);
 
     pageResult.setDatas(datas);
+
+    return result;
   }
 }

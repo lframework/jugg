@@ -2,7 +2,7 @@ package com.lframework.starter.web.components.generator.impl;
 
 import com.lframework.common.exceptions.impl.DefaultSysException;
 import com.lframework.common.utils.DateUtil;
-import com.lframework.starter.redis.components.RedisHandler;
+import com.lframework.starter.web.components.redis.RedisHandler;
 import com.lframework.starter.web.components.code.GenerateCodeType;
 import com.lframework.starter.web.components.generator.Generator;
 import java.time.LocalDate;

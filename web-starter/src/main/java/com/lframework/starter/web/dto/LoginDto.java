@@ -1,5 +1,7 @@
 package com.lframework.starter.web.dto;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.Set;
 import lombok.Data;
@@ -17,16 +19,19 @@ public class LoginDto implements BaseDto, Serializable {
   /**
    * Token
    */
+  @ApiModelProperty("Token")
   private String token;
 
   /**
    * 用户信息
    */
+  @ApiModelProperty("用户信息")
   private UserInfo user;
 
   /**
    * 角色
    */
+  @ApiModelProperty("角色")
   private Set<String> roles;
 
   public LoginDto(String token, String name, Set<String> roles) {
@@ -47,6 +52,7 @@ public class LoginDto implements BaseDto, Serializable {
     /**
      * 姓名
      */
+    @ApiModelProperty("姓名")
     private String name;
   }
 }

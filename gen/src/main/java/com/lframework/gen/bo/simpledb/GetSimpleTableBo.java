@@ -4,6 +4,7 @@ import com.lframework.common.utils.CollectionUtil;
 import com.lframework.common.utils.ObjectUtil;
 import com.lframework.gen.dto.simpledb.SimpleTableDto;
 import com.lframework.starter.web.bo.BaseBo;
+import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Data;
@@ -18,36 +19,43 @@ public class GetSimpleTableBo extends BaseBo<SimpleTableDto> {
   /**
    * ID
    */
+  @ApiModelProperty("ID")
   private String id;
 
   /**
    * 数据表所属的数据库名
    */
+  @ApiModelProperty("数据表所属的数据库名")
   private String tableSchema;
 
   /**
    * 数据库表名
    */
+  @ApiModelProperty("数据库表名")
   private String tableName;
 
   /**
    * 字段信息
    */
+  @ApiModelProperty("字段信息")
   private List<GetSimpleTableColumnBo> columns;
 
   /**
    * 数据库引擎
    */
+  @ApiModelProperty("数据库引擎")
   private String engine;
 
   /**
    * 字符校验编码集
    */
+  @ApiModelProperty("字符校验编码集")
   private String tableCollation;
 
   /**
    * 备注
    */
+  @ApiModelProperty("备注")
   private String tableComment;
 
   public GetSimpleTableBo() {

@@ -1,5 +1,7 @@
 package com.lframework.starter.web.dto;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import lombok.Data;
 
@@ -14,10 +16,12 @@ public class MenuMetaDto implements BaseDto, Serializable {
   /**
    * 标题
    */
+  @ApiModelProperty("标题")
   private String title;
 
   /**
-   * 是否缓存
+   * 是否不缓存
    */
+  @ApiModelProperty("是否不缓存")
   private Boolean noCache;
 }

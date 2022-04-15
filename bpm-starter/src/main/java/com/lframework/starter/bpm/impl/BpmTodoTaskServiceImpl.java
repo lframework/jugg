@@ -2,9 +2,9 @@ package com.lframework.starter.bpm.impl;
 
 import com.lframework.common.constants.StringPool;
 import com.lframework.starter.mybatis.resp.PageResult;
-import com.lframework.starter.security.bo.message.TodoTaskBo;
-import com.lframework.starter.security.components.IUserTokenResolver;
-import com.lframework.starter.security.service.message.ITodoTaskService;
+import com.lframework.starter.mybatis.dto.message.TodoTaskDto;
+import com.lframework.starter.web.components.security.IUserTokenResolver;
+import com.lframework.starter.mybatis.service.message.ITodoTaskService;
 import com.lframework.starter.web.utils.HttpUtil;
 import com.lframework.starter.web.utils.JsonUtil;
 import com.lframework.starter.web.utils.RequestUtil;
@@ -31,7 +31,7 @@ public class BpmTodoTaskServiceImpl implements ITodoTaskService {
   private IUserTokenResolver userTokenResolver;
 
   @Override
-  public PageResult<TodoTaskBo> queryBpmTodoTasks() {
+  public PageResult<TodoTaskDto> queryTodoTasks() {
     Map<String, Object> reqParams = new HashMap<>();
     reqParams.put("limit", 10);
     reqParams.put("sort", "DESC");
@@ -43,19 +43,19 @@ public class BpmTodoTaskServiceImpl implements ITodoTaskService {
         if (retMap.get("isOk") != null && Boolean.valueOf(retMap.get("isOk").toString())) {
           // 获取数据成功
           List<Map<String, Object>> rowMap = (List<Map<String, Object>>) retMap.get("rows");
-          List<TodoTaskBo> results = rowMap.stream().map(t -> {
-            TodoTaskBo result = new TodoTaskBo();
+          List<TodoTaskDto> results = rowMap.stream().map(t -> {
+            TodoTaskDto result = new TodoTaskDto();
             result.setTitle(t.get("subject").toString());
             result.setCreateTime(t.get("createTime").toString());
             result.setJumpUrl(
-                jumpUrl + "/agilebpm-ui/index.html?tokenKey=" + StringPool.HEADER_NAME_SESSION_ID
-                    + "&token=" + userTokenResolver.getFullToken(RequestUtil.getRequest()));
+                jumpUrl + "/agilebpm-ui/index.html?tokenKey=" + userTokenResolver.getTokenKey()
+                    + "&token=" + userTokenResolver.getFullToken());
 
             return result;
           }).collect(Collectors.toList());
 
           // 模拟分页数据
-          PageResult<TodoTaskBo> pageResult = new PageResult<>();
+          PageResult<TodoTaskDto> pageResult = new PageResult<>();
           pageResult.setTotalCount(Integer.parseInt(retMap.get("total").toString()));
           pageResult.setDatas(results);
 

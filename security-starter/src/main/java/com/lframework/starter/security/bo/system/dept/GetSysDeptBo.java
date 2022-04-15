@@ -1,7 +1,8 @@
 package com.lframework.starter.security.bo.system.dept;
 
-import com.lframework.starter.security.dto.system.dept.DefaultSysDeptDto;
+import com.lframework.starter.mybatis.dto.system.dept.DefaultSysDeptDto;
 import com.lframework.starter.web.bo.BaseBo;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -12,36 +13,43 @@ public class GetSysDeptBo extends BaseBo<DefaultSysDeptDto> {
   /**
    * ID
    */
+  @ApiModelProperty("ID")
   private String id;
 
   /**
    * 编号
    */
+  @ApiModelProperty("编号")
   private String code;
 
   /**
    * 名称
    */
+  @ApiModelProperty("名称")
   private String name;
 
   /**
    * 父级ID
    */
+  @ApiModelProperty("父级ID")
   private String parentId;
 
   /**
    * 简称
    */
+  @ApiModelProperty("简称")
   private String shortName;
 
   /**
    * 状态
    */
+  @ApiModelProperty("状态")
   private Boolean available;
 
   /**
    * 备注
    */
+  @ApiModelProperty("备注")
   private String description;
 
   public GetSysDeptBo() {

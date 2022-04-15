@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lframework.starter.mybatis.mappers.DefaultMenuMapper">
+    <resultMap id="MenuDto" type="com.lframework.starter.web.dto.MenuDto">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="path" column="path"/>
+        <result property="hidden" column="hidden"/>
+        <result property="display" column="display"/>
+        <result property="component" column="component"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="meta.title" column="title"/>
+        <result property="meta.noCache" column="no_cache"/>
+    </resultMap>
+
+    <sql id="MenuDto_sql">
+        SELECT id,
+               name,
+               path,
+               hidden,
+               display,
+               component,
+               parent_id,
+               title,
+               no_cache
+        FROM sys_menu
+    </sql>
+    <insert id="collectMenu">
+        INSERT INTO sys_menu_collect (id, user_id, menu_id) VALUES (#{id}, #{userId}, #{menuId})
+    </insert>
+    <delete id="cancelCollectMenu">
+        DELETE FROM sys_menu_collect WHERE user_id = #{userId} AND menu_id = #{menuId}
+    </delete>
+
+    <select id="getMenuByUserId" resultMap="MenuDto">
+        <include refid="MenuDto_sql"/>
+        <where>
+            <if test="!isAdmin">
+                AND id IN (
+                SELECT rm.menu_id FROM sys_user_role AS ur
+                LEFT JOIN sys_role_menu AS rm ON rm.role_id = ur.role_id
+                LEFT JOIN sys_role AS r ON r.id = rm.role_id
+                WHERE ur.user_id = #{userId}
+                AND r.available = TRUE
+                )
+            </if>
+            AND available = TRUE
+            <!-- 只查询目录和菜单 -->
+            AND display IN (0, 1)
+        </where>
+        ORDER BY code
+    </select>
+    <select id="getPermissionsByUserId" resultType="java.lang.String">
+        (
+        SELECT permission
+        FROM sys_menu
+        WHERE id IN (
+        SELECT rm.menu_id FROM sys_user_role AS ur
+        LEFT JOIN sys_role_menu AS rm ON rm.role_id = ur.role_id
+        LEFT JOIN sys_role AS r ON r.id = rm.role_id
+        WHERE ur.user_id = #{userId}
+        AND r.available = TRUE
+        )
+        AND available = TRUE
+        <!-- 只查询功能和权限 -->
+        AND display IN (1, 2)
+        AND permission IS NOT NULL
+        AND permission != ''
+        ) UNION ALL
+        (
+        SELECT permission FROM sys_role AS r
+        LEFT JOIN sys_user_role AS ur ON ur.role_id = r.id
+        WHERE ur.user_id = #{userId}
+        AND r.available = TRUE
+        AND r.permission IS NOT NULL
+        AND r.permission != ''
+        )
+    </select>
+    <select id="getCollectMenuIds" resultType="java.lang.String">
+        SELECT
+               mc.menu_id
+        FROM sys_menu_collect AS mc
+        WHERE mc.user_id = #{userId}
+    </select>
+</mapper>

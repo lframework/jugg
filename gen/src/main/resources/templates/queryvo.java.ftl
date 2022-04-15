@@ -22,6 +22,7 @@ public class Query${className}Vo extends PageVo implements BaseVo, Serializable 
     /**
      * ${column.description}
      */
+    @ApiModelProperty("${column.description}")
      </#if>
     <#if column.fixEnum>
     <#if column.type != 'String'>
@@ -37,6 +38,7 @@ public class Query${className}Vo extends PageVo implements BaseVo, Serializable 
     /**
      * ${column.description} 起始时间
      */
+    @ApiModelProperty("${column.description} 起始时间")
     <#if column.type != 'String'>
     @TypeMismatch(message = "${column.description}起始时间格式有误！")
     </#if>
@@ -48,6 +50,7 @@ public class Query${className}Vo extends PageVo implements BaseVo, Serializable 
     /**
      * ${column.description} 截止时间
      */
+    @ApiModelProperty("${column.description} 截止时间")
     <#if column.type != 'String'>
     @TypeMismatch(message = "${column.description}截止时间格式有误！")
     </#if>

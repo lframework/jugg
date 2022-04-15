@@ -12,6 +12,9 @@ import com.lframework.starter.security.bo.system.oplog.QueryOpLogBo;
 import com.lframework.starter.security.controller.DefaultBaseController;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
@@ -29,10 +32,10 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author zmj
  */
+@Api(tags = "操作日志")
 @Validated
 @RestController
 @RequestMapping("/system/oplog")
-@ConditionalOnProperty(value = "default-setting.sys-function.enabled", matchIfMissing = true)
 public class OpLogController extends DefaultBaseController {
 
   @Autowired
@@ -41,31 +44,32 @@ public class OpLogController extends DefaultBaseController {
   /**
    * 操作日志列表
    */
+  @ApiOperation("操作日志列表")
   @PreAuthorize("@permission.valid('system:oplog:query')")
   @GetMapping("/query")
-  public InvokeResult query(@Valid QueryOpLogsVo vo) {
+  public InvokeResult<PageResult<QueryOpLogBo>> query(@Valid QueryOpLogsVo vo) {
 
-    PageResult<DefaultOpLogsDto> pageResult = opLogsService
-        .query(getPageIndex(vo), getPageSize(vo), vo);
+    PageResult<DefaultOpLogsDto> pageResult = opLogsService.query(getPageIndex(vo), getPageSize(vo),
+        vo);
 
     List<DefaultOpLogsDto> datas = pageResult.getDatas();
+    List<QueryOpLogBo> results = null;
 
     if (!CollectionUtil.isEmpty(datas)) {
-      List<QueryOpLogBo> results = datas.stream().map(QueryOpLogBo::new)
-          .collect(Collectors.toList());
-
-      PageResultUtil.rebuild(pageResult, results);
+      results = datas.stream().map(QueryOpLogBo::new).collect(Collectors.toList());
     }
 
-    return InvokeResultBuilder.success(pageResult);
+    return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
   }
 
   /**
    * 操作日志详情
    */
+  @ApiOperation("操作日志详情")
+  @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
   @PreAuthorize("@permission.valid('system:oplog:query')")
   @GetMapping
-  public InvokeResult getById(@NotBlank(message = "ID不能为空") String id) {
+  public InvokeResult<GetOpLogBo> getById(@NotBlank(message = "ID不能为空") String id) {
 
     DefaultOpLogsDto data = opLogsService.getById(id);
 

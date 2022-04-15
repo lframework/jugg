@@ -9,28 +9,29 @@ import com.lframework.starter.security.bo.system.position.SysPositionSelectorBo;
 import com.lframework.starter.security.bo.system.role.SysRoleSelectorBo;
 import com.lframework.starter.security.bo.system.user.SysUserSelectorBo;
 import com.lframework.starter.security.controller.DefaultBaseController;
-import com.lframework.starter.security.dto.system.dept.DefaultSysDeptDto;
-import com.lframework.starter.security.dto.system.menu.DefaultSysMenuDto;
-import com.lframework.starter.security.dto.system.position.DefaultSysPositionDto;
-import com.lframework.starter.security.dto.system.role.DefaultSysRoleDto;
-import com.lframework.starter.security.dto.system.user.DefaultSysUserDto;
-import com.lframework.starter.security.service.system.ISysDeptService;
-import com.lframework.starter.security.service.system.ISysMenuService;
-import com.lframework.starter.security.service.system.ISysPositionService;
-import com.lframework.starter.security.service.system.ISysRoleService;
-import com.lframework.starter.security.service.system.ISysUserService;
-import com.lframework.starter.security.vo.system.menu.SysMenuSelectorVo;
-import com.lframework.starter.security.vo.system.position.SysPositionSelectorVo;
-import com.lframework.starter.security.vo.system.role.SysRoleSelectorVo;
-import com.lframework.starter.security.vo.system.user.SysUserSelectorVo;
+import com.lframework.starter.mybatis.dto.system.dept.DefaultSysDeptDto;
+import com.lframework.starter.mybatis.dto.system.menu.DefaultSysMenuDto;
+import com.lframework.starter.mybatis.dto.system.position.DefaultSysPositionDto;
+import com.lframework.starter.mybatis.dto.system.role.DefaultSysRoleDto;
+import com.lframework.starter.mybatis.dto.system.user.DefaultSysUserDto;
+import com.lframework.starter.mybatis.service.system.ISysDeptService;
+import com.lframework.starter.mybatis.service.system.ISysMenuService;
+import com.lframework.starter.mybatis.service.system.ISysPositionService;
+import com.lframework.starter.mybatis.service.system.ISysRoleService;
+import com.lframework.starter.mybatis.service.system.ISysUserService;
+import com.lframework.starter.mybatis.vo.system.menu.SysMenuSelectorVo;
+import com.lframework.starter.mybatis.vo.system.position.SysPositionSelectorVo;
+import com.lframework.starter.mybatis.vo.system.role.SysRoleSelectorVo;
+import com.lframework.starter.mybatis.vo.system.user.SysUserSelectorVo;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,10 +42,10 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author zmj
  */
+@Api(tags = "数据选择器")
 @Validated
 @RestController
 @RequestMapping("/selector")
-@ConditionalOnProperty(value = "default-setting.sys-function.enabled", matchIfMissing = true)
 public class DefaultSysSelectorController extends DefaultBaseController {
 
   @Autowired
@@ -65,8 +66,9 @@ public class DefaultSysSelectorController extends DefaultBaseController {
   /**
    * 系统菜单
    */
+  @ApiOperation("系统菜单")
   @GetMapping("/menu")
-  public InvokeResult menu(@Valid SysMenuSelectorVo vo) {
+  public InvokeResult<List<SysMenuSelectorBo>> menu(@Valid SysMenuSelectorVo vo) {
 
     List<SysMenuSelectorBo> results = Collections.EMPTY_LIST;
     List<DefaultSysMenuDto> datas = sysMenuService.selector(vo);
@@ -77,8 +79,9 @@ public class DefaultSysSelectorController extends DefaultBaseController {
     return InvokeResultBuilder.success(results);
   }
 
+  @ApiOperation("部门")
   @GetMapping("/dept")
-  public InvokeResult dept() {
+  public InvokeResult<List<SysDeptSelectorBo>> dept() {
 
     List<SysDeptSelectorBo> results = Collections.EMPTY_LIST;
     List<DefaultSysDeptDto> datas = sysDeptService.selector();
@@ -89,55 +92,50 @@ public class DefaultSysSelectorController extends DefaultBaseController {
     return InvokeResultBuilder.success(results);
   }
 
+  @ApiOperation("角色")
   @GetMapping("/role")
-  public InvokeResult role(@Valid SysRoleSelectorVo vo) {
+  public InvokeResult<PageResult<SysRoleSelectorBo>> role(@Valid SysRoleSelectorVo vo) {
 
-    PageResult<DefaultSysRoleDto> pageResult = sysRoleService
-        .selector(getPageIndex(vo), getPageSize(vo), vo);
+    PageResult<DefaultSysRoleDto> pageResult = sysRoleService.selector(getPageIndex(vo),
+        getPageSize(vo), vo);
     List<DefaultSysRoleDto> datas = pageResult.getDatas();
+    List<SysRoleSelectorBo> results = null;
     if (CollectionUtil.isNotEmpty(datas)) {
-      List<SysRoleSelectorBo> results = datas.stream().map(SysRoleSelectorBo::new)
-          .collect(Collectors.toList());
-      PageResultUtil.rebuild(pageResult, results);
+      results = datas.stream().map(SysRoleSelectorBo::new).collect(Collectors.toList());
     }
 
-    return InvokeResultBuilder.success(pageResult);
+    return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
   }
 
-  /**
-   * 用户
-   */
+  @ApiOperation("用户")
   @GetMapping("/user")
-  public InvokeResult user(@Valid SysUserSelectorVo vo) {
+  public InvokeResult<PageResult<SysUserSelectorBo>> user(@Valid SysUserSelectorVo vo) {
 
-    PageResult<DefaultSysUserDto> pageResult = sysUserService
-        .selector(getPageIndex(vo), getPageSize(vo), vo);
+    PageResult<DefaultSysUserDto> pageResult = sysUserService.selector(getPageIndex(vo),
+        getPageSize(vo), vo);
     List<DefaultSysUserDto> datas = pageResult.getDatas();
+    List<SysUserSelectorBo> results = null;
 
     if (!CollectionUtil.isEmpty(datas)) {
-      List<SysUserSelectorBo> results = datas.stream().map(SysUserSelectorBo::new)
-          .collect(Collectors.toList());
-
-      PageResultUtil.rebuild(pageResult, results);
+      results = datas.stream().map(SysUserSelectorBo::new).collect(Collectors.toList());
     }
 
-    return InvokeResultBuilder.success(pageResult);
+    return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
   }
 
+  @ApiOperation("岗位")
   @GetMapping("/position")
-  public InvokeResult position(@Valid SysPositionSelectorVo vo) {
+  public InvokeResult<PageResult<SysPositionSelectorBo>> position(@Valid SysPositionSelectorVo vo) {
 
-    PageResult<DefaultSysPositionDto> pageResult = sysPositionService
-        .selector(getPageIndex(vo), getPageSize(vo), vo);
+    PageResult<DefaultSysPositionDto> pageResult = sysPositionService.selector(getPageIndex(vo),
+        getPageSize(vo), vo);
     List<DefaultSysPositionDto> datas = pageResult.getDatas();
+    List<SysPositionSelectorBo> results = null;
 
     if (!CollectionUtil.isEmpty(datas)) {
-      List<SysPositionSelectorBo> results = datas.stream().map(SysPositionSelectorBo::new)
-          .collect(Collectors.toList());
-
-      PageResultUtil.rebuild(pageResult, results);
+      results = datas.stream().map(SysPositionSelectorBo::new).collect(Collectors.toList());
     }
 
-    return InvokeResultBuilder.success(pageResult);
+    return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
   }
 }

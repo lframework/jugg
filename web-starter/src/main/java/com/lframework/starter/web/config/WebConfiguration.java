@@ -1,5 +1,6 @@
 package com.lframework.starter.web.config;
 
+import cn.dev33.satoken.interceptor.SaAnnotationInterceptor;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,10 +10,14 @@ import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import com.lframework.common.constants.StringPool;
 import com.lframework.common.utils.IdWorker;
 import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.web.components.security.PermitAllService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +27,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
@@ -37,6 +43,17 @@ public class WebConfiguration implements WebMvcConfigurer {
 
   @Value("${center-id:1}")
   private Long centerId;
+
+  @Autowired
+  private PermitAllService permitAllService;
+
+  @Override
+  public void addInterceptors(InterceptorRegistry registry) {
+    registry.addInterceptor(new SaAnnotationInterceptor()).addPathPatterns("/**")
+        .excludePathPatterns(permitAllService.getUrls().stream().map(
+            Entry::getValue).collect(
+            Collectors.toList()));
+  }
 
   @Bean
   @ConditionalOnMissingBean(CorsFilter.class)
@@ -125,5 +142,11 @@ public class WebConfiguration implements WebMvcConfigurer {
   public IdWorker getIdWorker() {
 
     return new IdWorker(workerId, centerId);
+  }
+
+  @Bean
+  @ConditionalOnMissingBean(PermitAllService.class)
+  public PermitAllService permitAllService() {
+    return new PermitAllService();
   }
 }

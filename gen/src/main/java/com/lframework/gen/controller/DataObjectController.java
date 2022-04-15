@@ -24,6 +24,10 @@ import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
 import com.lframework.starter.web.service.IUserService;
 import com.lframework.starter.web.utils.ResponseUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
@@ -47,6 +51,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(tags = "代码生成")
 @Slf4j
 @Validated
 @RestController
@@ -65,85 +70,98 @@ public class DataObjectController extends DefaultBaseController {
   @Value("${spring.servlet.multipart.location}")
   private String location;
 
+  @ApiOperation("查询数据对象列表")
   @GetMapping("/query")
-  public InvokeResult query(@Valid QueryDataObjectVo vo) {
+  public InvokeResult<PageResult<QueryDataObjectBo>> query(@Valid QueryDataObjectVo vo) {
 
     PageResult<DataObjectDto> pageResult = dataObjectService.query(vo);
     List<DataObjectDto> datas = pageResult.getDatas();
+    List<QueryDataObjectBo> results = null;
     if (CollectionUtil.isNotEmpty(datas)) {
-      List<QueryDataObjectBo> results = datas.stream().map(QueryDataObjectBo::new)
-          .collect(Collectors.toList());
+      results = datas.stream().map(QueryDataObjectBo::new).collect(Collectors.toList());
       for (QueryDataObjectBo result : results) {
         UserDto createBy = userService.getById(result.getCreateBy());
         UserDto updateBy = userService.getById(result.getUpdateBy());
         result.setCreateBy(createBy.getName());
         result.setUpdateBy(updateBy.getName());
       }
-
-      PageResultUtil.rebuild(pageResult, results);
     }
 
-    return InvokeResultBuilder.success(pageResult);
+    return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
   }
 
+  @ApiOperation("根据ID查询")
+  @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
   @GetMapping
-  public InvokeResult get(@NotBlank(message = "ID不能为空！") String id) {
+  public InvokeResult<GetDataObjectBo> get(@NotBlank(message = "ID不能为空！") String id) {
 
     DataObjectDto data = dataObjectService.getById(id);
 
     return InvokeResultBuilder.success(new GetDataObjectBo(data));
   }
 
+  @ApiOperation("新增")
   @PostMapping
-  public InvokeResult create(@Valid CreateDataObjectVo vo) {
+  public InvokeResult<Void> create(@Valid CreateDataObjectVo vo) {
 
     dataObjectService.create(vo);
 
     return InvokeResultBuilder.success();
   }
 
+  @ApiOperation("修改")
   @PutMapping
-  public InvokeResult update(@Valid UpdateDataObjectVo vo) {
+  public InvokeResult<Void> update(@Valid UpdateDataObjectVo vo) {
 
     dataObjectService.update(vo);
 
     return InvokeResultBuilder.success();
   }
 
+  @ApiOperation("根据ID删除")
+  @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
   @DeleteMapping
-  public InvokeResult delete(@NotBlank(message = "ID不能为空！") String id) {
+  public InvokeResult<Void> delete(@NotBlank(message = "ID不能为空！") String id) {
 
     dataObjectService.delete(id);
 
     return InvokeResultBuilder.success();
   }
 
+  @ApiOperation("批量删除")
   @DeleteMapping("/batch")
-  public InvokeResult batchDelete(@RequestBody @NotEmpty(message = "ID不能为空！") List<String> ids) {
+  public InvokeResult<Void> batchDelete(
+      @ApiParam(value = "ID", required = true) @RequestBody @NotEmpty(message = "ID不能为空！") List<String> ids) {
 
     dataObjectService.batchDelete(ids);
 
     return InvokeResultBuilder.success();
   }
 
+  @ApiOperation("批量启用")
   @PatchMapping("/enable/batch")
-  public InvokeResult batchEnable(@RequestBody @NotEmpty(message = "ID不能为空！") List<String> ids) {
+  public InvokeResult<Void> batchEnable(
+      @ApiParam(value = "ID", required = true) @RequestBody @NotEmpty(message = "ID不能为空！") List<String> ids) {
 
     dataObjectService.batchEnable(ids, getCurrentUser().getId());
 
     return InvokeResultBuilder.success();
   }
 
+  @ApiOperation("批量停用")
   @PatchMapping("/unable/batch")
-  public InvokeResult batchUnable(@RequestBody @NotEmpty(message = "ID不能为空！") List<String> ids) {
+  public InvokeResult<Void> batchUnable(
+      @ApiParam(value = "ID", required = true) @RequestBody @NotEmpty(message = "ID不能为空！") List<String> ids) {
 
     dataObjectService.batchUnable(ids, getCurrentUser().getId());
 
     return InvokeResultBuilder.success();
   }
 
+  @ApiOperation("获取生成代码配置")
+  @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
   @GetMapping("/generate")
-  public InvokeResult getGenerate(@NotNull(message = "ID不能为空！") String id) {
+  public InvokeResult<DataObjectGenerateBo> getGenerate(@NotNull(message = "ID不能为空！") String id) {
 
     DataObjectGenerateDto data = dataObjectService.getGenerateById(id);
 
@@ -152,16 +170,19 @@ public class DataObjectController extends DefaultBaseController {
     return InvokeResultBuilder.success(result);
   }
 
+  @ApiOperation("修改生成代码配置")
   @PatchMapping("/generate")
-  public InvokeResult updateGenerate(@Valid @RequestBody UpdateDataObjectGenerateVo vo) {
+  public InvokeResult<Void> updateGenerate(@Valid @RequestBody UpdateDataObjectGenerateVo vo) {
 
     dataObjectService.updateGenerate(vo);
 
     return InvokeResultBuilder.success();
   }
 
+  @ApiOperation("预览")
+  @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
   @GetMapping("/preview")
-  public InvokeResult preView(String id) {
+  public InvokeResult<Map<String, String>> preView(@NotNull(message = "ID不能为空！") String id) {
 
     Generator generator = Generator.getInstance(id);
     List<GenerateDto> datas = generator.generateAll();
@@ -173,8 +194,10 @@ public class DataObjectController extends DefaultBaseController {
     return InvokeResultBuilder.success(result);
   }
 
+  @ApiOperation("下载")
+  @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
   @GetMapping("/download")
-  public void download(String id) {
+  public void download(@NotNull(message = "ID不能为空！") String id) {
 
     String fileLocation = location.endsWith(File.separator) ? location : location + File.separator;
     String filePath = fileLocation + IdUtil.getId() + File.separator;

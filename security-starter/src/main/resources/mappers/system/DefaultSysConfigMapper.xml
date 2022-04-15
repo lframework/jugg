@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.lframework.starter.security.mappers.DefaultSysConfigMapper">
+<mapper namespace="com.lframework.starter.mybatis.mappers.DefaultSysConfigMapper">
 
-    <resultMap id="SysConfigDto" type="com.lframework.starter.security.dto.system.config.SysConfigDto">
+    <resultMap id="SysConfigDto" type="com.lframework.starter.mybatis.dto.system.config.SysConfigDto">
         <id column="id" property="id"/>
         <result column="allow_regist" property="allowRegist"/>
         <result column="allow_lock" property="allowLock"/>

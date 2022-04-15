@@ -1,13 +1,12 @@
 package com.lframework.starter.security.components;
 
+import cn.dev33.satoken.exception.NotPermissionException;
 import com.lframework.common.exceptions.BaseException;
 import com.lframework.common.exceptions.impl.AccessDeniedException;
-import com.lframework.common.exceptions.impl.InputErrorException;
 import com.lframework.starter.web.components.WebExceptionHandler;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
 import com.lframework.starter.web.resp.Response;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.HandlerMethod;
@@ -38,12 +37,11 @@ public class SecurityExceptionHandler extends WebExceptionHandler {
     return InvokeResultBuilder.fail(ex);
   }
 
-  @ExceptionHandler(BadCredentialsException.class)
-  public Response badCredentialsException(BadCredentialsException e, HandlerMethod method) {
-
+  @ExceptionHandler(NotPermissionException.class)
+  public Response notPermissionException(NotPermissionException e, HandlerMethod method) {
     this.logException(e, method);
 
-    BaseException ex = new InputErrorException("登录名或密码错误！");
+    BaseException ex = new AccessDeniedException();
 
     this.setResponseCode(ex);
 

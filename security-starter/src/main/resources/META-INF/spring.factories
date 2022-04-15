@@ -1,4 +1,4 @@
 com.lframework.starter.security.config.DbSecurityConfiguration=\
-com.lframework.starter.security.config.DefaultSystemFunctionConfiguration,\
-com.lframework.starter.security.config.PasswordEncoderConfiguration,\
-com.lframework.starter.security.config.SpringSecurityConfiguration
+com.lframework.starter.mybatis.config.DefaultSystemFunctionConfiguration,\
+com.lframework.starter.web.config.PasswordEncoderConfiguration,\
+com.lframework.starter.security.config.SecurityConfiguration

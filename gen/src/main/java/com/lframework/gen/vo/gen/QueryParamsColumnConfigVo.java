@@ -1,6 +1,7 @@
 package com.lframework.gen.vo.gen;
 
 import com.lframework.starter.web.vo.BaseVo;
+import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import lombok.Data;
 
@@ -12,10 +13,12 @@ public class QueryParamsColumnConfigVo implements BaseVo, Serializable {
   /**
    * ID
    */
+  @ApiModelProperty("ID")
   private String id;
 
   /**
    * 查询类别
    */
+  @ApiModelProperty("查询类别")
   private Integer queryType;
 }
