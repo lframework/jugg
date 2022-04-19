@@ -1,7 +1,7 @@
 package ${packageName}.service.${moduleName};
 
 import com.lframework.starter.mybatis.resp.PageResult;
-import com.lframework.starter.web.service.BaseService;
+import com.lframework.starter.mybatis.service.BaseMpService;
 import ${packageName}.dto.${moduleName}.${bizName}.${className}Dto;
 <#if create??>
 import ${packageName}.vo.${moduleName}.${bizName}.Create${className}Vo;
@@ -12,6 +12,7 @@ import ${packageName}.vo.${moduleName}.${bizName}.Query${className}Vo;
 <#if update??>
 import ${packageName}.vo.${moduleName}.${bizName}.Update${className}Vo;
 </#if>
+import ${packageName}.entity.${className};
 <#if importPackages??>
     <#list importPackages as p>
 import ${p};
@@ -26,7 +27,7 @@ import java.util.List;
  * @author ${author}
 </#if>
  */
-public interface I${className}Service extends BaseService {
+public interface I${className}Service extends BaseMpService${r"<"}${className}${r">"} {
 
     <#if queryParams??>
     /**

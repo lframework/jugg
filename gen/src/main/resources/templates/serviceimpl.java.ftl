@@ -3,6 +3,7 @@ package ${packageName}.impl.${moduleName};
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.github.pagehelper.PageInfo;
 import com.lframework.common.exceptions.impl.DefaultClientException;
 import com.lframework.common.utils.Assert;
@@ -42,10 +43,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Service
-public class ${className}ServiceImpl implements I${className}Service {
-
-    @Autowired
-    private ${className}Mapper ${classNameProperty}Mapper;
+public class ${className}ServiceImpl extends BaseMpServiceImpl${r"<"}${className}Mapper, ${className}${r">"} implements I${className}Service {
 <#if queryParams??>
 
     @Override
@@ -65,7 +63,7 @@ public class ${className}ServiceImpl implements I${className}Service {
     @Override
     public List${r"<"}${className}Dto${r">"} query(Query${className}Vo vo) {
 
-        return ${classNameProperty}Mapper.query(vo);
+        return getBaseMapper().query(vo);
     }
 </#if>
 
@@ -75,7 +73,7 @@ public class ${className}ServiceImpl implements I${className}Service {
     @Override
     public ${className}Dto getById(<#list keys as key>${key.type} ${key.name}<#if key_index != keys?size - 1>, </#if></#list>) {
 
-        return ${classNameProperty}Mapper.getById(<#list keys as key>${key.name}<#if key_index != keys?size - 1>, </#if></#list>);
+        return getBaseMapper().getById(<#list keys as key>${key.name}<#if key_index != keys?size - 1>, </#if></#list>);
     }
 <#if create??>
 
@@ -112,7 +110,7 @@ public class ${className}ServiceImpl implements I${className}Service {
             </#if>
         </#list>
 
-        ${classNameProperty}Mapper.insert(data);
+        getBaseMapper().insert(data);
 
         OpLogUtil.setVariable("${create.keys[0].name}", <#if create.keys[0].type == 'String'>data.get${create.keys[0].nameProperty}()<#else>String.valueOf(data.get${create.keys[0].nameProperty}())</#if>);
         OpLogUtil.setExtra(vo);
@@ -127,7 +125,7 @@ public class ${className}ServiceImpl implements I${className}Service {
     @Override
     public void update(Update${className}Vo vo) {
 
-        ${className} data = ${classNameProperty}Mapper.selectById(vo.get${update.keys[0].nameProperty}());
+        ${className} data = getBaseMapper().selectById(vo.get${update.keys[0].nameProperty}());
         if (ObjectUtil.isNull(data)) {
             throw new DefaultClientException("${classDescription}不存在！");
         }
@@ -154,7 +152,7 @@ public class ${className}ServiceImpl implements I${className}Service {
     </#list>
                 .eq(${className}::get${update.keys[0].nameProperty}, vo.get${update.keys[0].nameProperty}());
 
-        ${classNameProperty}Mapper.update(updateWrapper);
+        getBaseMapper().update(updateWrapper);
 
         OpLogUtil.setVariable("${update.keys[0].name}", <#if update.keys[0].type == 'String'>data.get${update.keys[0].nameProperty}()<#else>String.valueOf(data.get${update.keys[0].nameProperty}())</#if>);
         OpLogUtil.setExtra(vo);
@@ -173,7 +171,7 @@ public class ${className}ServiceImpl implements I${className}Service {
     @Override
     public void deleteById(<#list keys as key>${key.type} ${key.name}<#if key_index != keys?size - 1>, </#if></#list>) {
 
-        ${classNameProperty}Mapper.deleteById(<#list keys as key>${key.name}<#if key_index != keys?size - 1>, </#if></#list>);
+        getBaseMapper().deleteById(<#list keys as key>${key.name}<#if key_index != keys?size - 1>, </#if></#list>);
         <#if isCache>
 
         I${className}Service thisService = getThis(this.getClass());
