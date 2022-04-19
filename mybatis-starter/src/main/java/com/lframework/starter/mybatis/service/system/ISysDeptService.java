@@ -1,13 +1,14 @@
 package com.lframework.starter.mybatis.service.system;
 
 import com.lframework.starter.mybatis.dto.system.dept.DefaultSysDeptDto;
+import com.lframework.starter.mybatis.entity.DefaultSysDept;
+import com.lframework.starter.mybatis.service.BaseMpService;
 import com.lframework.starter.mybatis.vo.system.dept.CreateSysDeptVo;
 import com.lframework.starter.mybatis.vo.system.dept.UpdateSysDeptVo;
-import com.lframework.starter.web.service.BaseService;
 import java.util.Collection;
 import java.util.List;
 
-public interface ISysDeptService extends BaseService {
+public interface ISysDeptService extends BaseMpService<DefaultSysDept> {
 
   /**
    * 选择器

@@ -1,7 +1,7 @@
 package com.lframework.starter.security.controller;
 
-import com.lframework.web.common.security.AbstractUserDetails;
 import com.lframework.starter.web.controller.BaseController;
+import com.lframework.web.common.security.AbstractUserDetails;
 import com.lframework.web.common.security.SecurityUtil;
 
 /**

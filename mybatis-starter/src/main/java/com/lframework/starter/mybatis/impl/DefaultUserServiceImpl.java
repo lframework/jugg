@@ -1,12 +1,13 @@
 package com.lframework.starter.mybatis.impl;
 
 import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.mybatis.entity.DefaultSysUser;
 import com.lframework.starter.mybatis.events.UpdateUserEvent;
 import com.lframework.starter.mybatis.mappers.DefaultUserMapper;
+import com.lframework.starter.mybatis.service.IUserService;
 import com.lframework.starter.web.components.security.PasswordEncoderWrapper;
 import com.lframework.starter.web.dto.UserDto;
 import com.lframework.starter.web.dto.UserInfoDto;
-import com.lframework.starter.web.service.IUserService;
 import com.lframework.starter.web.utils.ApplicationUtil;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author zmj
  */
-public class DefaultUserServiceImpl implements IUserService {
-
-  @Autowired
-  private DefaultUserMapper userMapper;
+public class DefaultUserServiceImpl extends
+    BaseMpServiceImpl<DefaultUserMapper, DefaultSysUser> implements IUserService {
 
   @Autowired
   private PasswordEncoderWrapper encoderWrapper;
@@ -85,7 +84,7 @@ public class DefaultUserServiceImpl implements IUserService {
   @Override
   public void lockById(String id) {
 
-    userMapper.lockById(id);
+    getBaseMapper().lockById(id);
 
     IUserService thisService = getThis(this.getClass());
     thisService.cleanCacheByKey(id);
@@ -94,7 +93,7 @@ public class DefaultUserServiceImpl implements IUserService {
   @Transactional
   @Override
   public void unlockById(String id) {
-    userMapper.unlockById(id);
+    getBaseMapper().unlockById(id);
 
     IUserService thisService = getThis(this.getClass());
     thisService.cleanCacheByKey(id);
@@ -108,27 +107,27 @@ public class DefaultUserServiceImpl implements IUserService {
 
   protected UserInfoDto doGetInfo(@NonNull String userId) {
 
-    return userMapper.getInfo(userId);
+    return getBaseMapper().getInfo(userId);
   }
 
   protected void doUpdatePassword(@NonNull String userId, @NonNull String password) {
 
-    userMapper.updatePassword(userId, password);
+    getBaseMapper().updatePassword(userId, password);
   }
 
   protected void doUpdateEmail(@NonNull String userId, @NonNull String email) {
 
-    userMapper.updateEmail(userId, email);
+    getBaseMapper().updateEmail(userId, email);
   }
 
   protected void doUpdateTelephone(@NonNull String userId, @NonNull String telephone) {
 
-    userMapper.updateTelephone(userId, telephone);
+    getBaseMapper().updateTelephone(userId, telephone);
   }
 
   protected UserDto doGetById(String id) {
 
-    return userMapper.getById(id);
+    return getBaseMapper().getById(id);
   }
 
   protected String encodePassword(String password) {

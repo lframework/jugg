@@ -2,12 +2,12 @@ package com.lframework.starter.security.controller.system;
 
 import com.lframework.common.utils.CollectionUtil;
 import com.lframework.common.utils.StringUtil;
-import com.lframework.starter.security.bo.system.role.QueryRoleMenuBo;
-import com.lframework.starter.security.controller.DefaultBaseController;
 import com.lframework.starter.mybatis.dto.system.menu.DefaultSysMenuDto;
 import com.lframework.starter.mybatis.service.system.ISysMenuService;
 import com.lframework.starter.mybatis.service.system.ISysRoleMenuService;
 import com.lframework.starter.mybatis.vo.system.role.SysRoleMenuSettingVo;
+import com.lframework.starter.security.bo.system.role.QueryRoleMenuBo;
+import com.lframework.starter.security.controller.DefaultBaseController;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
 import io.swagger.annotations.Api;
@@ -54,7 +54,7 @@ public class SysRoleMenuController extends DefaultBaseController {
 
     List<QueryRoleMenuBo> results = Collections.EMPTY_LIST;
     //查询所有菜单
-    List<DefaultSysMenuDto> allMenu = sysMenuService.query();
+    List<DefaultSysMenuDto> allMenu = sysMenuService.queryList();
     if (!CollectionUtil.isEmpty(allMenu)) {
       results = allMenu.stream().map(QueryRoleMenuBo::new).collect(Collectors.toList());
 

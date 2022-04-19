@@ -9,6 +9,7 @@ import com.lframework.gen.mappers.GenQueryParamsColumnConfigMapper;
 import com.lframework.gen.service.IDataObjectColumnService;
 import com.lframework.gen.service.IGenQueryParamsColumnConfigService;
 import com.lframework.gen.vo.dataobj.UpdateQueryParamsColumnConfigVo;
+import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.web.utils.EnumUtil;
 import java.util.Collections;
 import java.util.List;
@@ -18,13 +19,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class GenQueryParamsColumnConfigServiceImpl implements IGenQueryParamsColumnConfigService {
+public class GenQueryParamsColumnConfigServiceImpl extends
+    BaseMpServiceImpl<GenQueryParamsColumnConfigMapper, GenQueryParamsColumnConfig> implements
+    IGenQueryParamsColumnConfigService {
 
   @Autowired
   private IDataObjectColumnService dataObjectColumnService;
-
-  @Autowired
-  private GenQueryParamsColumnConfigMapper genQueryParamsColumnConfigMapper;
 
   @Override
   public List<GenQueryParamsColumnConfigDto> getByDataObjId(String dataObjId) {
@@ -34,7 +34,7 @@ public class GenQueryParamsColumnConfigServiceImpl implements IGenQueryParamsCol
       return Collections.EMPTY_LIST;
     }
 
-    return genQueryParamsColumnConfigMapper
+    return getBaseMapper()
         .getByIds(columns.stream().map(GenDataObjectColumnDto::getId).collect(Collectors.toList()));
   }
 
@@ -44,7 +44,7 @@ public class GenQueryParamsColumnConfigServiceImpl implements IGenQueryParamsCol
 
     List<GenDataObjectColumnDto> columns = dataObjectColumnService.getByDataObjId(dataObjId);
     if (!CollectionUtil.isEmpty(columns)) {
-      genQueryParamsColumnConfigMapper
+      getBaseMapper()
           .deleteBatchIds(
               columns.stream().map(GenDataObjectColumnDto::getId).collect(Collectors.toList()));
     }
@@ -58,7 +58,7 @@ public class GenQueryParamsColumnConfigServiceImpl implements IGenQueryParamsCol
             EnumUtil.getByCode(GenQueryType.class, updateQueryParamsColumnConfigVo.getQueryType()));
         record.setOrderNo(orderNo++);
 
-        genQueryParamsColumnConfigMapper.insert(record);
+        getBaseMapper().insert(record);
       }
     }
   }
@@ -66,13 +66,13 @@ public class GenQueryParamsColumnConfigServiceImpl implements IGenQueryParamsCol
   @Override
   public GenQueryParamsColumnConfigDto getById(String id) {
 
-    return genQueryParamsColumnConfigMapper.getById(id);
+    return getBaseMapper().getById(id);
   }
 
   @Transactional
   @Override
   public void deleteById(String id) {
 
-    genQueryParamsColumnConfigMapper.deleteById(id);
+    getBaseMapper().deleteById(id);
   }
 }

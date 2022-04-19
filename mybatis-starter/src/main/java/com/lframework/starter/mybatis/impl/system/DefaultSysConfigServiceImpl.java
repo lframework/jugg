@@ -3,27 +3,25 @@ package com.lframework.starter.mybatis.impl.system;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.lframework.starter.mybatis.annotations.OpLog;
-import com.lframework.starter.mybatis.enums.OpLogType;
-import com.lframework.starter.mybatis.service.system.ISysConfigService;
-import com.lframework.starter.mybatis.utils.OpLogUtil;
 import com.lframework.starter.mybatis.dto.system.config.SysConfigDto;
 import com.lframework.starter.mybatis.entity.SysConfig;
+import com.lframework.starter.mybatis.enums.OpLogType;
+import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.mybatis.mappers.DefaultSysConfigMapper;
+import com.lframework.starter.mybatis.service.system.ISysConfigService;
+import com.lframework.starter.mybatis.utils.OpLogUtil;
 import com.lframework.starter.mybatis.vo.system.config.UpdateSysConfigVo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
-public class DefaultSysConfigServiceImpl implements ISysConfigService {
-
-  @Autowired
-  private DefaultSysConfigMapper sysConfigMapper;
+public class DefaultSysConfigServiceImpl extends
+    BaseMpServiceImpl<DefaultSysConfigMapper, SysConfig> implements ISysConfigService {
 
   @Cacheable(value = SysConfigDto.CACHE_NAME, key = "'config'", unless = "#result == null")
   @Override
   public SysConfigDto get() {
 
-    return sysConfigMapper.get();
+    return getBaseMapper().get();
   }
 
   @OpLog(type = OpLogType.OTHER, name = "修改系统设置")
@@ -40,7 +38,7 @@ public class DefaultSysConfigServiceImpl implements ISysConfigService {
         .set(SysConfig::getForgetPswRequireSms, vo.getForgetPswRequireSms())
         .set(SysConfig::getSignName, vo.getSignName())
         .set(SysConfig::getTemplateCode, vo.getTemplateCode());
-    sysConfigMapper.update(updateWrapper);
+    getBaseMapper().update(updateWrapper);
 
     OpLogUtil.setExtra(vo);
 

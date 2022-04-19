@@ -11,6 +11,7 @@ import com.lframework.starter.mybatis.dto.system.position.DefaultSysUserPosition
 import com.lframework.starter.mybatis.dto.system.role.DefaultSysRoleDto;
 import com.lframework.starter.mybatis.dto.system.role.DefaultSysUserRoleDto;
 import com.lframework.starter.mybatis.dto.system.user.DefaultSysUserDto;
+import com.lframework.starter.mybatis.service.IUserService;
 import com.lframework.starter.mybatis.service.system.ISysDeptService;
 import com.lframework.starter.mybatis.service.system.ISysPositionService;
 import com.lframework.starter.mybatis.service.system.ISysRoleService;
@@ -19,7 +20,6 @@ import com.lframework.starter.mybatis.service.system.ISysUserPositionService;
 import com.lframework.starter.mybatis.service.system.ISysUserRoleService;
 import com.lframework.starter.web.bo.BaseBo;
 import com.lframework.starter.web.dto.UserDto;
-import com.lframework.starter.web.service.IUserService;
 import com.lframework.starter.web.utils.ApplicationUtil;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDateTime;

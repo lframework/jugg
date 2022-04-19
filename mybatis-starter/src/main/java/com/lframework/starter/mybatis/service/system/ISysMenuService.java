@@ -1,10 +1,11 @@
 package com.lframework.starter.mybatis.service.system;
 
 import com.lframework.starter.mybatis.dto.system.menu.DefaultSysMenuDto;
+import com.lframework.starter.mybatis.entity.DefaultSysMenu;
+import com.lframework.starter.mybatis.service.BaseMpService;
 import com.lframework.starter.mybatis.vo.system.menu.CreateSysMenuVo;
 import com.lframework.starter.mybatis.vo.system.menu.SysMenuSelectorVo;
 import com.lframework.starter.mybatis.vo.system.menu.UpdateSysMenuVo;
-import com.lframework.starter.web.service.BaseService;
 import java.util.List;
 
 /**
@@ -15,14 +16,14 @@ import java.util.List;
  * @author zmj
  * @since 2021-05-10
  */
-public interface ISysMenuService extends BaseService {
+public interface ISysMenuService extends BaseMpService<DefaultSysMenu> {
 
   /**
    * 系统菜单列表
    *
    * @return
    */
-  List<DefaultSysMenuDto> query();
+  List<DefaultSysMenuDto> queryList();
 
   /**
    * 根据角色ID查询已授权的菜单

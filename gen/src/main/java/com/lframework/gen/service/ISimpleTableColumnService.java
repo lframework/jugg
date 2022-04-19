@@ -1,11 +1,12 @@
 package com.lframework.gen.service;
 
 import com.lframework.gen.dto.simpledb.SimpleTableColumnDto;
+import com.lframework.gen.entity.GenSimpleTableColumn;
 import com.lframework.gen.vo.simpledb.CreateSimpleTableVo;
-import com.lframework.starter.web.service.BaseService;
+import com.lframework.starter.mybatis.service.BaseMpService;
 import java.util.List;
 
-public interface ISimpleTableColumnService extends BaseService {
+public interface ISimpleTableColumnService extends BaseMpService<GenSimpleTableColumn> {
 
   /**
    * 根据TableId查询

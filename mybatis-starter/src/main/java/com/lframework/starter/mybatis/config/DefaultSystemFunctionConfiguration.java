@@ -16,6 +16,8 @@ import com.lframework.starter.mybatis.impl.system.DefaultSysUserPositionServiceI
 import com.lframework.starter.mybatis.impl.system.DefaultSysUserRoleServiceImpl;
 import com.lframework.starter.mybatis.impl.system.DefaultSysUserServiceImpl;
 import com.lframework.starter.mybatis.impl.system.RecursionMappingServiceImpl;
+import com.lframework.starter.mybatis.service.IMenuService;
+import com.lframework.starter.mybatis.service.IUserService;
 import com.lframework.starter.mybatis.service.message.ITodoTaskService;
 import com.lframework.starter.mybatis.service.system.IRecursionMappingService;
 import com.lframework.starter.mybatis.service.system.ISysConfigService;
@@ -29,8 +31,6 @@ import com.lframework.starter.mybatis.service.system.ISysUserPositionService;
 import com.lframework.starter.mybatis.service.system.ISysUserRoleService;
 import com.lframework.starter.mybatis.service.system.ISysUserService;
 import com.lframework.starter.web.components.security.UserDetailsService;
-import com.lframework.starter.web.service.IMenuService;
-import com.lframework.starter.web.service.IUserService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

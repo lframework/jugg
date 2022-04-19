@@ -12,30 +12,28 @@ import com.lframework.common.utils.IdUtil;
 import com.lframework.common.utils.ObjectUtil;
 import com.lframework.common.utils.StringUtil;
 import com.lframework.starter.mybatis.annotations.OpLog;
+import com.lframework.starter.mybatis.dto.system.position.DefaultSysPositionDto;
+import com.lframework.starter.mybatis.entity.DefaultSysPosition;
 import com.lframework.starter.mybatis.enums.OpLogType;
+import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
+import com.lframework.starter.mybatis.mappers.system.DefaultSysPositionMapper;
 import com.lframework.starter.mybatis.resp.PageResult;
+import com.lframework.starter.mybatis.service.system.ISysPositionService;
 import com.lframework.starter.mybatis.utils.OpLogUtil;
 import com.lframework.starter.mybatis.utils.PageHelperUtil;
 import com.lframework.starter.mybatis.utils.PageResultUtil;
-import com.lframework.starter.mybatis.vo.system.position.UpdateSysPositionVo;
-import com.lframework.starter.mybatis.dto.system.position.DefaultSysPositionDto;
-import com.lframework.starter.mybatis.entity.DefaultSysPosition;
-import com.lframework.starter.mybatis.mappers.system.DefaultSysPositionMapper;
-import com.lframework.starter.mybatis.service.system.ISysPositionService;
 import com.lframework.starter.mybatis.vo.system.position.CreateSysPositionVo;
 import com.lframework.starter.mybatis.vo.system.position.QuerySysPositionVo;
 import com.lframework.starter.mybatis.vo.system.position.SysPositionSelectorVo;
+import com.lframework.starter.mybatis.vo.system.position.UpdateSysPositionVo;
 import java.util.Collection;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 
-public class DefaultSysPositionServiceImpl implements ISysPositionService {
-
-  @Autowired
-  private DefaultSysPositionMapper defaultSysPositionMapper;
+public class DefaultSysPositionServiceImpl extends
+    BaseMpServiceImpl<DefaultSysPositionMapper, DefaultSysPosition> implements ISysPositionService {
 
   @Override
   public PageResult<DefaultSysPositionDto> query(Integer pageIndex, Integer pageSize,
@@ -137,44 +135,44 @@ public class DefaultSysPositionServiceImpl implements ISysPositionService {
 
   protected List<DefaultSysPositionDto> doQuery(QuerySysPositionVo vo) {
 
-    return defaultSysPositionMapper.query(vo);
+    return getBaseMapper().query(vo);
   }
 
   protected DefaultSysPositionDto doGetById(String id) {
 
-    return defaultSysPositionMapper.getById(id);
+    return getBaseMapper().getById(id);
   }
 
   protected List<DefaultSysPositionDto> doSelector(SysPositionSelectorVo vo) {
 
-    return defaultSysPositionMapper.selector(vo);
+    return getBaseMapper().selector(vo);
   }
 
   protected void doBatchUnable(Collection<String> ids) {
 
     Wrapper<DefaultSysPosition> updateWrapper = Wrappers.lambdaUpdate(DefaultSysPosition.class)
         .set(DefaultSysPosition::getAvailable, Boolean.FALSE).in(DefaultSysPosition::getId, ids);
-    defaultSysPositionMapper.update(updateWrapper);
+    getBaseMapper().update(updateWrapper);
   }
 
   protected void doBatchEnable(Collection<String> ids) {
 
     Wrapper<DefaultSysPosition> updateWrapper = Wrappers.lambdaUpdate(DefaultSysPosition.class)
         .set(DefaultSysPosition::getAvailable, Boolean.TRUE).in(DefaultSysPosition::getId, ids);
-    defaultSysPositionMapper.update(updateWrapper);
+    getBaseMapper().update(updateWrapper);
   }
 
   protected DefaultSysPosition doCreate(CreateSysPositionVo vo) {
 
     Wrapper<DefaultSysPosition> checkWrapper = Wrappers.lambdaQuery(DefaultSysPosition.class)
         .eq(DefaultSysPosition::getCode, vo.getCode());
-    if (defaultSysPositionMapper.selectCount(checkWrapper) > 0) {
+    if (getBaseMapper().selectCount(checkWrapper) > 0) {
       throw new DefaultClientException("编号重复，请重新输入！");
     }
 
     checkWrapper = Wrappers.lambdaQuery(DefaultSysPosition.class)
         .eq(DefaultSysPosition::getName, vo.getName());
-    if (defaultSysPositionMapper.selectCount(checkWrapper) > 0) {
+    if (getBaseMapper().selectCount(checkWrapper) > 0) {
       throw new DefaultClientException("名称重复，请重新输入！");
     }
 
@@ -187,7 +185,7 @@ public class DefaultSysPositionServiceImpl implements ISysPositionService {
     data.setDescription(
         StringUtil.isBlank(vo.getDescription()) ? StringPool.EMPTY_STR : vo.getDescription());
 
-    defaultSysPositionMapper.insert(data);
+    getBaseMapper().insert(data);
 
     return data;
   }
@@ -201,13 +199,13 @@ public class DefaultSysPositionServiceImpl implements ISysPositionService {
 
     Wrapper<DefaultSysPosition> checkWrapper = Wrappers.lambdaQuery(DefaultSysPosition.class)
         .eq(DefaultSysPosition::getCode, vo.getCode()).ne(DefaultSysPosition::getId, vo.getId());
-    if (defaultSysPositionMapper.selectCount(checkWrapper) > 0) {
+    if (getBaseMapper().selectCount(checkWrapper) > 0) {
       throw new DefaultClientException("编号重复，请重新输入！");
     }
 
     checkWrapper = Wrappers.lambdaQuery(DefaultSysPosition.class)
         .eq(DefaultSysPosition::getName, vo.getName()).ne(DefaultSysPosition::getId, vo.getId());
-    if (defaultSysPositionMapper.selectCount(checkWrapper) > 0) {
+    if (getBaseMapper().selectCount(checkWrapper) > 0) {
       throw new DefaultClientException("名称重复，请重新输入！");
     }
 
@@ -220,7 +218,7 @@ public class DefaultSysPositionServiceImpl implements ISysPositionService {
             StringUtil.isBlank(vo.getDescription()) ? StringPool.EMPTY_STR : vo.getDescription())
         .eq(DefaultSysPosition::getId, vo.getId());
 
-    defaultSysPositionMapper.update(updateWrapper);
+    getBaseMapper().update(updateWrapper);
   }
 
   @CacheEvict(value = DefaultSysPositionDto.CACHE_NAME, key = "#key")

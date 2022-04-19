@@ -1,11 +1,12 @@
 package com.lframework.gen.service;
 
 import com.lframework.gen.dto.dataobj.GenQueryColumnConfigDto;
+import com.lframework.gen.entity.GenQueryColumnConfig;
 import com.lframework.gen.vo.dataobj.UpdateQueryColumnConfigVo;
-import com.lframework.starter.web.service.BaseService;
+import com.lframework.starter.mybatis.service.BaseMpService;
 import java.util.List;
 
-public interface IGenQueryColumnConfigService extends BaseService {
+public interface IGenQueryColumnConfigService extends BaseMpService<GenQueryColumnConfig> {
 
   /**
    * 根据数据对象ID查询

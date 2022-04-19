@@ -2,16 +2,17 @@ package com.lframework.gen.service;
 
 import com.lframework.gen.dto.dataobj.DataObjectDto;
 import com.lframework.gen.dto.dataobj.DataObjectGenerateDto;
+import com.lframework.gen.entity.GenDataObject;
 import com.lframework.gen.enums.DataObjectGenStatus;
 import com.lframework.gen.vo.dataobj.CreateDataObjectVo;
 import com.lframework.gen.vo.dataobj.QueryDataObjectVo;
 import com.lframework.gen.vo.dataobj.UpdateDataObjectGenerateVo;
 import com.lframework.gen.vo.dataobj.UpdateDataObjectVo;
 import com.lframework.starter.mybatis.resp.PageResult;
-import com.lframework.starter.web.service.BaseService;
+import com.lframework.starter.mybatis.service.BaseMpService;
 import java.util.List;
 
-public interface IDataObjectService extends BaseService {
+public interface IDataObjectService extends BaseMpService<GenDataObject> {
 
   /**
    * 查询数据对象列表

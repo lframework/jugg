@@ -5,22 +5,21 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.lframework.common.utils.CollectionUtil;
 import com.lframework.common.utils.IdUtil;
 import com.lframework.starter.mybatis.annotations.OpLog;
-import com.lframework.starter.mybatis.enums.OpLogType;
 import com.lframework.starter.mybatis.dto.system.position.DefaultSysUserPositionDto;
 import com.lframework.starter.mybatis.entity.DefaultSysUserPosition;
+import com.lframework.starter.mybatis.enums.OpLogType;
+import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.mybatis.mappers.system.DefaultSysUserPositionMapper;
 import com.lframework.starter.mybatis.service.system.ISysUserPositionService;
 import com.lframework.starter.mybatis.vo.system.position.SysUserPositionSettingVo;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 
-public class DefaultSysUserPositionServiceImpl implements ISysUserPositionService {
-
-  @Autowired
-  private DefaultSysUserPositionMapper defaultSysUserPositionMapper;
+public class DefaultSysUserPositionServiceImpl extends
+    BaseMpServiceImpl<DefaultSysUserPositionMapper, DefaultSysUserPosition> implements
+    ISysUserPositionService {
 
   @OpLog(type = OpLogType.OTHER, name = "用户设置岗位，用户ID：{}，岗位ID：{}", params = {"#vo.userId",
       "#vo.positionId"})
@@ -46,7 +45,7 @@ public class DefaultSysUserPositionServiceImpl implements ISysUserPositionServic
     Wrapper<DefaultSysUserPosition> deleteWrapper = Wrappers
         .lambdaQuery(DefaultSysUserPosition.class)
         .eq(DefaultSysUserPosition::getUserId, vo.getUserId());
-    defaultSysUserPositionMapper.delete(deleteWrapper);
+    getBaseMapper().delete(deleteWrapper);
 
     if (!CollectionUtil.isEmpty(vo.getPositionIds())) {
       for (String positionId : vo.getPositionIds()) {
@@ -55,14 +54,14 @@ public class DefaultSysUserPositionServiceImpl implements ISysUserPositionServic
         record.setUserId(vo.getUserId());
         record.setPositionId(positionId);
 
-        defaultSysUserPositionMapper.insert(record);
+        getBaseMapper().insert(record);
       }
     }
   }
 
   protected List<DefaultSysUserPositionDto> doGetByUserId(String userId) {
 
-    return defaultSysUserPositionMapper.getByUserId(userId);
+    return getBaseMapper().getByUserId(userId);
   }
 
   @CacheEvict(value = DefaultSysUserPositionDto.CACHE_NAME, key = "#key")

@@ -12,6 +12,7 @@ import com.lframework.gen.service.IDataObjectService;
 import com.lframework.gen.service.ISimpleTableColumnService;
 import com.lframework.gen.service.ISimpleTableService;
 import com.lframework.gen.vo.simpledb.CreateSimpleTableVo;
+import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.web.utils.EnumUtil;
 import java.util.List;
 import lombok.NonNull;
@@ -20,10 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class SimpleTableServiceImpl implements ISimpleTableService {
-
-  @Autowired
-  private GenSimpleTableMapper genSimpleTableMapper;
+public class SimpleTableServiceImpl extends
+    BaseMpServiceImpl<GenSimpleTableMapper, GenSimpleTable> implements ISimpleTableService {
 
   @Autowired
   private ISimpleTableColumnService simpleTableColumnService;
@@ -34,7 +33,7 @@ public class SimpleTableServiceImpl implements ISimpleTableService {
   @Override
   public SimpleTableDto getByDataObjId(String id) {
 
-    SimpleTableDto table = genSimpleTableMapper.getByDataObjId(id);
+    SimpleTableDto table = getBaseMapper().getByDataObjId(id);
     if (ObjectUtil.isNull(table)) {
       return table;
     }
@@ -54,7 +53,7 @@ public class SimpleTableServiceImpl implements ISimpleTableService {
       throw new DefaultClientException("数据库表已设置，不允许重复设置！");
     }
 
-    SimpleTableDto table = genSimpleTableMapper.get(vo.getTableSchema(), vo.getTableName());
+    SimpleTableDto table = getBaseMapper().get(vo.getTableSchema(), vo.getTableName());
     if (ObjectUtil.isNull(table)) {
       throw new DefaultClientException(
           "数据库表【" + vo.getTableSchema() + "." + vo.getTableName() + "】不存在！");
@@ -71,7 +70,7 @@ public class SimpleTableServiceImpl implements ISimpleTableService {
     simpleTable.setTableComment(table.getTableComment());
     simpleTable.setConvertType(EnumUtil.getByCode(GenConvertType.class, vo.getConvertType()));
 
-    genSimpleTableMapper.insert(simpleTable);
+    getBaseMapper().insert(simpleTable);
 
     //创建列
     simpleTableColumnService.create(simpleTable.getId(), vo);
@@ -91,7 +90,7 @@ public class SimpleTableServiceImpl implements ISimpleTableService {
       return;
     }
 
-    genSimpleTableMapper.deleteById(table.getId());
+    getBaseMapper().deleteById(table.getId());
 
     this.simpleTableColumnService.deleteByTableId(table.getId());
   }

@@ -7,11 +7,12 @@ import com.lframework.common.utils.CollectionUtil;
 import com.lframework.common.utils.IdUtil;
 import com.lframework.common.utils.ObjectUtil;
 import com.lframework.starter.mybatis.annotations.OpLog;
-import com.lframework.starter.mybatis.enums.OpLogType;
 import com.lframework.starter.mybatis.dto.system.role.DefaultSysRoleDto;
 import com.lframework.starter.mybatis.dto.system.role.DefaultSysUserRoleDto;
 import com.lframework.starter.mybatis.dto.system.user.DefaultSysUserDto;
 import com.lframework.starter.mybatis.entity.DefaultSysUserRole;
+import com.lframework.starter.mybatis.enums.OpLogType;
+import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.mybatis.mappers.system.DefaultSysUserRoleMapper;
 import com.lframework.starter.mybatis.service.system.ISysRoleService;
 import com.lframework.starter.mybatis.service.system.ISysUserRoleService;
@@ -23,10 +24,8 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-public class DefaultSysUserRoleServiceImpl implements ISysUserRoleService {
-
-  @Autowired
-  private DefaultSysUserRoleMapper defaultSysUserRoleMapper;
+public class DefaultSysUserRoleServiceImpl extends
+    BaseMpServiceImpl<DefaultSysUserRoleMapper, DefaultSysUserRole> implements ISysUserRoleService {
 
   @Autowired
   private ISysUserService sysUserService;
@@ -60,7 +59,7 @@ public class DefaultSysUserRoleServiceImpl implements ISysUserRoleService {
 
     Wrapper<DefaultSysUserRole> deleteWrapper = Wrappers.lambdaQuery(DefaultSysUserRole.class)
         .eq(DefaultSysUserRole::getUserId, userId);
-    defaultSysUserRoleMapper.delete(deleteWrapper);
+    getBaseMapper().delete(deleteWrapper);
 
     if (!CollectionUtil.isEmpty(roleIds)) {
       Set<String> roleIdSet = new HashSet<>(roleIds);
@@ -76,13 +75,13 @@ public class DefaultSysUserRoleServiceImpl implements ISysUserRoleService {
         record.setUserId(userId);
         record.setRoleId(role.getId());
 
-        defaultSysUserRoleMapper.insert(record);
+        getBaseMapper().insert(record);
       }
     }
   }
 
   protected List<DefaultSysUserRoleDto> doGetByUserId(String userId) {
 
-    return defaultSysUserRoleMapper.getByUserId(userId);
+    return getBaseMapper().getByUserId(userId);
   }
 }

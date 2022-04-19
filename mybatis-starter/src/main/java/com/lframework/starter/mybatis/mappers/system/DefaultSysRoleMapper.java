@@ -1,8 +1,8 @@
 package com.lframework.starter.mybatis.mappers.system;
 
-import com.lframework.starter.mybatis.mapper.BaseMapper;
 import com.lframework.starter.mybatis.dto.system.role.DefaultSysRoleDto;
 import com.lframework.starter.mybatis.entity.DefaultSysRole;
+import com.lframework.starter.mybatis.mapper.BaseMapper;
 import com.lframework.starter.mybatis.vo.system.role.QuerySysRoleVo;
 import com.lframework.starter.mybatis.vo.system.role.SysRoleSelectorVo;
 import java.util.List;

@@ -1,5 +1,6 @@
-package com.lframework.starter.web.service;
+package com.lframework.starter.mybatis.service;
 
+import com.lframework.starter.mybatis.entity.DefaultSysMenu;
 import com.lframework.starter.web.dto.MenuDto;
 import java.util.List;
 import java.util.Set;
@@ -9,7 +10,7 @@ import java.util.Set;
  *
  * @author zmj
  */
-public interface IMenuService extends BaseService {
+public interface IMenuService extends BaseMpService<DefaultSysMenu> {
 
   /**
    * 根据用户ID查询菜单

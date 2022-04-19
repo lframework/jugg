@@ -2,9 +2,9 @@ package com.lframework.starter.web.components.generator.impl;
 
 import com.lframework.common.exceptions.impl.DefaultSysException;
 import com.lframework.common.utils.DateUtil;
-import com.lframework.starter.web.components.redis.RedisHandler;
 import com.lframework.starter.web.components.code.GenerateCodeType;
 import com.lframework.starter.web.components.generator.Generator;
+import com.lframework.starter.web.components.redis.RedisHandler;
 import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 

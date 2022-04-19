@@ -1,11 +1,12 @@
 package com.lframework.gen.service;
 
 import com.lframework.gen.dto.dataobj.GenDetailColumnConfigDto;
+import com.lframework.gen.entity.GenDetailColumnConfig;
 import com.lframework.gen.vo.dataobj.UpdateDetailColumnConfigVo;
-import com.lframework.starter.web.service.BaseService;
+import com.lframework.starter.mybatis.service.BaseMpService;
 import java.util.List;
 
-public interface IGenDetailColumnConfigService extends BaseService {
+public interface IGenDetailColumnConfigService extends BaseMpService<GenDetailColumnConfig> {
 
   /**
    * 根据数据对象ID查询

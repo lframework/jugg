@@ -1,11 +1,12 @@
 package com.lframework.gen.service;
 
 import com.lframework.gen.dto.dataobj.GenCreateColumnConfigDto;
+import com.lframework.gen.entity.GenCreateColumnConfig;
 import com.lframework.gen.vo.dataobj.UpdateCreateColumnConfigVo;
-import com.lframework.starter.web.service.BaseService;
+import com.lframework.starter.mybatis.service.BaseMpService;
 import java.util.List;
 
-public interface IGenCreateColumnConfigService extends BaseService {
+public interface IGenCreateColumnConfigService extends BaseMpService<GenCreateColumnConfig> {
 
   /**
    * 根据数据对象ID查询

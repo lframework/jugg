@@ -1,8 +1,8 @@
 package com.lframework.starter.mybatis.mappers.system;
 
-import com.lframework.starter.mybatis.mapper.BaseMapper;
 import com.lframework.starter.mybatis.dto.system.position.DefaultSysPositionDto;
 import com.lframework.starter.mybatis.entity.DefaultSysPosition;
+import com.lframework.starter.mybatis.mapper.BaseMapper;
 import com.lframework.starter.mybatis.vo.system.position.QuerySysPositionVo;
 import com.lframework.starter.mybatis.vo.system.position.SysPositionSelectorVo;
 import java.util.List;

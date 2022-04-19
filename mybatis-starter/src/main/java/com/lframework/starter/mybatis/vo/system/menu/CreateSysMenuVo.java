@@ -20,21 +20,21 @@ public class CreateSysMenuVo implements BaseVo, Serializable {
   /**
    * 编号
    */
-  @ApiModelProperty(value = "编号",required = true)
+  @ApiModelProperty(value = "编号", required = true)
   @NotBlank(message = "请输入编号！")
   private String code;
 
   /**
    * 标题
    */
-  @ApiModelProperty(value = "标题",required = true)
+  @ApiModelProperty(value = "标题", required = true)
   @NotBlank(message = "请输入标题！")
   private String title;
 
   /**
    * 类型
    */
-  @ApiModelProperty(value = "类型",required = true)
+  @ApiModelProperty(value = "类型", required = true)
   @NotNull(message = "请选择类型！")
   @IsEnum(message = "请选择类型！", enumClass = SysMenuDisplay.class)
   private Integer display;

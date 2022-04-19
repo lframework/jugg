@@ -8,6 +8,7 @@ import com.lframework.gen.mappers.GenDetailColumnConfigMapper;
 import com.lframework.gen.service.IDataObjectColumnService;
 import com.lframework.gen.service.IGenDetailColumnConfigService;
 import com.lframework.gen.vo.dataobj.UpdateDetailColumnConfigVo;
+import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,13 +17,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class GenDetailColumnConfigServiceImpl implements IGenDetailColumnConfigService {
+public class GenDetailColumnConfigServiceImpl extends
+    BaseMpServiceImpl<GenDetailColumnConfigMapper, GenDetailColumnConfig> implements
+    IGenDetailColumnConfigService {
 
   @Autowired
   private IDataObjectColumnService dataObjectColumnService;
-
-  @Autowired
-  private GenDetailColumnConfigMapper genDetailColumnConfigMapper;
 
   @Override
   public List<GenDetailColumnConfigDto> getByDataObjId(String dataObjId) {
@@ -32,7 +32,7 @@ public class GenDetailColumnConfigServiceImpl implements IGenDetailColumnConfigS
       return Collections.EMPTY_LIST;
     }
 
-    return genDetailColumnConfigMapper
+    return getBaseMapper()
         .getByIds(columns.stream().map(GenDataObjectColumnDto::getId).collect(Collectors.toList()));
   }
 
@@ -42,7 +42,7 @@ public class GenDetailColumnConfigServiceImpl implements IGenDetailColumnConfigS
 
     List<GenDataObjectColumnDto> columns = dataObjectColumnService.getByDataObjId(dataObjId);
     if (!CollectionUtil.isEmpty(columns)) {
-      genDetailColumnConfigMapper
+      getBaseMapper()
           .deleteBatchIds(
               columns.stream().map(GenDataObjectColumnDto::getId).collect(Collectors.toList()));
     }
@@ -55,7 +55,7 @@ public class GenDetailColumnConfigServiceImpl implements IGenDetailColumnConfigS
         record.setSpan(updateDetailColumnConfigVo.getSpan());
         record.setOrderNo(orderNo++);
 
-        genDetailColumnConfigMapper.insert(record);
+        getBaseMapper().insert(record);
       }
     }
   }
@@ -63,13 +63,13 @@ public class GenDetailColumnConfigServiceImpl implements IGenDetailColumnConfigS
   @Override
   public GenDetailColumnConfigDto getById(String id) {
 
-    return genDetailColumnConfigMapper.getById(id);
+    return getBaseMapper().getById(id);
   }
 
   @Transactional
   @Override
   public void deleteById(String id) {
 
-    genDetailColumnConfigMapper.deleteById(id);
+    getBaseMapper().deleteById(id);
   }
 }

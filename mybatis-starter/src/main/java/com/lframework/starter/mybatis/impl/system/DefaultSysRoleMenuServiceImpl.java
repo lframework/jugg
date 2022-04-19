@@ -2,7 +2,6 @@ package com.lframework.starter.mybatis.impl.system;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.lframework.common.constants.StringPool;
 import com.lframework.common.exceptions.impl.DefaultClientException;
 import com.lframework.common.utils.CollectionUtil;
 import com.lframework.common.utils.IdUtil;
@@ -12,11 +11,12 @@ import com.lframework.starter.mybatis.dto.system.menu.DefaultSysMenuDto;
 import com.lframework.starter.mybatis.dto.system.role.DefaultSysRoleDto;
 import com.lframework.starter.mybatis.entity.DefaultSysRoleMenu;
 import com.lframework.starter.mybatis.enums.OpLogType;
+import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.mybatis.mappers.system.DefaultSysRoleMenuMapper;
 import com.lframework.starter.mybatis.service.system.ISysMenuService;
+import com.lframework.starter.mybatis.service.system.ISysRoleMenuService;
 import com.lframework.starter.mybatis.service.system.ISysRoleService;
 import com.lframework.starter.mybatis.vo.system.role.SysRoleMenuSettingVo;
-import com.lframework.starter.mybatis.service.system.ISysRoleMenuService;
 import com.lframework.web.common.security.SecurityConstants;
 import java.util.HashSet;
 import java.util.List;
@@ -24,10 +24,8 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-public class DefaultSysRoleMenuServiceImpl implements ISysRoleMenuService {
-
-  @Autowired
-  private DefaultSysRoleMenuMapper defaultSysRoleMenuMapper;
+public class DefaultSysRoleMenuServiceImpl extends
+    BaseMpServiceImpl<DefaultSysRoleMenuMapper, DefaultSysRoleMenu> implements ISysRoleMenuService {
 
   @Autowired
   private ISysRoleService sysRoleService;
@@ -49,7 +47,8 @@ public class DefaultSysRoleMenuServiceImpl implements ISysRoleMenuService {
 
       if (SecurityConstants.PERMISSION_ADMIN_NAME.equals(role.getPermission())) {
         throw new DefaultClientException(
-            "角色【" + role.getName() + "】的权限为【" + SecurityConstants.PERMISSION_ADMIN_NAME + "】，不允许授权！");
+            "角色【" + role.getName() + "】的权限为【" + SecurityConstants.PERMISSION_ADMIN_NAME
+                + "】，不允许授权！");
       }
 
       this.doSetting(roleId, vo.getMenuIds());
@@ -60,7 +59,7 @@ public class DefaultSysRoleMenuServiceImpl implements ISysRoleMenuService {
 
     Wrapper<DefaultSysRoleMenu> deleteWrapper = Wrappers.lambdaQuery(DefaultSysRoleMenu.class)
         .eq(DefaultSysRoleMenu::getRoleId, roleId);
-    defaultSysRoleMenuMapper.delete(deleteWrapper);
+    getBaseMapper().delete(deleteWrapper);
 
     if (!CollectionUtil.isEmpty(menuIds)) {
       Set<String> menuIdSet = new HashSet<>(menuIds);
@@ -76,7 +75,7 @@ public class DefaultSysRoleMenuServiceImpl implements ISysRoleMenuService {
         record.setRoleId(roleId);
         record.setMenuId(menu.getId());
 
-        defaultSysRoleMenuMapper.insert(record);
+        getBaseMapper().insert(record);
       }
     }
   }

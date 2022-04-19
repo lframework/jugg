@@ -5,12 +5,12 @@ import com.lframework.common.utils.CollectionUtil;
 import com.lframework.common.utils.IdUtil;
 import com.lframework.common.utils.RegUtil;
 import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.mybatis.entity.DefaultSysMenu;
 import com.lframework.starter.mybatis.mappers.DefaultMenuMapper;
+import com.lframework.starter.mybatis.service.IMenuService;
 import com.lframework.starter.web.components.security.IUserTokenResolver;
 import com.lframework.starter.web.dto.MenuDto;
-import com.lframework.starter.web.service.IMenuService;
 import com.lframework.starter.web.utils.ApplicationUtil;
-import com.lframework.starter.web.utils.RequestUtil;
 import com.lframework.starter.web.utils.SpelUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,10 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author zmj
  */
-public abstract class AbstractMenuServiceImpl implements IMenuService {
-
-  @Autowired
-  private DefaultMenuMapper defaultMenuMapper;
+public abstract class AbstractMenuServiceImpl extends
+    BaseMpServiceImpl<DefaultMenuMapper, DefaultSysMenu> implements IMenuService {
 
   @Autowired
   private IUserTokenResolver userTokenResolver;
@@ -76,7 +74,7 @@ public abstract class AbstractMenuServiceImpl implements IMenuService {
   @Override
   public Set<String> getPermissionsByUserId(String userId) {
 
-    return defaultMenuMapper.getPermissionsByUserId(userId);
+    return getBaseMapper().getPermissionsByUserId(userId);
   }
 
   @Transactional
@@ -89,7 +87,7 @@ public abstract class AbstractMenuServiceImpl implements IMenuService {
 
     this.cancelCollect(userId, menuId);
 
-    defaultMenuMapper.collectMenu(IdUtil.getId(), userId, menuId);
+    getBaseMapper().collectMenu(IdUtil.getId(), userId, menuId);
   }
 
   @Transactional
@@ -100,7 +98,7 @@ public abstract class AbstractMenuServiceImpl implements IMenuService {
       return;
     }
 
-    defaultMenuMapper.cancelCollectMenu(userId, menuId);
+    getBaseMapper().cancelCollectMenu(userId, menuId);
   }
 
   private List<String> getAllExpressions(String s) {
@@ -139,11 +137,11 @@ public abstract class AbstractMenuServiceImpl implements IMenuService {
 
   protected List<MenuDto> doGetMenus(String userId, boolean isAdmin) {
 
-    return defaultMenuMapper.getMenuByUserId(userId, isAdmin);
+    return getBaseMapper().getMenuByUserId(userId, isAdmin);
   }
 
   protected List<String> doGetCollectMenuIds(String userId) {
 
-    return defaultMenuMapper.getCollectMenuIds(userId);
+    return getBaseMapper().getCollectMenuIds(userId);
   }
 }

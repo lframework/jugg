@@ -8,30 +8,28 @@ import com.lframework.gen.enums.GenTemplateType;
 import com.lframework.gen.mappers.GenGenerateInfoMapper;
 import com.lframework.gen.service.IGenerateInfoService;
 import com.lframework.gen.vo.dataobj.UpdateGenerateInfoVo;
+import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.web.utils.EnumUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class GenerateInfoServiceImpl implements IGenerateInfoService {
-
-  @Autowired
-  private GenGenerateInfoMapper genGenerateInfoMapper;
+public class GenerateInfoServiceImpl extends
+    BaseMpServiceImpl<GenGenerateInfoMapper, GenGenerateInfo> implements IGenerateInfoService {
 
   @Override
   public GenGenerateInfoDto getByDataObjId(String dataObjId) {
 
-    return genGenerateInfoMapper.getByDataObjId(dataObjId);
+    return getBaseMapper().getByDataObjId(dataObjId);
   }
 
   @Transactional
   @Override
   public void updateGenerate(String dataObjId, UpdateGenerateInfoVo vo) {
 
-    GenGenerateInfo data = genGenerateInfoMapper.selectById(dataObjId);
+    GenGenerateInfo data = getBaseMapper().selectById(dataObjId);
     if (data != null) {
-      genGenerateInfoMapper.deleteById(data.getId());
+      getBaseMapper().deleteById(data.getId());
     } else {
       data = new GenGenerateInfo();
     }
@@ -56,13 +54,13 @@ public class GenerateInfoServiceImpl implements IGenerateInfoService {
     data.setIsCache(vo.getIsCache());
     data.setHasDelete(vo.getHasDelete());
 
-    genGenerateInfoMapper.insert(data);
+    getBaseMapper().insert(data);
   }
 
   @Transactional
   @Override
   public void deleteByDataObjId(String dataObjId) {
 
-    genGenerateInfoMapper.deleteById(dataObjId);
+    getBaseMapper().deleteById(dataObjId);
   }
 }

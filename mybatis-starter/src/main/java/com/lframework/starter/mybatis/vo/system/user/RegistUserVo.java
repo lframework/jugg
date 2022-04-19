@@ -3,7 +3,6 @@ package com.lframework.starter.mybatis.vo.system.user;
 import com.lframework.common.constants.PatternPool;
 import com.lframework.starter.web.components.validation.Pattern;
 import com.lframework.starter.web.vo.BaseVo;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import javax.validation.constraints.NotBlank;

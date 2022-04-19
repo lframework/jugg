@@ -18,7 +18,6 @@ import com.lframework.starter.web.utils.EnumUtil;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -27,10 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
  * @author zmj
  */
 @Slf4j
-public class DefaultOpLogsServiceImpl implements IOpLogsService {
-
-  @Autowired
-  private DefaultOpLogsMapper defaultOpLogsMapper;
+public class DefaultOpLogsServiceImpl extends
+    BaseMpServiceImpl<DefaultOpLogsMapper, DefaultOpLogs> implements IOpLogsService {
 
   @Transactional
   @Override
@@ -84,23 +81,23 @@ public class DefaultOpLogsServiceImpl implements IOpLogsService {
     }
     record.setIp(vo.getIp());
 
-    defaultOpLogsMapper.insert(record);
+    getBaseMapper().insert(record);
 
     return record;
   }
 
   protected List<DefaultOpLogsDto> doQuery(QueryOpLogsVo vo) {
 
-    return defaultOpLogsMapper.query(vo);
+    return getBaseMapper().query(vo);
   }
 
   protected DefaultOpLogsDto doGetById(String id) {
 
-    return defaultOpLogsMapper.getById(id);
+    return getBaseMapper().getById(id);
   }
 
   protected void doClearLogs(LocalDateTime endTime) {
 
-    defaultOpLogsMapper.clearLogs(endTime);
+    getBaseMapper().clearLogs(endTime);
   }
 }

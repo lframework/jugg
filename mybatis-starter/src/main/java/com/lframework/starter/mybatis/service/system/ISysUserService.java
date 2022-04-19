@@ -1,16 +1,17 @@
 package com.lframework.starter.mybatis.service.system;
 
 import com.lframework.starter.mybatis.dto.system.user.DefaultSysUserDto;
+import com.lframework.starter.mybatis.entity.DefaultSysUser;
 import com.lframework.starter.mybatis.resp.PageResult;
+import com.lframework.starter.mybatis.service.BaseMpService;
 import com.lframework.starter.mybatis.vo.system.user.CreateSysUserVo;
 import com.lframework.starter.mybatis.vo.system.user.QuerySysUserVo;
+import com.lframework.starter.mybatis.vo.system.user.RegistUserVo;
 import com.lframework.starter.mybatis.vo.system.user.SysUserSelectorVo;
 import com.lframework.starter.mybatis.vo.system.user.UpdateSysUserVo;
-import com.lframework.starter.mybatis.vo.system.user.RegistUserVo;
-import com.lframework.starter.web.service.BaseService;
 import java.util.List;
 
-public interface ISysUserService extends BaseService {
+public interface ISysUserService extends BaseMpService<DefaultSysUser> {
 
   /**
    * 查询列表

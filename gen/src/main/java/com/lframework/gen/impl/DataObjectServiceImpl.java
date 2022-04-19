@@ -35,6 +35,7 @@ import com.lframework.gen.vo.dataobj.CreateDataObjectVo;
 import com.lframework.gen.vo.dataobj.QueryDataObjectVo;
 import com.lframework.gen.vo.dataobj.UpdateDataObjectGenerateVo;
 import com.lframework.gen.vo.dataobj.UpdateDataObjectVo;
+import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.mybatis.resp.PageResult;
 import com.lframework.starter.mybatis.utils.PageHelperUtil;
 import com.lframework.starter.mybatis.utils.PageResultUtil;
@@ -48,10 +49,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class DataObjectServiceImpl implements IDataObjectService {
-
-  @Autowired
-  private GenDataObjectMapper genDataObjectMapper;
+public class DataObjectServiceImpl extends
+    BaseMpServiceImpl<GenDataObjectMapper, GenDataObject> implements IDataObjectService {
 
   @Autowired
   private IDataObjectColumnService dataObjectColumnService;
@@ -79,7 +78,7 @@ public class DataObjectServiceImpl implements IDataObjectService {
 
     PageHelperUtil.startPage(vo);
 
-    List<DataObjectDto> datas = genDataObjectMapper.query(vo);
+    List<DataObjectDto> datas = getBaseMapper().query(vo);
 
     return PageResultUtil.convert(new PageInfo<>(datas));
   }
@@ -87,7 +86,7 @@ public class DataObjectServiceImpl implements IDataObjectService {
   @Override
   public DataObjectDto getById(@NonNull String id) {
 
-    return genDataObjectMapper.getById(id);
+    return getBaseMapper().getById(id);
   }
 
   @Transactional
@@ -103,7 +102,7 @@ public class DataObjectServiceImpl implements IDataObjectService {
       data.setDescription(vo.getDescription());
     }
 
-    genDataObjectMapper.insert(data);
+    getBaseMapper().insert(data);
 
     return data.getId();
   }
@@ -120,7 +119,7 @@ public class DataObjectServiceImpl implements IDataObjectService {
     data.setDescription(
         StringUtil.isNotBlank(vo.getDescription()) ? vo.getDescription() : StringPool.EMPTY_STR);
 
-    genDataObjectMapper.updateById(data);
+    getBaseMapper().updateById(data);
   }
 
   @Transactional
@@ -131,7 +130,7 @@ public class DataObjectServiceImpl implements IDataObjectService {
     List<String> columnIds = columns.stream().map(GenDataObjectColumnDto::getId)
         .collect(Collectors.toList());
 
-    genDataObjectMapper.deleteById(id);
+    getBaseMapper().deleteById(id);
 
     dataObjectColumnService.deleteByDataObjId(id);
 
@@ -150,7 +149,7 @@ public class DataObjectServiceImpl implements IDataObjectService {
       return;
     }
 
-    genDataObjectMapper.deleteBatchIds(ids);
+    getBaseMapper().deleteBatchIds(ids);
   }
 
   @Transactional
@@ -164,7 +163,7 @@ public class DataObjectServiceImpl implements IDataObjectService {
     Wrapper<GenDataObject> wrapper = Wrappers.lambdaUpdate(GenDataObject.class)
         .set(GenDataObject::getAvailable, Boolean.TRUE).set(GenDataObject::getUpdateBy, userId)
         .in(GenDataObject::getId, ids);
-    genDataObjectMapper.update(wrapper);
+    getBaseMapper().update(wrapper);
   }
 
   @Transactional
@@ -178,7 +177,7 @@ public class DataObjectServiceImpl implements IDataObjectService {
     Wrapper<GenDataObject> wrapper = Wrappers.lambdaUpdate(GenDataObject.class)
         .set(GenDataObject::getAvailable, Boolean.FALSE).set(GenDataObject::getUpdateBy, userId)
         .in(GenDataObject::getId, ids);
-    genDataObjectMapper.update(wrapper);
+    getBaseMapper().update(wrapper);
   }
 
   @Override
@@ -248,7 +247,7 @@ public class DataObjectServiceImpl implements IDataObjectService {
         Wrapper<GenDataObject> updateWrapper = Wrappers.lambdaUpdate(GenDataObject.class)
             .set(GenDataObject::getGenStatus, status).eq(GenDataObject::getId, id)
             .eq(GenDataObject::getGenStatus, DataObjectGenStatus.CREATED);
-        if (genDataObjectMapper.update(updateWrapper) != 1) {
+        if (getBaseMapper().update(updateWrapper) != 1) {
           throw new DefaultClientException("数据对象【" + record.getName() + "】不允许修改！");
         }
         break;
@@ -257,7 +256,7 @@ public class DataObjectServiceImpl implements IDataObjectService {
         Wrapper<GenDataObject> updateWrapper = Wrappers.lambdaUpdate(GenDataObject.class)
             .set(GenDataObject::getGenStatus, status).eq(GenDataObject::getId, id)
             .eq(GenDataObject::getGenStatus, DataObjectGenStatus.CREATED);
-        if (genDataObjectMapper.update(updateWrapper) != 1) {
+        if (getBaseMapper().update(updateWrapper) != 1) {
           throw new DefaultClientException("数据对象【" + record.getName() + "】已经设置数据表，不允许重复设置！");
         }
         break;
@@ -267,7 +266,7 @@ public class DataObjectServiceImpl implements IDataObjectService {
             .set(GenDataObject::getGenStatus, status).eq(GenDataObject::getId, id)
             .in(GenDataObject::getGenStatus, DataObjectGenStatus.SET_TABLE,
                 DataObjectGenStatus.SET_GEN);
-        if (genDataObjectMapper.update(updateWrapper) != 1) {
+        if (getBaseMapper().update(updateWrapper) != 1) {
           throw new DefaultClientException("数据对象【" + record.getName() + "】尚未设置数据表，请先设置数据表！");
         }
         break;

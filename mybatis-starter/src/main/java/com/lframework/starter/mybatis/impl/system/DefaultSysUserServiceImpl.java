@@ -14,21 +14,21 @@ import com.lframework.common.utils.ObjectUtil;
 import com.lframework.common.utils.RegUtil;
 import com.lframework.common.utils.StringUtil;
 import com.lframework.starter.mybatis.annotations.OpLog;
-import com.lframework.starter.mybatis.enums.Gender;
-import com.lframework.starter.mybatis.enums.OpLogType;
-import com.lframework.starter.mybatis.resp.PageResult;
-import com.lframework.starter.mybatis.utils.OpLogUtil;
-import com.lframework.starter.mybatis.utils.PageHelperUtil;
-import com.lframework.starter.mybatis.utils.PageResultUtil;
-import com.lframework.starter.web.components.security.PasswordEncoderWrapper;
 import com.lframework.starter.mybatis.dto.system.user.DefaultSysUserDto;
 import com.lframework.starter.mybatis.entity.DefaultSysUser;
+import com.lframework.starter.mybatis.enums.Gender;
+import com.lframework.starter.mybatis.enums.OpLogType;
 import com.lframework.starter.mybatis.events.UpdateUserEvent;
+import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.mybatis.mappers.system.DefaultSysUserMapper;
+import com.lframework.starter.mybatis.resp.PageResult;
 import com.lframework.starter.mybatis.service.system.ISysUserDeptService;
 import com.lframework.starter.mybatis.service.system.ISysUserPositionService;
 import com.lframework.starter.mybatis.service.system.ISysUserRoleService;
 import com.lframework.starter.mybatis.service.system.ISysUserService;
+import com.lframework.starter.mybatis.utils.OpLogUtil;
+import com.lframework.starter.mybatis.utils.PageHelperUtil;
+import com.lframework.starter.mybatis.utils.PageResultUtil;
 import com.lframework.starter.mybatis.vo.system.dept.SysUserDeptSettingVo;
 import com.lframework.starter.mybatis.vo.system.position.SysUserPositionSettingVo;
 import com.lframework.starter.mybatis.vo.system.user.CreateSysUserVo;
@@ -39,6 +39,7 @@ import com.lframework.starter.mybatis.vo.system.user.SysUserSelectorVo;
 import com.lframework.starter.mybatis.vo.system.user.UpdateSysUserVo;
 import com.lframework.starter.web.components.code.GenerateCodeType;
 import com.lframework.starter.web.components.generator.impl.AbstractFlowGenerator;
+import com.lframework.starter.web.components.security.PasswordEncoderWrapper;
 import com.lframework.starter.web.dto.UserDto;
 import com.lframework.starter.web.dto.UserInfoDto;
 import com.lframework.starter.web.service.IGenerateCodeService;
@@ -52,11 +53,9 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-public class DefaultSysUserServiceImpl implements ISysUserService,
+public class DefaultSysUserServiceImpl extends
+    BaseMpServiceImpl<DefaultSysUserMapper, DefaultSysUser> implements ISysUserService,
     ApplicationListener<UpdateUserEvent> {
-
-  @Autowired
-  private DefaultSysUserMapper defaultSysUserMapper;
 
   @Autowired
   private PasswordEncoderWrapper encoderWrapper;
@@ -228,39 +227,39 @@ public class DefaultSysUserServiceImpl implements ISysUserService,
 
   protected List<DefaultSysUserDto> doQuery(QuerySysUserVo vo) {
 
-    return defaultSysUserMapper.query(vo);
+    return getBaseMapper().query(vo);
   }
 
   protected DefaultSysUserDto doGetById(String id) {
 
-    return defaultSysUserMapper.getById(id);
+    return getBaseMapper().getById(id);
   }
 
   protected void doBatchEnable(List<String> ids) {
 
     Wrapper<DefaultSysUser> updateWrapper = Wrappers.lambdaUpdate(DefaultSysUser.class)
         .set(DefaultSysUser::getAvailable, Boolean.TRUE).in(DefaultSysUser::getId, ids);
-    defaultSysUserMapper.update(updateWrapper);
+    getBaseMapper().update(updateWrapper);
   }
 
   protected void doBatchUnable(List<String> ids) {
 
     Wrapper<DefaultSysUser> updateWrapper = Wrappers.lambdaUpdate(DefaultSysUser.class)
         .set(DefaultSysUser::getAvailable, Boolean.FALSE).in(DefaultSysUser::getId, ids);
-    defaultSysUserMapper.update(updateWrapper);
+    getBaseMapper().update(updateWrapper);
   }
 
   protected DefaultSysUser doCreate(CreateSysUserVo vo) {
 
     Wrapper<DefaultSysUser> checkCodeWrapper = Wrappers.lambdaQuery(DefaultSysUser.class)
         .eq(DefaultSysUser::getCode, vo.getCode());
-    if (defaultSysUserMapper.selectCount(checkCodeWrapper) > 0) {
+    if (getBaseMapper().selectCount(checkCodeWrapper) > 0) {
       throw new DefaultClientException("编号重复，请重新输入！");
     }
 
     Wrapper<DefaultSysUser> checkUsernameWrapper = Wrappers.lambdaQuery(DefaultSysUser.class)
         .eq(DefaultSysUser::getUsername, vo.getUsername());
-    if (defaultSysUserMapper.selectCount(checkUsernameWrapper) > 0) {
+    if (getBaseMapper().selectCount(checkUsernameWrapper) > 0) {
       throw new DefaultClientException("用户名重复，请重新输入！");
     }
 
@@ -283,7 +282,7 @@ public class DefaultSysUserServiceImpl implements ISysUserService,
     record.setDescription(
         StringUtil.isBlank(vo.getDescription()) ? StringPool.EMPTY_STR : vo.getDescription());
 
-    defaultSysUserMapper.insert(record);
+    getBaseMapper().insert(record);
 
     return record;
   }
@@ -292,13 +291,13 @@ public class DefaultSysUserServiceImpl implements ISysUserService,
 
     Wrapper<DefaultSysUser> checkCodeWrapper = Wrappers.lambdaQuery(DefaultSysUser.class)
         .eq(DefaultSysUser::getCode, vo.getCode()).ne(DefaultSysUser::getId, vo.getId());
-    if (defaultSysUserMapper.selectCount(checkCodeWrapper) > 0) {
+    if (getBaseMapper().selectCount(checkCodeWrapper) > 0) {
       throw new DefaultClientException("编号重复，请重新输入！");
     }
 
     Wrapper<DefaultSysUser> checkUsernameWrapper = Wrappers.lambdaQuery(DefaultSysUser.class)
         .eq(DefaultSysUser::getUsername, vo.getUsername()).ne(DefaultSysUser::getId, vo.getId());
-    if (defaultSysUserMapper.selectCount(checkUsernameWrapper) > 0) {
+    if (getBaseMapper().selectCount(checkUsernameWrapper) > 0) {
       throw new DefaultClientException("用户名重复，请重新输入！");
     }
 
@@ -324,19 +323,19 @@ public class DefaultSysUserServiceImpl implements ISysUserService,
       updateWrapper.set(DefaultSysUser::getTelephone, vo.getTelephone());
     }
 
-    defaultSysUserMapper.update(updateWrapper);
+    getBaseMapper().update(updateWrapper);
   }
 
   protected List<DefaultSysUserDto> doSelector(SysUserSelectorVo vo) {
 
-    return defaultSysUserMapper.selector(vo);
+    return getBaseMapper().selector(vo);
   }
 
   protected void doRegist(RegistUserVo vo) {
 
     Wrapper<DefaultSysUser> queryWrapper = Wrappers.lambdaQuery(DefaultSysUser.class)
         .eq(DefaultSysUser::getUsername, vo.getUsername());
-    if (defaultSysUserMapper.selectCount(queryWrapper) > 0) {
+    if (getBaseMapper().selectCount(queryWrapper) > 0) {
       throw new DefaultClientException("用户名重复，请重新输入！");
     }
 
@@ -358,7 +357,7 @@ public class DefaultSysUserServiceImpl implements ISysUserService,
     record.setAvailable(Boolean.TRUE);
     record.setDescription(StringPool.EMPTY_STR);
 
-    defaultSysUserMapper.insert(record);
+    getBaseMapper().insert(record);
   }
 
   @CacheEvict(value = {DefaultSysUserDto.CACHE_NAME, UserDto.CACHE_NAME,

@@ -17,6 +17,7 @@ import com.lframework.gen.mappers.GenDataObjectColumnMapper;
 import com.lframework.gen.service.IDataObjectColumnService;
 import com.lframework.gen.vo.dataobj.CreateDataObjectColumnVo;
 import com.lframework.gen.vo.dataobj.UpdateDataObjectColumnGenerateVo;
+import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.web.utils.EnumUtil;
 import java.util.List;
 import lombok.NonNull;
@@ -25,10 +26,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class DataObjectColumnServiceImpl implements IDataObjectColumnService {
-
-  @Autowired
-  private GenDataObjectColumnMapper genDataObjectColumnMapper;
+public class DataObjectColumnServiceImpl extends
+    BaseMpServiceImpl<GenDataObjectColumnMapper, GenDataObjectColumn> implements
+    IDataObjectColumnService {
 
   @Autowired
   private GenViewTypeConverter genViewTypeConverter;
@@ -52,7 +52,7 @@ public class DataObjectColumnServiceImpl implements IDataObjectColumnService {
     }
     data.setViewType(viewTypes.get(0));
 
-    genDataObjectColumnMapper.insert(data);
+    getBaseMapper().insert(data);
 
     return data.getId();
   }
@@ -63,13 +63,13 @@ public class DataObjectColumnServiceImpl implements IDataObjectColumnService {
 
     Wrapper<GenDataObjectColumn> wrapper = Wrappers.lambdaQuery(GenDataObjectColumn.class)
         .eq(GenDataObjectColumn::getDataObjId, dataObjId);
-    genDataObjectColumnMapper.delete(wrapper);
+    getBaseMapper().delete(wrapper);
   }
 
   @Override
   public List<GenDataObjectColumnDto> getByDataObjId(String dataObjId) {
 
-    return genDataObjectColumnMapper.getByDataObjId(dataObjId);
+    return getBaseMapper().getByDataObjId(dataObjId);
   }
 
   @Transactional
@@ -79,7 +79,7 @@ public class DataObjectColumnServiceImpl implements IDataObjectColumnService {
     Wrapper<GenDataObjectColumn> queryWrapper = Wrappers.lambdaQuery(GenDataObjectColumn.class)
         .eq(GenDataObjectColumn::getDataObjId, dataObjId)
         .orderByAsc(GenDataObjectColumn::getColumnOrder);
-    List<GenDataObjectColumn> columns = genDataObjectColumnMapper.selectList(queryWrapper);
+    List<GenDataObjectColumn> columns = getBaseMapper().selectList(queryWrapper);
     if (CollectionUtil.isEmpty(columns)) {
       throw new DefaultClientException("数据对象不存在！");
     }
@@ -144,7 +144,7 @@ public class DataObjectColumnServiceImpl implements IDataObjectColumnService {
           .set(GenDataObjectColumn::getColumnOrder, vo.indexOf(columnVo))
           .eq(GenDataObjectColumn::getId, columnVo.getId());
 
-      genDataObjectColumnMapper.update(updateWrapper);
+      getBaseMapper().update(updateWrapper);
     }
   }
 }

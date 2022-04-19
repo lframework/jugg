@@ -1,11 +1,12 @@
 package com.lframework.starter.mybatis.service.system;
 
 import com.lframework.starter.mybatis.dto.system.position.DefaultSysUserPositionDto;
+import com.lframework.starter.mybatis.entity.DefaultSysUserPosition;
+import com.lframework.starter.mybatis.service.BaseMpService;
 import com.lframework.starter.mybatis.vo.system.position.SysUserPositionSettingVo;
-import com.lframework.starter.web.service.BaseService;
 import java.util.List;
 
-public interface ISysUserPositionService extends BaseService {
+public interface ISysUserPositionService extends BaseMpService<DefaultSysUserPosition> {
 
   /**
    * 设置岗位

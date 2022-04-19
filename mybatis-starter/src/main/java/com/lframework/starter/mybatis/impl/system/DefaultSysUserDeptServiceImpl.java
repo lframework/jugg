@@ -8,19 +8,17 @@ import com.lframework.starter.mybatis.annotations.OpLog;
 import com.lframework.starter.mybatis.dto.system.dept.DefaultSysUserDeptDto;
 import com.lframework.starter.mybatis.entity.DefaultSysUserDept;
 import com.lframework.starter.mybatis.enums.OpLogType;
+import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.mybatis.mappers.system.DefaultSysUserDeptMapper;
 import com.lframework.starter.mybatis.service.system.ISysUserDeptService;
 import com.lframework.starter.mybatis.vo.system.dept.SysUserDeptSettingVo;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 
-public class DefaultSysUserDeptServiceImpl implements ISysUserDeptService {
-
-  @Autowired
-  private DefaultSysUserDeptMapper defaultSysUserDeptMapper;
+public class DefaultSysUserDeptServiceImpl extends
+    BaseMpServiceImpl<DefaultSysUserDeptMapper, DefaultSysUserDept> implements ISysUserDeptService {
 
   @OpLog(type = OpLogType.OTHER, name = "用户设置部门，用户ID：{}，部门ID：{}", params = {"#vo.userId",
       "#vo.positionId"})
@@ -51,7 +49,7 @@ public class DefaultSysUserDeptServiceImpl implements ISysUserDeptService {
 
     Wrapper<DefaultSysUserDept> deleteWrapper = Wrappers.lambdaQuery(DefaultSysUserDept.class)
         .eq(DefaultSysUserDept::getUserId, vo.getUserId());
-    defaultSysUserDeptMapper.delete(deleteWrapper);
+    getBaseMapper().delete(deleteWrapper);
 
     if (!CollectionUtil.isEmpty(vo.getDeptIds())) {
       for (String deptId : vo.getDeptIds()) {
@@ -60,19 +58,19 @@ public class DefaultSysUserDeptServiceImpl implements ISysUserDeptService {
         record.setUserId(vo.getUserId());
         record.setDeptId(deptId);
 
-        defaultSysUserDeptMapper.insert(record);
+        getBaseMapper().insert(record);
       }
     }
   }
 
   protected List<DefaultSysUserDeptDto> doGetByUserId(String userId) {
 
-    return defaultSysUserDeptMapper.getByUserId(userId);
+    return getBaseMapper().getByUserId(userId);
   }
 
   protected Boolean doHasByDeptId(String deptId) {
 
-    return defaultSysUserDeptMapper.hasByDeptId(deptId) != null;
+    return getBaseMapper().hasByDeptId(deptId) != null;
   }
 
   @CacheEvict(value = DefaultSysUserDeptDto.CACHE_NAME, key = "#key")

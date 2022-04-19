@@ -1,15 +1,16 @@
 package com.lframework.starter.mybatis.service.system;
 
 import com.lframework.starter.mybatis.dto.system.position.DefaultSysPositionDto;
+import com.lframework.starter.mybatis.entity.DefaultSysPosition;
 import com.lframework.starter.mybatis.resp.PageResult;
-import com.lframework.starter.mybatis.vo.system.position.UpdateSysPositionVo;
+import com.lframework.starter.mybatis.service.BaseMpService;
 import com.lframework.starter.mybatis.vo.system.position.CreateSysPositionVo;
 import com.lframework.starter.mybatis.vo.system.position.QuerySysPositionVo;
 import com.lframework.starter.mybatis.vo.system.position.SysPositionSelectorVo;
-import com.lframework.starter.web.service.BaseService;
+import com.lframework.starter.mybatis.vo.system.position.UpdateSysPositionVo;
 import java.util.Collection;
 
-public interface ISysPositionService extends BaseService {
+public interface ISysPositionService extends BaseMpService<DefaultSysPosition> {
 
   /**
    * 查询全部岗位信息

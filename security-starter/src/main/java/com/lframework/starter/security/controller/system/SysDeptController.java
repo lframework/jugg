@@ -2,13 +2,13 @@ package com.lframework.starter.security.controller.system;
 
 import com.lframework.common.exceptions.impl.DefaultClientException;
 import com.lframework.common.utils.CollectionUtil;
-import com.lframework.starter.security.bo.system.dept.GetSysDeptBo;
-import com.lframework.starter.security.bo.system.dept.SysDeptTreeBo;
-import com.lframework.starter.security.controller.DefaultBaseController;
 import com.lframework.starter.mybatis.dto.system.dept.DefaultSysDeptDto;
 import com.lframework.starter.mybatis.service.system.ISysDeptService;
 import com.lframework.starter.mybatis.vo.system.dept.CreateSysDeptVo;
 import com.lframework.starter.mybatis.vo.system.dept.UpdateSysDeptVo;
+import com.lframework.starter.security.bo.system.dept.GetSysDeptBo;
+import com.lframework.starter.security.bo.system.dept.SysDeptTreeBo;
+import com.lframework.starter.security.controller.DefaultBaseController;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
 import io.swagger.annotations.Api;

@@ -1,10 +1,10 @@
 package com.lframework.starter.mybatis.mappers.system;
 
-import com.lframework.starter.mybatis.mapper.BaseMapper;
-import com.lframework.starter.mybatis.vo.system.user.SysUserSelectorVo;
 import com.lframework.starter.mybatis.dto.system.user.DefaultSysUserDto;
 import com.lframework.starter.mybatis.entity.DefaultSysUser;
+import com.lframework.starter.mybatis.mapper.BaseMapper;
 import com.lframework.starter.mybatis.vo.system.user.QuerySysUserVo;
+import com.lframework.starter.mybatis.vo.system.user.SysUserSelectorVo;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 

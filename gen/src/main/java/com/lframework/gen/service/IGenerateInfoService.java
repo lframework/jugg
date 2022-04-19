@@ -1,10 +1,11 @@
 package com.lframework.gen.service;
 
 import com.lframework.gen.dto.dataobj.GenGenerateInfoDto;
+import com.lframework.gen.entity.GenGenerateInfo;
 import com.lframework.gen.vo.dataobj.UpdateGenerateInfoVo;
-import com.lframework.starter.web.service.BaseService;
+import com.lframework.starter.mybatis.service.BaseMpService;
 
-public interface IGenerateInfoService extends BaseService {
+public interface IGenerateInfoService extends BaseMpService<GenGenerateInfo> {
 
   /**
    * 根据数据对象ID查询

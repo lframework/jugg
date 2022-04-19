@@ -2,10 +2,10 @@ package com.lframework.starter.mybatis.impl;
 
 import com.lframework.common.exceptions.impl.UserLoginException;
 import com.lframework.common.utils.ObjectUtil;
-import com.lframework.web.common.security.AbstractUserDetails;
+import com.lframework.starter.mybatis.service.IMenuService;
 import com.lframework.starter.web.components.security.UserDetailsService;
-import com.lframework.starter.web.service.IMenuService;
 import com.lframework.starter.web.utils.RequestUtil;
+import com.lframework.web.common.security.AbstractUserDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 

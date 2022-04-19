@@ -1,10 +1,11 @@
 package com.lframework.gen.service;
 
 import com.lframework.gen.dto.simpledb.SimpleTableDto;
+import com.lframework.gen.entity.GenSimpleTable;
 import com.lframework.gen.vo.simpledb.CreateSimpleTableVo;
-import com.lframework.starter.web.service.BaseService;
+import com.lframework.starter.mybatis.service.BaseMpService;
 
-public interface ISimpleTableService extends BaseService {
+public interface ISimpleTableService extends BaseMpService<GenSimpleTable> {
 
   /**
    * 根据数据对象ID查询

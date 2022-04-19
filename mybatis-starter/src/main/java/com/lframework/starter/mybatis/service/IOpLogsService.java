@@ -1,10 +1,10 @@
 package com.lframework.starter.mybatis.service;
 
 import com.lframework.starter.mybatis.dto.DefaultOpLogsDto;
+import com.lframework.starter.mybatis.entity.DefaultOpLogs;
 import com.lframework.starter.mybatis.resp.PageResult;
 import com.lframework.starter.mybatis.vo.CreateOpLogsVo;
 import com.lframework.starter.mybatis.vo.QueryOpLogsVo;
-import com.lframework.starter.web.service.BaseService;
 import java.time.LocalDateTime;
 
 /**
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  *
  * @author zmj
  */
-public interface IOpLogsService extends BaseService {
+public interface IOpLogsService extends BaseMpService<DefaultOpLogs> {
 
   /**
    * 创建

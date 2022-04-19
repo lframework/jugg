@@ -1,5 +1,6 @@
 package com.lframework.starter.mybatis.mappers;
 
+import com.lframework.starter.mybatis.entity.DefaultSysMenu;
 import com.lframework.starter.mybatis.mapper.BaseMapper;
 import com.lframework.starter.web.dto.MenuDto;
 import java.util.List;
@@ -11,7 +12,7 @@ import org.apache.ibatis.annotations.Param;
  *
  * @author zmj
  */
-public interface DefaultMenuMapper extends BaseMapper {
+public interface DefaultMenuMapper extends BaseMapper<DefaultSysMenu> {
 
   /**
    * 根据用户ID查询菜单

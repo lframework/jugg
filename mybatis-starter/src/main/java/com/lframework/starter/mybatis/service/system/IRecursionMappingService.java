@@ -1,10 +1,12 @@
 package com.lframework.starter.mybatis.service.system;
 
 
+import com.lframework.starter.mybatis.entity.RecursionMapping;
 import com.lframework.starter.mybatis.enums.system.NodeType;
+import com.lframework.starter.mybatis.service.BaseMpService;
 import java.util.List;
 
-public interface IRecursionMappingService {
+public interface IRecursionMappingService extends BaseMpService<RecursionMapping> {
 
   /**
    * 查询节点的父节点ID

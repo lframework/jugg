@@ -1,7 +1,7 @@
 package com.lframework.starter.mybatis.mappers.system;
 
-import com.lframework.starter.mybatis.mapper.BaseMapper;
 import com.lframework.starter.mybatis.entity.DefaultSysRoleMenu;
+import com.lframework.starter.mybatis.mapper.BaseMapper;
 
 /**
  * <p>

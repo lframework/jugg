@@ -1,16 +1,17 @@
 package com.lframework.starter.mybatis.service.system;
 
 import com.lframework.starter.mybatis.dto.system.role.DefaultSysRoleDto;
+import com.lframework.starter.mybatis.entity.DefaultSysRole;
 import com.lframework.starter.mybatis.resp.PageResult;
+import com.lframework.starter.mybatis.service.BaseMpService;
 import com.lframework.starter.mybatis.vo.system.role.CreateSysRoleVo;
 import com.lframework.starter.mybatis.vo.system.role.QuerySysRoleVo;
 import com.lframework.starter.mybatis.vo.system.role.SysRoleSelectorVo;
 import com.lframework.starter.mybatis.vo.system.role.UpdateSysRoleVo;
-import com.lframework.starter.web.service.BaseService;
 import java.util.Collection;
 import java.util.List;
 
-public interface ISysRoleService extends BaseService {
+public interface ISysRoleService extends BaseMpService<DefaultSysRole> {
 
   /**
    * 查询列表

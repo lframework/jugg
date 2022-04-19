@@ -1,12 +1,13 @@
 package com.lframework.gen.service;
 
 import com.lframework.gen.dto.dataobj.GenDataObjectColumnDto;
+import com.lframework.gen.entity.GenDataObjectColumn;
 import com.lframework.gen.vo.dataobj.CreateDataObjectColumnVo;
 import com.lframework.gen.vo.dataobj.UpdateDataObjectColumnGenerateVo;
-import com.lframework.starter.web.service.BaseService;
+import com.lframework.starter.mybatis.service.BaseMpService;
 import java.util.List;
 
-public interface IDataObjectColumnService extends BaseService {
+public interface IDataObjectColumnService extends BaseMpService<GenDataObjectColumn> {
 
   /**
    * 创建

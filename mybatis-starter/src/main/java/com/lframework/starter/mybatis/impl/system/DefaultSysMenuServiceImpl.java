@@ -9,13 +9,14 @@ import com.lframework.common.utils.IdUtil;
 import com.lframework.common.utils.ObjectUtil;
 import com.lframework.common.utils.StringUtil;
 import com.lframework.starter.mybatis.annotations.OpLog;
-import com.lframework.starter.mybatis.enums.OpLogType;
-import com.lframework.starter.mybatis.utils.OpLogUtil;
 import com.lframework.starter.mybatis.dto.system.menu.DefaultSysMenuDto;
 import com.lframework.starter.mybatis.entity.DefaultSysMenu;
+import com.lframework.starter.mybatis.enums.OpLogType;
 import com.lframework.starter.mybatis.enums.system.SysMenuDisplay;
+import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.mybatis.mappers.system.DefaultSysMenuMapper;
 import com.lframework.starter.mybatis.service.system.ISysMenuService;
+import com.lframework.starter.mybatis.utils.OpLogUtil;
 import com.lframework.starter.mybatis.vo.system.menu.CreateSysMenuVo;
 import com.lframework.starter.mybatis.vo.system.menu.SysMenuSelectorVo;
 import com.lframework.starter.mybatis.vo.system.menu.UpdateSysMenuVo;
@@ -23,7 +24,6 @@ import com.lframework.starter.web.utils.EnumUtil;
 import com.lframework.web.common.security.SecurityConstants;
 import java.util.List;
 import lombok.NonNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,13 +36,11 @@ import org.springframework.transaction.annotation.Transactional;
  * @author zmj
  * @since 2021-05-10
  */
-public class DefaultSysMenuServiceImpl implements ISysMenuService {
-
-  @Autowired
-  private DefaultSysMenuMapper defaultSysMenuMapper;
+public class DefaultSysMenuServiceImpl extends
+    BaseMpServiceImpl<DefaultSysMenuMapper, DefaultSysMenu> implements ISysMenuService {
 
   @Override
-  public List<DefaultSysMenuDto> query() {
+  public List<DefaultSysMenuDto> queryList() {
 
     return this.doQuery();
   }
@@ -176,17 +174,17 @@ public class DefaultSysMenuServiceImpl implements ISysMenuService {
 
   protected List<DefaultSysMenuDto> doQuery() {
 
-    return defaultSysMenuMapper.query();
+    return getBaseMapper().query();
   }
 
   protected List<DefaultSysMenuDto> doGetByRoleId(String roleId) {
 
-    return defaultSysMenuMapper.getByRoleId(roleId);
+    return getBaseMapper().getByRoleId(roleId);
   }
 
   protected DefaultSysMenuDto doGetById(@NonNull String id) {
 
-    return defaultSysMenuMapper.getById(id);
+    return getBaseMapper().getById(id);
   }
 
   protected DefaultSysMenu doCreate(@NonNull CreateSysMenuVo vo) {
@@ -196,7 +194,7 @@ public class DefaultSysMenuServiceImpl implements ISysMenuService {
     data.setId(IdUtil.getId());
     this.setDataForCreate(vo, data);
 
-    defaultSysMenuMapper.insert(data);
+    getBaseMapper().insert(data);
 
     return data;
   }
@@ -209,35 +207,35 @@ public class DefaultSysMenuServiceImpl implements ISysMenuService {
 
     this.setDataForCreate(vo, data);
 
-    defaultSysMenuMapper.deleteById(vo.getId());
+    getBaseMapper().deleteById(vo.getId());
 
-    defaultSysMenuMapper.insert(data);
+    getBaseMapper().insert(data);
 
     return data;
   }
 
   protected void doDeleteById(@NonNull String id) {
 
-    defaultSysMenuMapper.deleteById(id);
+    getBaseMapper().deleteById(id);
   }
 
   protected List<DefaultSysMenuDto> doSelector(SysMenuSelectorVo vo) {
 
-    return defaultSysMenuMapper.selector(vo);
+    return getBaseMapper().selector(vo);
   }
 
   protected void doBatchEnable(@NonNull List<String> ids, @NonNull String userId) {
 
     Wrapper<DefaultSysMenu> wrapper = Wrappers.lambdaUpdate(DefaultSysMenu.class)
         .set(DefaultSysMenu::getAvailable, Boolean.TRUE).in(DefaultSysMenu::getId, ids);
-    defaultSysMenuMapper.update(new DefaultSysMenu(), wrapper);
+    getBaseMapper().update(new DefaultSysMenu(), wrapper);
   }
 
   protected void doBatchUnable(@NonNull List<String> ids, @NonNull String userId) {
 
     Wrapper<DefaultSysMenu> wrapper = Wrappers.lambdaUpdate(DefaultSysMenu.class)
         .set(DefaultSysMenu::getAvailable, Boolean.FALSE).in(DefaultSysMenu::getId, ids);
-    defaultSysMenuMapper.update(new DefaultSysMenu(), wrapper);
+    getBaseMapper().update(new DefaultSysMenu(), wrapper);
   }
 
   protected void setDataForCreate(@NonNull CreateSysMenuVo vo, @NonNull DefaultSysMenu data) {
@@ -303,7 +301,8 @@ public class DefaultSysMenuServiceImpl implements ISysMenuService {
       }
 
       if (SecurityConstants.PERMISSION_ADMIN_NAME.equals(vo.getPermission())) {
-        throw new DefaultClientException("权限【" + SecurityConstants.PERMISSION_ADMIN_NAME + "】为内置权限，请修改！");
+        throw new DefaultClientException(
+            "权限【" + SecurityConstants.PERMISSION_ADMIN_NAME + "】为内置权限，请修改！");
       }
 
       data.setPermission(vo.getPermission());
@@ -312,7 +311,7 @@ public class DefaultSysMenuServiceImpl implements ISysMenuService {
 
   protected List<DefaultSysMenuDto> doGetChildrenById(String id) {
 
-    return defaultSysMenuMapper.getChildrenById(id);
+    return getBaseMapper().getChildrenById(id);
   }
 
   @CacheEvict(value = DefaultSysMenuDto.CACHE_NAME, key = "#key")

@@ -1,5 +1,6 @@
 package com.lframework.starter.mybatis.mappers;
 
+import com.lframework.starter.mybatis.entity.DefaultSysUser;
 import com.lframework.starter.mybatis.mapper.BaseMapper;
 import com.lframework.starter.web.dto.UserDto;
 import com.lframework.starter.web.dto.UserInfoDto;
@@ -10,7 +11,7 @@ import org.apache.ibatis.annotations.Param;
  *
  * @author zmj
  */
-public interface DefaultUserMapper extends BaseMapper {
+public interface DefaultUserMapper extends BaseMapper<DefaultSysUser> {
 
   /**
    * 获取用户信息

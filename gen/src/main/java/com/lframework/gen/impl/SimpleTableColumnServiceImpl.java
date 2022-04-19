@@ -17,6 +17,7 @@ import com.lframework.gen.service.IDataObjectColumnService;
 import com.lframework.gen.service.ISimpleTableColumnService;
 import com.lframework.gen.vo.dataobj.CreateDataObjectColumnVo;
 import com.lframework.gen.vo.simpledb.CreateSimpleTableVo;
+import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.NonNull;
@@ -25,10 +26,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class SimpleTableColumnServiceImpl implements ISimpleTableColumnService {
-
-  @Autowired
-  private GenSimpleTableColumnMapper genSimpleTableColumnMapper;
+public class SimpleTableColumnServiceImpl extends
+    BaseMpServiceImpl<GenSimpleTableColumnMapper, GenSimpleTableColumn> implements
+    ISimpleTableColumnService {
 
   @Autowired
   private IDataObjectColumnService dataObjectColumnService;
@@ -39,7 +39,7 @@ public class SimpleTableColumnServiceImpl implements ISimpleTableColumnService {
   @Override
   public List<SimpleTableColumnDto> getByTableId(String id) {
 
-    return genSimpleTableColumnMapper.getByTableId(id);
+    return getBaseMapper().getByTableId(id);
   }
 
   @Transactional
@@ -48,14 +48,14 @@ public class SimpleTableColumnServiceImpl implements ISimpleTableColumnService {
 
     Wrapper<GenSimpleTableColumn> wrapper = Wrappers.lambdaUpdate(GenSimpleTableColumn.class)
         .eq(GenSimpleTableColumn::getTableId, tableId);
-    genSimpleTableColumnMapper.delete(wrapper);
+    getBaseMapper().delete(wrapper);
   }
 
   @Transactional
   @Override
   public void create(@NonNull String tableId, @NonNull CreateSimpleTableVo vo) {
 
-    List<OriSimpleTableColumnDto> columns = genSimpleTableColumnMapper.get(vo);
+    List<OriSimpleTableColumnDto> columns = getBaseMapper().get(vo);
     if (!CollectionUtil.isEmpty(columns)) {
       List<GenSimpleTableColumn> columnList = columns.stream().map(t -> {
         GenSimpleTableColumn column = new GenSimpleTableColumn();
@@ -74,7 +74,7 @@ public class SimpleTableColumnServiceImpl implements ISimpleTableColumnService {
 
       for (GenSimpleTableColumn genSimpleTableColumn : columnList) {
 
-        genSimpleTableColumnMapper.insert(genSimpleTableColumn);
+        getBaseMapper().insert(genSimpleTableColumn);
 
         //创建DataObjectColumn
         CreateDataObjectColumnVo createDataObjectColumnVo = new CreateDataObjectColumnVo();
@@ -107,6 +107,6 @@ public class SimpleTableColumnServiceImpl implements ISimpleTableColumnService {
   @Override
   public SimpleTableColumnDto getById(String id) {
 
-    return genSimpleTableColumnMapper.getById(id);
+    return getBaseMapper().getById(id);
   }
 }

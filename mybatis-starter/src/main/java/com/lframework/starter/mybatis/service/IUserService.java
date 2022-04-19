@@ -1,5 +1,6 @@
-package com.lframework.starter.web.service;
+package com.lframework.starter.mybatis.service;
 
+import com.lframework.starter.mybatis.entity.DefaultSysUser;
 import com.lframework.starter.web.dto.UserDto;
 import com.lframework.starter.web.dto.UserInfoDto;
 
@@ -8,7 +9,7 @@ import com.lframework.starter.web.dto.UserInfoDto;
  *
  * @author zmj
  */
-public interface IUserService extends BaseService {
+public interface IUserService extends BaseMpService<DefaultSysUser> {
 
   /**
    * 获取用户信息

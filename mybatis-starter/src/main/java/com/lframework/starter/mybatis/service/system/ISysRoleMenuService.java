@@ -1,9 +1,10 @@
 package com.lframework.starter.mybatis.service.system;
 
+import com.lframework.starter.mybatis.entity.DefaultSysRoleMenu;
+import com.lframework.starter.mybatis.service.BaseMpService;
 import com.lframework.starter.mybatis.vo.system.role.SysRoleMenuSettingVo;
-import com.lframework.starter.web.service.BaseService;
 
-public interface ISysRoleMenuService extends BaseService {
+public interface ISysRoleMenuService extends BaseMpService<DefaultSysRoleMenu> {
 
   /**
    * 授权角色菜单

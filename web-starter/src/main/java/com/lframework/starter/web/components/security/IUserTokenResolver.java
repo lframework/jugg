@@ -1,7 +1,5 @@
 package com.lframework.starter.web.components.security;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * 用户Token解析器
  */
@@ -25,6 +23,7 @@ public interface IUserTokenResolver {
 
   /**
    * 获取Token的key
+   *
    * @return
    */
   String getTokenKey();

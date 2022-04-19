@@ -1,11 +1,12 @@
 package com.lframework.starter.mybatis.service.system;
 
 import com.lframework.starter.mybatis.dto.system.dept.DefaultSysUserDeptDto;
+import com.lframework.starter.mybatis.entity.DefaultSysUserDept;
+import com.lframework.starter.mybatis.service.BaseMpService;
 import com.lframework.starter.mybatis.vo.system.dept.SysUserDeptSettingVo;
-import com.lframework.starter.web.service.BaseService;
 import java.util.List;
 
-public interface ISysUserDeptService extends BaseService {
+public interface ISysUserDeptService extends BaseMpService<DefaultSysUserDept> {
 
   /**
    * 设置部门

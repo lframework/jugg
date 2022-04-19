@@ -8,18 +8,17 @@ import com.lframework.common.utils.IdUtil;
 import com.lframework.common.utils.StringUtil;
 import com.lframework.starter.mybatis.entity.RecursionMapping;
 import com.lframework.starter.mybatis.enums.system.NodeType;
+import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.mybatis.mappers.system.RecursionMappingMapper;
 import com.lframework.starter.mybatis.service.system.IRecursionMappingService;
 import java.util.Collections;
 import java.util.List;
 import lombok.NonNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-public class RecursionMappingServiceImpl implements IRecursionMappingService {
-
-  @Autowired
-  private RecursionMappingMapper recursionMappingMapper;
+public class RecursionMappingServiceImpl extends
+    BaseMpServiceImpl<RecursionMappingMapper, RecursionMapping> implements
+    IRecursionMappingService {
 
   @Override
   public List<String> getNodeParentIds(@NonNull String nodeId, @NonNull NodeType nodeType) {
@@ -32,7 +31,7 @@ public class RecursionMappingServiceImpl implements IRecursionMappingService {
         .eq(RecursionMapping::getNodeId, nodeId)
         .eq(RecursionMapping::getNodeType, nodeType.getCode());
 
-    RecursionMapping recursionMappings = recursionMappingMapper.selectOne(queryWrapper);
+    RecursionMapping recursionMappings = getBaseMapper().selectOne(queryWrapper);
     if (recursionMappings == null || StringUtil.isEmpty(recursionMappings.getPath())) {
       return Collections.EMPTY_LIST;
     }
@@ -43,7 +42,7 @@ public class RecursionMappingServiceImpl implements IRecursionMappingService {
   @Override
   public List<String> getNodeChildIds(String nodeId, NodeType nodeType) {
 
-    return recursionMappingMapper.getNodeChildIds(nodeId, nodeType.getCode());
+    return getBaseMapper().getNodeChildIds(nodeId, nodeType.getCode());
   }
 
   @Transactional
@@ -60,7 +59,7 @@ public class RecursionMappingServiceImpl implements IRecursionMappingService {
     Wrapper<RecursionMapping> deleteWrapper = Wrappers.lambdaQuery(RecursionMapping.class)
         .eq(RecursionMapping::getNodeId, nodeId)
         .eq(RecursionMapping::getNodeType, nodeType.getCode());
-    recursionMappingMapper.delete(deleteWrapper);
+    getBaseMapper().delete(deleteWrapper);
   }
 
   @Transactional
@@ -70,7 +69,7 @@ public class RecursionMappingServiceImpl implements IRecursionMappingService {
     Wrapper<RecursionMapping> deleteWrapper = Wrappers.lambdaQuery(RecursionMapping.class)
         .eq(RecursionMapping::getNodeId, nodeId)
         .eq(RecursionMapping::getNodeType, nodeType.getCode());
-    recursionMappingMapper.delete(deleteWrapper);
+    getBaseMapper().delete(deleteWrapper);
 
     RecursionMapping data = new RecursionMapping();
     data.setId(IdUtil.getId());
@@ -83,6 +82,6 @@ public class RecursionMappingServiceImpl implements IRecursionMappingService {
       data.setLevel(parentIds.size() + 1);
     }
 
-    recursionMappingMapper.insert(data);
+    getBaseMapper().insert(data);
   }
 }

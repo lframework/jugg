@@ -9,15 +9,16 @@ import com.lframework.common.utils.IdUtil;
 import com.lframework.common.utils.ObjectUtil;
 import com.lframework.common.utils.StringUtil;
 import com.lframework.starter.mybatis.annotations.OpLog;
-import com.lframework.starter.mybatis.enums.OpLogType;
-import com.lframework.starter.mybatis.mappers.system.DefaultSysDeptMapper;
-import com.lframework.starter.mybatis.utils.OpLogUtil;
 import com.lframework.starter.mybatis.dto.system.dept.DefaultSysDeptDto;
 import com.lframework.starter.mybatis.entity.DefaultSysDept;
+import com.lframework.starter.mybatis.enums.OpLogType;
 import com.lframework.starter.mybatis.enums.system.SysDeptNodeType;
+import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
+import com.lframework.starter.mybatis.mappers.system.DefaultSysDeptMapper;
 import com.lframework.starter.mybatis.service.system.IRecursionMappingService;
 import com.lframework.starter.mybatis.service.system.ISysDeptService;
 import com.lframework.starter.mybatis.service.system.ISysUserDeptService;
+import com.lframework.starter.mybatis.utils.OpLogUtil;
 import com.lframework.starter.mybatis.vo.system.dept.CreateSysDeptVo;
 import com.lframework.starter.mybatis.vo.system.dept.UpdateSysDeptVo;
 import com.lframework.starter.web.utils.ApplicationUtil;
@@ -29,10 +30,8 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 
-public class DefaultSysDeptServiceImpl implements ISysDeptService {
-
-  @Autowired
-  private DefaultSysDeptMapper defaultSysDeptMapper;
+public class DefaultSysDeptServiceImpl extends
+    BaseMpServiceImpl<DefaultSysDeptMapper, DefaultSysDept> implements ISysDeptService {
 
   @Autowired
   private IRecursionMappingService recursionMappingService;
@@ -160,26 +159,26 @@ public class DefaultSysDeptServiceImpl implements ISysDeptService {
 
   protected List<DefaultSysDeptDto> doSelector() {
 
-    return defaultSysDeptMapper.selector();
+    return getBaseMapper().selector();
   }
 
   protected DefaultSysDeptDto doGetById(String id) {
 
-    return defaultSysDeptMapper.getById(id);
+    return getBaseMapper().getById(id);
   }
 
   protected void doBatchUnable(Collection<String> ids) {
 
     Wrapper<DefaultSysDept> updateWrapper = Wrappers.lambdaUpdate(DefaultSysDept.class)
         .set(DefaultSysDept::getAvailable, Boolean.FALSE).in(DefaultSysDept::getId, ids);
-    defaultSysDeptMapper.update(updateWrapper);
+    getBaseMapper().update(updateWrapper);
   }
 
   protected void doBatchEnable(Collection<String> ids) {
 
     Wrapper<DefaultSysDept> updateWrapper = Wrappers.lambdaUpdate(DefaultSysDept.class)
         .set(DefaultSysDept::getAvailable, Boolean.TRUE).in(DefaultSysDept::getId, ids);
-    defaultSysDeptMapper.update(updateWrapper);
+    getBaseMapper().update(updateWrapper);
   }
 
   protected DefaultSysDept doCreate(CreateSysDeptVo vo) {
@@ -187,14 +186,14 @@ public class DefaultSysDeptServiceImpl implements ISysDeptService {
     //查询Code是否重复
     Wrapper<DefaultSysDept> checkWrapper = Wrappers.lambdaQuery(DefaultSysDept.class)
         .eq(DefaultSysDept::getCode, vo.getCode());
-    if (defaultSysDeptMapper.selectCount(checkWrapper) > 0) {
+    if (getBaseMapper().selectCount(checkWrapper) > 0) {
       throw new DefaultClientException("编号重复，请重新输入！");
     }
 
     //查询Name是否重复
     checkWrapper = Wrappers.lambdaQuery(DefaultSysDept.class)
         .eq(DefaultSysDept::getName, vo.getName());
-    if (defaultSysDeptMapper.selectCount(checkWrapper) > 0) {
+    if (getBaseMapper().selectCount(checkWrapper) > 0) {
       throw new DefaultClientException("名称重复，请重新输入！");
     }
 
@@ -202,7 +201,7 @@ public class DefaultSysDeptServiceImpl implements ISysDeptService {
     if (!StringUtil.isBlank(vo.getParentId())) {
       Wrapper<DefaultSysDept> checkParentWrapper = Wrappers.lambdaQuery(DefaultSysDept.class)
           .eq(DefaultSysDept::getId, vo.getParentId());
-      if (defaultSysDeptMapper.selectCount(checkParentWrapper) == 0) {
+      if (getBaseMapper().selectCount(checkParentWrapper) == 0) {
         throw new DefaultClientException("上级部门不存在，请检查！");
       }
     }
@@ -218,7 +217,7 @@ public class DefaultSysDeptServiceImpl implements ISysDeptService {
     data.setAvailable(Boolean.TRUE);
     data.setDescription(vo.getDescription());
 
-    defaultSysDeptMapper.insert(data);
+    getBaseMapper().insert(data);
 
     return data;
   }
@@ -233,14 +232,14 @@ public class DefaultSysDeptServiceImpl implements ISysDeptService {
     //查询Code是否重复
     Wrapper<DefaultSysDept> checkWrapper = Wrappers.lambdaQuery(DefaultSysDept.class)
         .eq(DefaultSysDept::getCode, vo.getCode()).ne(DefaultSysDept::getId, data.getId());
-    if (defaultSysDeptMapper.selectCount(checkWrapper) > 0) {
+    if (getBaseMapper().selectCount(checkWrapper) > 0) {
       throw new DefaultClientException("编号重复，请重新输入！");
     }
 
     //查询Name是否重复
     checkWrapper = Wrappers.lambdaQuery(DefaultSysDept.class)
         .eq(DefaultSysDept::getName, vo.getName()).ne(DefaultSysDept::getId, data.getId());
-    if (defaultSysDeptMapper.selectCount(checkWrapper) > 0) {
+    if (getBaseMapper().selectCount(checkWrapper) > 0) {
       throw new DefaultClientException("名称重复，请重新输入！");
     }
 
@@ -251,7 +250,7 @@ public class DefaultSysDeptServiceImpl implements ISysDeptService {
       }
       Wrapper<DefaultSysDept> checkParentWrapper = Wrappers.lambdaQuery(DefaultSysDept.class)
           .eq(DefaultSysDept::getId, vo.getParentId());
-      if (defaultSysDeptMapper.selectCount(checkParentWrapper) == 0) {
+      if (getBaseMapper().selectCount(checkParentWrapper) == 0) {
         throw new DefaultClientException("上级部门不存在，请检查！");
       }
     }
@@ -265,7 +264,7 @@ public class DefaultSysDeptServiceImpl implements ISysDeptService {
             StringUtil.isBlank(vo.getDescription()) ? StringPool.EMPTY_STR : vo.getDescription())
         .set(DefaultSysDept::getAvailable, vo.getAvailable()).eq(DefaultSysDept::getId, vo.getId());
 
-    defaultSysDeptMapper.update(updateWrapper);
+    getBaseMapper().update(updateWrapper);
   }
 
   /**

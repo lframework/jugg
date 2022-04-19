@@ -5,14 +5,14 @@ import com.lframework.common.exceptions.impl.InputErrorException;
 import com.lframework.common.utils.CollectionUtil;
 import com.lframework.common.utils.ObjectUtil;
 import com.lframework.common.utils.StringUtil;
-import com.lframework.starter.security.bo.system.menu.GetSysMenuBo;
-import com.lframework.starter.security.bo.system.menu.QuerySysMenuBo;
-import com.lframework.starter.security.controller.DefaultBaseController;
 import com.lframework.starter.mybatis.dto.system.menu.DefaultSysMenuDto;
 import com.lframework.starter.mybatis.enums.system.SysMenuDisplay;
 import com.lframework.starter.mybatis.service.system.ISysMenuService;
 import com.lframework.starter.mybatis.vo.system.menu.CreateSysMenuVo;
 import com.lframework.starter.mybatis.vo.system.menu.UpdateSysMenuVo;
+import com.lframework.starter.security.bo.system.menu.GetSysMenuBo;
+import com.lframework.starter.security.bo.system.menu.QuerySysMenuBo;
+import com.lframework.starter.security.controller.DefaultBaseController;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
 import com.lframework.starter.web.utils.EnumUtil;
@@ -62,7 +62,7 @@ public class SysMenuController extends DefaultBaseController {
   public InvokeResult<List<QuerySysMenuBo>> query() {
 
     List<QuerySysMenuBo> results = Collections.EMPTY_LIST;
-    List<DefaultSysMenuDto> datas = sysMenuService.query();
+    List<DefaultSysMenuDto> datas = sysMenuService.queryList();
     if (CollectionUtil.isNotEmpty(datas)) {
       results = datas.stream().map(QuerySysMenuBo::new).collect(Collectors.toList());
     }

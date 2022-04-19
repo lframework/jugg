@@ -8,6 +8,7 @@ import com.lframework.gen.mappers.GenUpdateColumnConfigMapper;
 import com.lframework.gen.service.IDataObjectColumnService;
 import com.lframework.gen.service.IGenUpdateColumnConfigService;
 import com.lframework.gen.vo.dataobj.UpdateUpdateColumnConfigVo;
+import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,13 +17,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class GenUpdateColumnConfigServiceImpl implements IGenUpdateColumnConfigService {
+public class GenUpdateColumnConfigServiceImpl extends
+    BaseMpServiceImpl<GenUpdateColumnConfigMapper, GenUpdateColumnConfig> implements
+    IGenUpdateColumnConfigService {
 
   @Autowired
   private IDataObjectColumnService dataObjectColumnService;
-
-  @Autowired
-  private GenUpdateColumnConfigMapper genUpdateColumnConfigMapper;
 
   @Override
   public List<GenUpdateColumnConfigDto> getByDataObjId(String dataObjId) {
@@ -32,7 +32,7 @@ public class GenUpdateColumnConfigServiceImpl implements IGenUpdateColumnConfigS
       return Collections.EMPTY_LIST;
     }
 
-    return genUpdateColumnConfigMapper
+    return getBaseMapper()
         .getByIds(columns.stream().map(GenDataObjectColumnDto::getId).collect(Collectors.toList()));
   }
 
@@ -42,7 +42,7 @@ public class GenUpdateColumnConfigServiceImpl implements IGenUpdateColumnConfigS
 
     List<GenDataObjectColumnDto> columns = dataObjectColumnService.getByDataObjId(dataObjId);
     if (!CollectionUtil.isEmpty(columns)) {
-      genUpdateColumnConfigMapper
+      getBaseMapper()
           .deleteBatchIds(
               columns.stream().map(GenDataObjectColumnDto::getId).collect(Collectors.toList()));
     }
@@ -55,7 +55,7 @@ public class GenUpdateColumnConfigServiceImpl implements IGenUpdateColumnConfigS
         record.setRequired(updateUpdateColumnConfigVo.getRequired());
         record.setOrderNo(orderNo++);
 
-        genUpdateColumnConfigMapper.insert(record);
+        getBaseMapper().insert(record);
       }
     }
   }
@@ -63,13 +63,13 @@ public class GenUpdateColumnConfigServiceImpl implements IGenUpdateColumnConfigS
   @Override
   public GenUpdateColumnConfigDto getById(String id) {
 
-    return genUpdateColumnConfigMapper.getById(id);
+    return getBaseMapper().getById(id);
   }
 
   @Transactional
   @Override
   public void deleteById(String id) {
 
-    genUpdateColumnConfigMapper.deleteById(id);
+    getBaseMapper().deleteById(id);
   }
 }
