@@ -29,7 +29,7 @@ public interface IGenQueryColumnConfigService extends BaseMpService<GenQueryColu
    * @param id
    * @return
    */
-  GenQueryColumnConfigDto getById(String id);
+  GenQueryColumnConfigDto findById(String id);
 
   /**
    * 根据ID查询

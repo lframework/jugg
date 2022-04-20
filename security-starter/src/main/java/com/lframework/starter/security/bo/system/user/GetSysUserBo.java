@@ -134,6 +134,62 @@ public class GetSysUserBo extends BaseBo<DefaultSysUserDto> {
     super(dto);
   }
 
+  @Override
+  protected void afterInit(DefaultSysUserDto dto) {
+
+    ISysUserPositionService sysUserPositionService = ApplicationUtil.getBean(
+        ISysUserPositionService.class);
+    List<DefaultSysUserPositionDto> userPositions = sysUserPositionService.getByUserId(dto.getId());
+    if (!CollectionUtil.isEmpty(userPositions)) {
+      ISysPositionService sysPositionService = ApplicationUtil.getBean(ISysPositionService.class);
+      this.positions = userPositions.stream().map(t -> {
+        DefaultSysPositionDto position = sysPositionService.findById(t.getPositionId());
+        PositionBo positionBo = new PositionBo();
+        positionBo.setId(position.getId());
+        positionBo.setName(position.getName());
+
+        return positionBo;
+      }).collect(Collectors.toList());
+
+      this.positionName = StringUtil.join(StringPool.STR_SPLIT_CN,
+          this.positions.stream().map(PositionBo::getName).collect(Collectors.toList()));
+    }
+
+    ISysUserDeptService sysUserDeptService = ApplicationUtil.getBean(ISysUserDeptService.class);
+    List<DefaultSysUserDeptDto> userDepts = sysUserDeptService.getByUserId(dto.getId());
+    if (!CollectionUtil.isEmpty(userDepts)) {
+      ISysDeptService sysDeptService = ApplicationUtil.getBean(ISysDeptService.class);
+      this.depts = userDepts.stream().map(t -> {
+        DefaultSysDeptDto dept = sysDeptService.findById(t.getDeptId());
+        DeptBo deptBo = new DeptBo();
+        deptBo.setId(dept.getId());
+        deptBo.setName(dept.getName());
+
+        return deptBo;
+      }).collect(Collectors.toList());
+
+      this.deptName = StringUtil.join(StringPool.STR_SPLIT_CN,
+          this.depts.stream().map(DeptBo::getName).collect(Collectors.toList()));
+    }
+
+    ISysUserRoleService sysUserRoleService = ApplicationUtil.getBean(ISysUserRoleService.class);
+    List<DefaultSysUserRoleDto> userRoles = sysUserRoleService.getByUserId(dto.getId());
+    if (!CollectionUtil.isEmpty(userRoles)) {
+      ISysRoleService sysRoleService = ApplicationUtil.getBean(ISysRoleService.class);
+      this.roles = userRoles.stream().map(t -> {
+        DefaultSysRoleDto role = sysRoleService.findById(t.getRoleId());
+        RoleBo roleBo = new RoleBo();
+        roleBo.setId(role.getId());
+        roleBo.setName(role.getName());
+
+        return roleBo;
+      }).collect(Collectors.toList());
+
+      this.roleName = StringUtil.join(StringPool.STR_SPLIT_CN,
+          this.roles.stream().map(RoleBo::getName).collect(Collectors.toList()));
+    }
+  }
+
   @Data
   @EqualsAndHashCode(callSuper = true)
   public static class PositionBo extends BaseBo {
@@ -183,61 +239,5 @@ public class GetSysUserBo extends BaseBo<DefaultSysUserDto> {
      */
     @ApiModelProperty("角色名称")
     private String name;
-  }
-
-  @Override
-  protected void afterInit(DefaultSysUserDto dto) {
-
-    ISysUserPositionService sysUserPositionService = ApplicationUtil.getBean(
-        ISysUserPositionService.class);
-    List<DefaultSysUserPositionDto> userPositions = sysUserPositionService.getByUserId(dto.getId());
-    if (!CollectionUtil.isEmpty(userPositions)) {
-      ISysPositionService sysPositionService = ApplicationUtil.getBean(ISysPositionService.class);
-      this.positions = userPositions.stream().map(t -> {
-        DefaultSysPositionDto position = sysPositionService.getById(t.getPositionId());
-        PositionBo positionBo = new PositionBo();
-        positionBo.setId(position.getId());
-        positionBo.setName(position.getName());
-
-        return positionBo;
-      }).collect(Collectors.toList());
-
-      this.positionName = StringUtil.join(StringPool.STR_SPLIT_CN,
-          this.positions.stream().map(PositionBo::getName).collect(Collectors.toList()));
-    }
-
-    ISysUserDeptService sysUserDeptService = ApplicationUtil.getBean(ISysUserDeptService.class);
-    List<DefaultSysUserDeptDto> userDepts = sysUserDeptService.getByUserId(dto.getId());
-    if (!CollectionUtil.isEmpty(userDepts)) {
-      ISysDeptService sysDeptService = ApplicationUtil.getBean(ISysDeptService.class);
-      this.depts = userDepts.stream().map(t -> {
-        DefaultSysDeptDto dept = sysDeptService.getById(t.getDeptId());
-        DeptBo deptBo = new DeptBo();
-        deptBo.setId(dept.getId());
-        deptBo.setName(dept.getName());
-
-        return deptBo;
-      }).collect(Collectors.toList());
-
-      this.deptName = StringUtil.join(StringPool.STR_SPLIT_CN,
-          this.depts.stream().map(DeptBo::getName).collect(Collectors.toList()));
-    }
-
-    ISysUserRoleService sysUserRoleService = ApplicationUtil.getBean(ISysUserRoleService.class);
-    List<DefaultSysUserRoleDto> userRoles = sysUserRoleService.getByUserId(dto.getId());
-    if (!CollectionUtil.isEmpty(userRoles)) {
-      ISysRoleService sysRoleService = ApplicationUtil.getBean(ISysRoleService.class);
-      this.roles = userRoles.stream().map(t -> {
-        DefaultSysRoleDto role = sysRoleService.getById(t.getRoleId());
-        RoleBo roleBo = new RoleBo();
-        roleBo.setId(role.getId());
-        roleBo.setName(role.getName());
-
-        return roleBo;
-      }).collect(Collectors.toList());
-
-      this.roleName = StringUtil.join(StringPool.STR_SPLIT_CN,
-          this.roles.stream().map(RoleBo::getName).collect(Collectors.toList()));
-    }
   }
 }

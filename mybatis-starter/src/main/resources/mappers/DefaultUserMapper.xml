@@ -37,7 +37,7 @@
         WHERE id = #{userId}
     </select>
 
-    <select id="getById" resultType="com.lframework.starter.web.dto.UserDto">
+    <select id="findById" resultType="com.lframework.starter.web.dto.UserDto">
         SELECT id, name
         FROM sys_user
         WHERE id = #{id}

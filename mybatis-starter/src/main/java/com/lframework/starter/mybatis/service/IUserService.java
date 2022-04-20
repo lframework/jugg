@@ -49,7 +49,7 @@ public interface IUserService extends BaseMpService<DefaultSysUser> {
    * @param id
    * @return
    */
-  UserDto getById(String id);
+  UserDto findById(String id);
 
   /**
    * 根据ID锁定

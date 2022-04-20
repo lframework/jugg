@@ -27,8 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SimpleTableColumnServiceImpl extends
-    BaseMpServiceImpl<GenSimpleTableColumnMapper, GenSimpleTableColumn> implements
-    ISimpleTableColumnService {
+    BaseMpServiceImpl<GenSimpleTableColumnMapper, GenSimpleTableColumn>
+    implements ISimpleTableColumnService {
 
   @Autowired
   private IDataObjectColumnService dataObjectColumnService;
@@ -84,14 +84,14 @@ public class SimpleTableColumnServiceImpl extends
         createDataObjectColumnVo.setName(genSimpleTableColumn.getColumnComment());
         //属性名转换
         if (vo.getConvertType() == GenConvertType.UNDERLINE_TO_CAMEL.getCode().intValue()) {
-          createDataObjectColumnVo
-              .setPropertyName(StringUtil.toCamelCase(genSimpleTableColumn.getColumnName()));
+          createDataObjectColumnVo.setPropertyName(
+              StringUtil.toCamelCase(genSimpleTableColumn.getColumnName()));
         }
 
         createDataObjectColumnVo.setIsKey(genSimpleTableColumn.getIsKey());
         //JDBCType转JavaType
-        GenMySqlDataType columnType = genMysqlDataTypeConverter
-            .convert(genSimpleTableColumn.getDataType());
+        GenMySqlDataType columnType = genMysqlDataTypeConverter.convert(
+            genSimpleTableColumn.getDataType());
         if (columnType == null || columnType.getDataType() == null) {
           throw new DefaultClientException(
               "字段：" + genSimpleTableColumn.getColumnName() + "类型暂不支持！");
@@ -105,8 +105,8 @@ public class SimpleTableColumnServiceImpl extends
   }
 
   @Override
-  public SimpleTableColumnDto getById(String id) {
+  public SimpleTableColumnDto findById(String id) {
 
-    return getBaseMapper().getById(id);
+    return getBaseMapper().findById(id);
   }
 }

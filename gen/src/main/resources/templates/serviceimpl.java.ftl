@@ -15,7 +15,6 @@ import com.lframework.starter.mybatis.utils.OpLogUtil;
 import com.lframework.starter.mybatis.utils.PageHelperUtil;
 import com.lframework.starter.mybatis.utils.PageResultUtil;
 import com.lframework.starter.web.utils.EnumUtil;
-import ${packageName}.dto.${moduleName}.${bizName}.${className}Dto;
 import ${packageName}.entity.${className};
 <#if importPackages??>
     <#list importPackages as p>
@@ -47,13 +46,13 @@ public class ${className}ServiceImpl extends BaseMpServiceImpl${r"<"}${className
 <#if queryParams??>
 
     @Override
-    public PageResult${r"<"}${className}Dto${r">"} query(Integer pageIndex, Integer pageSize, Query${className}Vo vo) {
+    public PageResult${r"<"}${className}${r">"} query(Integer pageIndex, Integer pageSize, Query${className}Vo vo) {
 
         Assert.greaterThanZero(pageIndex);
         Assert.greaterThanZero(pageSize);
 
         PageHelperUtil.startPage(pageIndex, pageSize);
-        List${r"<"}${className}Dto${r">"} datas = this.query(vo);
+        List${r"<"}${className}${r">"} datas = this.query(vo);
 
         return PageResultUtil.convert(new PageInfo<>(datas));
     }
@@ -61,20 +60,12 @@ public class ${className}ServiceImpl extends BaseMpServiceImpl${r"<"}${className
 <#if queryParams??>
 
     @Override
-    public List${r"<"}${className}Dto${r">"} query(Query${className}Vo vo) {
+    public List${r"<"}${className}${r">"} query(Query${className}Vo vo) {
 
         return getBaseMapper().query(vo);
     }
 </#if>
 
-    <#if isCache>
-    @Cacheable(value = ${className}Dto.CACHE_NAME, key = "<#list keys as key>#${key.name}<#if key_index != keys?size - 1>_</#if></#list>", unless = "#result == null")
-    </#if>
-    @Override
-    public ${className}Dto getById(<#list keys as key>${key.type} ${key.name}<#if key_index != keys?size - 1>, </#if></#list>) {
-
-        return getBaseMapper().getById(<#list keys as key>${key.name}<#if key_index != keys?size - 1>, </#if></#list>);
-    }
 <#if create??>
 
     @OpLog(type = OpLogType.OTHER, name = "新增${classDescription}，ID：{}", params = ${r'{"#'}${create.keys[0].name}${r'"}'})
@@ -181,7 +172,7 @@ public class ${className}ServiceImpl extends BaseMpServiceImpl${r"<"}${className
     </#if>
 
     <#if isCache>
-    @CacheEvict(value = ${className}Dto.CACHE_NAME, key = "#key")
+    @CacheEvict(value = ${className}.CACHE_NAME, key = "#key")
     </#if>
     @Override
     public void cleanCacheByKey(String key) {

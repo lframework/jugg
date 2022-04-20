@@ -31,6 +31,7 @@ public class DefaultGenerator extends AbstractSnowFlakeGenerator implements Gene
 
   @Override
   public String generate() {
+
     if (this.generatorType == GeneratorType.FLOW) {
       return defaultFlowGenerator.generate();
     } else {
@@ -38,12 +39,13 @@ public class DefaultGenerator extends AbstractSnowFlakeGenerator implements Gene
     }
   }
 
-  public enum GeneratorType {
-    FLOW, SNOW_FLAKE
-  }
-
   @Override
   public boolean isSpecial() {
+
     return true;
+  }
+
+  public enum GeneratorType {
+    FLOW, SNOW_FLAKE
   }
 }

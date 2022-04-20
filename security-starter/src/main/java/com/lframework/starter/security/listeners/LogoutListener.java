@@ -12,6 +12,7 @@ public class LogoutListener implements ApplicationListener<LogoutEvent> {
 
   @Override
   public void onApplicationEvent(LogoutEvent event) {
+
     CreateOpLogsVo vo = new CreateOpLogsVo();
     vo.setName("退出登录");
     vo.setLogType(OpLogType.AUTH.getCode());

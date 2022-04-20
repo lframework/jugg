@@ -34,7 +34,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 
 public class DefaultSysRoleServiceImpl extends
-    BaseMpServiceImpl<DefaultSysRoleMapper, DefaultSysRole> implements ISysRoleService {
+    BaseMpServiceImpl<DefaultSysRoleMapper, DefaultSysRole>
+    implements ISysRoleService {
 
   @Override
   public PageResult<DefaultSysRoleDto> query(Integer pageIndex, Integer pageSize,
@@ -57,7 +58,7 @@ public class DefaultSysRoleServiceImpl extends
 
   @Cacheable(value = DefaultSysRoleDto.CACHE_NAME, key = "#id", unless = "#result == null")
   @Override
-  public DefaultSysRoleDto getById(String id) {
+  public DefaultSysRoleDto findById(String id) {
 
     return this.doGetById(id);
   }
@@ -85,7 +86,7 @@ public class DefaultSysRoleServiceImpl extends
     }
 
     for (String id : ids) {
-      DefaultSysRoleDto role = this.getById(id);
+      DefaultSysRoleDto role = this.findById(id);
       if (SecurityConstants.PERMISSION_ADMIN_NAME.equals(role.getPermission())) {
         throw new DefaultClientException(
             "角色【" + role.getName() + "】的权限为【" + SecurityConstants.PERMISSION_ADMIN_NAME
@@ -111,7 +112,7 @@ public class DefaultSysRoleServiceImpl extends
     }
 
     for (String id : ids) {
-      DefaultSysRoleDto role = this.getById(id);
+      DefaultSysRoleDto role = this.findById(id);
       if (SecurityConstants.PERMISSION_ADMIN_NAME.equals(role.getPermission())) {
         throw new DefaultClientException(
             "角色【" + role.getName() + "】的权限为【" + SecurityConstants.PERMISSION_ADMIN_NAME
@@ -146,7 +147,7 @@ public class DefaultSysRoleServiceImpl extends
   @Override
   public void update(UpdateSysRoleVo vo) {
 
-    DefaultSysRoleDto data = this.getById(vo.getId());
+    DefaultSysRoleDto data = this.findById(vo.getId());
     if (ObjectUtil.isNull(data)) {
       throw new DefaultClientException("角色不存在！");
     }
@@ -186,7 +187,7 @@ public class DefaultSysRoleServiceImpl extends
 
   protected DefaultSysRoleDto doGetById(String id) {
 
-    return getBaseMapper().getById(id);
+    return getBaseMapper().findById(id);
   }
 
   protected List<DefaultSysRoleDto> doSelector(SysRoleSelectorVo vo) {
@@ -258,7 +259,8 @@ public class DefaultSysRoleServiceImpl extends
     }
 
     checkWrapper = Wrappers.lambdaQuery(DefaultSysRole.class)
-        .eq(DefaultSysRole::getName, vo.getName()).ne(DefaultSysRole::getId, vo.getId());
+        .eq(DefaultSysRole::getName, vo.getName())
+        .ne(DefaultSysRole::getId, vo.getId());
     if (getBaseMapper().selectCount(checkWrapper) > 0) {
       throw new DefaultClientException("名称重复，请重新输入！");
     }

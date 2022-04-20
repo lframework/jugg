@@ -29,7 +29,7 @@ public interface IGenUpdateColumnConfigService extends BaseMpService<GenUpdateCo
    * @param id
    * @return
    */
-  GenUpdateColumnConfigDto getById(String id);
+  GenUpdateColumnConfigDto findById(String id);
 
   /**
    * 根据ID删除

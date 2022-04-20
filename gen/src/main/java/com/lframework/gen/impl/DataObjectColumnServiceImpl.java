@@ -27,8 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class DataObjectColumnServiceImpl extends
-    BaseMpServiceImpl<GenDataObjectColumnMapper, GenDataObjectColumn> implements
-    IDataObjectColumnService {
+    BaseMpServiceImpl<GenDataObjectColumnMapper, GenDataObjectColumn>
+    implements IDataObjectColumnService {
 
   @Autowired
   private GenViewTypeConverter genViewTypeConverter;
@@ -140,8 +140,7 @@ public class DataObjectColumnServiceImpl extends
                   StringPool.EMPTY_STR).set(GenDataObjectColumn::getIsOrder, columnVo.getIsOrder())
           .set(GenDataObjectColumn::getOrderType, columnVo.getIsOrder() ?
               EnumUtil.getByCode(GenOrderType.class, columnVo.getOrderType()) :
-              null)
-          .set(GenDataObjectColumn::getColumnOrder, vo.indexOf(columnVo))
+              null).set(GenDataObjectColumn::getColumnOrder, vo.indexOf(columnVo))
           .eq(GenDataObjectColumn::getId, columnVo.getId());
 
       getBaseMapper().update(updateWrapper);

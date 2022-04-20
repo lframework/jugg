@@ -28,5 +28,5 @@ public interface DefaultSysDeptMapper extends BaseMapper<DefaultSysDept> {
    * @param id
    * @return
    */
-  DefaultSysDeptDto getById(String id);
+  DefaultSysDeptDto findById(String id);
 }

@@ -1,6 +1,7 @@
 package com.lframework.gen.vo.dataobj;
 
 import com.lframework.gen.enums.DataObjectType;
+import com.lframework.starter.web.components.validation.IsCode;
 import com.lframework.starter.web.components.validation.IsEnum;
 import com.lframework.starter.web.vo.BaseVo;
 import io.swagger.annotations.ApiModelProperty;
@@ -21,6 +22,7 @@ public class CreateDataObjectVo implements BaseVo, Serializable {
    * 编号
    */
   @ApiModelProperty(value = "编号", required = true)
+  @IsCode
   @NotBlank(message = "请输入编号！")
   private String code;
 

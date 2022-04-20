@@ -17,8 +17,8 @@ import lombok.NonNull;
 import org.springframework.transaction.annotation.Transactional;
 
 public class RecursionMappingServiceImpl extends
-    BaseMpServiceImpl<RecursionMappingMapper, RecursionMapping> implements
-    IRecursionMappingService {
+    BaseMpServiceImpl<RecursionMappingMapper, RecursionMapping>
+    implements IRecursionMappingService {
 
   @Override
   public List<String> getNodeParentIds(@NonNull String nodeId, @NonNull NodeType nodeType) {

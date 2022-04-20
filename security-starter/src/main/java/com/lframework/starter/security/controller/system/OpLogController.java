@@ -68,9 +68,9 @@ public class OpLogController extends DefaultBaseController {
   @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
   @PreAuthorize("@permission.valid('system:oplog:query')")
   @GetMapping
-  public InvokeResult<GetOpLogBo> getById(@NotBlank(message = "ID不能为空") String id) {
+  public InvokeResult<GetOpLogBo> findById(@NotBlank(message = "ID不能为空") String id) {
 
-    DefaultOpLogsDto data = opLogsService.getById(id);
+    DefaultOpLogsDto data = opLogsService.findById(id);
 
     if (data == null) {
       throw new DefaultClientException("操作日志不存在！");

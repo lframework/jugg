@@ -26,8 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
  * @author zmj
  */
 @Slf4j
-public class DefaultOpLogsServiceImpl extends
-    BaseMpServiceImpl<DefaultOpLogsMapper, DefaultOpLogs> implements IOpLogsService {
+public class DefaultOpLogsServiceImpl extends BaseMpServiceImpl<DefaultOpLogsMapper, DefaultOpLogs>
+    implements IOpLogsService {
 
   @Transactional
   @Override
@@ -52,7 +52,7 @@ public class DefaultOpLogsServiceImpl extends
   }
 
   @Override
-  public DefaultOpLogsDto getById(String id) {
+  public DefaultOpLogsDto findById(String id) {
 
     return this.doGetById(id);
   }
@@ -93,7 +93,7 @@ public class DefaultOpLogsServiceImpl extends
 
   protected DefaultOpLogsDto doGetById(String id) {
 
-    return getBaseMapper().getById(id);
+    return getBaseMapper().findById(id);
   }
 
   protected void doClearLogs(LocalDateTime endTime) {

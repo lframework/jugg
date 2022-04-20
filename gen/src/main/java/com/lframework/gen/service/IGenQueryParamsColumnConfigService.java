@@ -30,7 +30,7 @@ public interface IGenQueryParamsColumnConfigService extends
    * @param id
    * @return
    */
-  GenQueryParamsColumnConfigDto getById(String id);
+  GenQueryParamsColumnConfigDto findById(String id);
 
   /**
    * 根据ID删除

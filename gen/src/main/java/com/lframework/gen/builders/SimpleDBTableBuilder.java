@@ -38,6 +38,6 @@ public class SimpleDBTableBuilder implements TableBuilder {
   @Override
   public TableColumn buildTableColumn(String id) {
 
-    return simpleTableColumnService.getById(id);
+    return simpleTableColumnService.findById(id);
   }
 }

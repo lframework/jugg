@@ -49,10 +49,10 @@ public class WebConfiguration implements WebMvcConfigurer {
 
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
+
     registry.addInterceptor(new SaAnnotationInterceptor()).addPathPatterns("/**")
-        .excludePathPatterns(permitAllService.getUrls().stream().map(
-            Entry::getValue).collect(
-            Collectors.toList()));
+        .excludePathPatterns(
+            permitAllService.getUrls().stream().map(Entry::getValue).collect(Collectors.toList()));
   }
 
   @Bean
@@ -147,6 +147,7 @@ public class WebConfiguration implements WebMvcConfigurer {
   @Bean
   @ConditionalOnMissingBean(PermitAllService.class)
   public PermitAllService permitAllService() {
+
     return new PermitAllService();
   }
 }

@@ -1,6 +1,7 @@
 package com.lframework.starter.mybatis.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.lframework.starter.web.dto.BaseDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,7 +15,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_config")
-public class SysConfig extends BaseEntity {
+public class SysConfig extends BaseEntity implements BaseDto {
 
   private static final long serialVersionUID = 1L;
 

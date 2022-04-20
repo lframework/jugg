@@ -2,6 +2,7 @@ package ${packageName}.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lframework.starter.mybatis.entity.BaseEntity;
+import com.lframework.starter.web.dto.BaseDto;
 <#if importPackages??>
     <#list importPackages as p>
 import ${p};
@@ -22,9 +23,11 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("${tableName}")
-public class ${className} extends BaseEntity {
+public class ${className} extends BaseEntity implements BaseDto {
 
     private static final long serialVersionUID = 1L;
+
+    public static final String CACHE_NAME = "${className}";
 
     <#list columns as column>
     /**

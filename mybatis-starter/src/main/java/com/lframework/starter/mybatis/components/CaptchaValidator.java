@@ -30,6 +30,7 @@ public class CaptchaValidator {
    * @param captcha
    */
   public void validate(String sn, String captcha) {
+
     log.debug("开始校验验证码，sn={}, captcha={}", sn, captcha);
 
     SysConfigDto config = sysConfigService.get();

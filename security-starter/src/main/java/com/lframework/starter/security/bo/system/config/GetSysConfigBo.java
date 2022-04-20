@@ -71,6 +71,7 @@ public class GetSysConfigBo extends BaseBo<SysConfigDto> {
   private String templateCode;
 
   public GetSysConfigBo(SysConfigDto dto) {
+
     super(dto);
   }
 }

@@ -20,6 +20,7 @@ public class UploadUrlValidator implements ConstraintValidator<UploadUrl, String
 
   @Override
   public void initialize(UploadUrl constraintAnnotation) {
+
     String domain = ApplicationUtil.getProperty("upload.domain");
     if (domain.endsWith("/")) {
       domain = domain.substring(0, domain.length() - 1);

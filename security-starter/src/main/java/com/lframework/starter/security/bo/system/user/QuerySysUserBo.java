@@ -150,19 +150,19 @@ public class QuerySysUserBo extends BaseBo<DefaultSysUserDto> {
 
     IUserService userService = ApplicationUtil.getBean(IUserService.class);
 
-    UserDto createBy = userService.getById(this.getCreateBy());
-    UserDto updateBy = userService.getById(this.getUpdateBy());
+    UserDto createBy = userService.findById(this.getCreateBy());
+    UserDto updateBy = userService.findById(this.getUpdateBy());
     this.setCreateBy(createBy.getName());
     this.setUpdateBy(updateBy.getName());
 
-    ISysUserPositionService sysUserPositionService = ApplicationUtil
-        .getBean(ISysUserPositionService.class);
+    ISysUserPositionService sysUserPositionService = ApplicationUtil.getBean(
+        ISysUserPositionService.class);
     List<DefaultSysUserPositionDto> userPositions = sysUserPositionService.getByUserId(dto.getId());
     if (!CollectionUtil.isEmpty(userPositions)) {
       ISysPositionService sysPositionService = ApplicationUtil.getBean(ISysPositionService.class);
       List<String> positionNames = new ArrayList<>(userPositions.size());
       for (DefaultSysUserPositionDto userPosition : userPositions) {
-        DefaultSysPositionDto position = sysPositionService.getById(userPosition.getPositionId());
+        DefaultSysPositionDto position = sysPositionService.findById(userPosition.getPositionId());
         positionNames.add(position.getName());
       }
 
@@ -175,7 +175,7 @@ public class QuerySysUserBo extends BaseBo<DefaultSysUserDto> {
       ISysDeptService sysDeptService = ApplicationUtil.getBean(ISysDeptService.class);
       List<String> deptNames = new ArrayList<>(userDepts.size());
       for (DefaultSysUserDeptDto userDept : userDepts) {
-        DefaultSysDeptDto dept = sysDeptService.getById(userDept.getDeptId());
+        DefaultSysDeptDto dept = sysDeptService.findById(userDept.getDeptId());
         deptNames.add(dept.getName());
       }
 
@@ -188,7 +188,7 @@ public class QuerySysUserBo extends BaseBo<DefaultSysUserDto> {
       ISysRoleService sysRoleService = ApplicationUtil.getBean(ISysRoleService.class);
       List<String> roleNames = new ArrayList<>(userRoles.size());
       for (DefaultSysUserRoleDto userRole : userRoles) {
-        DefaultSysRoleDto role = sysRoleService.getById(userRole.getRoleId());
+        DefaultSysRoleDto role = sysRoleService.findById(userRole.getRoleId());
         roleNames.add(role.getName());
       }
 

@@ -25,7 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 public class DefaultSysUserRoleServiceImpl extends
-    BaseMpServiceImpl<DefaultSysUserRoleMapper, DefaultSysUserRole> implements ISysUserRoleService {
+    BaseMpServiceImpl<DefaultSysUserRoleMapper, DefaultSysUserRole>
+    implements ISysUserRoleService {
 
   @Autowired
   private ISysUserService sysUserService;
@@ -40,7 +41,7 @@ public class DefaultSysUserRoleServiceImpl extends
   public void setting(SysUserRoleSettingVo vo) {
 
     for (String userId : vo.getUserIds()) {
-      DefaultSysUserDto user = sysUserService.getById(userId);
+      DefaultSysUserDto user = sysUserService.findById(userId);
       if (ObjectUtil.isNull(user)) {
         throw new DefaultClientException("用户不存在！");
       }
@@ -65,7 +66,7 @@ public class DefaultSysUserRoleServiceImpl extends
       Set<String> roleIdSet = new HashSet<>(roleIds);
 
       for (String roleId : roleIdSet) {
-        DefaultSysRoleDto role = sysRoleService.getById(roleId);
+        DefaultSysRoleDto role = sysRoleService.findById(roleId);
         if (ObjectUtil.isNull(role)) {
           throw new DefaultClientException("角色不存在，请检查！");
         }

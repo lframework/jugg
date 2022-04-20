@@ -49,9 +49,7 @@ public class SysUserRoleController extends DefaultBaseController {
    * 查询角色列表
    */
   @ApiOperation("查询角色列表")
-  @ApiImplicitParams({
-      @ApiImplicitParam(value = "用户ID", name = "userId", paramType = "query")
-  })
+  @ApiImplicitParams({@ApiImplicitParam(value = "用户ID", name = "userId", paramType = "query")})
   @PreAuthorize("@permission.valid('system:user:permission')")
   @GetMapping("/roles")
   public InvokeResult<List<QueryUserRoleBo>> roles(String userId) {

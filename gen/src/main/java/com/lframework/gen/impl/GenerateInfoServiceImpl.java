@@ -15,7 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class GenerateInfoServiceImpl extends
-    BaseMpServiceImpl<GenGenerateInfoMapper, GenGenerateInfo> implements IGenerateInfoService {
+    BaseMpServiceImpl<GenGenerateInfoMapper, GenGenerateInfo>
+    implements IGenerateInfoService {
 
   @Override
   public GenGenerateInfoDto getByDataObjId(String dataObjId) {

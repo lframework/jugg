@@ -113,8 +113,8 @@ public class ExcelUtil {
 
     HttpServletResponse response = ResponseUtil.getResponse();
     try (OutputStream os = response.getOutputStream()) {
-      fileName = URLEncoder
-          .encode(fileName + ExcelTypeEnum.XLS.getValue(), StandardCharsets.UTF_8.name());
+      fileName = URLEncoder.encode(fileName + ExcelTypeEnum.XLS.getValue(),
+          StandardCharsets.UTF_8.name());
       response.setContentType("application/msexcel");
       response.setCharacterEncoding(StandardCharsets.UTF_8.name());
       response.setHeader("FileName", fileName);
@@ -199,8 +199,8 @@ public class ExcelUtil {
 
     HttpServletResponse response = ResponseUtil.getResponse();
     try (OutputStream os = response.getOutputStream()) {
-      fileName = URLEncoder
-          .encode(fileName + ExcelTypeEnum.XLSX.getValue(), StandardCharsets.UTF_8.name());
+      fileName = URLEncoder.encode(fileName + ExcelTypeEnum.XLSX.getValue(),
+          StandardCharsets.UTF_8.name());
       response.setContentType("application/vnd.ms-excel");
       response.setCharacterEncoding(StandardCharsets.UTF_8.name());
       response.setHeader("FileName", fileName);
@@ -329,8 +329,8 @@ public class ExcelUtil {
     HttpServletResponse response = ResponseUtil.getResponse();
     try {
       OutputStream os = response.getOutputStream();
-      fileName = URLEncoder
-          .encode(fileName + ExcelTypeEnum.XLS.getValue(), StandardCharsets.UTF_8.name());
+      fileName = URLEncoder.encode(fileName + ExcelTypeEnum.XLS.getValue(),
+          StandardCharsets.UTF_8.name());
       response.setContentType("application/msexcel");
       response.setCharacterEncoding(StandardCharsets.UTF_8.name());
       response.setHeader("FileName", fileName);
@@ -371,8 +371,8 @@ public class ExcelUtil {
 
     HttpServletResponse response = ResponseUtil.getResponse();
     try (OutputStream os = response.getOutputStream()) {
-      fileName = URLEncoder
-          .encode(fileName + ExcelTypeEnum.XLSX.getValue(), StandardCharsets.UTF_8.name());
+      fileName = URLEncoder.encode(fileName + ExcelTypeEnum.XLSX.getValue(),
+          StandardCharsets.UTF_8.name());
       response.setContentType("application/vnd.ms-excel");
       response.setCharacterEncoding(StandardCharsets.UTF_8.name());
       response.setHeader("FileName", fileName);
@@ -461,8 +461,8 @@ public class ExcelUtil {
       Class<T> clazz, List<T> datas, List<WriteHandler> writeHandlers) {
 
     ExcelMultipartWriterSheetBuilder builder = new ExcelMultipartWriterBuilder().file(os)
-        .excelType(excelType).useDefaultStyle(false)
-        .head(clazz).sheet(sheetName);
+        .excelType(excelType)
+        .useDefaultStyle(false).head(clazz).sheet(sheetName);
     writeHandlers = getWriteHandlers(writeHandlers);
 
     writeHandlers.forEach(builder::registerWriteHandler);
@@ -484,8 +484,8 @@ public class ExcelUtil {
       String sheetName, ExcelTypeEnum excelType, Class<T> clazz) {
 
     ExcelMultipartWriterSheetBuilder builder = new ExcelMultipartWriterBuilder().file(os)
-        .excelType(excelType).useDefaultStyle(false)
-        .head(clazz).sheet(sheetName);
+        .excelType(excelType)
+        .useDefaultStyle(false).head(clazz).sheet(sheetName);
     List<WriteHandler> writeHandlers = getWriteHandlers();
     writeHandlers.forEach(builder::registerWriteHandler);
 

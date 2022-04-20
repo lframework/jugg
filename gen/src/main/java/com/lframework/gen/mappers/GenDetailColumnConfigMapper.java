@@ -30,5 +30,5 @@ public interface GenDetailColumnConfigMapper extends BaseMapper<GenDetailColumnC
    * @param id
    * @return
    */
-  GenDetailColumnConfigDto getById(String id);
+  GenDetailColumnConfigDto findById(String id);
 }

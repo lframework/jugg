@@ -29,6 +29,7 @@ public class TodoTaskBo extends BaseBo<TodoTaskDto> {
   private String jumpUrl;
 
   public TodoTaskBo(TodoTaskDto dto) {
+
     super(dto);
   }
 }

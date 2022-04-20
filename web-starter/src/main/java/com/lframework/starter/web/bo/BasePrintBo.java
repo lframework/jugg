@@ -69,9 +69,11 @@ public abstract class BasePrintBo<T extends BasePrintDataBo<? extends BaseDto>> 
   private String html;
 
   public BasePrintBo() {
+
   }
 
   public BasePrintBo(String templateName) {
+
     this(templateName, null);
   }
 

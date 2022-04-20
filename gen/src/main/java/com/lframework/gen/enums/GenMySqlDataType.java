@@ -14,24 +14,23 @@ public enum GenMySqlDataType implements BaseEnum<String> {
       "bigint"), BIT("bit", GenDataType.BOOLEAN, "bit"), REAL("real", GenDataType.DOUBLE,
       "real"), DOUBLE(
       "double", GenDataType.BIG_DECIMAL, "double"), FLOAT("float", GenDataType.BIG_DECIMAL,
-      "float"), DECIMAL("decimal",
-      GenDataType.BIG_DECIMAL, "decimal"), NUMERIC("numeric", GenDataType.BIG_DECIMAL,
-      "numeric"), CHAR("char",
-      GenDataType.STRING, "char"), VARCHAR("varchar", GenDataType.STRING, "varchar"), DATE("date",
-      GenDataType.LOCAL_DATE, "date"), TIME("time", GenDataType.LOCAL_TIME, "time"), YEAR("year",
-      null,
-      "year"), TIMESTAMP("timestamp", GenDataType.LOCAL_DATE_TIME, "timestamp"), DATETIME(
-      "datetime",
-      GenDataType.LOCAL_DATE_TIME, "datetime"), TINYBLOB("tinyblob", null, "tinyblob"), BLOB("blob",
-      null,
-      "blob"), MEDIUMBLOB("mediumblob", null, "mediumblob"), LONGBLOB("longblob", null,
-      "longblob"), TINYTEXT(
-      "tinytext", GenDataType.STRING, "tinytext"), MEDIUMTEXT("mediumtext", GenDataType.STRING,
-      "mediumtext"), TEXT("text", GenDataType.STRING, "text"), LONGTEXT("longtext",
+      "float"), DECIMAL(
+      "decimal", GenDataType.BIG_DECIMAL, "decimal"), NUMERIC("numeric", GenDataType.BIG_DECIMAL,
+      "numeric"), CHAR("char", GenDataType.STRING, "char"), VARCHAR("varchar", GenDataType.STRING,
+      "varchar"), DATE("date", GenDataType.LOCAL_DATE, "date"), TIME("time", GenDataType.LOCAL_TIME,
+      "time"), YEAR("year", null, "year"), TIMESTAMP("timestamp", GenDataType.LOCAL_DATE_TIME,
+      "timestamp"), DATETIME("datetime", GenDataType.LOCAL_DATE_TIME, "datetime"), TINYBLOB(
+      "tinyblob", null,
+      "tinyblob"), BLOB("blob", null, "blob"), MEDIUMBLOB("mediumblob", null,
+      "mediumblob"), LONGBLOB("longblob",
+      null, "longblob"), TINYTEXT("tinytext", GenDataType.STRING, "tinytext"), MEDIUMTEXT(
+      "mediumtext",
+      GenDataType.STRING, "mediumtext"), TEXT("text", GenDataType.STRING, "text"), LONGTEXT(
+      "longtext",
+      GenDataType.STRING, "longtext"), ENUM("enum", GenDataType.STRING, "enum"), SET("set",
       GenDataType.STRING,
-      "longtext"), ENUM("enum", GenDataType.STRING, "enum"), SET("set", GenDataType.STRING,
-      "set"), BINARY(
-      "binary", null, "binary"), VARBINARY("varbinary", null, "varbinary"), POINT("point", null,
+      "set"), BINARY("binary", null, "binary"), VARBINARY("varbinary", null, "varbinary"), POINT(
+      "point", null,
       "point"), LINESTRING("linestring", null, "linestring"), POLYGON("polygon", null,
       "polygon"), GEOMETRY(
       "geometry", null, "geometry"), MULTIPOINT("multipoint", null, "multipoint"), MULTILINESTRING(

@@ -32,7 +32,7 @@ public interface DefaultSysRoleMapper extends BaseMapper<DefaultSysRole> {
    * @param id
    * @return
    */
-  DefaultSysRoleDto getById(String id);
+  DefaultSysRoleDto findById(String id);
 
   /**
    * 根据用户ID查询

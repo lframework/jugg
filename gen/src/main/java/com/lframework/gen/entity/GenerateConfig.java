@@ -1,6 +1,7 @@
 package com.lframework.gen.entity;
 
 import com.lframework.starter.mybatis.entity.BaseEntity;
+import com.lframework.starter.web.dto.BaseDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -9,6 +10,6 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class GenerateConfig extends BaseEntity {
+public class GenerateConfig extends BaseEntity implements BaseDto {
 
 }

@@ -21,14 +21,14 @@ import org.springframework.stereotype.Component;
 @Conditional(RedisLockConditional.class)
 public class RedisLockBuilder implements LockBuilder {
 
-  @Resource(name = "redisTemplate")
-  private RedisTemplate redisTemplate;
-
   private static final ThreadLocal<Map<String, Locker>> LOCKERS;
 
   static {
     LOCKERS = new ThreadLocal<>();
   }
+
+  @Resource(name = "redisTemplate")
+  private RedisTemplate redisTemplate;
 
   @Override
   public Locker buildLocker(String lockName, long expireTime, long waitTime) {
@@ -76,29 +76,6 @@ public class RedisLockBuilder implements LockBuilder {
       this.expireTime = expireTime;
 
       this.waitTime = waitTime;
-    }
-
-    private class TryLockRedisCallBack implements RedisCallback<Boolean> {
-
-      @Override
-      public Boolean doInRedis(RedisConnection connection) throws DataAccessException {
-
-        if (log.isDebugEnabled()) {
-          log.debug("key={}, requestId={}", key, requestId);
-        }
-
-        return connection.set(key, requestId, Expiration.from(expireTime, TimeUnit.MILLISECONDS),
-            RedisStringCommands.SetOption.ifAbsent());
-      }
-    }
-
-    private class ReleaseRedisCallBack implements RedisCallback<Boolean> {
-
-      @Override
-      public Boolean doInRedis(RedisConnection connection) throws DataAccessException {
-
-        return connection.eval(SCRIPT.getBytes(), ReturnType.BOOLEAN, 1, key, requestId);
-      }
     }
 
     @Override
@@ -178,6 +155,29 @@ public class RedisLockBuilder implements LockBuilder {
     public void close() {
 
       unLock();
+    }
+
+    private class TryLockRedisCallBack implements RedisCallback<Boolean> {
+
+      @Override
+      public Boolean doInRedis(RedisConnection connection) throws DataAccessException {
+
+        if (log.isDebugEnabled()) {
+          log.debug("key={}, requestId={}", key, requestId);
+        }
+
+        return connection.set(key, requestId, Expiration.from(expireTime, TimeUnit.MILLISECONDS),
+            RedisStringCommands.SetOption.ifAbsent());
+      }
+    }
+
+    private class ReleaseRedisCallBack implements RedisCallback<Boolean> {
+
+      @Override
+      public Boolean doInRedis(RedisConnection connection) throws DataAccessException {
+
+        return connection.eval(SCRIPT.getBytes(), ReturnType.BOOLEAN, 1, key, requestId);
+      }
     }
   }
 }

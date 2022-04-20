@@ -103,7 +103,6 @@ public class Generator {
     GenerateDto mapperJava = this.generateMapper();
     GenerateDto mapperXml = this.generateListMapperXml();
     GenerateDto entityJava = this.generateEntity();
-    GenerateDto dtoJava = this.generateDto();
 
     GenerateDto queryVoJava = this.generateQueryVo();
     GenerateDto createVoJava = this.generateCreateVo();
@@ -117,7 +116,6 @@ public class Generator {
     results.add(mapperJava);
     results.add(mapperXml);
     results.add(entityJava);
-    results.add(dtoJava);
 
     if (queryVoJava != null) {
       results.add(queryVoJava);
@@ -302,26 +300,6 @@ public class Generator {
   }
 
   /**
-   * 生成Dto.java代码
-   *
-   * @return
-   */
-  public GenerateDto generateDto() {
-    // dto的生成参数与entity一样
-    EntityTemplate template = this.getEntityTemplate();
-
-    String content = this.generate("dto.java.ftl", template);
-
-    return this.buildGenerateResult(
-        "java" + File.separator + "src" + File.separator + "main" + File.separator + "java"
-            + File.separator
-            + template.getPackageName().replaceAll("\\.", "\\" + File.separator) + File.separator
-            + "dto"
-            + File.separator + template.getModuleName() + File.separator + template.getBizName(),
-        template.getClassName() + "Dto.java", content);
-  }
-
-  /**
    * 生成UpdateVo.java代码
    *
    * @return
@@ -435,13 +413,14 @@ public class Generator {
    * @return
    */
   public GenerateDto generateIndexVue() {
+
     ControllerTemplate template = this.getControllerTemplate();
     String content = this.generate("index.vue.ftl", template);
 
     return this.buildGenerateResult(
         "vue" + File.separator + "src" + File.separator + "views" + File.separator
-            + template.getModuleName() + File.separator + template.getBizName(), "index.vue",
-        content);
+            + template.getModuleName()
+            + File.separator + template.getBizName(), "index.vue", content);
   }
 
   /**
@@ -461,8 +440,8 @@ public class Generator {
 
     return this.buildGenerateResult(
         "vue" + File.separator + "src" + File.separator + "views" + File.separator
-            + template.getModuleName() + File.separator + template.getBizName(), "add.vue",
-        content);
+            + template.getModuleName()
+            + File.separator + template.getBizName(), "add.vue", content);
   }
 
   /**
@@ -482,8 +461,8 @@ public class Generator {
 
     return this.buildGenerateResult(
         "vue" + File.separator + "src" + File.separator + "views" + File.separator
-            + template.getModuleName() + File.separator + template.getBizName(), "modify.vue",
-        content);
+            + template.getModuleName()
+            + File.separator + template.getBizName(), "modify.vue", content);
   }
 
   /**
@@ -503,8 +482,8 @@ public class Generator {
 
     return this.buildGenerateResult(
         "vue" + File.separator + "src" + File.separator + "views" + File.separator
-            + template.getModuleName() + File.separator + template.getBizName(), "detail.vue",
-        content);
+            + template.getModuleName()
+            + File.separator + template.getBizName(), "detail.vue", content);
   }
 
   /**
@@ -573,8 +552,8 @@ public class Generator {
       }
       if (column.getFixEnum()) {
         // 如果是枚举类型
-        columnObj
-            .setType(column.getEnumBack().substring(column.getEnumBack().lastIndexOf(".") + 1));
+        columnObj.setType(
+            column.getEnumBack().substring(column.getEnumBack().lastIndexOf(".") + 1));
         columnObj.setFrontType(column.getEnumFront());
         importPackages.add(column.getEnumBack());
       } else {
@@ -593,9 +572,8 @@ public class Generator {
       columnObj.setName(column.getColumnName());
       // MybatisPlus默认命名规则是下划线转驼峰，所以如果不是这个规则的话，需要单独指定TableField和TableId
       columnObj.setColumnName(column.getTableColumn().getColumnName());
-      columnObj
-          .setDefaultConvertType(
-              dataObject.getTable().getConvertType() == GenConvertType.UNDERLINE_TO_CAMEL);
+      columnObj.setDefaultConvertType(
+          dataObject.getTable().getConvertType() == GenConvertType.UNDERLINE_TO_CAMEL);
       if (!columnObj.getDefaultConvertType()) {
         importPackages.add(TableId.class.getName());
         importPackages.add(TableField.class.getName());
@@ -693,8 +671,8 @@ public class Generator {
     serviceTemplate.setPackageName(dataObject.getGenerateInfo().getPackageName());
     serviceTemplate.setClassName(dataObject.getGenerateInfo().getClassName());
     serviceTemplate.setClassNameProperty(
-        dataObject.getGenerateInfo().getClassName().substring(0, 1).toLowerCase() + dataObject
-            .getGenerateInfo()
+        dataObject.getGenerateInfo().getClassName().substring(0, 1).toLowerCase()
+            + dataObject.getGenerateInfo()
             .getClassName().substring(1));
     serviceTemplate.setModuleName(dataObject.getGenerateInfo().getModuleName());
     serviceTemplate.setBizName(dataObject.getGenerateInfo().getBizName());
@@ -775,8 +753,8 @@ public class Generator {
       QueryParamsTemplate.Column columnObj = new QueryParamsTemplate.Column();
       if (column.getFixEnum()) {
         // 如果是枚举类型
-        columnObj
-            .setType(column.getEnumBack().substring(column.getEnumBack().lastIndexOf(".") + 1));
+        columnObj.setType(
+            column.getEnumBack().substring(column.getEnumBack().lastIndexOf(".") + 1));
         columnObj.setFrontType(column.getEnumFront());
         columnObj.setViewType(column.getViewType().getCode());
         columnObj.setEnumCodeType(column.getDataType().getDesc());
@@ -860,8 +838,8 @@ public class Generator {
       columnObj.setRequired(column.getCreateConfig().getRequired());
       if (column.getFixEnum()) {
         // 如果是枚举类型
-        columnObj
-            .setType(column.getEnumBack().substring(column.getEnumBack().lastIndexOf(".") + 1));
+        columnObj.setType(
+            column.getEnumBack().substring(column.getEnumBack().lastIndexOf(".") + 1));
         columnObj.setFrontType(column.getEnumFront());
         columnObj.setViewType(column.getViewType().getCode());
         importPackages.add(column.getEnumBack());
@@ -981,8 +959,8 @@ public class Generator {
       columnObj.setRequired(column.getUpdateConfig().getRequired());
       if (column.getFixEnum()) {
         // 如果是枚举类型
-        columnObj
-            .setType(column.getEnumBack().substring(column.getEnumBack().lastIndexOf(".") + 1));
+        columnObj.setType(
+            column.getEnumBack().substring(column.getEnumBack().lastIndexOf(".") + 1));
         columnObj.setFrontType(column.getEnumFront());
         columnObj.setViewType(column.getViewType().getCode());
         importPackages.add(column.getEnumBack());
@@ -1105,8 +1083,8 @@ public class Generator {
       QueryTemplate.Column columnObj = new QueryTemplate.Column();
       if (column.getFixEnum()) {
         // 如果是枚举类型
-        columnObj
-            .setType(column.getEnumBack().substring(column.getEnumBack().lastIndexOf(".") + 1));
+        columnObj.setType(
+            column.getEnumBack().substring(column.getEnumBack().lastIndexOf(".") + 1));
         columnObj.setFrontType(column.getEnumFront());
         columnObj.setViewType(column.getViewType().getCode());
         importPackages.add(column.getEnumBack());
@@ -1115,9 +1093,10 @@ public class Generator {
         columnObj.setType(column.getDataType().getDesc());
         columnObj.setIsNumberType(GenDataType.isNumberType(column.getDataType()));
         columnObj.setViewType(column.getViewType().getCode());
-        columnObj.setHasAvailableTag(column.getViewType() == GenViewType.SELECT
-            && column.getDataType() == GenDataType.BOOLEAN && "available"
-            .equals(column.getColumnName()));
+        columnObj.setHasAvailableTag(
+            column.getViewType() == GenViewType.SELECT
+                && column.getDataType() == GenDataType.BOOLEAN
+                && "available".equals(column.getColumnName()));
       }
       // 以下类型需要单独引包
       if (column.getDataType() == GenDataType.LOCAL_DATE) {
@@ -1195,16 +1174,17 @@ public class Generator {
       DetailTemplate.Column columnObj = new DetailTemplate.Column();
       if (column.getFixEnum()) {
         // 如果是枚举类型
-        columnObj
-            .setType(column.getEnumBack().substring(column.getEnumBack().lastIndexOf(".") + 1));
+        columnObj.setType(
+            column.getEnumBack().substring(column.getEnumBack().lastIndexOf(".") + 1));
         columnObj.setFrontType(column.getEnumFront());
         importPackages.add(column.getEnumBack());
         importPackages.add(EnumUtil.class.getName());
       } else {
         columnObj.setType(column.getDataType().getDesc());
-        columnObj.setHasAvailableTag(column.getViewType() == GenViewType.SELECT
-            && column.getDataType() == GenDataType.BOOLEAN && "available"
-            .equals(column.getColumnName()));
+        columnObj.setHasAvailableTag(
+            column.getViewType() == GenViewType.SELECT
+                && column.getDataType() == GenDataType.BOOLEAN
+                && "available".equals(column.getColumnName()));
         if (columnObj.getHasAvailableTag()) {
           detailTemplate.setHasAvailableTag(Boolean.TRUE);
         }
@@ -1265,8 +1245,8 @@ public class Generator {
     controllerTemplate.setPackageName(dataObject.getGenerateInfo().getPackageName());
     controllerTemplate.setClassName(dataObject.getGenerateInfo().getClassName());
     controllerTemplate.setClassNameProperty(
-        dataObject.getGenerateInfo().getClassName().substring(0, 1).toLowerCase() + dataObject
-            .getGenerateInfo()
+        dataObject.getGenerateInfo().getClassName().substring(0, 1).toLowerCase()
+            + dataObject.getGenerateInfo()
             .getClassName().substring(1));
     controllerTemplate.setModuleName(dataObject.getGenerateInfo().getModuleName());
     controllerTemplate.setBizName(dataObject.getGenerateInfo().getBizName());
@@ -1335,6 +1315,7 @@ public class Generator {
   }
 
   private SqlTemplate getSqlTemplate() {
+
     SqlTemplate sqlTemplate = new SqlTemplate();
     sqlTemplate.setModuleName(dataObject.getGenerateInfo().getModuleName());
     sqlTemplate.setBizName(dataObject.getGenerateInfo().getBizName());
@@ -1390,6 +1371,7 @@ public class Generator {
   }
 
   private void loadStaticClasses(Map root) {
+
     BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
 
     TemplateHashModel staticModels = wrapper.getStaticModels();

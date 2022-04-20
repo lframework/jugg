@@ -23,7 +23,7 @@ public interface ISysDeptService extends BaseMpService<DefaultSysDept> {
    * @param id
    * @return
    */
-  DefaultSysDeptDto getById(String id);
+  DefaultSysDeptDto findById(String id);
 
   /**
    * 根据ID停用

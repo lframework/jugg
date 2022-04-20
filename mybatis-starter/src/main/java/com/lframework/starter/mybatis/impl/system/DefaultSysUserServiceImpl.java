@@ -54,8 +54,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 public class DefaultSysUserServiceImpl extends
-    BaseMpServiceImpl<DefaultSysUserMapper, DefaultSysUser> implements ISysUserService,
-    ApplicationListener<UpdateUserEvent> {
+    BaseMpServiceImpl<DefaultSysUserMapper, DefaultSysUser>
+    implements ISysUserService, ApplicationListener<UpdateUserEvent> {
 
   @Autowired
   private PasswordEncoderWrapper encoderWrapper;
@@ -88,7 +88,7 @@ public class DefaultSysUserServiceImpl extends
 
   @Cacheable(value = DefaultSysUserDto.CACHE_NAME, key = "#id", unless = "#result == null")
   @Override
-  public DefaultSysUserDto getById(String id) {
+  public DefaultSysUserDto findById(String id) {
 
     return this.doGetById(id);
   }
@@ -161,7 +161,7 @@ public class DefaultSysUserServiceImpl extends
   @Override
   public void update(UpdateSysUserVo vo) {
 
-    DefaultSysUserDto data = this.getById(vo.getId());
+    DefaultSysUserDto data = this.findById(vo.getId());
     if (ObjectUtil.isNull(data)) {
       throw new DefaultClientException("用户不存在！");
     }
@@ -232,7 +232,7 @@ public class DefaultSysUserServiceImpl extends
 
   protected DefaultSysUserDto doGetById(String id) {
 
-    return getBaseMapper().getById(id);
+    return getBaseMapper().findById(id);
   }
 
   protected void doBatchEnable(List<String> ids) {
@@ -311,8 +311,8 @@ public class DefaultSysUserServiceImpl extends
             StringUtil.isBlank(vo.getDescription()) ? StringPool.EMPTY_STR : vo.getDescription());
 
     if (!StringUtil.isBlank(vo.getPassword())) {
-      updateWrapper
-          .set(DefaultSysUser::getPassword, encoderWrapper.getEncoder().encode(vo.getPassword()));
+      updateWrapper.set(DefaultSysUser::getPassword,
+          encoderWrapper.getEncoder().encode(vo.getPassword()));
     }
 
     if (!StringUtil.isBlank(vo.getEmail())) {
@@ -383,16 +383,19 @@ public class DefaultSysUserServiceImpl extends
 
     @Override
     public GenerateCodeType getType() {
+
       return new UserCodeType();
     }
 
     @Override
     protected int getCodeLength() {
+
       return 5;
     }
 
     @Override
     protected String getPreffix() {
+
       return "R";
     }
   }

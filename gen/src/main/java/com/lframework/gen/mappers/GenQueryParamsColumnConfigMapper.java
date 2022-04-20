@@ -30,5 +30,5 @@ public interface GenQueryParamsColumnConfigMapper extends BaseMapper<GenQueryPar
    * @param id
    * @return
    */
-  GenQueryParamsColumnConfigDto getById(String id);
+  GenQueryParamsColumnConfigDto findById(String id);
 }

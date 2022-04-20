@@ -43,9 +43,9 @@ public class SimpleDBController extends BaseController {
   @GetMapping("/tables")
   public InvokeResult<List<SimpleDBSelectorBo>> getTables(@Valid GetTablesVo vo) {
 
-    List<SimpleDBDto> datas =
-        (vo.getIsCurrentDb() != null && vo.getIsCurrentDb()) ? simpleDBService.getCurrentTables()
-            : simpleDBService.getTables(null);
+    List<SimpleDBDto> datas = (vo.getIsCurrentDb() != null && vo.getIsCurrentDb()) ?
+        simpleDBService.getCurrentTables() :
+        simpleDBService.getTables(null);
     List<SimpleDBSelectorBo> results = Collections.EMPTY_LIST;
     if (CollectionUtil.isNotEmpty(datas)) {
       results = datas.stream().map(SimpleDBSelectorBo::new).collect(Collectors.toList());

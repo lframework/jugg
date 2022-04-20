@@ -40,119 +40,135 @@ import org.apache.http.util.EntityUtils;
 @Slf4j
 public class HttpUtil {
 
+  public static final String CHARSET = "UTF-8";
   /**
    * 从连接池获取连接的timeout超出预设时间
    */
   private static final int DEFAULT_CONNECTION_REQUST_TIME_OUT = 3000;
-
   /**
    * 客户端和服务器建立连接的timeout
    */
   private static final int DEFAULT_CONNECT_TIME_OUT = 3000;
-
   /**
    * 客户端从服务器读取数据的timeout超出预期设定时间
    */
   private static final int DEFAULT_SOCKET_TIME_OUT = 30000;
 
-  public static final String CHARSET = "UTF-8";
-
   public static String doGet(String url, Map<String, Object> params) throws IOException {
 
     return doGet(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        DEFAULT_CONNECT_TIME_OUT, DEFAULT_SOCKET_TIME_OUT, null, null);
+        DEFAULT_CONNECT_TIME_OUT,
+        DEFAULT_SOCKET_TIME_OUT, null, null);
   }
 
   public static String doGet(String url, Map<String, Object> params, int socketTimeout)
       throws IOException {
 
     return doGet(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        DEFAULT_CONNECT_TIME_OUT, socketTimeout, null, null);
+        DEFAULT_CONNECT_TIME_OUT,
+        socketTimeout, null, null);
   }
 
   public static String doGet(String url, Map<String, Object> params, int connectionTimeout,
-      int socketTimeout) throws IOException {
+      int socketTimeout)
+      throws IOException {
 
     return doGet(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT, connectionTimeout,
-        socketTimeout, null, null);
+        socketTimeout,
+        null, null);
   }
 
   public static String doGet(String url, Map<String, Object> params, int connectionRequestTimeout,
       int connectionTimeout, int socketTimeout) throws IOException {
 
     return doGet(url, params, null, CHARSET, connectionRequestTimeout, connectionTimeout,
-        socketTimeout, null, null);
+        socketTimeout, null,
+        null);
   }
 
   public static String doGet(String url, Map<String, Object> params, Map<String, String> headers)
       throws IOException {
 
     return doGet(url, params, headers, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        DEFAULT_CONNECT_TIME_OUT, DEFAULT_SOCKET_TIME_OUT, null, null);
+        DEFAULT_CONNECT_TIME_OUT,
+        DEFAULT_SOCKET_TIME_OUT, null, null);
   }
 
   public static String doGet(String url, Map<String, Object> params, Map<String, String> headers,
-      int socketTimeout) throws IOException {
+      int socketTimeout)
+      throws IOException {
 
     return doGet(url, params, headers, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        DEFAULT_CONNECT_TIME_OUT, socketTimeout, null, null);
+        DEFAULT_CONNECT_TIME_OUT,
+        socketTimeout, null, null);
   }
 
   public static String doGet(String url, Map<String, Object> params, Map<String, String> headers,
       int connectionTimeout, int socketTimeout) throws IOException {
 
     return doGet(url, params, headers, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        connectionTimeout, socketTimeout, null, null);
+        connectionTimeout,
+        socketTimeout, null, null);
   }
 
   public static String doGet(String url, Map<String, Object> params, Map<String, String> headers,
       int connectionRequestTimeout, int connectionTimeout, int socketTimeout) throws IOException {
 
     return doGet(url, params, headers, CHARSET, connectionRequestTimeout, connectionTimeout,
-        socketTimeout, null, null);
+        socketTimeout, null,
+        null);
   }
 
   public static String doGet(String url, Map<String, Object> params, InputStream certStream,
-      String certPsw) throws IOException {
-
-    return doGet(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        DEFAULT_CONNECT_TIME_OUT, DEFAULT_SOCKET_TIME_OUT, certStream, certPsw);
-  }
-
-  public static String doGet(String url, Map<String, Object> params, InputStream certStream,
-      String certPsw, int socketTimeout) throws IOException {
-
-    return doGet(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        DEFAULT_CONNECT_TIME_OUT, socketTimeout, certStream, certPsw);
-  }
-
-  public static String doGet(String url, Map<String, Object> params, InputStream certStream,
-      String certPsw, int connectionTimeout, int socketTimeout) throws IOException {
-
-    return doGet(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT, connectionTimeout,
-        socketTimeout, certStream, certPsw);
-  }
-
-  public static String doGet(String url, Map<String, Object> params, InputStream certStream,
-      String certPsw, int connectionRequestTimeout, int connectionTimeout, int socketTimeout)
+      String certPsw)
       throws IOException {
 
-    return doGet(url, params, null, CHARSET, connectionRequestTimeout, connectionTimeout,
+    return doGet(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
+        DEFAULT_CONNECT_TIME_OUT,
+        DEFAULT_SOCKET_TIME_OUT, certStream, certPsw);
+  }
+
+  public static String doGet(String url, Map<String, Object> params, InputStream certStream,
+      String certPsw,
+      int socketTimeout) throws IOException {
+
+    return doGet(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
+        DEFAULT_CONNECT_TIME_OUT,
         socketTimeout, certStream, certPsw);
+  }
+
+  public static String doGet(String url, Map<String, Object> params, InputStream certStream,
+      String certPsw,
+      int connectionTimeout, int socketTimeout) throws IOException {
+
+    return doGet(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT, connectionTimeout,
+        socketTimeout,
+        certStream, certPsw);
+  }
+
+  public static String doGet(String url, Map<String, Object> params, InputStream certStream,
+      String certPsw,
+      int connectionRequestTimeout, int connectionTimeout, int socketTimeout) throws IOException {
+
+    return doGet(url, params, null, CHARSET, connectionRequestTimeout, connectionTimeout,
+        socketTimeout, certStream,
+        certPsw);
   }
 
   public static String doGet(String url, Map<String, Object> params, Map<String, String> headers,
       InputStream certStream, String certPsw) throws IOException {
 
     return doGet(url, params, headers, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        DEFAULT_CONNECT_TIME_OUT, DEFAULT_SOCKET_TIME_OUT, certStream, certPsw);
+        DEFAULT_CONNECT_TIME_OUT,
+        DEFAULT_SOCKET_TIME_OUT, certStream, certPsw);
   }
 
   public static String doGet(String url, Map<String, Object> params, Map<String, String> headers,
       InputStream certStream, String certPsw, int socketTimeout) throws IOException {
 
     return doGet(url, params, headers, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        DEFAULT_CONNECT_TIME_OUT, socketTimeout, certStream, certPsw);
+        DEFAULT_CONNECT_TIME_OUT,
+        socketTimeout, certStream, certPsw);
   }
 
   public static String doGet(String url, Map<String, Object> params, Map<String, String> headers,
@@ -160,7 +176,8 @@ public class HttpUtil {
       throws IOException {
 
     return doGet(url, params, headers, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        connectionTimeout, socketTimeout, certStream, certPsw);
+        connectionTimeout,
+        socketTimeout, certStream, certPsw);
   }
 
   public static String doGet(String url, Map<String, Object> params, Map<String, String> headers,
@@ -168,83 +185,100 @@ public class HttpUtil {
       int socketTimeout) throws IOException {
 
     return doGet(url, params, headers, CHARSET, connectionRequestTimeout, connectionTimeout,
-        socketTimeout, certStream, certPsw);
+        socketTimeout,
+        certStream, certPsw);
   }
 
   public static String doPost(String url, Map<String, Object> params) throws IOException {
 
     return doPost(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        DEFAULT_CONNECT_TIME_OUT, DEFAULT_SOCKET_TIME_OUT, null, null);
+        DEFAULT_CONNECT_TIME_OUT,
+        DEFAULT_SOCKET_TIME_OUT, null, null);
   }
 
   public static String doPost(String url, Map<String, Object> params, int socketTimeout)
       throws IOException {
 
     return doPost(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        DEFAULT_CONNECT_TIME_OUT, socketTimeout, null, null);
+        DEFAULT_CONNECT_TIME_OUT,
+        socketTimeout, null, null);
   }
 
   public static String doPost(String url, Map<String, Object> params, int connectionTimeout,
-      int socketTimeout) throws IOException {
+      int socketTimeout)
+      throws IOException {
 
     return doPost(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT, connectionTimeout,
-        socketTimeout, null, null);
+        socketTimeout,
+        null, null);
   }
 
   public static String doPost(String url, Map<String, Object> params, int connectionRequestTimeout,
       int connectionTimeout, int socketTimeout) throws IOException {
 
     return doPost(url, params, null, CHARSET, connectionRequestTimeout, connectionTimeout,
-        socketTimeout, null, null);
+        socketTimeout, null,
+        null);
   }
 
   public static String doPost(String url, Map<String, Object> params, Map<String, String> headers)
       throws IOException {
 
     return doPost(url, params, headers, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        DEFAULT_CONNECT_TIME_OUT, DEFAULT_SOCKET_TIME_OUT, null, null);
+        DEFAULT_CONNECT_TIME_OUT,
+        DEFAULT_SOCKET_TIME_OUT, null, null);
   }
 
   public static String doPost(String url, Map<String, Object> params, Map<String, String> headers,
-      int socketTimeout) throws IOException {
+      int socketTimeout)
+      throws IOException {
 
     return doPost(url, params, headers, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        DEFAULT_CONNECT_TIME_OUT, socketTimeout, null, null);
+        DEFAULT_CONNECT_TIME_OUT,
+        socketTimeout, null, null);
   }
 
   public static String doPost(String url, Map<String, Object> params, Map<String, String> headers,
       int connectionTimeout, int socketTimeout) throws IOException {
 
     return doPost(url, params, headers, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        connectionTimeout, socketTimeout, null, null);
+        connectionTimeout,
+        socketTimeout, null, null);
   }
 
   public static String doPost(String url, Map<String, Object> params, Map<String, String> headers,
       int connectionRequestTimeout, int connectionTimeout, int socketTimeout) throws IOException {
 
     return doPost(url, params, headers, CHARSET, connectionRequestTimeout, connectionTimeout,
-        socketTimeout, null, null);
+        socketTimeout, null,
+        null);
   }
 
   public static String doPost(String url, Map<String, Object> params, InputStream certStream,
-      String certPsw) throws IOException {
+      String certPsw)
+      throws IOException {
 
     return doPost(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        DEFAULT_CONNECT_TIME_OUT, DEFAULT_SOCKET_TIME_OUT, certStream, certPsw);
+        DEFAULT_CONNECT_TIME_OUT,
+        DEFAULT_SOCKET_TIME_OUT, certStream, certPsw);
   }
 
   public static String doPost(String url, Map<String, Object> params, int socketTimeout,
-      InputStream certStream, String certPsw) throws IOException {
+      InputStream certStream,
+      String certPsw) throws IOException {
 
     return doPost(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        DEFAULT_CONNECT_TIME_OUT, socketTimeout, certStream, certPsw);
+        DEFAULT_CONNECT_TIME_OUT,
+        socketTimeout, certStream, certPsw);
   }
 
   public static String doPost(String url, Map<String, Object> params, int connectionTimeout,
-      int socketTimeout, InputStream certStream, String certPsw) throws IOException {
+      int socketTimeout,
+      InputStream certStream, String certPsw) throws IOException {
 
     return doPost(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT, connectionTimeout,
-        socketTimeout, certStream, certPsw);
+        socketTimeout,
+        certStream, certPsw);
   }
 
   public static String doPost(String url, Map<String, Object> params, int connectionRequestTimeout,
@@ -252,21 +286,25 @@ public class HttpUtil {
       throws IOException {
 
     return doPost(url, params, null, CHARSET, connectionRequestTimeout, connectionTimeout,
-        socketTimeout, certStream, certPsw);
+        socketTimeout,
+        certStream, certPsw);
   }
 
   public static String doPost(String url, Map<String, Object> params, Map<String, String> headers,
       InputStream certStream, String certPsw) throws IOException {
 
     return doPost(url, params, headers, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        DEFAULT_CONNECT_TIME_OUT, DEFAULT_SOCKET_TIME_OUT, certStream, certPsw);
+        DEFAULT_CONNECT_TIME_OUT,
+        DEFAULT_SOCKET_TIME_OUT, certStream, certPsw);
   }
 
   public static String doPost(String url, Map<String, Object> params, Map<String, String> headers,
-      int socketTimeout, InputStream certStream, String certPsw) throws IOException {
+      int socketTimeout,
+      InputStream certStream, String certPsw) throws IOException {
 
     return doPost(url, params, headers, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        DEFAULT_CONNECT_TIME_OUT, socketTimeout, certStream, certPsw);
+        DEFAULT_CONNECT_TIME_OUT,
+        socketTimeout, certStream, certPsw);
   }
 
   public static String doPost(String url, Map<String, Object> params, Map<String, String> headers,
@@ -274,247 +312,308 @@ public class HttpUtil {
       throws IOException {
 
     return doPost(url, params, headers, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        connectionTimeout, socketTimeout, certStream, certPsw);
+        connectionTimeout,
+        socketTimeout, certStream, certPsw);
   }
 
   public static String doPost(String url, Map<String, Object> params, Map<String, String> headers,
       int connectionRequestTimeout, int connectionTimeout, int socketTimeout,
-      InputStream certStream, String certPsw) throws IOException {
+      InputStream certStream,
+      String certPsw) throws IOException {
 
     return doPost(url, params, headers, CHARSET, connectionRequestTimeout, connectionTimeout,
-        socketTimeout, certStream, certPsw);
+        socketTimeout,
+        certStream, certPsw);
   }
 
   public static String doPostJson(String url, Map<String, Object> params) throws IOException {
 
     return doPostJson(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        DEFAULT_CONNECT_TIME_OUT, DEFAULT_SOCKET_TIME_OUT, null, null);
+        DEFAULT_CONNECT_TIME_OUT,
+        DEFAULT_SOCKET_TIME_OUT, null, null);
   }
 
   public static String doPostJson(String url, Map<String, Object> params, int socketTimeout)
       throws IOException {
 
     return doPostJson(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        DEFAULT_CONNECT_TIME_OUT, socketTimeout, null, null);
+        DEFAULT_CONNECT_TIME_OUT,
+        socketTimeout, null, null);
   }
 
   public static String doPostJson(String url, Map<String, Object> params, int connectionTimeout,
-      int socketTimeout) throws IOException {
+      int socketTimeout)
+      throws IOException {
 
     return doPostJson(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        connectionTimeout, socketTimeout, null, null);
-  }
-
-  public static String doPostJson(String url, Map<String, Object> params,
-      int connectionRequestTimeout, int connectionTimeout, int socketTimeout) throws IOException {
-
-    return doPostJson(url, params, null, CHARSET, connectionRequestTimeout, connectionTimeout,
+        connectionTimeout,
         socketTimeout, null, null);
   }
 
   public static String doPostJson(String url, Map<String, Object> params,
-      Map<String, String> headers) throws IOException {
-
-    return doPostJson(url, params, headers, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        DEFAULT_CONNECT_TIME_OUT, DEFAULT_SOCKET_TIME_OUT, null, null);
-  }
-
-  public static String doPostJson(String url, Map<String, Object> params,
-      Map<String, String> headers, int socketTimeout) throws IOException {
-
-    return doPostJson(url, params, headers, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        DEFAULT_CONNECT_TIME_OUT, socketTimeout, null, null);
-  }
-
-  public static String doPostJson(String url, Map<String, Object> params,
-      Map<String, String> headers, int connectionTimeout, int socketTimeout) throws IOException {
-
-    return doPostJson(url, params, headers, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        connectionTimeout, socketTimeout, null, null);
-  }
-
-  public static String doPostJson(String url, Map<String, Object> params,
-      Map<String, String> headers, int connectionRequestTimeout, int connectionTimeout,
-      int socketTimeout) throws IOException {
-
-    return doPostJson(url, params, headers, CHARSET, connectionRequestTimeout, connectionTimeout,
-        socketTimeout, null, null);
-  }
-
-  public static String doPostJson(String url, Map<String, Object> params, InputStream certStream,
-      String certPsw) throws IOException {
-
-    return doPostJson(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        DEFAULT_CONNECT_TIME_OUT, DEFAULT_SOCKET_TIME_OUT, certStream, certPsw);
-  }
-
-  public static String doPostJson(String url, Map<String, Object> params, int socketTimeout,
-      InputStream certStream, String certPsw) throws IOException {
-
-    return doPostJson(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        DEFAULT_CONNECT_TIME_OUT, socketTimeout, certStream, certPsw);
-  }
-
-  public static String doPostJson(String url, Map<String, Object> params, int connectionTimeout,
-      int socketTimeout, InputStream certStream, String certPsw) throws IOException {
-
-    return doPostJson(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        connectionTimeout, socketTimeout, certStream, certPsw);
-  }
-
-  public static String doPostJson(String url, Map<String, Object> params,
-      int connectionRequestTimeout, int connectionTimeout, int socketTimeout,
-      InputStream certStream, String certPsw) throws IOException {
+      int connectionRequestTimeout,
+      int connectionTimeout, int socketTimeout) throws IOException {
 
     return doPostJson(url, params, null, CHARSET, connectionRequestTimeout, connectionTimeout,
-        socketTimeout, certStream, certPsw);
+        socketTimeout, null,
+        null);
   }
 
   public static String doPostJson(String url, Map<String, Object> params,
-      Map<String, String> headers, InputStream certStream, String certPsw) throws IOException {
-
-    return doPostJson(url, params, headers, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        DEFAULT_CONNECT_TIME_OUT, DEFAULT_SOCKET_TIME_OUT, certStream, certPsw);
-  }
-
-  public static String doPostJson(String url, Map<String, Object> params,
-      Map<String, String> headers, int socketTimeout, InputStream certStream, String certPsw)
+      Map<String, String> headers)
       throws IOException {
 
     return doPostJson(url, params, headers, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        DEFAULT_CONNECT_TIME_OUT, socketTimeout, certStream, certPsw);
+        DEFAULT_CONNECT_TIME_OUT,
+        DEFAULT_SOCKET_TIME_OUT, null, null);
   }
 
   public static String doPostJson(String url, Map<String, Object> params,
-      Map<String, String> headers, int connectionTimeout, int socketTimeout, InputStream certStream,
-      String certPsw) throws IOException {
+      Map<String, String> headers,
+      int socketTimeout) throws IOException {
 
     return doPostJson(url, params, headers, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        connectionTimeout, socketTimeout, certStream, certPsw);
+        DEFAULT_CONNECT_TIME_OUT,
+        socketTimeout, null, null);
   }
 
   public static String doPostJson(String url, Map<String, Object> params,
-      Map<String, String> headers, int connectionRequestTimeout, int connectionTimeout,
-      int socketTimeout, InputStream certStream, String certPsw) throws IOException {
+      Map<String, String> headers,
+      int connectionTimeout, int socketTimeout) throws IOException {
+
+    return doPostJson(url, params, headers, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
+        connectionTimeout,
+        socketTimeout, null, null);
+  }
+
+  public static String doPostJson(String url, Map<String, Object> params,
+      Map<String, String> headers,
+      int connectionRequestTimeout, int connectionTimeout, int socketTimeout) throws IOException {
 
     return doPostJson(url, params, headers, CHARSET, connectionRequestTimeout, connectionTimeout,
+        socketTimeout,
+        null, null);
+  }
+
+  public static String doPostJson(String url, Map<String, Object> params, InputStream certStream,
+      String certPsw)
+      throws IOException {
+
+    return doPostJson(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
+        DEFAULT_CONNECT_TIME_OUT,
+        DEFAULT_SOCKET_TIME_OUT, certStream, certPsw);
+  }
+
+  public static String doPostJson(String url, Map<String, Object> params, int socketTimeout,
+      InputStream certStream,
+      String certPsw) throws IOException {
+
+    return doPostJson(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
+        DEFAULT_CONNECT_TIME_OUT,
         socketTimeout, certStream, certPsw);
+  }
+
+  public static String doPostJson(String url, Map<String, Object> params, int connectionTimeout,
+      int socketTimeout,
+      InputStream certStream, String certPsw) throws IOException {
+
+    return doPostJson(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
+        connectionTimeout,
+        socketTimeout, certStream, certPsw);
+  }
+
+  public static String doPostJson(String url, Map<String, Object> params,
+      int connectionRequestTimeout,
+      int connectionTimeout, int socketTimeout, InputStream certStream, String certPsw)
+      throws IOException {
+
+    return doPostJson(url, params, null, CHARSET, connectionRequestTimeout, connectionTimeout,
+        socketTimeout,
+        certStream, certPsw);
+  }
+
+  public static String doPostJson(String url, Map<String, Object> params,
+      Map<String, String> headers,
+      InputStream certStream, String certPsw) throws IOException {
+
+    return doPostJson(url, params, headers, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
+        DEFAULT_CONNECT_TIME_OUT,
+        DEFAULT_SOCKET_TIME_OUT, certStream, certPsw);
+  }
+
+  public static String doPostJson(String url, Map<String, Object> params,
+      Map<String, String> headers,
+      int socketTimeout, InputStream certStream, String certPsw) throws IOException {
+
+    return doPostJson(url, params, headers, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
+        DEFAULT_CONNECT_TIME_OUT,
+        socketTimeout, certStream, certPsw);
+  }
+
+  public static String doPostJson(String url, Map<String, Object> params,
+      Map<String, String> headers,
+      int connectionTimeout, int socketTimeout, InputStream certStream, String certPsw)
+      throws IOException {
+
+    return doPostJson(url, params, headers, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
+        connectionTimeout,
+        socketTimeout, certStream, certPsw);
+  }
+
+  public static String doPostJson(String url, Map<String, Object> params,
+      Map<String, String> headers,
+      int connectionRequestTimeout, int connectionTimeout, int socketTimeout,
+      InputStream certStream,
+      String certPsw) throws IOException {
+
+    return doPostJson(url, params, headers, CHARSET, connectionRequestTimeout, connectionTimeout,
+        socketTimeout,
+        certStream, certPsw);
   }
 
   public static String doPostXml(String url, Map<String, Object> params) throws IOException {
 
     return doPostXml(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        DEFAULT_CONNECT_TIME_OUT, DEFAULT_SOCKET_TIME_OUT, null, null);
+        DEFAULT_CONNECT_TIME_OUT,
+        DEFAULT_SOCKET_TIME_OUT, null, null);
   }
 
   public static String doPostXml(String url, Map<String, Object> params, int socketTimeout)
       throws IOException {
 
     return doPostXml(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        DEFAULT_CONNECT_TIME_OUT, socketTimeout, null, null);
+        DEFAULT_CONNECT_TIME_OUT,
+        socketTimeout, null, null);
   }
 
   public static String doPostXml(String url, Map<String, Object> params, int connectionTimeout,
-      int socketTimeout) throws IOException {
+      int socketTimeout)
+      throws IOException {
 
     return doPostXml(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        connectionTimeout, socketTimeout, null, null);
-  }
-
-  public static String doPostXml(String url, Map<String, Object> params,
-      int connectionRequestTimeout, int connectionTimeout, int socketTimeout) throws IOException {
-
-    return doPostXml(url, params, null, CHARSET, connectionRequestTimeout, connectionTimeout,
+        connectionTimeout,
         socketTimeout, null, null);
   }
 
   public static String doPostXml(String url, Map<String, Object> params,
-      Map<String, String> headers) throws IOException {
-
-    return doPostXml(url, params, headers, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        DEFAULT_CONNECT_TIME_OUT, DEFAULT_SOCKET_TIME_OUT, null, null);
-  }
-
-  public static String doPostXml(String url, Map<String, Object> params,
-      Map<String, String> headers, int socketTimeout) throws IOException {
-
-    return doPostXml(url, params, headers, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        DEFAULT_CONNECT_TIME_OUT, socketTimeout, null, null);
-  }
-
-  public static String doPostXml(String url, Map<String, Object> params,
-      Map<String, String> headers, int connectionTimeout, int socketTimeout) throws IOException {
-
-    return doPostXml(url, params, headers, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        connectionTimeout, socketTimeout, null, null);
-  }
-
-  public static String doPostXml(String url, Map<String, Object> params,
-      Map<String, String> headers, int connectionRequestTimeout, int connectionTimeout,
-      int socketTimeout) throws IOException {
-
-    return doPostXml(url, params, headers, CHARSET, connectionRequestTimeout, connectionTimeout,
-        socketTimeout, null, null);
-  }
-
-  public static String doPostXml(String url, Map<String, Object> params, InputStream certStream,
-      String certPsw) throws IOException {
-
-    return doPostXml(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        DEFAULT_CONNECT_TIME_OUT, DEFAULT_SOCKET_TIME_OUT, certStream, certPsw);
-  }
-
-  public static String doPostXml(String url, Map<String, Object> params, int socketTimeout,
-      InputStream certStream, String certPsw) throws IOException {
-
-    return doPostXml(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        DEFAULT_CONNECT_TIME_OUT, socketTimeout, certStream, certPsw);
-  }
-
-  public static String doPostXml(String url, Map<String, Object> params, int connectionTimeout,
-      int socketTimeout, InputStream certStream, String certPsw) throws IOException {
-
-    return doPostXml(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        connectionTimeout, socketTimeout, certStream, certPsw);
-  }
-
-  public static String doPostXml(String url, Map<String, Object> params,
-      int connectionRequestTimeout, int connectionTimeout, int socketTimeout,
-      InputStream certStream, String certPsw) throws IOException {
+      int connectionRequestTimeout,
+      int connectionTimeout, int socketTimeout) throws IOException {
 
     return doPostXml(url, params, null, CHARSET, connectionRequestTimeout, connectionTimeout,
-        socketTimeout, certStream, certPsw);
+        socketTimeout, null,
+        null);
   }
 
   public static String doPostXml(String url, Map<String, Object> params,
-      Map<String, String> headers, InputStream certStream, String certPsw) throws IOException {
-
-    return doPostXml(url, params, headers, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        DEFAULT_CONNECT_TIME_OUT, DEFAULT_SOCKET_TIME_OUT, certStream, certPsw);
-  }
-
-  public static String doPostXml(String url, Map<String, Object> params,
-      Map<String, String> headers, int socketTimeout, InputStream certStream, String certPsw)
+      Map<String, String> headers)
       throws IOException {
 
     return doPostXml(url, params, headers, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        DEFAULT_CONNECT_TIME_OUT, socketTimeout, certStream, certPsw);
+        DEFAULT_CONNECT_TIME_OUT,
+        DEFAULT_SOCKET_TIME_OUT, null, null);
   }
 
   public static String doPostXml(String url, Map<String, Object> params,
-      Map<String, String> headers, int connectionTimeout, int socketTimeout, InputStream certStream,
-      String certPsw) throws IOException {
+      Map<String, String> headers,
+      int socketTimeout) throws IOException {
 
     return doPostXml(url, params, headers, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
-        connectionTimeout, socketTimeout, certStream, certPsw);
+        DEFAULT_CONNECT_TIME_OUT,
+        socketTimeout, null, null);
   }
 
   public static String doPostXml(String url, Map<String, Object> params,
-      Map<String, String> headers, int connectionRequestTimeout, int connectionTimeout,
-      int socketTimeout, InputStream certStream, String certPsw) throws IOException {
+      Map<String, String> headers,
+      int connectionTimeout, int socketTimeout) throws IOException {
+
+    return doPostXml(url, params, headers, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
+        connectionTimeout,
+        socketTimeout, null, null);
+  }
+
+  public static String doPostXml(String url, Map<String, Object> params,
+      Map<String, String> headers,
+      int connectionRequestTimeout, int connectionTimeout, int socketTimeout) throws IOException {
 
     return doPostXml(url, params, headers, CHARSET, connectionRequestTimeout, connectionTimeout,
+        socketTimeout,
+        null, null);
+  }
+
+  public static String doPostXml(String url, Map<String, Object> params, InputStream certStream,
+      String certPsw)
+      throws IOException {
+
+    return doPostXml(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
+        DEFAULT_CONNECT_TIME_OUT,
+        DEFAULT_SOCKET_TIME_OUT, certStream, certPsw);
+  }
+
+  public static String doPostXml(String url, Map<String, Object> params, int socketTimeout,
+      InputStream certStream,
+      String certPsw) throws IOException {
+
+    return doPostXml(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
+        DEFAULT_CONNECT_TIME_OUT,
         socketTimeout, certStream, certPsw);
+  }
+
+  public static String doPostXml(String url, Map<String, Object> params, int connectionTimeout,
+      int socketTimeout,
+      InputStream certStream, String certPsw) throws IOException {
+
+    return doPostXml(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
+        connectionTimeout,
+        socketTimeout, certStream, certPsw);
+  }
+
+  public static String doPostXml(String url, Map<String, Object> params,
+      int connectionRequestTimeout,
+      int connectionTimeout, int socketTimeout, InputStream certStream, String certPsw)
+      throws IOException {
+
+    return doPostXml(url, params, null, CHARSET, connectionRequestTimeout, connectionTimeout,
+        socketTimeout,
+        certStream, certPsw);
+  }
+
+  public static String doPostXml(String url, Map<String, Object> params,
+      Map<String, String> headers,
+      InputStream certStream, String certPsw) throws IOException {
+
+    return doPostXml(url, params, headers, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
+        DEFAULT_CONNECT_TIME_OUT,
+        DEFAULT_SOCKET_TIME_OUT, certStream, certPsw);
+  }
+
+  public static String doPostXml(String url, Map<String, Object> params,
+      Map<String, String> headers,
+      int socketTimeout, InputStream certStream, String certPsw) throws IOException {
+
+    return doPostXml(url, params, headers, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
+        DEFAULT_CONNECT_TIME_OUT,
+        socketTimeout, certStream, certPsw);
+  }
+
+  public static String doPostXml(String url, Map<String, Object> params,
+      Map<String, String> headers,
+      int connectionTimeout, int socketTimeout, InputStream certStream, String certPsw)
+      throws IOException {
+
+    return doPostXml(url, params, headers, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
+        connectionTimeout,
+        socketTimeout, certStream, certPsw);
+  }
+
+  public static String doPostXml(String url, Map<String, Object> params,
+      Map<String, String> headers,
+      int connectionRequestTimeout, int connectionTimeout, int socketTimeout,
+      InputStream certStream,
+      String certPsw) throws IOException {
+
+    return doPostXml(url, params, headers, CHARSET, connectionRequestTimeout, connectionTimeout,
+        socketTimeout,
+        certStream, certPsw);
   }
 
   /**
@@ -526,8 +625,10 @@ public class HttpUtil {
    * @return 页面内容
    */
   public static String doGet(String url, Map<String, Object> requestParams,
-      Map<String, String> headers, String charset, int connectionRequestTimeout, int connectTimeout,
-      int socketTimeout, InputStream certStream, String certPsw) throws IOException {
+      Map<String, String> headers,
+      String charset, int connectionRequestTimeout, int connectTimeout, int socketTimeout,
+      InputStream certStream,
+      String certPsw) throws IOException {
 
     SimpleMap<String, Object> params = new SimpleMap<>(requestParams);
     if (StringUtil.isBlank(url)) {
@@ -555,7 +656,8 @@ public class HttpUtil {
     }
 
     CloseableHttpClient httpClient = buildHttpClient(certStream, certPsw, connectionRequestTimeout,
-        connectTimeout, socketTimeout);
+        connectTimeout,
+        socketTimeout);
 
     @Cleanup CloseableHttpResponse response = httpClient.execute(httpGet);
     int statusCode = response.getStatusLine().getStatusCode();
@@ -589,8 +691,10 @@ public class HttpUtil {
    * @throws IOException
    */
   public static String doPost(String url, Map<String, Object> requestParams,
-      Map<String, String> headers, String charset, int connectionRequestTimeout, int connectTimeout,
-      int socketTimeout, InputStream certStream, String certPsw) throws IOException {
+      Map<String, String> headers,
+      String charset, int connectionRequestTimeout, int connectTimeout, int socketTimeout,
+      InputStream certStream,
+      String certPsw) throws IOException {
 
     SimpleMap<String, Object> params = new SimpleMap<>(requestParams);
     if (StringUtil.isBlank(url)) {
@@ -620,7 +724,8 @@ public class HttpUtil {
     }
 
     CloseableHttpClient httpClient = buildHttpClient(certStream, certPsw, connectionRequestTimeout,
-        connectTimeout, socketTimeout);
+        connectTimeout,
+        socketTimeout);
 
     @Cleanup CloseableHttpResponse response = httpClient.execute(httpPost);
 
@@ -644,8 +749,10 @@ public class HttpUtil {
   }
 
   public static String doPostJson(String url, Map<String, Object> params,
-      Map<String, String> headers, String charset, int connectionRequestTimeout, int connectTimeout,
-      int socketTimeout, InputStream certStream, String certPsw) throws IOException {
+      Map<String, String> headers, String charset,
+      int connectionRequestTimeout, int connectTimeout, int socketTimeout, InputStream certStream,
+      String certPsw)
+      throws IOException {
 
     if (StringUtil.isBlank(url)) {
       throw new IllegalArgumentException("url不能为空！");
@@ -665,7 +772,8 @@ public class HttpUtil {
     }
 
     CloseableHttpClient httpClient = buildHttpClient(certStream, certPsw, connectionRequestTimeout,
-        connectTimeout, socketTimeout);
+        connectTimeout,
+        socketTimeout);
 
     @Cleanup CloseableHttpResponse response = httpClient.execute(httpPost);
 
@@ -689,8 +797,10 @@ public class HttpUtil {
   }
 
   public static String doPostXml(String url, Map<String, Object> params,
-      Map<String, String> headers, String charset, int connectionRequestTimeout, int connectTimeout,
-      int socketTimeout, InputStream certStream, String certPsw) throws IOException {
+      Map<String, String> headers, String charset,
+      int connectionRequestTimeout, int connectTimeout, int socketTimeout, InputStream certStream,
+      String certPsw)
+      throws IOException {
 
     if (StringUtil.isBlank(url)) {
       throw new IllegalArgumentException("url不能为空！");
@@ -711,7 +821,8 @@ public class HttpUtil {
     }
 
     CloseableHttpClient httpClient = buildHttpClient(certStream, certPsw, connectionRequestTimeout,
-        connectTimeout, socketTimeout);
+        connectTimeout,
+        socketTimeout);
 
     @Cleanup CloseableHttpResponse response = httpClient.execute(httpPost);
 
@@ -754,7 +865,8 @@ public class HttpUtil {
         sslContext.init(kmf.getKeyManagers(), null, new SecureRandom());
 
         SSLConnectionSocketFactory sslConnectionSocketFactory = new SSLConnectionSocketFactory(
-            sslContext, new String[]{"TLSv1"}, null, new DefaultHostnameVerifier());
+            sslContext,
+            new String[]{"TLSv1"}, null, new DefaultHostnameVerifier());
 
         connManager = new BasicHttpClientConnectionManager(
             RegistryBuilder.<ConnectionSocketFactory>create()
@@ -769,8 +881,8 @@ public class HttpUtil {
       }
 
       RequestConfig config = RequestConfig.custom()
-          .setConnectionRequestTimeout(connectionRequestTimeout).setConnectTimeout(connectTimeout)
-          .setSocketTimeout(socketTimeout).build();
+          .setConnectionRequestTimeout(connectionRequestTimeout)
+          .setConnectTimeout(connectTimeout).setSocketTimeout(socketTimeout).build();
       CloseableHttpClient httpClient = HttpClientBuilder.create().setDefaultRequestConfig(config)
           .setConnectionManager(connManager).build();
 

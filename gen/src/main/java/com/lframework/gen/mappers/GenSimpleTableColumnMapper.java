@@ -31,7 +31,7 @@ public interface GenSimpleTableColumnMapper extends BaseMapper<GenSimpleTableCol
    * @param id
    * @return
    */
-  SimpleTableColumnDto getById(String id);
+  SimpleTableColumnDto findById(String id);
 
   /**
    * 根据创建Vo查询

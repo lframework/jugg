@@ -26,7 +26,7 @@ public interface ISysPositionService extends BaseMpService<DefaultSysPosition> {
    * @param id
    * @return
    */
-  DefaultSysPositionDto getById(String id);
+  DefaultSysPositionDto findById(String id);
 
   /**
    * 选择器

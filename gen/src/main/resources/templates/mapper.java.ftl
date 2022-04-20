@@ -5,8 +5,6 @@ import ${packageName}.entity.${className};
 <#if queryParams??>
 import ${packageName}.vo.${moduleName}.${bizName}.Query${className}Vo;
 </#if>
-import ${packageName}.dto.${moduleName}.${bizName}.${className}Dto;
-
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -28,11 +26,6 @@ public interface ${className}Mapper extends BaseMapper<${className}> {
      * @param vo
      * @return
      */
-    List${r"<"}${className}Dto${r">"} query(@Param("vo") Query${className}Vo vo);
+    List${r"<"}${className}${r">"} query(@Param("vo") Query${className}Vo vo);
     </#if>
-
-    /**
-     * 根据ID查询
-     */
-    ${className}Dto getById(<#list keys as key>@Param("${key.name}") ${key.type} ${key.name}<#if key_index != keys?size - 1>, </#if></#list>);
 }

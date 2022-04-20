@@ -9,9 +9,11 @@ import lombok.EqualsAndHashCode;
 public class BasePrintDataBo<T extends BaseDto> extends BaseBo<T> {
 
   public BasePrintDataBo() {
+
   }
 
   public BasePrintDataBo(T dto) {
+
     super(dto);
   }
 }

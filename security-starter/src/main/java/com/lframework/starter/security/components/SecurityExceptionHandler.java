@@ -39,6 +39,7 @@ public class SecurityExceptionHandler extends WebExceptionHandler {
 
   @ExceptionHandler(NotPermissionException.class)
   public Response notPermissionException(NotPermissionException e, HandlerMethod method) {
+
     this.logException(e, method);
 
     BaseException ex = new AccessDeniedException();

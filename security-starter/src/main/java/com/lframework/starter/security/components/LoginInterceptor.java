@@ -15,12 +15,14 @@ public class LoginInterceptor implements HandlerInterceptor {
   private PermitAllService permitAllService;
 
   public LoginInterceptor(PermitAllService permitAllService) {
+
     this.permitAllService = permitAllService;
   }
 
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
       throws Exception {
+
     if (permitAllService.isMatch(request)) {
       log.debug("uri={}，无需登录验证", request.getRequestURI());
       return true;

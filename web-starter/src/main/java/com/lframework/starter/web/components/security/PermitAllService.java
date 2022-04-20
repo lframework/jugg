@@ -29,6 +29,7 @@ public class PermitAllService {
 
   @PostConstruct
   public void init() {
+
     List<Entry<HttpMethod, String>> results = new ArrayList<>();
     if (StringUtil.isNotEmpty(this.filterUrl)) {
       String[] filterUrls = filterUrl.split(",");

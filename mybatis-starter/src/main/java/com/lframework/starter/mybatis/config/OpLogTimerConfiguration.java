@@ -16,8 +16,11 @@ import org.springframework.stereotype.Component;
 public class OpLogTimerConfiguration implements ApplicationListener<ApplicationReadyEvent> {
 
   private static final String JOB_NAME = "OP_LOG_TIMER";
+
   private static final String JOB_GROUP_NAME = "OP_LOG_TIMER_GROUP";
+
   private static final String TRIGGER_NAME = "OP_LOG_TIMER_TRIGGER";
+
   private static final String TRIGGER_GROUP_NAME = "OP_LOG_TIMER_TRIGGER_GROUP";
 
   @Value("${op-logs.enabled:'true'}")
@@ -25,6 +28,7 @@ public class OpLogTimerConfiguration implements ApplicationListener<ApplicationR
 
   @Override
   public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
+
     JobDetail jobDetail = QrtzHandler.getJob(JOB_NAME, JOB_GROUP_NAME);
     if (jobDetail == null) {
       // 没有任务
@@ -32,9 +36,9 @@ public class OpLogTimerConfiguration implements ApplicationListener<ApplicationR
         return;
       }
 
-      QrtzHandler
-          .addJob(JOB_NAME, JOB_GROUP_NAME, OpLogClearJob.class, TRIGGER_NAME, TRIGGER_GROUP_NAME,
-              "0 0 * * * ? *");
+      QrtzHandler.addJob(JOB_NAME, JOB_GROUP_NAME, OpLogClearJob.class, TRIGGER_NAME,
+          TRIGGER_GROUP_NAME,
+          "0 0 * * * ? *");
     } else {
       if (!this.enabled) {
         QrtzHandler.deleteJob(JOB_NAME, JOB_GROUP_NAME, TRIGGER_NAME, TRIGGER_GROUP_NAME);
@@ -55,6 +59,7 @@ public class OpLogTimerConfiguration implements ApplicationListener<ApplicationR
 
     @Override
     public void onExecute(JobExecutionContext context) {
+
       LocalDateTime now = LocalDateTime.now();
       LocalDateTime endTime = now.minusDays(retainDays);
 

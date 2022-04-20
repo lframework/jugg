@@ -57,7 +57,7 @@
         ORDER BY create_time DESC
     </select>
 
-    <select id="getById" resultMap="OpLogsDto">
+    <select id="findById" resultMap="OpLogsDto">
         <include refid="OpLogsDto_sql"/>
         WHERE id = #{id}
     </select>

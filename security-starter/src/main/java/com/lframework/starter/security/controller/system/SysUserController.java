@@ -82,7 +82,7 @@ public class SysUserController extends DefaultBaseController {
   @GetMapping
   public InvokeResult<GetSysUserBo> get(@NotBlank(message = "ID不能为空！") String id) {
 
-    DefaultSysUserDto data = sysUserService.getById(id);
+    DefaultSysUserDto data = sysUserService.findById(id);
     if (data == null) {
       throw new DefaultClientException("用户不存在！");
     }
@@ -152,6 +152,7 @@ public class SysUserController extends DefaultBaseController {
   @PreAuthorize("@permission.valid('system:user:modify')")
   @PatchMapping("unlock")
   public InvokeResult<Void> unlock(@NotBlank(message = "ID不能为空！") String id) {
+
     userService.unlockById(id);
 
     return InvokeResultBuilder.success();

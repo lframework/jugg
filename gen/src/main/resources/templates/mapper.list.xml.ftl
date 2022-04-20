@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="${packageName}.mappers.${className}Mapper">
 
-    <resultMap id="${className}Dto" type="${packageName}.dto.${moduleName}.${bizName}.${className}Dto">
+    <resultMap id="${className}" type="${packageName}.entity.${className}">
         <#list entity.columns as column>
             <#if column.isKey>
         <id column="${column.columnName}" property="${column.name}"/>
@@ -12,7 +12,7 @@
         </#list>
     </resultMap>
 
-    <sql id="${className}Dto_sql">
+    <sql id="${className}_sql">
         SELECT
         <#list entity.columns as column>
             tb.${column.columnName}<#if column_index != entity.columns?size - 1>,</#if>
@@ -21,8 +21,8 @@
     </sql>
 
     <#if queryParams??>
-    <select id="query" resultMap="${className}Dto">
-        <include refid="${className}Dto_sql"/>
+    <select id="query" resultMap="${className}">
+        <include refid="${className}_sql"/>
         <where>
             <#list queryParams.columns as column>
                 <#if column.viewType == 6>
@@ -46,13 +46,4 @@
         </#if>
     </select>
     </#if>
-
-    <select id="getById" resultMap="${className}Dto">
-        <include refid="${className}Dto_sql"/>
-        <where>
-            <#list keys as key>
-            AND tb.${key.columnName} = ${r"#{"}${key.name}${r"}"}
-            </#list>
-        </where>
-    </select>
 </mapper>

@@ -19,37 +19,40 @@ public class AliSmsServiceImpl implements IAliSmsService {
   private Client client;
 
   public AliSmsServiceImpl(Client client) {
+
     this.client = client;
   }
 
   @Override
   public SendSmsResponseBody send(String phoneNumbers, String signName, String templateCode) {
+
     return send(phoneNumbers, signName, templateCode, null, null, null);
   }
 
   @Override
   public SendSmsResponseBody send(String phoneNumbers, String signName, String templateCode,
       Map<String, Object> templateParam) {
+
     return send(phoneNumbers, signName, templateCode, templateParam, null, null);
   }
 
   @Override
   public SendSmsResponseBody send(String phoneNumbers, String signName, String templateCode,
       Map<String, Object> templateParam, String smsUpExtendCode) {
+
     return send(phoneNumbers, signName, templateCode, templateParam, smsUpExtendCode, null);
   }
 
   @Override
   public SendSmsResponseBody send(String phoneNumbers, String signName, String templateCode,
       Map<String, Object> templateParam, String smsUpExtendCode, String outId) {
-    SendSmsRequest sendSmsRequest = new SendSmsRequest()
-        .setPhoneNumbers(phoneNumbers)
+
+    SendSmsRequest sendSmsRequest = new SendSmsRequest().setPhoneNumbers(phoneNumbers)
         .setSignName(signName)
         .setTemplateCode(templateCode)
         .setTemplateParam(
             CollectionUtil.isEmpty(templateParam) ? null : JsonUtil.toJsonString(templateParam))
-        .setSmsUpExtendCode(smsUpExtendCode)
-        .setOutId(outId);
+        .setSmsUpExtendCode(smsUpExtendCode).setOutId(outId);
 
     if (log.isDebugEnabled()) {
       log.debug(

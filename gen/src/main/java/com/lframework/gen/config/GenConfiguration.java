@@ -17,12 +17,13 @@ public class GenConfiguration {
 
     // 除了描述 其他全与info保持一致
     ApiInfo apiInfo = new ApiInfo(info.getTitle(), "代码生成模块", info.getVersion(),
-        info.getTermsOfServiceUrl(), info.getContact(), info.getLicense(), info.getLicenseUrl(),
-        info.getVendorExtensions());
+        info.getTermsOfServiceUrl(),
+        info.getContact(), info.getLicense(), info.getLicenseUrl(), info.getVendorExtensions());
 
     Docket docket = new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo).groupName("代码生成")
-        .select().apis(RequestHandlerSelectors.basePackage("com.lframework.gen"))
-        .paths(PathSelectors.any()).build()
+        .select()
+        .apis(RequestHandlerSelectors.basePackage("com.lframework.gen")).paths(PathSelectors.any())
+        .build()
         .extensions(openApiExtensionResolver.buildSettingExtensions());
     return docket;
   }

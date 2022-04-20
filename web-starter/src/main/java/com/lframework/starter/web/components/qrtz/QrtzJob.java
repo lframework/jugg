@@ -14,6 +14,7 @@ public abstract class QrtzJob implements Job {
 
   @Override
   public void execute(JobExecutionContext context) throws JobExecutionException {
+
     log.info("开始执行定时任务【{}】", this.getClass().getName());
 
     try {

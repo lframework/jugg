@@ -20,6 +20,7 @@ public class DefaultSnowFlakeGenerator extends AbstractSnowFlakeGenerator implem
 
   @Override
   public boolean isSpecial() {
+
     return true;
   }
 }

@@ -74,7 +74,7 @@ public class SysDeptController extends DefaultBaseController {
   @GetMapping
   public InvokeResult<GetSysDeptBo> get(@NotBlank(message = "ID不能为空！") String id) {
 
-    DefaultSysDeptDto data = sysDeptService.getById(id);
+    DefaultSysDeptDto data = sysDeptService.findById(id);
     if (data == null) {
       throw new DefaultClientException("部门不存在！");
     }

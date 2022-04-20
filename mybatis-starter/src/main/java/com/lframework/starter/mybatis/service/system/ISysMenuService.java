@@ -39,7 +39,7 @@ public interface ISysMenuService extends BaseMpService<DefaultSysMenu> {
    * @param id
    * @return
    */
-  DefaultSysMenuDto getById(String id);
+  DefaultSysMenuDto findById(String id);
 
   /**
    * 创建系统菜单

@@ -28,7 +28,7 @@ public interface IDataObjectService extends BaseMpService<GenDataObject> {
    * @param id
    * @return
    */
-  DataObjectDto getById(String id);
+  DataObjectDto findById(String id);
 
   /**
    * 创建数据对象

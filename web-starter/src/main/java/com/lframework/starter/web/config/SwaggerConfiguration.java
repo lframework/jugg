@@ -22,6 +22,7 @@ public class SwaggerConfiguration implements WebMvcConfigurer {
 
   @Override
   public void addResourceHandlers(ResourceHandlerRegistry registry) {
+
     registry.addResourceHandler("doc.html").addResourceLocations("classpath:/META-INF/resources/");
     registry.addResourceHandler("/webjars/**")
         .addResourceLocations("classpath:/META-INF/resources/webjars/");
@@ -30,6 +31,7 @@ public class SwaggerConfiguration implements WebMvcConfigurer {
   @Bean
   @ConditionalOnProperty(value = "knife4j.enable", matchIfMissing = true)
   public SwaggerReadyListener swaggerReadyListener() {
+
     return new SwaggerReadyListener();
   }
 
@@ -42,14 +44,15 @@ public class SwaggerConfiguration implements WebMvcConfigurer {
     @SneakyThrows
     @Override
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
+
       log.info("\n----------------------------------------------------------\n\t"
               + "Application '{}' 已启动！ 访问地址：\n\t" + "Local： \thttp://localhost:{}\n\t"
               + "External： \thttp://{}:{}\n\t" + "Doc: \thttp://{}:{}/doc.html\n"
               + "----------------------------------------------------------",
           ApplicationUtil.getProperty("spring.application.name"),
-          ApplicationUtil.getProperty("server.port"), InetAddress.getLocalHost().getHostAddress(),
-          ApplicationUtil.getProperty("server.port"), InetAddress.getLocalHost().getHostAddress(),
-          ApplicationUtil.getProperty("server.port"));
+          ApplicationUtil.getProperty("server.port"),
+          InetAddress.getLocalHost().getHostAddress(), ApplicationUtil.getProperty("server.port"),
+          InetAddress.getLocalHost().getHostAddress(), ApplicationUtil.getProperty("server.port"));
     }
   }
 }

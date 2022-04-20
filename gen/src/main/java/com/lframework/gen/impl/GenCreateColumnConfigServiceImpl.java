@@ -17,9 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class GenCreateColumnConfigServiceImpl extends
-    BaseMpServiceImpl<GenCreateColumnConfigMapper, GenCreateColumnConfig> implements
-    IGenCreateColumnConfigService {
+public class GenCreateColumnConfigServiceImpl
+    extends BaseMpServiceImpl<GenCreateColumnConfigMapper, GenCreateColumnConfig>
+    implements IGenCreateColumnConfigService {
 
 
   @Autowired
@@ -33,8 +33,8 @@ public class GenCreateColumnConfigServiceImpl extends
       return Collections.EMPTY_LIST;
     }
 
-    return getBaseMapper()
-        .getByIds(columns.stream().map(GenDataObjectColumnDto::getId).collect(Collectors.toList()));
+    return getBaseMapper().getByIds(
+        columns.stream().map(GenDataObjectColumnDto::getId).collect(Collectors.toList()));
   }
 
   @Transactional
@@ -43,9 +43,8 @@ public class GenCreateColumnConfigServiceImpl extends
 
     List<GenDataObjectColumnDto> columns = dataObjectColumnService.getByDataObjId(dataObjId);
     if (!CollectionUtil.isEmpty(columns)) {
-      getBaseMapper()
-          .deleteBatchIds(
-              columns.stream().map(GenDataObjectColumnDto::getId).collect(Collectors.toList()));
+      getBaseMapper().deleteBatchIds(
+          columns.stream().map(GenDataObjectColumnDto::getId).collect(Collectors.toList()));
     }
 
     if (!CollectionUtil.isEmpty(vo)) {
@@ -62,9 +61,9 @@ public class GenCreateColumnConfigServiceImpl extends
   }
 
   @Override
-  public GenCreateColumnConfigDto getById(String id) {
+  public GenCreateColumnConfigDto findById(String id) {
 
-    return getBaseMapper().getById(id);
+    return getBaseMapper().findById(id);
   }
 
   @Transactional

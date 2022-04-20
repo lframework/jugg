@@ -52,7 +52,8 @@ public class UploadUtil {
    * @return
    */
   public static String upload(MultipartFile file, String baseLocation, List<String> locations,
-      String fileName, String baseUrl) {
+      String fileName,
+      String baseUrl) {
 
     Assert.notNull(file);
     Assert.notBlank(baseLocation);
@@ -71,8 +72,9 @@ public class UploadUtil {
       baseUrl = baseUrl + "/";
     }
     //文件全路径 比如/upload/datas/2022/01/01/
-    String fullPath = baseLocation + (CollectionUtil.isEmpty(locations) ? StringPool.EMPTY_STR
-        : CollectionUtil.join(locations, File.separator)) + File.separator;
+    String fullPath = baseLocation + (CollectionUtil.isEmpty(locations) ?
+        StringPool.EMPTY_STR :
+        CollectionUtil.join(locations, File.separator)) + File.separator;
 
     // 扩展名 比如jpg
     String suffix = FileUtil.getSuffix(file.getOriginalFilename());
@@ -89,8 +91,9 @@ public class UploadUtil {
       throw new DefaultSysException(e.getMessage());
     }
 
-    return baseUrl + (CollectionUtil.isEmpty(locations) ? StringPool.EMPTY_STR
-        : CollectionUtil.join(locations, "/") + "/") + fullFileName;
+    return baseUrl + (CollectionUtil.isEmpty(locations) ?
+        StringPool.EMPTY_STR :
+        CollectionUtil.join(locations, "/") + "/") + fullFileName;
   }
 
   /**
@@ -99,6 +102,7 @@ public class UploadUtil {
    * @return
    */
   private static List<String> getDefaultLocations() {
+
     LocalDate now = LocalDate.now();
     List<String> locations = new ArrayList<>();
     locations.add(DateUtil.formatDate(now, "yyyy"));

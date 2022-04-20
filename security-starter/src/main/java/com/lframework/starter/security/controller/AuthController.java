@@ -115,6 +115,7 @@ public class AuthController extends SecurityController {
   @ApiOperation(value = "获取登录初始化参数", notes = "用于初始化登录页面")
   @GetMapping(StringPool.AUTH_INIT_URL)
   public InvokeResult<AuthInitBo> getInit() {
+
     SysConfigDto data = sysConfigService.get();
 
     return InvokeResultBuilder.success(new AuthInitBo(data));
@@ -123,6 +124,7 @@ public class AuthController extends SecurityController {
   @ApiOperation(value = "注册")
   @PostMapping(StringPool.AUTH_REGIST_URL)
   public InvokeResult<Void> regist(@Valid RegistUserVo vo) {
+
     SysConfigDto config = sysConfigService.get();
     if (!config.getAllowRegist()) {
       throw new DefaultClientException("系统不允许注册账户！");
@@ -168,6 +170,7 @@ public class AuthController extends SecurityController {
   @ApiOperation("登录")
   @PostMapping(StringPool.LOGIN_API_URL)
   public InvokeResult<LoginDto> login(@Valid LoginVo vo) {
+
     String username = vo.getUsername();
     String password = vo.getPassword();
 

@@ -49,8 +49,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class DataObjectServiceImpl extends
-    BaseMpServiceImpl<GenDataObjectMapper, GenDataObject> implements IDataObjectService {
+public class DataObjectServiceImpl extends BaseMpServiceImpl<GenDataObjectMapper, GenDataObject>
+    implements IDataObjectService {
 
   @Autowired
   private IDataObjectColumnService dataObjectColumnService;
@@ -84,9 +84,9 @@ public class DataObjectServiceImpl extends
   }
 
   @Override
-  public DataObjectDto getById(@NonNull String id) {
+  public DataObjectDto findById(@NonNull String id) {
 
-    return getBaseMapper().getById(id);
+    return getBaseMapper().findById(id);
   }
 
   @Transactional
@@ -191,24 +191,24 @@ public class DataObjectServiceImpl extends
     GenGenerateInfoDto generateInfo = generateInfoService.getByDataObjId(id);
     result.setGenerateInfo(generateInfo);
 
-    List<GenCreateColumnConfigDto> createColumnConfigDtos = genCreateColumnConfigService
-        .getByDataObjId(id);
+    List<GenCreateColumnConfigDto> createColumnConfigDtos = genCreateColumnConfigService.getByDataObjId(
+        id);
     result.setCreateConfigs(createColumnConfigDtos);
 
-    List<GenUpdateColumnConfigDto> updateColumnConfigDtos = genUpdateColumnConfigService
-        .getByDataObjId(id);
+    List<GenUpdateColumnConfigDto> updateColumnConfigDtos = genUpdateColumnConfigService.getByDataObjId(
+        id);
     result.setUpdateConfigs(updateColumnConfigDtos);
 
-    List<GenQueryColumnConfigDto> queryColumnConfigDtos = genQueryColumnConfigService
-        .getByDataObjId(id);
+    List<GenQueryColumnConfigDto> queryColumnConfigDtos = genQueryColumnConfigService.getByDataObjId(
+        id);
     result.setQueryConfigs(queryColumnConfigDtos);
 
-    List<GenQueryParamsColumnConfigDto> queryParamsColumnConfigDtos = genQueryParamsColumnConfigService
-        .getByDataObjId(id);
+    List<GenQueryParamsColumnConfigDto> queryParamsColumnConfigDtos = genQueryParamsColumnConfigService.getByDataObjId(
+        id);
     result.setQueryParamsConfigs(queryParamsColumnConfigDtos);
 
-    List<GenDetailColumnConfigDto> detailColumnConfigDtos = genDetailColumnConfigService
-        .getByDataObjId(id);
+    List<GenDetailColumnConfigDto> detailColumnConfigDtos = genDetailColumnConfigService.getByDataObjId(
+        id);
     result.setDetailConfigs(detailColumnConfigDtos);
 
     return result;
@@ -238,7 +238,8 @@ public class DataObjectServiceImpl extends
   @Transactional
   @Override
   public void setStatus(String id, DataObjectGenStatus status) {
-    DataObjectDto record = this.getById(id);
+
+    DataObjectDto record = this.findById(id);
     if (record == null) {
       throw new DefaultClientException("数据对象不存在！");
     }

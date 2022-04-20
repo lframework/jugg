@@ -22,6 +22,22 @@ public enum GenDataType implements BaseEnum<Integer> {
     this.desc = desc;
   }
 
+  /**
+   * 是否是数字类型
+   *
+   * @param type
+   * @return
+   */
+  public static Boolean isNumberType(GenDataType type) {
+
+    if (type == null) {
+      return false;
+    }
+
+    return type == INTEGER || type == SHORT || type == LONG || type == DOUBLE
+        || type == BIG_DECIMAL;
+  }
+
   @Override
   public Integer getCode() {
 
@@ -32,20 +48,5 @@ public enum GenDataType implements BaseEnum<Integer> {
   public String getDesc() {
 
     return this.desc;
-  }
-
-  /**
-   * 是否是数字类型
-   *
-   * @param type
-   * @return
-   */
-  public static Boolean isNumberType(GenDataType type) {
-    if (type == null) {
-      return false;
-    }
-
-    return type == INTEGER || type == SHORT || type == LONG || type == DOUBLE
-        || type == BIG_DECIMAL;
   }
 }

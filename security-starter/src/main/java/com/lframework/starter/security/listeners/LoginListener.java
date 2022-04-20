@@ -14,6 +14,7 @@ public class LoginListener implements ApplicationListener<LoginEvent> {
 
   @Override
   public void onApplicationEvent(LoginEvent loginEvent) {
+
     AbstractUserDetails currentUser = SecurityUtil.getCurrentUser();
     CreateOpLogsVo vo = new CreateOpLogsVo();
     vo.setName("用户登录");

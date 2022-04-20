@@ -59,7 +59,7 @@
         AND c.TABLE_NAME = #{tableName}
         ORDER BY c.ORDINAL_POSITION
     </select>
-    <select id="getById" resultMap="SimpleTableColumnDto">
+    <select id="findById" resultMap="SimpleTableColumnDto">
         <include refid="SimpleTableColumnDto_sql"/>
         WHERE id = #{id}
     </select>

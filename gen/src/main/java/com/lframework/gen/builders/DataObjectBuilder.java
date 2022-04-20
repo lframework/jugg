@@ -57,7 +57,7 @@ public class DataObjectBuilder {
   public DataObject build(String id) {
 
     // 根据ID查询数据对象
-    DataObjectDto dataObject = dataObjectService.getById(id);
+    DataObjectDto dataObject = dataObjectService.findById(id);
     DataObject result = new DataObject();
     result.setId(dataObject.getId());
     result.setCode(dataObject.getCode());
@@ -103,11 +103,11 @@ public class DataObjectBuilder {
         result.setOrderType(column.getOrderType());
       }
 
-      result.setCreateConfig(genCreateColumnConfigService.getById(column.getId()));
-      result.setUpdateConfig(genUpdateColumnConfigService.getById(column.getId()));
-      result.setQueryConfig(genQueryColumnConfigService.getById(column.getId()));
-      result.setQueryParamsConfig(genQueryParamsColumnConfigService.getById(column.getId()));
-      result.setDetailConfig(genDetailColumnConfigService.getById(column.getId()));
+      result.setCreateConfig(genCreateColumnConfigService.findById(column.getId()));
+      result.setUpdateConfig(genUpdateColumnConfigService.findById(column.getId()));
+      result.setQueryConfig(genQueryColumnConfigService.findById(column.getId()));
+      result.setQueryParamsConfig(genQueryParamsColumnConfigService.findById(column.getId()));
+      result.setDetailConfig(genDetailColumnConfigService.findById(column.getId()));
 
       results.add(result);
     }

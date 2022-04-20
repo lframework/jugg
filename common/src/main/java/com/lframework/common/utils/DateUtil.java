@@ -75,6 +75,7 @@ public class DateUtil extends cn.hutool.core.date.DateUtil {
   }
 
   public static long getTime(Date date) {
+
     return date.getTime();
   }
 }

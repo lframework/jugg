@@ -78,7 +78,7 @@ public class SysRoleController extends DefaultBaseController {
   @GetMapping
   public InvokeResult<GetSysRoleBo> get(@NotBlank(message = "ID不能为空！") String id) {
 
-    DefaultSysRoleDto data = sysRoleService.getById(id);
+    DefaultSysRoleDto data = sysRoleService.findById(id);
     if (data == null) {
       throw new DefaultClientException("角色不存在！");
     }

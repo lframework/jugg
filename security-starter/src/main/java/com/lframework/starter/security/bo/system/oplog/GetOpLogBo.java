@@ -80,7 +80,7 @@ public class GetOpLogBo extends BaseBo<DefaultOpLogsDto> {
     this.logType = dto.getLogType().getCode();
 
     IUserService userService = ApplicationUtil.getBean(IUserService.class);
-    UserDto createBy = userService.getById(dto.getCreateBy());
+    UserDto createBy = userService.findById(dto.getCreateBy());
     this.createBy = createBy.getName();
   }
 }

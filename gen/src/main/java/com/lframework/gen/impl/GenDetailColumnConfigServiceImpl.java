@@ -17,9 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class GenDetailColumnConfigServiceImpl extends
-    BaseMpServiceImpl<GenDetailColumnConfigMapper, GenDetailColumnConfig> implements
-    IGenDetailColumnConfigService {
+public class GenDetailColumnConfigServiceImpl
+    extends BaseMpServiceImpl<GenDetailColumnConfigMapper, GenDetailColumnConfig>
+    implements IGenDetailColumnConfigService {
 
   @Autowired
   private IDataObjectColumnService dataObjectColumnService;
@@ -32,8 +32,8 @@ public class GenDetailColumnConfigServiceImpl extends
       return Collections.EMPTY_LIST;
     }
 
-    return getBaseMapper()
-        .getByIds(columns.stream().map(GenDataObjectColumnDto::getId).collect(Collectors.toList()));
+    return getBaseMapper().getByIds(
+        columns.stream().map(GenDataObjectColumnDto::getId).collect(Collectors.toList()));
   }
 
   @Transactional
@@ -42,9 +42,8 @@ public class GenDetailColumnConfigServiceImpl extends
 
     List<GenDataObjectColumnDto> columns = dataObjectColumnService.getByDataObjId(dataObjId);
     if (!CollectionUtil.isEmpty(columns)) {
-      getBaseMapper()
-          .deleteBatchIds(
-              columns.stream().map(GenDataObjectColumnDto::getId).collect(Collectors.toList()));
+      getBaseMapper().deleteBatchIds(
+          columns.stream().map(GenDataObjectColumnDto::getId).collect(Collectors.toList()));
     }
 
     if (!CollectionUtil.isEmpty(vo)) {
@@ -61,9 +60,9 @@ public class GenDetailColumnConfigServiceImpl extends
   }
 
   @Override
-  public GenDetailColumnConfigDto getById(String id) {
+  public GenDetailColumnConfigDto findById(String id) {
 
-    return getBaseMapper().getById(id);
+    return getBaseMapper().findById(id);
   }
 
   @Transactional

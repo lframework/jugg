@@ -21,8 +21,8 @@ public class ReflectUtil extends cn.hutool.core.util.ReflectUtil {
 
     // 从lambda信息取出method、field、class等
     String fieldName = serializedLambda.getImplMethodName().substring("get".length());
-    fieldName = fieldName
-        .replaceFirst(fieldName.charAt(0) + "", (fieldName.charAt(0) + "").toLowerCase());
+    fieldName = fieldName.replaceFirst(fieldName.charAt(0) + "",
+        (fieldName.charAt(0) + "").toLowerCase());
 
     // 从field取出字段名，可以根据实际情况调整
     return fieldName.replaceAll("[A-Z]", "$0");

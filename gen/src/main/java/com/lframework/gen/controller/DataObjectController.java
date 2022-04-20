@@ -80,8 +80,8 @@ public class DataObjectController extends DefaultBaseController {
     if (CollectionUtil.isNotEmpty(datas)) {
       results = datas.stream().map(QueryDataObjectBo::new).collect(Collectors.toList());
       for (QueryDataObjectBo result : results) {
-        UserDto createBy = userService.getById(result.getCreateBy());
-        UserDto updateBy = userService.getById(result.getUpdateBy());
+        UserDto createBy = userService.findById(result.getCreateBy());
+        UserDto updateBy = userService.findById(result.getUpdateBy());
         result.setCreateBy(createBy.getName());
         result.setUpdateBy(updateBy.getName());
       }
@@ -95,7 +95,7 @@ public class DataObjectController extends DefaultBaseController {
   @GetMapping
   public InvokeResult<GetDataObjectBo> get(@NotBlank(message = "ID不能为空！") String id) {
 
-    DataObjectDto data = dataObjectService.getById(id);
+    DataObjectDto data = dataObjectService.findById(id);
 
     return InvokeResultBuilder.success(new GetDataObjectBo(data));
   }

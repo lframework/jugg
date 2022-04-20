@@ -50,7 +50,7 @@
         </where>
         ORDER BY code
     </select>
-    <select id="getById" resultMap="DataObjectDto">
+    <select id="findById" resultMap="DataObjectDto">
         <include refid="DataObjectDto_sql"/>
         WHERE id = #{id}
     </select>

@@ -30,5 +30,5 @@ public interface GenCreateColumnConfigMapper extends BaseMapper<GenCreateColumnC
    * @param id
    * @return
    */
-  GenCreateColumnConfigDto getById(String id);
+  GenCreateColumnConfigDto findById(String id);
 }

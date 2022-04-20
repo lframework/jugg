@@ -21,8 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class SimpleTableServiceImpl extends
-    BaseMpServiceImpl<GenSimpleTableMapper, GenSimpleTable> implements ISimpleTableService {
+public class SimpleTableServiceImpl extends BaseMpServiceImpl<GenSimpleTableMapper, GenSimpleTable>
+    implements ISimpleTableService {
 
   @Autowired
   private ISimpleTableColumnService simpleTableColumnService;

@@ -86,8 +86,8 @@ public class QuerySysPositionBo extends BaseBo<DefaultSysPositionDto> {
 
     IUserService userService = ApplicationUtil.getBean(IUserService.class);
 
-    UserDto createBy = userService.getById(this.getCreateBy());
-    UserDto updateBy = userService.getById(this.getUpdateBy());
+    UserDto createBy = userService.findById(this.getCreateBy());
+    UserDto updateBy = userService.findById(this.getUpdateBy());
     this.setCreateBy(createBy.getName());
     this.setUpdateBy(updateBy.getName());
   }

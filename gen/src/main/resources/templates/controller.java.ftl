@@ -15,7 +15,6 @@ import ${packageName}.bo.${moduleName}.${bizName}.Query${className}Bo;
 <#if queryParams??>
 import ${packageName}.vo.${moduleName}.${bizName}.Query${className}Vo;
 </#if>
-import ${packageName}.dto.${moduleName}.${bizName}.${className}Dto;
 import ${packageName}.service.${moduleName}.I${className}Service;
 <#if create??>
 import ${packageName}.vo.${moduleName}.${bizName}.Create${className}Vo;
@@ -23,6 +22,7 @@ import ${packageName}.vo.${moduleName}.${bizName}.Create${className}Vo;
 <#if update??>
 import ${packageName}.vo.${moduleName}.${bizName}.Update${className}Vo;
 </#if>
+import ${packageName}.entity.${className};
 <#if importPackages??>
     <#list importPackages as p>
 import ${p};
@@ -65,9 +65,9 @@ public class ${className}Controller extends DefaultBaseController {
     @GetMapping("/query")
     public ${r"InvokeResult<PageResult<"}Query${className}${r"Bo>>"} query(@Valid Query${className}Vo vo) {
 
-        PageResult${r"<"}${className}Dto${r">"} pageResult = ${classNameProperty}Service.query(getPageIndex(vo), getPageSize(vo), vo);
+        PageResult${r"<"}${className}${r">"} pageResult = ${classNameProperty}Service.query(getPageIndex(vo), getPageSize(vo), vo);
 
-        List${r"<"}${className}Dto${r">"} datas = pageResult.getDatas();
+        List${r"<"}${className}${r">"} datas = pageResult.getDatas();
         List${r"<"}Query${className}Bo${r">"} results = null;
 
         if (!CollectionUtil.isEmpty(datas)) {
@@ -88,7 +88,7 @@ public class ${className}Controller extends DefaultBaseController {
     @GetMapping
     public ${r"InvokeResult<Get"}${className}${r"Bo>"} get(<#if keys[0].type == 'String'>@NotBlank<#else>@NotNull</#if>(message = "${keys[0].name}不能为空！") ${keys[0].type} ${keys[0].name}) {
 
-        ${className}Dto data = ${classNameProperty}Service.getById(${keys[0].name});
+        ${className} data = ${classNameProperty}Service.getById(${keys[0].name});
         if (data == null) {
             throw new DefaultClientException("${classDescription}不存在！");
         }

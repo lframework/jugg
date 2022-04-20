@@ -29,7 +29,7 @@ public interface ISysUserService extends BaseMpService<DefaultSysUser> {
    * @param id
    * @return
    */
-  DefaultSysUserDto getById(String id);
+  DefaultSysUserDto findById(String id);
 
   /**
    * 批量启用

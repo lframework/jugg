@@ -43,7 +43,7 @@
         </where>
         ORDER BY code
     </select>
-    <select id="getById" resultMap="SysPositionDto">
+    <select id="findById" resultMap="SysPositionDto">
         <include refid="SysPositionDto_sql"/>
         WHERE id = #{id}
     </select>

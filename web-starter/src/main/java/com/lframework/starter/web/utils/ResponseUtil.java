@@ -32,9 +32,7 @@ public class ResponseUtil {
    */
   public static HttpServletResponse getResponse() {
 
-    HttpServletResponse response = ((ServletRequestAttributes) (RequestContextHolder
-        .currentRequestAttributes()))
-        .getResponse();
+    HttpServletResponse response = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getResponse();
 
     return response;
   }

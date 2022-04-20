@@ -25,7 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 public class DefaultSysRoleMenuServiceImpl extends
-    BaseMpServiceImpl<DefaultSysRoleMenuMapper, DefaultSysRoleMenu> implements ISysRoleMenuService {
+    BaseMpServiceImpl<DefaultSysRoleMenuMapper, DefaultSysRoleMenu>
+    implements ISysRoleMenuService {
 
   @Autowired
   private ISysRoleService sysRoleService;
@@ -40,7 +41,7 @@ public class DefaultSysRoleMenuServiceImpl extends
   public void setting(SysRoleMenuSettingVo vo) {
 
     for (String roleId : vo.getRoleIds()) {
-      DefaultSysRoleDto role = sysRoleService.getById(roleId);
+      DefaultSysRoleDto role = sysRoleService.findById(roleId);
       if (ObjectUtil.isNull(role)) {
         throw new DefaultClientException("角色不存在！");
       }
@@ -65,7 +66,7 @@ public class DefaultSysRoleMenuServiceImpl extends
       Set<String> menuIdSet = new HashSet<>(menuIds);
 
       for (String menuId : menuIdSet) {
-        DefaultSysMenuDto menu = sysMenuService.getById(menuId);
+        DefaultSysMenuDto menu = sysMenuService.findById(menuId);
         if (ObjectUtil.isNull(menu)) {
           throw new DefaultClientException("菜单不存在，请检查！");
         }

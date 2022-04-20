@@ -17,9 +17,9 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 
-public class DefaultSysUserPositionServiceImpl extends
-    BaseMpServiceImpl<DefaultSysUserPositionMapper, DefaultSysUserPosition> implements
-    ISysUserPositionService {
+public class DefaultSysUserPositionServiceImpl
+    extends BaseMpServiceImpl<DefaultSysUserPositionMapper, DefaultSysUserPosition>
+    implements ISysUserPositionService {
 
   @OpLog(type = OpLogType.OTHER, name = "用户设置岗位，用户ID：{}，岗位ID：{}", params = {"#vo.userId",
       "#vo.positionId"})
@@ -42,8 +42,8 @@ public class DefaultSysUserPositionServiceImpl extends
 
   protected void doSetting(SysUserPositionSettingVo vo) {
 
-    Wrapper<DefaultSysUserPosition> deleteWrapper = Wrappers
-        .lambdaQuery(DefaultSysUserPosition.class)
+    Wrapper<DefaultSysUserPosition> deleteWrapper = Wrappers.lambdaQuery(
+            DefaultSysUserPosition.class)
         .eq(DefaultSysUserPosition::getUserId, vo.getUserId());
     getBaseMapper().delete(deleteWrapper);
 

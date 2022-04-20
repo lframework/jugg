@@ -106,9 +106,9 @@ public class GenDataObjectColumnBo extends BaseBo<GenDataObjectColumnDto> {
   @Override
   public <A> BaseBo<GenDataObjectColumnDto> convert(GenDataObjectColumnDto dto) {
 
-    return super
-        .convert(dto, GenDataObjectColumnBo::getDataType, GenDataObjectColumnBo::getViewType,
-            GenDataObjectColumnBo::getOrderType);
+    return super.convert(dto, GenDataObjectColumnBo::getDataType,
+        GenDataObjectColumnBo::getViewType,
+        GenDataObjectColumnBo::getOrderType);
   }
 
   @Override

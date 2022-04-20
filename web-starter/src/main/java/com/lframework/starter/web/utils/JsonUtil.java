@@ -94,6 +94,7 @@ public class JsonUtil {
   }
 
   public static boolean isJson(String jsonStr) {
+
     if (StringUtil.isBlank(jsonStr)) {
       return false;
     }

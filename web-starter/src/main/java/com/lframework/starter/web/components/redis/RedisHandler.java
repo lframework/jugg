@@ -202,6 +202,7 @@ public class RedisHandler {
    * @return
    */
   public Map<String, Object> hgetAll(String key) {
+
     Assert.notNull(key);
 
     return redisTemplate.opsForHash().entries(key);

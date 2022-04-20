@@ -1,5 +1,6 @@
 package com.lframework.starter.mybatis.vo.system.position;
 
+import com.lframework.starter.web.components.validation.IsCode;
 import com.lframework.starter.web.vo.BaseVo;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
@@ -23,6 +24,7 @@ public class UpdateSysPositionVo implements BaseVo, Serializable {
    * 岗位编号
    */
   @ApiModelProperty("岗位编号")
+  @IsCode
   @NotBlank(message = "请输入编号！")
   private String code;
 

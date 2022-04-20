@@ -39,6 +39,7 @@ public class RequestUtil {
    * @return
    */
   public static Map<String, String> getHeaders() {
+
     HttpServletRequest request = getRequest();
 
     Enumeration<String> headerNames = request.getHeaderNames();

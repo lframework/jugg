@@ -3,6 +3,7 @@ package com.lframework.gen.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lframework.gen.enums.GenQueryType;
 import com.lframework.starter.mybatis.entity.BaseEntity;
+import com.lframework.starter.web.dto.BaseDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -17,7 +18,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("gen_query_params_column_config")
-public class GenQueryParamsColumnConfig extends BaseEntity {
+public class GenQueryParamsColumnConfig extends BaseEntity implements BaseDto {
 
   private static final long serialVersionUID = 1L;
 

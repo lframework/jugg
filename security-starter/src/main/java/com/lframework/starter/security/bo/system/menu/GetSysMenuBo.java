@@ -120,7 +120,7 @@ public class GetSysMenuBo extends BaseBo<DefaultSysMenuDto> {
     this.display = dto.getDisplay().getCode();
     if (!StringUtil.isBlank(dto.getParentId())) {
       ISysMenuService sysMenuService = ApplicationUtil.getBean(ISysMenuService.class);
-      this.parentName = sysMenuService.getById(dto.getParentId()).getTitle();
+      this.parentName = sysMenuService.findById(dto.getParentId()).getTitle();
     }
 
   }

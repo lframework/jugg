@@ -14,10 +14,8 @@ import lombok.Data;
 @Data
 public class SysConfigDto implements BaseDto, Serializable {
 
-  private static final long serialVersionUID = 1L;
-
   public static final String CACHE_NAME = "SysConfigDto";
-
+  private static final long serialVersionUID = 1L;
   /**
    * ID
    */

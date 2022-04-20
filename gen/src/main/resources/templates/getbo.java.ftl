@@ -3,7 +3,7 @@ package ${packageName}.bo.${moduleName}.${bizName};
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lframework.common.constants.StringPool;
 import com.lframework.starter.web.bo.BaseBo;
-import ${packageName}.dto.${moduleName}.${bizName}.${className}Dto;
+import ${packageName}.entity.${className};
 <#if importPackages??>
     <#list importPackages as p>
 import ${p};
@@ -24,7 +24,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class Get${className}Bo extends BaseBo${r"<"}${className}Dto${r">"} {
+public class Get${className}Bo extends BaseBo${r"<"}${className}${r">"} {
 
     /**
      * ${keys[0].description}
@@ -53,20 +53,20 @@ public class Get${className}Bo extends BaseBo${r"<"}${className}Dto${r">"} {
 
     }
 
-    public Get${className}Bo(${className}Dto dto) {
+    public Get${className}Bo(${className} dto) {
 
         super(dto);
     }
 
     <#if hasFixEnum>
     @Override
-    public BaseBo${r"<"}${className}Dto${r">"} convert(${className}Dto dto) {
+    public BaseBo${r"<"}${className}${r">"} convert(${className} dto) {
 
         return super.convert(dto<#list columns as column><#if column.fixEnum>, Get${className}Bo::get${column.nameProperty}</#if></#list>);
     }
 
     @Override
-    protected void afterInit(${className}Dto dto) {
+    protected void afterInit(${className} dto) {
 
         <#list columns as column>
             <#if column.fixEnum>

@@ -21,8 +21,8 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 @Slf4j
 public class QrtzHandler {
 
-  private static final SchedulerFactoryBean SCHEDULER_FACTORY = ApplicationUtil
-      .getBean(SchedulerFactoryBean.class);
+  private static final SchedulerFactoryBean SCHEDULER_FACTORY = ApplicationUtil.getBean(
+      SchedulerFactoryBean.class);
 
   public static void addJob(Class<? extends QrtzJob> jobClass, String cron,
       Map<String, String> jobDatas) {
@@ -37,6 +37,7 @@ public class QrtzHandler {
 
   public static void addJob(String jobName, String jobGroupName, Class<? extends QrtzJob> jobClass,
       String triggerName, String triggerGroupName, String cron) {
+
     addJob(jobName, jobGroupName, jobClass, triggerName, triggerGroupName, cron, null);
   }
 
@@ -53,6 +54,7 @@ public class QrtzHandler {
    */
   public static void addJob(String jobName, String jobGroupName, Class<? extends QrtzJob> jobClass,
       String triggerName, String triggerGroupName, String cron, Map<String, String> jobDatas) {
+
     try {
       Scheduler sched = SCHEDULER_FACTORY.getScheduler();
       JobBuilder jobBuilder = JobBuilder.newJob(jobClass);
@@ -92,6 +94,7 @@ public class QrtzHandler {
    * @return
    */
   public static CronTrigger getTrigger(String triggerName, String triggerGroupName) {
+
     try {
       Scheduler sched = SCHEDULER_FACTORY.getScheduler();
       TriggerKey triggerKey = TriggerKey.triggerKey(triggerName, triggerGroupName);
@@ -112,6 +115,7 @@ public class QrtzHandler {
    * @return
    */
   public static JobDetail getJob(String jobName, String jobGroupName) {
+
     try {
       Scheduler sched = SCHEDULER_FACTORY.getScheduler();
       JobDetail jobDetail = sched.getJobDetail(JobKey.jobKey(jobName, jobGroupName));
@@ -130,6 +134,7 @@ public class QrtzHandler {
    * @param cron             cron表达式
    */
   public static void updateJobCron(String triggerName, String triggerGroupName, String cron) {
+
     try {
       Scheduler sched = SCHEDULER_FACTORY.getScheduler();
       CronTrigger trigger = getTrigger(triggerName, triggerGroupName);
@@ -160,8 +165,9 @@ public class QrtzHandler {
    * @param triggerName      触发器名称
    * @param triggerGroupName 触发器组名称
    */
-  public static void deleteJob(String jobName, String jobGroupName,
-      String triggerName, String triggerGroupName) {
+  public static void deleteJob(String jobName, String jobGroupName, String triggerName,
+      String triggerGroupName) {
+
     try {
       Scheduler sched = SCHEDULER_FACTORY.getScheduler();
 
@@ -180,6 +186,7 @@ public class QrtzHandler {
    * 启动所有任务
    */
   public static void startJobs() {
+
     try {
       Scheduler sched = SCHEDULER_FACTORY.getScheduler();
       sched.start();
@@ -193,6 +200,7 @@ public class QrtzHandler {
    * 关闭所有任务
    */
   public static void shutdownJobs() {
+
     try {
       Scheduler sched = SCHEDULER_FACTORY.getScheduler();
       if (!sched.isShutdown()) {
@@ -210,6 +218,7 @@ public class QrtzHandler {
    * @throws SchedulerException
    */
   public static void safeShutdown() throws SchedulerException {
+
     int executingJobSize = SCHEDULER_FACTORY.getScheduler().getCurrentlyExecutingJobs().size();
     log.info("当前运行任务个数：{}，等待完成后关闭", executingJobSize);
     SCHEDULER_FACTORY.getScheduler().shutdown(true);

@@ -32,7 +32,7 @@ public interface DefaultSysUserMapper extends BaseMapper<DefaultSysUser> {
    * @param id
    * @return
    */
-  DefaultSysUserDto getById(String id);
+  DefaultSysUserDto findById(String id);
 
   /**
    * 选择器

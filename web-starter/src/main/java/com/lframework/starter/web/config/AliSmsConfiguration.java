@@ -17,8 +17,8 @@ public class AliSmsConfiguration {
   @ConditionalOnMissingBean(IAliSmsService.class)
   public IAliSmsService getAliSmsService(AliSmsProperties properties) throws Exception {
 
-    Client client = AliSmsUtil
-        .createClient(properties.getAccessKeyId(), properties.getAccessKeySecret());
+    Client client = AliSmsUtil.createClient(properties.getAccessKeyId(),
+        properties.getAccessKeySecret());
     return new AliSmsServiceImpl(client);
   }
 }

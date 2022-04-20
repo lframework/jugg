@@ -12,6 +12,7 @@ public class CronUtil {
    * @return
    */
   public static String getDateTimeCron(LocalDateTime dateTime) {
+
     return dateTime.getSecond() + " " + dateTime.getMinute() + " " + dateTime.getHour() + " "
         + dateTime.getDayOfMonth() + " " + dateTime.getMonthValue() + " ? " + dateTime.getYear();
   }
@@ -23,6 +24,7 @@ public class CronUtil {
    * @return
    */
   public static String getDateCron(LocalDate date) {
+
     return "0 0 0 " + date.getDayOfMonth() + " " + date.getMonthValue() + " ? " + date.getYear();
   }
 
@@ -33,6 +35,7 @@ public class CronUtil {
    * @return
    */
   public static String getDateMaxCron(LocalDate date) {
+
     return "59 59 23 " + date.getDayOfMonth() + " " + date.getMonthValue() + " ? " + date.getYear();
   }
 }

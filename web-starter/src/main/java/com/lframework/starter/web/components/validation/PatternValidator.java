@@ -26,8 +26,9 @@ public class PatternValidator implements ConstraintValidator<Pattern, Object> {
   @Override
   public boolean isValid(Object value, ConstraintValidatorContext context) {
 
-    return value == null || (value instanceof CharSequence && StringUtil
-        .isEmpty((CharSequence) value)) || RegUtil
-        .isMatch(java.util.regex.Pattern.compile(this.regExp), StringUtil.toString(value));
+    return value == null || (value instanceof CharSequence && StringUtil.isEmpty(
+        (CharSequence) value))
+        || RegUtil.isMatch(java.util.regex.Pattern.compile(this.regExp),
+        StringUtil.toString(value));
   }
 }

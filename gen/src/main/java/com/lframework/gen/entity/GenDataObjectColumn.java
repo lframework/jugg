@@ -5,6 +5,7 @@ import com.lframework.gen.enums.GenDataType;
 import com.lframework.gen.enums.GenOrderType;
 import com.lframework.gen.enums.GenViewType;
 import com.lframework.starter.mybatis.entity.BaseEntity;
+import com.lframework.starter.web.dto.BaseDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -19,7 +20,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("gen_data_object_column")
-public class GenDataObjectColumn extends BaseEntity {
+public class GenDataObjectColumn extends BaseEntity implements BaseDto {
 
   private static final long serialVersionUID = 1L;
 

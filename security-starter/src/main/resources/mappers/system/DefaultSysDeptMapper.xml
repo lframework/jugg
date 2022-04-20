@@ -28,7 +28,7 @@
         <include refid="SysDeptDto_sql"/>
         ORDER BY code
     </select>
-    <select id="getById" resultMap="SysDeptDto">
+    <select id="findById" resultMap="SysDeptDto">
         <include refid="SysDeptDto_sql"/>
         WHERE id = #{id}
     </select>

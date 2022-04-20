@@ -21,8 +21,9 @@ public class FormatDirective implements TemplateDirectiveModel {
 
   @Override
   public void execute(Environment env, @SuppressWarnings("rawtypes") Map params,
-      TemplateModel[] loopVars, TemplateDirectiveBody body)
-      throws TemplateException, IOException {
+      TemplateModel[] loopVars,
+      TemplateDirectiveBody body) throws TemplateException, IOException {
+
     FormatWriter writer = new FormatWriter(env.getOut(),
         env.getCurrentDirectiveCallPlace().getBeginColumn());
     body.render(writer);
@@ -55,21 +56,25 @@ public class FormatDirective implements TemplateDirectiveModel {
     private List<Character> writeChars = new ArrayList<>();
 
     public FormatWriter(Writer out, int column) {
+
       this.out = out;
       this.space = new char[column];
       Arrays.fill(this.space, ' ');
     }
 
     public char[] getSpace() {
+
       return space;
     }
 
     public List<Character> getWriteChars() {
+
       return writeChars;
     }
 
     @Override
     public void write(char[] cbuf, int off, int len) throws IOException {
+
       List<Character> chars = new ArrayList<>();
       for (int i = off; i < len; i++) {
         char c = cbuf[i];
@@ -99,11 +104,13 @@ public class FormatDirective implements TemplateDirectiveModel {
 
     @Override
     public void flush() throws IOException {
+
       out.flush();
     }
 
     @Override
     public void close() throws IOException {
+
       out.close();
     }
 

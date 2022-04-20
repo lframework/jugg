@@ -27,6 +27,7 @@ public class EnumValidator implements ConstraintValidator<IsEnum, Serializable> 
   public boolean isValid(Serializable value, ConstraintValidatorContext context) {
 
     return ObjectUtil.isNull(value) || ObjectUtil.isNotNull(EnumUtil.getByCode(enumsClass, value))
-        || (value instanceof CharSequence && StringUtil.isEmpty((CharSequence) value));
+        || (
+        value instanceof CharSequence && StringUtil.isEmpty((CharSequence) value));
   }
 }

@@ -34,7 +34,7 @@ public interface ISysRoleService extends BaseMpService<DefaultSysRole> {
    * @param id
    * @return
    */
-  DefaultSysRoleDto getById(String id);
+  DefaultSysRoleDto findById(String id);
 
   /**
    * 选择器

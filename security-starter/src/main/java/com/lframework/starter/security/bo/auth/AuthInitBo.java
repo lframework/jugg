@@ -41,6 +41,7 @@ public class AuthInitBo extends BaseBo<SysConfigDto> {
   private Boolean forgetPswRequireSms;
 
   public AuthInitBo(SysConfigDto dto) {
+
     super(dto);
   }
 }

@@ -69,7 +69,7 @@
         ORDER BY u.code
     </select>
 
-    <select id="getById" resultMap="SysUserDto">
+    <select id="findById" resultMap="SysUserDto">
         <include refid="SysUserDto_sql"/>
         WHERE u.id = #{id}
     </select>

@@ -31,5 +31,5 @@ public interface GenDataObjectMapper extends BaseMapper<GenDataObject> {
    * @param id
    * @return
    */
-  DataObjectDto getById(@Param("id") String id);
+  DataObjectDto findById(@Param("id") String id);
 }

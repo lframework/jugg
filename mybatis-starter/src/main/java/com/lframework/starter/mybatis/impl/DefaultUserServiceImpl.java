@@ -20,8 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author zmj
  */
-public class DefaultUserServiceImpl extends
-    BaseMpServiceImpl<DefaultUserMapper, DefaultSysUser> implements IUserService {
+public class DefaultUserServiceImpl extends BaseMpServiceImpl<DefaultUserMapper, DefaultSysUser>
+    implements IUserService {
 
   @Autowired
   private PasswordEncoderWrapper encoderWrapper;
@@ -71,7 +71,7 @@ public class DefaultUserServiceImpl extends
 
   @Cacheable(value = UserDto.CACHE_NAME, key = "#id", unless = "#result == null")
   @Override
-  public UserDto getById(String id) {
+  public UserDto findById(String id) {
 
     if (StringUtil.isBlank(id)) {
       return null;
@@ -93,6 +93,7 @@ public class DefaultUserServiceImpl extends
   @Transactional
   @Override
   public void unlockById(String id) {
+
     getBaseMapper().unlockById(id);
 
     IUserService thisService = getThis(this.getClass());
@@ -127,7 +128,7 @@ public class DefaultUserServiceImpl extends
 
   protected UserDto doGetById(String id) {
 
-    return getBaseMapper().getById(id);
+    return getBaseMapper().findById(id);
   }
 
   protected String encodePassword(String password) {

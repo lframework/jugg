@@ -80,6 +80,7 @@ public class UpdateSysConfigVo implements BaseVo, Serializable {
 
   @Override
   public void validate() {
+
     if (this.allowForgetPsw) {
       if (this.forgetPswRequireMail == null) {
         throw new InputErrorException("请选择忘记密码是否使用邮箱！");

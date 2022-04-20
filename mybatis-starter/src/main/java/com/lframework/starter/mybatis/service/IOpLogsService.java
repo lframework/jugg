@@ -38,7 +38,7 @@ public interface IOpLogsService extends BaseMpService<DefaultOpLogs> {
    * @param id
    * @return
    */
-  DefaultOpLogsDto getById(String id);
+  DefaultOpLogsDto findById(String id);
 
   /**
    * 根据截止时间删除日志

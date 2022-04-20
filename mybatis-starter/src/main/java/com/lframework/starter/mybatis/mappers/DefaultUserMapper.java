@@ -51,7 +51,7 @@ public interface DefaultUserMapper extends BaseMapper<DefaultSysUser> {
    * @param id
    * @return
    */
-  UserDto getById(String id);
+  UserDto findById(String id);
 
   /**
    * 根据ID锁定

@@ -38,7 +38,7 @@ public interface DefaultSysMenuMapper extends BaseMapper<DefaultSysMenu> {
    * @param id
    * @return
    */
-  DefaultSysMenuDto getById(String id);
+  DefaultSysMenuDto findById(String id);
 
   /**
    * 系统菜单选择器数据

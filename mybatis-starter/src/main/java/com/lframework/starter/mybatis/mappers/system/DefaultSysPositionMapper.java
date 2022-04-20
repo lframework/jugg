@@ -32,7 +32,7 @@ public interface DefaultSysPositionMapper extends BaseMapper<DefaultSysPosition>
    * @param id
    * @return
    */
-  DefaultSysPositionDto getById(String id);
+  DefaultSysPositionDto findById(String id);
 
   /**
    * 选择器

@@ -128,7 +128,8 @@ public class DefaultSysSelectorController extends DefaultBaseController {
   public InvokeResult<PageResult<SysPositionSelectorBo>> position(@Valid SysPositionSelectorVo vo) {
 
     PageResult<DefaultSysPositionDto> pageResult = sysPositionService.selector(getPageIndex(vo),
-        getPageSize(vo), vo);
+        getPageSize(vo),
+        vo);
     List<DefaultSysPositionDto> datas = pageResult.getDatas();
     List<SysPositionSelectorBo> results = null;
 

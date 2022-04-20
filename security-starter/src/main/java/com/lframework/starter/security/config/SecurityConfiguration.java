@@ -25,6 +25,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
 
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
+
     registry.addInterceptor(new LoginInterceptor(permitAllService));
   }
 
@@ -33,14 +34,14 @@ public class SecurityConfiguration implements WebMvcConfigurer {
 
     // 除了描述 其他全与info保持一致
     ApiInfo apiInfo = new ApiInfo(info.getTitle(), "用户认证鉴权模块以及公共接口", info.getVersion(),
-        info.getTermsOfServiceUrl(), info.getContact(), info.getLicense(), info.getLicenseUrl(),
-        info.getVendorExtensions());
+        info.getTermsOfServiceUrl(),
+        info.getContact(), info.getLicense(), info.getLicenseUrl(), info.getVendorExtensions());
 
     Docket docket = new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo)
         .groupName("用户认证鉴权以及公共接口").select()
         .apis(RequestHandlerSelectors.basePackage("com.lframework.starter.security"))
-        .paths(PathSelectors.any()).build()
-        .extensions(openApiExtensionResolver.buildSettingExtensions());
+        .paths(PathSelectors.any())
+        .build().extensions(openApiExtensionResolver.buildSettingExtensions());
     return docket;
   }
 

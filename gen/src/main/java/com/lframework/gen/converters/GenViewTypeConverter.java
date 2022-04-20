@@ -44,8 +44,8 @@ public class GenViewTypeConverter {
     } else if (dataType == GenDataType.LOCAL_DATE) {
       results.addAll(Arrays.asList(GenViewType.INPUT, GenViewType.DATE, GenViewType.DATE_RANGE));
     } else if (dataType == GenDataType.LOCAL_DATE_TIME) {
-      results
-          .addAll(Arrays.asList(GenViewType.INPUT, GenViewType.DATETIME, GenViewType.DATE_RANGE));
+      results.addAll(
+          Arrays.asList(GenViewType.INPUT, GenViewType.DATETIME, GenViewType.DATE_RANGE));
     } else if (dataType == GenDataType.LOCAL_TIME) {
       results.addAll(Arrays.asList(GenViewType.INPUT, GenViewType.TIME));
     } else if (dataType == GenDataType.BOOLEAN) {

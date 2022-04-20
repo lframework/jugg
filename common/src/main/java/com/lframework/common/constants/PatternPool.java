@@ -42,32 +42,32 @@ public class PatternPool extends cn.hutool.core.lang.PatternPool {
    */
   public static final String PATTERN_STR_IS_INTEGER_GT_ZERO = "^[1-9]\\d*$";
 
-  public static final Pattern PATTERN_IS_INTEGER_GT_ZERO = Pattern
-      .compile(PATTERN_STR_IS_INTEGER_GT_ZERO);
+  public static final Pattern PATTERN_IS_INTEGER_GT_ZERO = Pattern.compile(
+      PATTERN_STR_IS_INTEGER_GT_ZERO);
 
   /**
    * 是否 负整数
    */
   public static final String PATTERN_STR_IS_INTEGER_LT_ZERO = "^-[1-9]\\d*$";
 
-  public static final Pattern PATTERN_IS_INTEGER_LT_ZERO = Pattern
-      .compile(PATTERN_STR_IS_INTEGER_LT_ZERO);
+  public static final Pattern PATTERN_IS_INTEGER_LT_ZERO = Pattern.compile(
+      PATTERN_STR_IS_INTEGER_LT_ZERO);
 
   /**
    * 是否 非正整数 <=0
    */
   public static final String PATTERN_STR_IS_INTEGER_LE_ZERO = "^(-[1-9]\\d*|[0]{1})$";
 
-  public static final Pattern PATTERN_IS_INTEGER_LE_ZERO = Pattern
-      .compile(PATTERN_STR_IS_INTEGER_LE_ZERO);
+  public static final Pattern PATTERN_IS_INTEGER_LE_ZERO = Pattern.compile(
+      PATTERN_STR_IS_INTEGER_LE_ZERO);
 
   /**
    * 是否 非负整数 >=0
    */
   public static final String PATTERN_STR_IS_INTEGER_GE_ZERO = "^([1-9]\\d*|[0]{1})$";
 
-  public static final Pattern PATTERN_IS_INTEGER_GE_ZERO = Pattern
-      .compile(PATTERN_STR_IS_INTEGER_GE_ZERO);
+  public static final Pattern PATTERN_IS_INTEGER_GE_ZERO = Pattern.compile(
+      PATTERN_STR_IS_INTEGER_GE_ZERO);
 
   /**
    * 是否 浮点数
@@ -81,32 +81,32 @@ public class PatternPool extends cn.hutool.core.lang.PatternPool {
    */
   public static final String PATTERN_STR_IS_FLOAT_GT_ZERO = "^(([1-9]\\d*\\.\\d*|0\\.\\d*[1-9]\\d*)|([1-9]\\d*))$";
 
-  public static final Pattern PATTERN_IS_FLOAT_GT_ZERO = Pattern
-      .compile(PATTERN_STR_IS_FLOAT_GT_ZERO);
+  public static final Pattern PATTERN_IS_FLOAT_GT_ZERO = Pattern.compile(
+      PATTERN_STR_IS_FLOAT_GT_ZERO);
 
   /**
    * 是否 负浮点数
    */
   public static final String PATTERN_STR_IS_FLOAT_LT_ZERO = "^((-([1-9]\\d*\\.\\d*|0\\.\\d*[1-9]\\d*))|(-[1-9]\\d*))$";
 
-  public static final Pattern PATTERN_IS_FLOAT_LT_ZERO = Pattern
-      .compile(PATTERN_STR_IS_FLOAT_LT_ZERO);
+  public static final Pattern PATTERN_IS_FLOAT_LT_ZERO = Pattern.compile(
+      PATTERN_STR_IS_FLOAT_LT_ZERO);
 
   /**
    * 是否 非正浮点数 <= 0
    */
   public static final String PATTERN_STR_IS_FLOAT_LE_ZERO = "^(((-([1-9]\\d*\\.\\d*|0\\.\\d*[1-9]\\d*))|0?\\.0+|0)|(-[1-9]\\d*))$";
 
-  public static final Pattern PATTERN_IS_FLOAT_LE_ZERO = Pattern
-      .compile(PATTERN_STR_IS_FLOAT_LE_ZERO);
+  public static final Pattern PATTERN_IS_FLOAT_LE_ZERO = Pattern.compile(
+      PATTERN_STR_IS_FLOAT_LE_ZERO);
 
   /**
    * 是否 非负浮点数 >= 0
    */
   public static final String PATTERN_STR_IS_FLOAT_GE_ZERO = "^(([1-9]\\d*\\.\\d*|0\\.\\d*[1-9]\\d*|0?\\.0+|0)|([1-9]\\d*))$";
 
-  public static final Pattern PATTERN_IS_FLOAT_GE_ZERO = Pattern
-      .compile(PATTERN_STR_IS_FLOAT_GE_ZERO);
+  public static final Pattern PATTERN_IS_FLOAT_GE_ZERO = Pattern.compile(
+      PATTERN_STR_IS_FLOAT_GE_ZERO);
 
   /**
    * 是否 数字组成
@@ -135,4 +135,11 @@ public class PatternPool extends cn.hutool.core.lang.PatternPool {
   public static final String PATTERN_STR_HTTP_URL = "^(https?|http)://((?!(\\?)).)*$";
 
   public static final Pattern PATTERN_HTTP_URL = Pattern.compile(PATTERN_STR_HTTP_URL);
+
+  /**
+   * 编号
+   */
+  public static final String PATTERN_STR_CODE = "^[A-Za-z0-9]{1,20}$";
+
+  public static final Pattern PATTERN_CODE = Pattern.compile(PATTERN_STR_CODE);
 }

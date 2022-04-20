@@ -29,10 +29,12 @@ public class LoginEvent extends ApplicationEvent {
   }
 
   public AbstractUserDetails getUser() {
+
     return user;
   }
 
   public String getToken() {
+
     return token;
   }
 }

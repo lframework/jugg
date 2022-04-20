@@ -29,7 +29,7 @@ public interface IGenDetailColumnConfigService extends BaseMpService<GenDetailCo
    * @param id
    * @return
    */
-  GenDetailColumnConfigDto getById(String id);
+  GenDetailColumnConfigDto findById(String id);
 
   /**
    * 根据ID查询

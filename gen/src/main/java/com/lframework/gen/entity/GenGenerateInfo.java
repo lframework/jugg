@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.lframework.gen.enums.GenKeyType;
 import com.lframework.gen.enums.GenTemplateType;
 import com.lframework.starter.mybatis.entity.BaseEntity;
+import com.lframework.starter.web.dto.BaseDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -18,7 +19,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("gen_generate_info")
-public class GenGenerateInfo extends BaseEntity {
+public class GenGenerateInfo extends BaseEntity implements BaseDto {
 
   private static final long serialVersionUID = 1L;
 

@@ -45,7 +45,7 @@
         </where>
         ORDER BY code
     </select>
-    <select id="getById" resultMap="SysRoleDto">
+    <select id="findById" resultMap="SysRoleDto">
         <include refid="SysRoleDto_sql"/>
         WHERE id = #{id}
     </select>

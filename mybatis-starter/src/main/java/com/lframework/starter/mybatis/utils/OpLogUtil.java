@@ -37,8 +37,8 @@ public class OpLogUtil {
 
   public static void addLog(CreateOpLogsVo vo) {
 
-    ExecutorService pool = (ExecutorService) ApplicationUtil
-        .getBean(OpLogConfiguration.OP_LOG_THREAD_POOL_NAME);
+    ExecutorService pool = (ExecutorService) ApplicationUtil.getBean(
+        OpLogConfiguration.OP_LOG_THREAD_POOL_NAME);
     IOpLogsService opLogsService = ApplicationUtil.getBean(IOpLogsService.class);
 
     pool.execute(() -> {

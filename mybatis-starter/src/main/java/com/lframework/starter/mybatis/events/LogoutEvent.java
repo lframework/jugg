@@ -27,6 +27,7 @@ public class LogoutEvent extends ApplicationEvent {
   }
 
   public String getToken() {
+
     return token;
   }
 }

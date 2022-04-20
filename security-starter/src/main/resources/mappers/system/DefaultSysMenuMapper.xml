@@ -54,7 +54,7 @@
         </where>
         ORDER BY code
     </select>
-    <select id="getById" resultMap="SysMenuDto">
+    <select id="findById" resultMap="SysMenuDto">
         <include refid="SysMenuDto_sql"/>
         WHERE id = #{id}
     </select>

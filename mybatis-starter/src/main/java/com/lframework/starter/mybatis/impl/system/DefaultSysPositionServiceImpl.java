@@ -33,7 +33,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 
 public class DefaultSysPositionServiceImpl extends
-    BaseMpServiceImpl<DefaultSysPositionMapper, DefaultSysPosition> implements ISysPositionService {
+    BaseMpServiceImpl<DefaultSysPositionMapper, DefaultSysPosition>
+    implements ISysPositionService {
 
   @Override
   public PageResult<DefaultSysPositionDto> query(Integer pageIndex, Integer pageSize,
@@ -51,7 +52,7 @@ public class DefaultSysPositionServiceImpl extends
 
   @Cacheable(value = DefaultSysPositionDto.CACHE_NAME, key = "#id", unless = "#result == null")
   @Override
-  public DefaultSysPositionDto getById(String id) {
+  public DefaultSysPositionDto findById(String id) {
 
     return this.doGetById(id);
   }
@@ -140,7 +141,7 @@ public class DefaultSysPositionServiceImpl extends
 
   protected DefaultSysPositionDto doGetById(String id) {
 
-    return getBaseMapper().getById(id);
+    return getBaseMapper().findById(id);
   }
 
   protected List<DefaultSysPositionDto> doSelector(SysPositionSelectorVo vo) {
@@ -192,7 +193,7 @@ public class DefaultSysPositionServiceImpl extends
 
   protected void doUpdate(UpdateSysPositionVo vo) {
 
-    DefaultSysPositionDto data = this.getById(vo.getId());
+    DefaultSysPositionDto data = this.findById(vo.getId());
     if (ObjectUtil.isNull(data)) {
       throw new DefaultClientException("岗位不存在！");
     }
@@ -204,13 +205,14 @@ public class DefaultSysPositionServiceImpl extends
     }
 
     checkWrapper = Wrappers.lambdaQuery(DefaultSysPosition.class)
-        .eq(DefaultSysPosition::getName, vo.getName()).ne(DefaultSysPosition::getId, vo.getId());
+        .eq(DefaultSysPosition::getName, vo.getName())
+        .ne(DefaultSysPosition::getId, vo.getId());
     if (getBaseMapper().selectCount(checkWrapper) > 0) {
       throw new DefaultClientException("名称重复，请重新输入！");
     }
 
-    LambdaUpdateWrapper<DefaultSysPosition> updateWrapper = Wrappers
-        .lambdaUpdate(DefaultSysPosition.class)
+    LambdaUpdateWrapper<DefaultSysPosition> updateWrapper = Wrappers.lambdaUpdate(
+            DefaultSysPosition.class)
         .set(DefaultSysPosition::getCode, vo.getCode())
         .set(DefaultSysPosition::getName, vo.getName())
         .set(DefaultSysPosition::getAvailable, vo.getAvailable())

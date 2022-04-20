@@ -1,6 +1,7 @@
 package com.lframework.starter.mybatis.vo.system.user;
 
 import com.lframework.starter.mybatis.enums.Gender;
+import com.lframework.starter.web.components.validation.IsCode;
 import com.lframework.starter.web.components.validation.IsEnum;
 import com.lframework.starter.web.vo.BaseVo;
 import io.swagger.annotations.ApiModelProperty;
@@ -26,6 +27,7 @@ public class UpdateSysUserVo implements BaseVo, Serializable {
    * 编号
    */
   @ApiModelProperty(value = "编号", required = true)
+  @IsCode
   @NotBlank(message = "请输入编号！")
   private String code;
 

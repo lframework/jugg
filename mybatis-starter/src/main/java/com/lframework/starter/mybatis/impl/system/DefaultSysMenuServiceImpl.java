@@ -37,7 +37,8 @@ import org.springframework.transaction.annotation.Transactional;
  * @since 2021-05-10
  */
 public class DefaultSysMenuServiceImpl extends
-    BaseMpServiceImpl<DefaultSysMenuMapper, DefaultSysMenu> implements ISysMenuService {
+    BaseMpServiceImpl<DefaultSysMenuMapper, DefaultSysMenu>
+    implements ISysMenuService {
 
   @Override
   public List<DefaultSysMenuDto> queryList() {
@@ -53,7 +54,7 @@ public class DefaultSysMenuServiceImpl extends
 
   @Cacheable(value = DefaultSysMenuDto.CACHE_NAME, key = "#id", unless = "#result == null")
   @Override
-  public DefaultSysMenuDto getById(@NonNull String id) {
+  public DefaultSysMenuDto findById(@NonNull String id) {
 
     return this.doGetById(id);
   }
@@ -77,7 +78,7 @@ public class DefaultSysMenuServiceImpl extends
   @Override
   public void update(@NonNull UpdateSysMenuVo vo) {
 
-    DefaultSysMenuDto oriMenu = this.getById(vo.getId());
+    DefaultSysMenuDto oriMenu = this.findById(vo.getId());
     if (oriMenu.getIsSpecial()) {
       throw new DefaultClientException("菜单【" + oriMenu.getTitle() + "】为内置菜单，不允许修改！");
     }
@@ -101,7 +102,7 @@ public class DefaultSysMenuServiceImpl extends
   @Override
   public void deleteById(@NonNull String id) {
 
-    DefaultSysMenuDto oriMenu = this.getById(id);
+    DefaultSysMenuDto oriMenu = this.findById(id);
     if (oriMenu.getIsSpecial()) {
       throw new DefaultClientException("菜单【" + oriMenu.getTitle() + "】为内置菜单，不允许删除！");
     }
@@ -134,7 +135,7 @@ public class DefaultSysMenuServiceImpl extends
     }
 
     for (String id : ids) {
-      DefaultSysMenuDto oriMenu = this.getById(id);
+      DefaultSysMenuDto oriMenu = this.findById(id);
       if (oriMenu.getIsSpecial()) {
         throw new DefaultClientException("菜单【" + oriMenu.getTitle() + "】为内置菜单，不允许启用！");
       }
@@ -158,7 +159,7 @@ public class DefaultSysMenuServiceImpl extends
     }
 
     for (String id : ids) {
-      DefaultSysMenuDto oriMenu = this.getById(id);
+      DefaultSysMenuDto oriMenu = this.findById(id);
       if (oriMenu.getIsSpecial()) {
         throw new DefaultClientException("菜单【" + oriMenu.getTitle() + "】为内置菜单，不允许停用！");
       }
@@ -184,7 +185,7 @@ public class DefaultSysMenuServiceImpl extends
 
   protected DefaultSysMenuDto doGetById(@NonNull String id) {
 
-    return getBaseMapper().getById(id);
+    return getBaseMapper().findById(id);
   }
 
   protected DefaultSysMenu doCreate(@NonNull CreateSysMenuVo vo) {
@@ -244,7 +245,7 @@ public class DefaultSysMenuServiceImpl extends
 
     DefaultSysMenuDto parentMenu = null;
     if (!StringUtil.isBlank(vo.getParentId())) {
-      parentMenu = this.getById(vo.getParentId());
+      parentMenu = this.findById(vo.getParentId());
       if (parentMenu == null) {
         throw new DefaultClientException("父级菜单不存在！");
       }

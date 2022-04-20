@@ -100,8 +100,7 @@ public abstract class AbstractUserDetails implements UserDetails, Serializable {
 
   public boolean isAdmin() {
 
-    return !isNoPermission() && this.permissions.contains(
-        SecurityConstants.PERMISSION_ADMIN_NAME);
+    return !isNoPermission() && this.permissions.contains(SecurityConstants.PERMISSION_ADMIN_NAME);
   }
 
 }

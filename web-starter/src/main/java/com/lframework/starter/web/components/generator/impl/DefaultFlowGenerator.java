@@ -18,11 +18,13 @@ public class DefaultFlowGenerator extends AbstractFlowGenerator implements Gener
 
   @Override
   protected int getCodeLength() {
+
     return 10;
   }
 
   @Override
   public boolean isSpecial() {
+
     return true;
   }
 }

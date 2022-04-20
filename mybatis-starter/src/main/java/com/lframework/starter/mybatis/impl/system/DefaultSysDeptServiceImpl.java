@@ -31,7 +31,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 
 public class DefaultSysDeptServiceImpl extends
-    BaseMpServiceImpl<DefaultSysDeptMapper, DefaultSysDept> implements ISysDeptService {
+    BaseMpServiceImpl<DefaultSysDeptMapper, DefaultSysDept>
+    implements ISysDeptService {
 
   @Autowired
   private IRecursionMappingService recursionMappingService;
@@ -47,7 +48,7 @@ public class DefaultSysDeptServiceImpl extends
 
   @Cacheable(value = DefaultSysDeptDto.CACHE_NAME, key = "#id", unless = "#result == null")
   @Override
-  public DefaultSysDeptDto getById(String id) {
+  public DefaultSysDeptDto findById(String id) {
 
     return this.doGetById(id);
   }
@@ -63,8 +64,8 @@ public class DefaultSysDeptServiceImpl extends
 
     List<String> batchIds = new ArrayList<>();
     for (String id : ids) {
-      List<String> nodeChildIds = recursionMappingService
-          .getNodeChildIds(id, ApplicationUtil.getBean(SysDeptNodeType.class));
+      List<String> nodeChildIds = recursionMappingService.getNodeChildIds(id,
+          ApplicationUtil.getBean(SysDeptNodeType.class));
       if (CollectionUtil.isEmpty(nodeChildIds)) {
         continue;
       }
@@ -93,8 +94,8 @@ public class DefaultSysDeptServiceImpl extends
 
     List<String> batchIds = new ArrayList<>();
     for (String id : ids) {
-      List<String> nodeChildIds = recursionMappingService
-          .getNodeChildIds(id, ApplicationUtil.getBean(SysDeptNodeType.class));
+      List<String> nodeChildIds = recursionMappingService.getNodeChildIds(id,
+          ApplicationUtil.getBean(SysDeptNodeType.class));
       if (CollectionUtil.isEmpty(nodeChildIds)) {
         continue;
       }
@@ -164,7 +165,7 @@ public class DefaultSysDeptServiceImpl extends
 
   protected DefaultSysDeptDto doGetById(String id) {
 
-    return getBaseMapper().getById(id);
+    return getBaseMapper().findById(id);
   }
 
   protected void doBatchUnable(Collection<String> ids) {
@@ -224,7 +225,7 @@ public class DefaultSysDeptServiceImpl extends
 
   protected void doUpdate(UpdateSysDeptVo vo) {
 
-    DefaultSysDeptDto data = this.getById(vo.getId());
+    DefaultSysDeptDto data = this.findById(vo.getId());
     if (data == null) {
       throw new DefaultClientException("部门不存在！");
     }
@@ -238,7 +239,8 @@ public class DefaultSysDeptServiceImpl extends
 
     //查询Name是否重复
     checkWrapper = Wrappers.lambdaQuery(DefaultSysDept.class)
-        .eq(DefaultSysDept::getName, vo.getName()).ne(DefaultSysDept::getId, data.getId());
+        .eq(DefaultSysDept::getName, vo.getName())
+        .ne(DefaultSysDept::getId, data.getId());
     if (getBaseMapper().selectCount(checkWrapper) > 0) {
       throw new DefaultClientException("名称重复，请重新输入！");
     }
@@ -276,15 +278,15 @@ public class DefaultSysDeptServiceImpl extends
   protected void saveRecursion(String deptId, String parentId) {
 
     if (!StringUtil.isBlank(parentId)) {
-      List<String> parentIds = recursionMappingService
-          .getNodeParentIds(parentId, ApplicationUtil.getBean(SysDeptNodeType.class));
+      List<String> parentIds = recursionMappingService.getNodeParentIds(parentId,
+          ApplicationUtil.getBean(SysDeptNodeType.class));
       if (CollectionUtil.isEmpty(parentIds)) {
         parentIds = new ArrayList<>();
       }
       parentIds.add(parentId);
 
-      recursionMappingService
-          .saveNode(deptId, ApplicationUtil.getBean(SysDeptNodeType.class), parentIds);
+      recursionMappingService.saveNode(deptId, ApplicationUtil.getBean(SysDeptNodeType.class),
+          parentIds);
     } else {
       recursionMappingService.saveNode(deptId, ApplicationUtil.getBean(SysDeptNodeType.class));
     }

@@ -27,7 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
  * @author zmj
  */
 public abstract class AbstractMenuServiceImpl extends
-    BaseMpServiceImpl<DefaultMenuMapper, DefaultSysMenu> implements IMenuService {
+    BaseMpServiceImpl<DefaultMenuMapper, DefaultSysMenu>
+    implements IMenuService {
 
   @Autowired
   private IUserTokenResolver userTokenResolver;

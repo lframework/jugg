@@ -5,9 +5,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lframework.starter.mybatis.service.BaseMpService;
 
-public abstract class BaseMpServiceImpl<M extends BaseMapper<T>, T> extends
-    ServiceImpl<M, T> implements
-    BaseMpService<T> {
+public abstract class BaseMpServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<M, T>
+    implements BaseMpService<T> {
 
   @Override
   public T getOne(Wrapper<T> queryWrapper, boolean throwEx) {

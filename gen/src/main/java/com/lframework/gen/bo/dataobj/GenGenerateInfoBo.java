@@ -117,7 +117,7 @@ public class GenGenerateInfoBo extends BaseBo<GenGenerateInfoDto> {
 
     if (!StringUtil.isBlank(dto.getParentMenuId())) {
       ISysMenuService sysMenuService = ApplicationUtil.getBean(ISysMenuService.class);
-      this.parentMenuName = sysMenuService.getById(dto.getParentMenuId()).getName();
+      this.parentMenuName = sysMenuService.findById(dto.getParentMenuId()).getName();
     }
   }
 }

@@ -18,7 +18,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 
 public class DefaultSysUserDeptServiceImpl extends
-    BaseMpServiceImpl<DefaultSysUserDeptMapper, DefaultSysUserDept> implements ISysUserDeptService {
+    BaseMpServiceImpl<DefaultSysUserDeptMapper, DefaultSysUserDept>
+    implements ISysUserDeptService {
 
   @OpLog(type = OpLogType.OTHER, name = "用户设置部门，用户ID：{}，部门ID：{}", params = {"#vo.userId",
       "#vo.positionId"})

@@ -15,7 +15,8 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
 public class DefaultSysConfigServiceImpl extends
-    BaseMpServiceImpl<DefaultSysConfigMapper, SysConfig> implements ISysConfigService {
+    BaseMpServiceImpl<DefaultSysConfigMapper, SysConfig>
+    implements ISysConfigService {
 
   @Cacheable(value = SysConfigDto.CACHE_NAME, key = "'config'", unless = "#result == null")
   @Override
@@ -27,11 +28,13 @@ public class DefaultSysConfigServiceImpl extends
   @OpLog(type = OpLogType.OTHER, name = "修改系统设置")
   @Override
   public void update(UpdateSysConfigVo vo) {
+
     ISysConfigService thisService = getThis(this.getClass());
 
     Wrapper<SysConfig> updateWrapper = Wrappers.lambdaUpdate(SysConfig.class)
         .set(SysConfig::getAllowRegist, vo.getAllowRegist())
-        .set(SysConfig::getAllowLock, vo.getAllowLock()).set(SysConfig::getFailNum, vo.getFailNum())
+        .set(SysConfig::getAllowLock, vo.getAllowLock())
+        .set(SysConfig::getFailNum, vo.getFailNum())
         .set(SysConfig::getAllowCaptcha, vo.getAllowCaptcha())
         .set(SysConfig::getAllowForgetPsw, vo.getAllowForgetPsw())
         .set(SysConfig::getForgetPswRequireMail, vo.getForgetPswRequireMail())

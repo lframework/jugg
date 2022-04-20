@@ -12,16 +12,19 @@ public class UserTokenResolver implements IUserTokenResolver {
 
   @Override
   public String getToken() {
+
     return StpUtil.getTokenValue();
   }
 
   @Override
   public String getFullToken() {
+
     return getToken();
   }
 
   @Override
   public String getTokenKey() {
+
     return tokenKey;
   }
 }

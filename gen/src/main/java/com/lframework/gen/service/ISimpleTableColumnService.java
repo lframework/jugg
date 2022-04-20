@@ -38,5 +38,5 @@ public interface ISimpleTableColumnService extends BaseMpService<GenSimpleTableC
    * @param id
    * @return
    */
-  SimpleTableColumnDto getById(String id);
+  SimpleTableColumnDto findById(String id);
 }

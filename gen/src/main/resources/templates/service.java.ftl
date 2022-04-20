@@ -2,7 +2,6 @@ package ${packageName}.service.${moduleName};
 
 import com.lframework.starter.mybatis.resp.PageResult;
 import com.lframework.starter.mybatis.service.BaseMpService;
-import ${packageName}.dto.${moduleName}.${bizName}.${className}Dto;
 <#if create??>
 import ${packageName}.vo.${moduleName}.${bizName}.Create${className}Vo;
 </#if>
@@ -34,7 +33,7 @@ public interface I${className}Service extends BaseMpService${r"<"}${className}${
      * 查询列表
      * @return
      */
-    PageResult${r"<"}${className}Dto${r">"} query(Integer pageIndex, Integer pageSize, Query${className}Vo vo);
+    PageResult${r"<"}${className}${r">"} query(Integer pageIndex, Integer pageSize, Query${className}Vo vo);
     </#if>
 
     <#if queryParams??>
@@ -43,15 +42,8 @@ public interface I${className}Service extends BaseMpService${r"<"}${className}${
      * @param vo
      * @return
      */
-    ${r"List<"}${className}Dto${r">"} query(Query${className}Vo vo);
+    ${r"List<"}${className}${r">"} query(Query${className}Vo vo);
     </#if>
-
-    /**
-     * 根据ID查询
-     * @param ${keys[0].name}
-     * @return
-     */
-    ${className}Dto getById(<#list keys as key>${key.type} ${key.name}<#if key_index != keys?size - 1>, </#if></#list>);
 
     <#if create??>
     /**

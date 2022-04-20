@@ -12,6 +12,7 @@ public class BpmConfiguration {
 
   @Bean
   public ITodoTaskService todoTaskService() {
+
     return new BpmTodoTaskServiceImpl();
   }
 }

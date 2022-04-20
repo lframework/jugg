@@ -78,7 +78,7 @@ public class SysPositionController extends DefaultBaseController {
   @GetMapping
   public InvokeResult<GetSysPositionBo> get(@NotBlank(message = "ID不能为空！") String id) {
 
-    DefaultSysPositionDto data = sysPositionService.getById(id);
+    DefaultSysPositionDto data = sysPositionService.findById(id);
     if (data == null) {
       throw new DefaultClientException("岗位不存在！");
     }

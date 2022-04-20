@@ -94,7 +94,7 @@ public class SysMenuController extends DefaultBaseController {
   @GetMapping
   public InvokeResult<GetSysMenuBo> get(@NotBlank(message = "ID不能为空！") String id) {
 
-    DefaultSysMenuDto data = sysMenuService.getById(id);
+    DefaultSysMenuDto data = sysMenuService.findById(id);
     if (ObjectUtil.isNull(data)) {
       throw new DefaultClientException("菜单不存在！");
     }
@@ -184,7 +184,7 @@ public class SysMenuController extends DefaultBaseController {
         }
 
         if (!StringUtil.isBlank(vo.getParentId())) {
-          DefaultSysMenuDto parentMenu = sysMenuService.getById(vo.getParentId());
+          DefaultSysMenuDto parentMenu = sysMenuService.findById(vo.getParentId());
 
           if (parentMenu.getDisplay() != SysMenuDisplay.CATALOG) {
             throw new InputErrorException(
@@ -199,7 +199,7 @@ public class SysMenuController extends DefaultBaseController {
             "当菜单类型是“" + SysMenuDisplay.PERMISSION.getDesc() + "”时，父级菜单不能为空！");
       }
 
-      DefaultSysMenuDto parentMenu = sysMenuService.getById(vo.getParentId());
+      DefaultSysMenuDto parentMenu = sysMenuService.findById(vo.getParentId());
       if (ObjectUtil.isNull(parentMenu)) {
         throw new InputErrorException(
             "当菜单类型是“" + SysMenuDisplay.PERMISSION.getDesc() + "”时，父级菜单不能为空！");
