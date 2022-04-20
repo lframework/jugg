@@ -36,7 +36,7 @@ public class CacheConfiguration extends CachingConfigurerSupport {
     J2CacheBuilder j2CacheBuilder = J2CacheBuilder.init(config);
     // 构建适配器
     J2CacheSpringCacheManageAdapter j2CacheSpringCacheManageAdapter = new J2CacheSpringCacheManageAdapter(
-        j2CacheBuilder, true);
+        j2CacheBuilder, config.isDefaultCacheNullObject());
 
     return j2CacheSpringCacheManageAdapter;
   }
