@@ -88,6 +88,12 @@ public class GetSysMenuBo extends BaseBo<DefaultSysMenuDto> {
   private String permission;
 
   /**
+   * 是否特殊菜单
+   */
+  @ApiModelProperty("是否特殊菜单")
+  private Boolean isSpecial;
+
+  /**
    * 状态
    */
   @ApiModelProperty("状态")

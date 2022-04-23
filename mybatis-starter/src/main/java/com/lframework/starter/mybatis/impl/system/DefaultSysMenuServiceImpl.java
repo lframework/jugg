@@ -79,9 +79,6 @@ public class DefaultSysMenuServiceImpl extends
   public void update(@NonNull UpdateSysMenuVo vo) {
 
     DefaultSysMenuDto oriMenu = this.findById(vo.getId());
-    if (oriMenu.getIsSpecial()) {
-      throw new DefaultClientException("菜单【" + oriMenu.getTitle() + "】为内置菜单，不允许修改！");
-    }
 
     if (!ObjectUtil.equals(vo.getDisplay(), oriMenu.getDisplay().getCode())) {
       throw new DefaultClientException("菜单【" + oriMenu.getTitle() + "】" + "不允许更改类型！");
@@ -103,9 +100,6 @@ public class DefaultSysMenuServiceImpl extends
   public void deleteById(@NonNull String id) {
 
     DefaultSysMenuDto oriMenu = this.findById(id);
-    if (oriMenu.getIsSpecial()) {
-      throw new DefaultClientException("菜单【" + oriMenu.getTitle() + "】为内置菜单，不允许删除！");
-    }
 
     List<DefaultSysMenuDto> children = this.doGetChildrenById(id);
     if (CollectionUtil.isNotEmpty(children)) {
@@ -134,13 +128,6 @@ public class DefaultSysMenuServiceImpl extends
       return;
     }
 
-    for (String id : ids) {
-      DefaultSysMenuDto oriMenu = this.findById(id);
-      if (oriMenu.getIsSpecial()) {
-        throw new DefaultClientException("菜单【" + oriMenu.getTitle() + "】为内置菜单，不允许启用！");
-      }
-    }
-
     this.doBatchEnable(ids, userId);
 
     ISysMenuService thisService = getThis(this.getClass());
@@ -156,13 +143,6 @@ public class DefaultSysMenuServiceImpl extends
 
     if (CollectionUtil.isEmpty(ids)) {
       return;
-    }
-
-    for (String id : ids) {
-      DefaultSysMenuDto oriMenu = this.findById(id);
-      if (oriMenu.getIsSpecial()) {
-        throw new DefaultClientException("菜单【" + oriMenu.getTitle() + "】为内置菜单，不允许停用！");
-      }
     }
 
     this.doBatchUnable(ids, userId);
@@ -207,6 +187,12 @@ public class DefaultSysMenuServiceImpl extends
     data.setId(vo.getId());
 
     this.setDataForCreate(vo, data);
+
+    ISysMenuService thisService = getThis(this.getClass());
+
+    DefaultSysMenuDto record = thisService.findById(vo.getId());
+
+    data.setIsSpecial(record.getIsSpecial());
 
     getBaseMapper().deleteById(vo.getId());
 
