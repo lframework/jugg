@@ -61,6 +61,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -85,6 +86,9 @@ public class AuthController extends SecurityController {
 
   @Autowired
   private Producer producer;
+
+  @Resource(name = "numberProducer")
+  private Producer numberProducer;
 
   @Autowired
   private ISysUserService sysUserService;
@@ -309,7 +313,7 @@ public class AuthController extends SecurityController {
 
     String code = (String) redisHandler.get(key);
     if (code == null) {
-      code = producer.createText();
+      code = numberProducer.createText();
       redisHandler.set(key, code, 15 * 60 * 1000L);
     }
 
@@ -460,7 +464,7 @@ public class AuthController extends SecurityController {
 
     String code = (String) redisHandler.get(key);
     if (code == null) {
-      code = producer.createText();
+      code = numberProducer.createText();
       redisHandler.set(key, code, 15 * 60 * 1000L);
     }
 
@@ -547,7 +551,7 @@ public class AuthController extends SecurityController {
 
     String code = (String) redisHandler.get(key);
     if (code == null) {
-      code = producer.createText();
+      code = numberProducer.createText();
       redisHandler.set(key, code, 15 * 60 * 1000L);
     }
 
