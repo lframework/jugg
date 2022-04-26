@@ -315,11 +315,14 @@ public class AuthController extends SecurityController {
 
     String captcha = code;
 
-    /*ThreadUtil.execAsync(() -> {
+    if (log.isDebugEnabled()) {
+      log.debug("手机号登录验证码={}", captcha);
+    }
+
+    ThreadUtil.execAsync(() -> {
       aliSmsService.send(telephone, sysConfig.getTelephoneLoginSignName(),
           sysConfig.getTelephoneLoginTemplateCode(), Collections.singletonMap("code", captcha));
-    });*/
-    log.info("captcha={}", captcha);
+    });
 
     return InvokeResultBuilder.success();
   }
