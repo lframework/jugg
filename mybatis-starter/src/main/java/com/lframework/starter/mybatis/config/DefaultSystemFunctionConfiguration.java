@@ -15,6 +15,7 @@ import com.lframework.starter.mybatis.impl.system.DefaultSysUserDeptServiceImpl;
 import com.lframework.starter.mybatis.impl.system.DefaultSysUserPositionServiceImpl;
 import com.lframework.starter.mybatis.impl.system.DefaultSysUserRoleServiceImpl;
 import com.lframework.starter.mybatis.impl.system.DefaultSysUserServiceImpl;
+import com.lframework.starter.mybatis.impl.system.DefaultSysUserTelephoneServiceImpl;
 import com.lframework.starter.mybatis.impl.system.RecursionMappingServiceImpl;
 import com.lframework.starter.mybatis.service.IMenuService;
 import com.lframework.starter.mybatis.service.IUserService;
@@ -30,6 +31,7 @@ import com.lframework.starter.mybatis.service.system.ISysUserDeptService;
 import com.lframework.starter.mybatis.service.system.ISysUserPositionService;
 import com.lframework.starter.mybatis.service.system.ISysUserRoleService;
 import com.lframework.starter.mybatis.service.system.ISysUserService;
+import com.lframework.starter.mybatis.service.system.ISysUserTelephoneService;
 import com.lframework.starter.web.components.security.UserDetailsService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -144,5 +146,12 @@ public class DefaultSystemFunctionConfiguration {
   public ITodoTaskService getTodoTaskService() {
 
     return new TodoTaskServiceImpl();
+  }
+
+  @Bean
+  @ConditionalOnMissingBean(ISysUserTelephoneService.class)
+  public ISysUserTelephoneService getSysUserTelephoneService() {
+
+    return new DefaultSysUserTelephoneServiceImpl();
   }
 }

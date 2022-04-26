@@ -1,6 +1,6 @@
 package com.lframework.starter.security.bo.system.config;
 
-import com.lframework.starter.mybatis.dto.system.config.SysConfigDto;
+import com.lframework.starter.mybatis.entity.SysConfig;
 import com.lframework.starter.web.bo.BaseBo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class GetSysConfigBo extends BaseBo<SysConfigDto> {
+public class GetSysConfigBo extends BaseBo<SysConfig> {
 
   /**
    * ID
@@ -21,6 +21,24 @@ public class GetSysConfigBo extends BaseBo<SysConfigDto> {
    */
   @ApiModelProperty("是否允许注册")
   private Boolean allowRegist;
+
+  /**
+   * 是否允许手机号登录
+   */
+  @ApiModelProperty("是否允许手机号登录")
+  private Boolean allowTelephoneLogin;
+
+  /**
+   * 手机号登录时的signName
+   */
+  @ApiModelProperty("手机号登录时的signName")
+  private String telephoneLoginSignName;
+
+  /**
+   * 手机号登录时的templateCode
+   */
+  @ApiModelProperty("手机号登录时的templateCode")
+  private String telephoneLoginTemplateCode;
 
   /**
    * 是否允许锁定用户
@@ -70,7 +88,7 @@ public class GetSysConfigBo extends BaseBo<SysConfigDto> {
   @ApiModelProperty("templateCode")
   private String templateCode;
 
-  public GetSysConfigBo(SysConfigDto dto) {
+  public GetSysConfigBo(SysConfig dto) {
 
     super(dto);
   }

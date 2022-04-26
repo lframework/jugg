@@ -19,6 +19,8 @@ public class SysConfig extends BaseEntity implements BaseDto {
 
   private static final long serialVersionUID = 1L;
 
+  public static final String CACHE_NAME = "SysConfig";
+
   /**
    * ID
    */
@@ -28,6 +30,21 @@ public class SysConfig extends BaseEntity implements BaseDto {
    * 是否允许注册
    */
   private Boolean allowRegist;
+
+  /**
+   * 是否允许手机号登录
+   */
+  private Boolean allowTelephoneLogin;
+
+  /**
+   * 手机号登录时的signName
+   */
+  private String telephoneLoginSignName;
+
+  /**
+   * 手机号登录时的templateCode
+   */
+  private String telephoneLoginTemplateCode;
 
   /**
    * 是否允许锁定用户

@@ -1,6 +1,6 @@
 package com.lframework.starter.security.controller.system;
 
-import com.lframework.starter.mybatis.dto.system.config.SysConfigDto;
+import com.lframework.starter.mybatis.entity.SysConfig;
 import com.lframework.starter.mybatis.service.system.ISysConfigService;
 import com.lframework.starter.mybatis.vo.system.config.UpdateSysConfigVo;
 import com.lframework.starter.security.bo.system.config.GetSysConfigBo;
@@ -32,7 +32,7 @@ public class SysConfigController extends DefaultBaseController {
   @GetMapping
   public InvokeResult<GetSysConfigBo> get() {
 
-    SysConfigDto data = sysConfigService.get();
+    SysConfig data = sysConfigService.get();
 
     return InvokeResultBuilder.success(new GetSysConfigBo(data));
   }

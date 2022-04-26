@@ -73,41 +73,6 @@ public interface StringPool {
   String LOGIN_CAPTCHA_KEY = "login_captcha_key_{}";
 
   /**
-   * 登录API URL
-   */
-  String LOGIN_API_URL = "/auth/login";
-
-  /**
-   * 退出登录API URL
-   */
-  String LOGOUT_API_URL = "/auth/logout";
-
-  /**
-   * 获取验证码URL
-   */
-  String CAPTCHA_URL = "/auth/captcha";
-
-  /**
-   * 登录初始化参数URL
-   */
-  String AUTH_INIT_URL = "/auth/init";
-
-  /**
-   * 注册URL
-   */
-  String AUTH_REGIST_URL = "/auth/regist";
-
-  /**
-   * 登录提交验证码的参数名
-   */
-  String CAPTCHA_PARAMETER_NAME = "captcha";
-
-  /**
-   * 登录提交SN的参数名
-   */
-  String SN_PARAMETER_NAME = "sn";
-
-  /**
    * SessionId在Header中的key值
    */
   String HEADER_NAME_SESSION_ID = "X-Auth-Token";

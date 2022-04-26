@@ -23,6 +23,24 @@ public class UpdateSysConfigVo implements BaseVo, Serializable {
   private Boolean allowRegist;
 
   /**
+   * 是否允许手机号登录
+   */
+  @ApiModelProperty(value = "是否允许手机号登录", required = true)
+  @NotNull(message = "请选择是否允许手机号登录！")
+  @TypeMismatch(message = "是否允许手机号登录格式错误！")
+  private Boolean allowTelephoneLogin;
+
+  /**
+   * 手机号登录时的signName
+   */
+  private String telephoneLoginSignName;
+
+  /**
+   * 手机号登录时的templateCode
+   */
+  private String telephoneLoginTemplateCode;
+
+  /**
    * 是否允许锁定用户
    */
   @ApiModelProperty(value = "是否允许锁定用户", required = true)
@@ -102,6 +120,16 @@ public class UpdateSysConfigVo implements BaseVo, Serializable {
         if (StringUtil.isBlank(this.templateCode)) {
           throw new InputErrorException("请输入templateCode！");
         }
+      }
+    }
+
+    if (this.allowTelephoneLogin) {
+      if (StringUtil.isBlank(this.telephoneLoginSignName)) {
+        throw new InputErrorException("请输入手机号登录signName！");
+      }
+
+      if (StringUtil.isBlank(this.telephoneLoginTemplateCode)) {
+        throw new InputErrorException("请输入手机号登录templateCode！");
       }
     }
   }

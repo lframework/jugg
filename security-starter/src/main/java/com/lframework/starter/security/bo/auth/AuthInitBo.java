@@ -1,6 +1,6 @@
 package com.lframework.starter.security.bo.auth;
 
-import com.lframework.starter.mybatis.dto.system.config.SysConfigDto;
+import com.lframework.starter.mybatis.entity.SysConfig;
 import com.lframework.starter.web.bo.BaseBo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -8,13 +8,19 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class AuthInitBo extends BaseBo<SysConfigDto> {
+public class AuthInitBo extends BaseBo<SysConfig> {
 
   /**
    * 是否允许注册
    */
   @ApiModelProperty("是否允许注册")
   private Boolean allowRegist;
+
+  /**
+   * 是否允许手机号登录
+   */
+  @ApiModelProperty("是否允许手机号登录")
+  private Boolean allowTelephoneLogin;
 
   /**
    * 是否允许验证码
@@ -40,7 +46,7 @@ public class AuthInitBo extends BaseBo<SysConfigDto> {
   @ApiModelProperty("忘记密码是否使用短信")
   private Boolean forgetPswRequireSms;
 
-  public AuthInitBo(SysConfigDto dto) {
+  public AuthInitBo(SysConfig dto) {
 
     super(dto);
   }

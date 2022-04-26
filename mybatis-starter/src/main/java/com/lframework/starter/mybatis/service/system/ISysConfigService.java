@@ -1,6 +1,5 @@
 package com.lframework.starter.mybatis.service.system;
 
-import com.lframework.starter.mybatis.dto.system.config.SysConfigDto;
 import com.lframework.starter.mybatis.entity.SysConfig;
 import com.lframework.starter.mybatis.service.BaseMpService;
 import com.lframework.starter.mybatis.vo.system.config.UpdateSysConfigVo;
@@ -17,7 +16,7 @@ public interface ISysConfigService extends BaseMpService<SysConfig> {
    *
    * @return
    */
-  SysConfigDto get();
+  SysConfig get();
 
   /**
    * 修改

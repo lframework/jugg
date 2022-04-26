@@ -3,7 +3,6 @@ package com.lframework.starter.mybatis.impl.system;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.lframework.starter.mybatis.annotations.OpLog;
-import com.lframework.starter.mybatis.dto.system.config.SysConfigDto;
 import com.lframework.starter.mybatis.entity.SysConfig;
 import com.lframework.starter.mybatis.enums.OpLogType;
 import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
@@ -18,11 +17,11 @@ public class DefaultSysConfigServiceImpl extends
     BaseMpServiceImpl<DefaultSysConfigMapper, SysConfig>
     implements ISysConfigService {
 
-  @Cacheable(value = SysConfigDto.CACHE_NAME, key = "'config'", unless = "#result == null")
+  @Cacheable(value = SysConfig.CACHE_NAME, key = "'config'", unless = "#result == null")
   @Override
-  public SysConfigDto get() {
+  public SysConfig get() {
 
-    return getBaseMapper().get();
+    return getBaseMapper().selectOne(Wrappers.lambdaQuery(SysConfig.class));
   }
 
   @OpLog(type = OpLogType.OTHER, name = "修改系统设置")
@@ -40,7 +39,10 @@ public class DefaultSysConfigServiceImpl extends
         .set(SysConfig::getForgetPswRequireMail, vo.getForgetPswRequireMail())
         .set(SysConfig::getForgetPswRequireSms, vo.getForgetPswRequireSms())
         .set(SysConfig::getSignName, vo.getSignName())
-        .set(SysConfig::getTemplateCode, vo.getTemplateCode());
+        .set(SysConfig::getTemplateCode, vo.getTemplateCode())
+        .set(SysConfig::getAllowTelephoneLogin, vo.getAllowTelephoneLogin())
+        .set(SysConfig::getTelephoneLoginSignName, vo.getTelephoneLoginSignName())
+        .set(SysConfig::getTelephoneLoginTemplateCode, vo.getTelephoneLoginTemplateCode());
     getBaseMapper().update(updateWrapper);
 
     OpLogUtil.setExtra(vo);
@@ -48,7 +50,7 @@ public class DefaultSysConfigServiceImpl extends
     thisService.cleanCacheByKey("config");
   }
 
-  @CacheEvict(value = SysConfigDto.CACHE_NAME, key = "#key")
+  @CacheEvict(value = SysConfig.CACHE_NAME, key = "#key")
   @Override
   public void cleanCacheByKey(String key) {
 

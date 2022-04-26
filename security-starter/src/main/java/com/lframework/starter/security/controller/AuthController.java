@@ -2,6 +2,8 @@ package com.lframework.starter.security.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.codec.Base64;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.code.kaptcha.Producer;
 import com.lframework.common.constants.PatternPool;
 import com.lframework.common.constants.StringPool;
@@ -13,17 +15,25 @@ import com.lframework.common.utils.RegUtil;
 import com.lframework.common.utils.StringUtil;
 import com.lframework.common.utils.ThreadUtil;
 import com.lframework.starter.mybatis.components.CaptchaValidator;
-import com.lframework.starter.mybatis.dto.system.config.SysConfigDto;
+import com.lframework.starter.mybatis.entity.DefaultSysUser;
+import com.lframework.starter.mybatis.entity.DefaultSysUserTelephone;
+import com.lframework.starter.mybatis.entity.SysConfig;
 import com.lframework.starter.mybatis.events.LoginEvent;
 import com.lframework.starter.mybatis.events.LogoutEvent;
 import com.lframework.starter.mybatis.service.IMenuService;
 import com.lframework.starter.mybatis.service.IUserService;
 import com.lframework.starter.mybatis.service.system.ISysConfigService;
 import com.lframework.starter.mybatis.service.system.ISysUserService;
+import com.lframework.starter.mybatis.service.system.ISysUserTelephoneService;
+import com.lframework.starter.mybatis.vo.system.user.GetTelephoneLoginCaptchaVo;
 import com.lframework.starter.mybatis.vo.system.user.LoginVo;
 import com.lframework.starter.mybatis.vo.system.user.RegistUserVo;
+import com.lframework.starter.mybatis.vo.system.user.TelephoneBindUserVo;
+import com.lframework.starter.mybatis.vo.system.user.TelephoneLoginVo;
 import com.lframework.starter.security.bo.auth.AuthInitBo;
 import com.lframework.starter.security.bo.auth.ForgetPswUserInfoBo;
+import com.lframework.starter.security.bo.auth.LoginBo;
+import com.lframework.starter.security.bo.auth.TelephoneLoginBo;
 import com.lframework.starter.web.components.redis.RedisHandler;
 import com.lframework.starter.web.components.security.IUserTokenResolver;
 import com.lframework.starter.web.components.security.PasswordEncoderWrapper;
@@ -112,20 +122,23 @@ public class AuthController extends SecurityController {
   @Autowired
   private IUserTokenResolver userTokenResolver;
 
+  @Autowired
+  private ISysUserTelephoneService sysUserTelephoneService;
+
   @ApiOperation(value = "获取登录初始化参数", notes = "用于初始化登录页面")
-  @GetMapping(StringPool.AUTH_INIT_URL)
+  @GetMapping("/auth/init")
   public InvokeResult<AuthInitBo> getInit() {
 
-    SysConfigDto data = sysConfigService.get();
+    SysConfig data = sysConfigService.get();
 
     return InvokeResultBuilder.success(new AuthInitBo(data));
   }
 
   @ApiOperation(value = "注册")
-  @PostMapping(StringPool.AUTH_REGIST_URL)
+  @PostMapping("/auth/regist")
   public InvokeResult<Void> regist(@Valid RegistUserVo vo) {
 
-    SysConfigDto config = sysConfigService.get();
+    SysConfig config = sysConfigService.get();
     if (!config.getAllowRegist()) {
       throw new DefaultClientException("系统不允许注册账户！");
     }
@@ -139,7 +152,7 @@ public class AuthController extends SecurityController {
    * 获取登录验证码
    */
   @ApiOperation(value = "获取登录验证码")
-  @GetMapping(StringPool.CAPTCHA_URL)
+  @GetMapping("/auth/captcha")
   public InvokeResult<GenerateCaptchaDto> generateCaptcha() {
 
     String code = producer.createText();
@@ -168,8 +181,8 @@ public class AuthController extends SecurityController {
   }
 
   @ApiOperation("登录")
-  @PostMapping(StringPool.LOGIN_API_URL)
-  public InvokeResult<LoginDto> login(@Valid LoginVo vo) {
+  @PostMapping("/auth/login")
+  public InvokeResult<LoginBo> login(@Valid LoginVo vo) {
 
     String username = vo.getUsername();
     String password = vo.getPassword();
@@ -180,63 +193,17 @@ public class AuthController extends SecurityController {
     String captcha = vo.getCaptcha();
     captchaValidator.validate(sn, captcha);
 
+    this.checkUserLogin(username, password);
+
     AbstractUserDetails user = userDetailsService.loadUserByUsername(username);
-    if (!passwordEncoderWrapper.getEncoder().matches(password, user.getPassword())) {
-      SysConfigDto config = sysConfigService.get();
-      if (config.getAllowLock()) {
-        String lockKey = username + "_" + DateUtil.formatDate(LocalDate.now()) + "_LOGIN_LOCK";
-        long loginErrorNum = redisHandler.incr(lockKey, 1);
-        redisHandler.expire(lockKey, 86400000L);
-        if (loginErrorNum < config.getFailNum()) {
-          throw new UserLoginException(
-              "您已经登录失败" + loginErrorNum + "次，您还可以尝试" + (config.getFailNum() - loginErrorNum)
-                  + "次！");
-        } else {
-          userService.lockById(user.getId());
-          redisHandler.expire(lockKey, 1L);
-          // 锁定用户
-          throw new UserLoginException("用户已锁定，无法登录！");
-        }
-      }
 
-      throw new UserLoginException("用户名或密码错误！");
-    }
+    LoginDto dto = this.doLogin(user);
 
-    if (!user.isAccountNonExpired()) {
-      throw new UserLoginException("账户已过期，不允许登录！");
-    }
-
-    if (!user.isAccountNonLocked()) {
-      throw new UserLoginException("账户已过期，不允许登录！");
-    }
-
-    if (!user.isAccountNonLocked()) {
-      throw new UserLoginException("账户已锁定，不允许登录！");
-    }
-
-    if (!user.isEnabled()) {
-      throw new UserLoginException("账户已停用，不允许登录！");
-    }
-
-    if (user.isNoPermission()) {
-      throw new UserLoginException("账户未授权，不允许登录！");
-    }
-
-    // 登录
-    StpUtil.login(user.getUsername());
-
-    StpUtil.getSession().set(SecurityConstants.USER_INFO_KEY, user);
-
-    String token = userTokenResolver.getToken();
-    ApplicationUtil.publishEvent(new LoginEvent(this, SecurityUtil.getCurrentUser(), token));
-
-    LoginDto dto = new LoginDto(token, user.getName(), user.getPermissions());
-
-    return InvokeResultBuilder.success(dto);
+    return InvokeResultBuilder.success(new LoginBo(dto));
   }
 
   @ApiOperation("退出登录")
-  @PostMapping(StringPool.LOGOUT_API_URL)
+  @PostMapping("/auth/logout")
   public InvokeResult<Void> logout() {
 
     AbstractUserDetails user = getCurrentUser();
@@ -253,6 +220,144 @@ public class AuthController extends SecurityController {
     }
 
     return InvokeResultBuilder.success();
+  }
+
+  @ApiOperation("手机号登录")
+  @PostMapping("/auth/login/telephone")
+  public InvokeResult<TelephoneLoginBo> telephoneLogin(@Valid TelephoneLoginVo vo) {
+
+    SysConfig sysConfig = sysConfigService.get();
+
+    if (!sysConfig.getAllowTelephoneLogin()) {
+      throw new DefaultClientException("系统不允许手机号登录！");
+    }
+
+    // 校验验证码
+    String key = "TELEPHONE_LOGIN_SMS_CODE_" + vo.getTelephone();
+    String checkKey = "TELEPHONE_LOGIN_CHECK_SMS_CODE_" + vo.getTelephone();
+
+    String code = (String) redisHandler.get(key);
+    if (code == null) {
+      throw new DefaultClientException("验证码已过期，请重新获取！");
+    }
+
+    if (!code.equalsIgnoreCase(vo.getCaptcha())) {
+      throw new DefaultClientException("验证码不正确，请重新输入！");
+    }
+
+    DefaultSysUserTelephone record = sysUserTelephoneService.getOne(
+        Wrappers.lambdaQuery(DefaultSysUserTelephone.class)
+            .eq(DefaultSysUserTelephone::getTelephone, vo.getTelephone()));
+    if (record == null) {
+      // 先插入手机号记录
+      record = new DefaultSysUserTelephone();
+      record.setId(IdUtil.getId());
+      record.setTelephone(vo.getTelephone());
+
+      sysUserTelephoneService.save(record);
+    }
+
+    try {
+      // 是否已经绑定用户
+      boolean isBind = !StringUtil.isBlank(record.getUserId());
+      if (isBind) {
+        // 查询用户
+        DefaultSysUser sysUser = userService.getById(record.getUserId());
+
+        // 进行登录
+        AbstractUserDetails user = userDetailsService.loadUserByUsername(sysUser.getUsername());
+        LoginDto dto = this.doLogin(user);
+
+        return InvokeResultBuilder.success(new TelephoneLoginBo(dto));
+      } else {
+        // 需要绑定用户
+        TelephoneLoginBo result = new TelephoneLoginBo();
+        result.setIsBind(Boolean.FALSE);
+
+        // 手机号绑定用户仅限15分钟
+        String telephoneBindCheckKey = "TELEPHONE_BIND_USER_FLAG_" + vo.getTelephone();
+        // 15分钟有效期
+        redisHandler.set(telephoneBindCheckKey, "1", 15 * 60 * 1000);
+
+        return InvokeResultBuilder.success(result);
+      }
+    } finally {
+      // 删除Key
+      redisHandler.del(key, checkKey);
+    }
+  }
+
+  @ApiOperation("发送手机号登录的验证码")
+  @GetMapping("/auth/login/telephone/captcha")
+  public InvokeResult<Void> sendTelephoneLoginCaptcha(@Valid GetTelephoneLoginCaptchaVo vo) {
+
+    SysConfig sysConfig = sysConfigService.get();
+
+    if (!sysConfig.getAllowTelephoneLogin()) {
+      throw new DefaultClientException("系统不允许手机号登录！");
+    }
+
+    String telephone = vo.getTelephone();
+    // 发送短信验证码
+    String key = "TELEPHONE_LOGIN_SMS_CODE_" + telephone;
+    String checkKey = "TELEPHONE_LOGIN_CHECK_SMS_CODE_" + telephone;
+    if (redisHandler.get(checkKey) != null) {
+      throw new DefaultClientException("获取验证码过于频繁，请稍后再试！");
+    } else {
+      redisHandler.set(checkKey, true, 60 * 1000L);
+    }
+
+    String code = (String) redisHandler.get(key);
+    if (code == null) {
+      code = producer.createText();
+      redisHandler.set(key, code, 15 * 60 * 1000L);
+    }
+
+    String captcha = code;
+
+    /*ThreadUtil.execAsync(() -> {
+      aliSmsService.send(telephone, sysConfig.getTelephoneLoginSignName(),
+          sysConfig.getTelephoneLoginTemplateCode(), Collections.singletonMap("code", captcha));
+    });*/
+    log.info("captcha={}", captcha);
+
+    return InvokeResultBuilder.success();
+  }
+
+  @ApiOperation("手机号绑定用户")
+  @PostMapping("/auth/bind/telephone")
+  public InvokeResult<LoginBo> telephoneBindUser(@Valid TelephoneBindUserVo vo) {
+
+    SysConfig sysConfig = sysConfigService.get();
+
+    if (!sysConfig.getAllowTelephoneLogin()) {
+      throw new DefaultClientException("系统不允许手机号登录！");
+    }
+
+    String telephoneBindCheckKey = "TELEPHONE_BIND_USER_FLAG_" + vo.getTelephone();
+    if (redisHandler.get(telephoneBindCheckKey) == null) {
+      throw new DefaultClientException("由于您长时间未操作，无法绑定账号，请重新进行操作！");
+    }
+
+    String username = vo.getUsername();
+    String password = vo.getPassword();
+
+    this.checkUserLogin(username, password);
+
+    try {
+      AbstractUserDetails user = userDetailsService.loadUserByUsername(username);
+
+      LoginDto dto = this.doLogin(user);
+
+      Wrapper<DefaultSysUserTelephone> updateWrapper = Wrappers.lambdaUpdate(
+              DefaultSysUserTelephone.class).set(DefaultSysUserTelephone::getUserId, user.getId())
+          .eq(DefaultSysUserTelephone::getTelephone, vo.getTelephone());
+      sysUserTelephoneService.update(updateWrapper);
+
+      return InvokeResultBuilder.success(new LoginBo(dto));
+    } finally {
+      redisHandler.del(telephoneBindCheckKey);
+    }
   }
 
   @ApiOperation(value = "获取用户信息")
@@ -303,7 +408,7 @@ public class AuthController extends SecurityController {
   public InvokeResult<ForgetPswUserInfoBo> getByForget(
       @NotBlank(message = "用户名不能为空！") String username) {
 
-    SysConfigDto sysConfig = sysConfigService.get();
+    SysConfig sysConfig = sysConfigService.get();
     if (!sysConfig.getAllowForgetPsw()) {
       throw new DefaultClientException("系统不允许重置密码！");
     }
@@ -327,7 +432,7 @@ public class AuthController extends SecurityController {
   @GetMapping("/auth/forget/mail/code")
   public InvokeResult<Void> sendMailCodeByForget(@NotBlank(message = "用户名不能为空！") String username) {
 
-    SysConfigDto sysConfig = sysConfigService.get();
+    SysConfig sysConfig = sysConfigService.get();
     if (!sysConfig.getAllowForgetPsw()) {
       throw new DefaultClientException("系统不允许重置密码！");
     }
@@ -375,7 +480,7 @@ public class AuthController extends SecurityController {
       @NotBlank(message = "新密码不能为空！") @Pattern(regexp = PatternPool.PATTERN_STR_PASSWORD, message = "密码长度必须为5-16位，只允许包含大写字母、小写字母、数字、下划线") String password,
       @NotBlank(message = "验证码不能为空！") String captcha) {
 
-    SysConfigDto sysConfig = sysConfigService.get();
+    SysConfig sysConfig = sysConfigService.get();
     if (!sysConfig.getAllowForgetPsw()) {
       throw new DefaultClientException("系统不允许重置密码！");
     }
@@ -414,7 +519,7 @@ public class AuthController extends SecurityController {
   public InvokeResult<Void> sendSmsCodeByForget(
       @ApiParam(value = "用户名", required = true) @NotBlank(message = "用户名不能为空！") String username) {
 
-    SysConfigDto sysConfig = sysConfigService.get();
+    SysConfig sysConfig = sysConfigService.get();
     if (!sysConfig.getAllowForgetPsw()) {
       throw new DefaultClientException("系统不允许重置密码！");
     }
@@ -463,7 +568,7 @@ public class AuthController extends SecurityController {
       @NotBlank(message = "新密码不能为空！") @Pattern(regexp = PatternPool.PATTERN_STR_PASSWORD, message = "密码长度必须为5-16位，只允许包含大写字母、小写字母、数字、下划线") String password,
       @NotBlank(message = "验证码不能为空！") String captcha) {
 
-    SysConfigDto sysConfig = sysConfigService.get();
+    SysConfig sysConfig = sysConfigService.get();
     if (!sysConfig.getAllowForgetPsw()) {
       throw new DefaultClientException("系统不允许重置密码！");
     }
@@ -489,5 +594,63 @@ public class AuthController extends SecurityController {
     userService.updatePassword(user.getId(), password);
 
     return InvokeResultBuilder.success();
+  }
+
+  private LoginDto doLogin(AbstractUserDetails user) {
+
+    if (!user.isAccountNonExpired()) {
+      throw new UserLoginException("账户已过期，不允许登录！");
+    }
+
+    if (!user.isAccountNonLocked()) {
+      throw new UserLoginException("账户已过期，不允许登录！");
+    }
+
+    if (!user.isAccountNonLocked()) {
+      throw new UserLoginException("账户已锁定，不允许登录！");
+    }
+
+    if (!user.isEnabled()) {
+      throw new UserLoginException("账户已停用，不允许登录！");
+    }
+
+    if (user.isNoPermission()) {
+      throw new UserLoginException("账户未授权，不允许登录！");
+    }
+
+    // 登录
+    StpUtil.login(user.getUsername());
+
+    StpUtil.getSession().set(SecurityConstants.USER_INFO_KEY, user);
+
+    String token = userTokenResolver.getToken();
+    ApplicationUtil.publishEvent(new LoginEvent(this, SecurityUtil.getCurrentUser(), token));
+
+    LoginDto dto = new LoginDto(token, user.getName(), user.getPermissions());
+
+    return dto;
+  }
+
+  private void checkUserLogin(String username, String password) {
+    AbstractUserDetails user = userDetailsService.loadUserByUsername(username);
+    if (!passwordEncoderWrapper.getEncoder().matches(password, user.getPassword())) {
+      SysConfig config = sysConfigService.get();
+      if (config.getAllowLock()) {
+        String lockKey = username + "_" + DateUtil.formatDate(LocalDate.now()) + "_LOGIN_LOCK";
+        long loginErrorNum = redisHandler.incr(lockKey, 1);
+        redisHandler.expire(lockKey, 86400000L);
+        if (loginErrorNum < config.getFailNum()) {
+          throw new UserLoginException(
+              "您已经登录失败" + loginErrorNum + "次，您还可以尝试" + (config.getFailNum() - loginErrorNum)
+                  + "次！");
+        } else {
+          userService.lockById(user.getId());
+          redisHandler.expire(lockKey, 1L);
+          // 锁定用户
+          throw new UserLoginException("用户已锁定，无法登录！");
+        }
+      }
+      throw new UserLoginException("用户名或密码错误！");
+    }
   }
 }

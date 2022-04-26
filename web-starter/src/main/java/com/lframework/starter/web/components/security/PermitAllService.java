@@ -1,6 +1,5 @@
 package com.lframework.starter.web.components.security;
 
-import com.lframework.common.constants.StringPool;
 import com.lframework.common.utils.StringUtil;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
@@ -40,15 +39,18 @@ public class PermitAllService {
     }
 
     // 登录
-    results.add(new SimpleEntry<>(HttpMethod.POST, StringPool.LOGIN_API_URL));
+    results.add(new SimpleEntry<>(HttpMethod.POST, "/auth/login"));
+    results.add(new SimpleEntry<>(HttpMethod.POST, "/auth/login/telephone"));
+    results.add(new SimpleEntry<>(HttpMethod.POST, "/auth/bind/telephone"));
+    results.add(new SimpleEntry<>(HttpMethod.GET, "/auth/login/telephone/captcha"));
     // 获取验证码
-    results.add(new SimpleEntry<>(HttpMethod.GET, StringPool.CAPTCHA_URL));
+    results.add(new SimpleEntry<>(HttpMethod.GET, "/auth/captcha"));
     // 退出登录
-    results.add(new SimpleEntry<>(HttpMethod.POST, StringPool.LOGOUT_API_URL));
+    results.add(new SimpleEntry<>(HttpMethod.POST, "/auth/logout"));
     // 系统初始化
-    results.add(new SimpleEntry<>(HttpMethod.GET, StringPool.AUTH_INIT_URL));
+    results.add(new SimpleEntry<>(HttpMethod.GET, "/auth/init"));
     // 注册
-    results.add(new SimpleEntry<>(HttpMethod.POST, StringPool.AUTH_REGIST_URL));
+    results.add(new SimpleEntry<>(HttpMethod.POST, "/auth/regist"));
     // 访问上传文件url
     results.add(new SimpleEntry<>(HttpMethod.GET,
         uploadUrl.endsWith("/") ? uploadUrl + "**" : uploadUrl + "/**"));

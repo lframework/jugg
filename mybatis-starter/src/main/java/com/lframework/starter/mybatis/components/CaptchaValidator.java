@@ -3,7 +3,7 @@ package com.lframework.starter.mybatis.components;
 import com.lframework.common.constants.StringPool;
 import com.lframework.common.exceptions.impl.DefaultClientException;
 import com.lframework.common.utils.StringUtil;
-import com.lframework.starter.mybatis.dto.system.config.SysConfigDto;
+import com.lframework.starter.mybatis.entity.SysConfig;
 import com.lframework.starter.mybatis.service.system.ISysConfigService;
 import com.lframework.starter.web.components.redis.RedisHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +33,7 @@ public class CaptchaValidator {
 
     log.debug("开始校验验证码，sn={}, captcha={}", sn, captcha);
 
-    SysConfigDto config = sysConfigService.get();
+    SysConfig config = sysConfigService.get();
     if (!config.getAllowCaptcha()) {
       log.debug("系统配置无需验证码，直接验证通过");
       return;
