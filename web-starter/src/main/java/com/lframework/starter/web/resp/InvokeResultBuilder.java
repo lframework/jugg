@@ -2,6 +2,7 @@ package com.lframework.starter.web.resp;
 
 import com.lframework.common.constants.ResponseConstants;
 import com.lframework.common.exceptions.BaseException;
+import com.lframework.starter.web.utils.LogUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -52,6 +53,7 @@ public class InvokeResultBuilder {
     InvokeResult<Void> invokeResult = new InvokeResult<>();
     invokeResult.setCode(ResponseConstants.INVOKE_RESULT_FAIL_CODE);
     invokeResult.setMsg(ResponseConstants.INVOKE_RESULT_FAIL_MSG);
+    invokeResult.setTraceId(LogUtil.getTraceId(false));
 
     return invokeResult;
   }
@@ -67,6 +69,7 @@ public class InvokeResultBuilder {
     InvokeResult<Void> invokeResult = new InvokeResult<>();
     invokeResult.setCode(ResponseConstants.INVOKE_RESULT_FAIL_CODE);
     invokeResult.setMsg(msg);
+    invokeResult.setTraceId(LogUtil.getTraceId(false));
 
     return invokeResult;
   }
@@ -83,6 +86,7 @@ public class InvokeResultBuilder {
     invokeResult.setCode(ResponseConstants.INVOKE_RESULT_FAIL_CODE);
     invokeResult.setMsg(msg);
     invokeResult.setData(data);
+    invokeResult.setTraceId(LogUtil.getTraceId(false));
 
     return invokeResult;
   }
@@ -98,6 +102,7 @@ public class InvokeResultBuilder {
     InvokeResult<Void> invokeResult = new InvokeResult<>();
     invokeResult.setCode(e.getCode());
     invokeResult.setMsg(e.getMsg());
+    invokeResult.setTraceId(LogUtil.getTraceId(false));
 
     return invokeResult;
   }

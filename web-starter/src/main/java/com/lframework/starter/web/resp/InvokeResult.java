@@ -29,4 +29,10 @@ public class InvokeResult<T> implements Response<T> {
    */
   @ApiModelProperty("数据")
   private T data;
+
+  /**
+   * TraceId
+   */
+  @ApiModelProperty("TraceId")
+  private String traceId;
 }
