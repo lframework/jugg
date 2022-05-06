@@ -89,9 +89,6 @@ public class DefaultSysMenuServiceImpl extends
     OpLogUtil.setVariable("id", data.getId());
     OpLogUtil.setVariable("code", vo.getCode());
     OpLogUtil.setExtra(vo);
-
-    ISysMenuService thisService = getThis(this.getClass());
-    thisService.cleanCacheByKey(data.getId());
   }
 
   @OpLog(type = OpLogType.OTHER, name = "删除菜单，ID：{}", params = "#id")
@@ -108,9 +105,6 @@ public class DefaultSysMenuServiceImpl extends
     }
 
     this.doDeleteById(id);
-
-    ISysMenuService thisService = getThis(this.getClass());
-    thisService.cleanCacheByKey(id);
   }
 
   @Override
@@ -129,11 +123,6 @@ public class DefaultSysMenuServiceImpl extends
     }
 
     this.doBatchEnable(ids, userId);
-
-    ISysMenuService thisService = getThis(this.getClass());
-    for (String id : ids) {
-      thisService.cleanCacheByKey(id);
-    }
   }
 
   @OpLog(type = OpLogType.OTHER, name = "停用菜单，ID：{}", params = "#ids", loopFormat = true)
@@ -146,11 +135,6 @@ public class DefaultSysMenuServiceImpl extends
     }
 
     this.doBatchUnable(ids, userId);
-
-    ISysMenuService thisService = getThis(this.getClass());
-    for (String id : ids) {
-      thisService.cleanCacheByKey(id);
-    }
   }
 
   protected List<DefaultSysMenuDto> doQuery() {

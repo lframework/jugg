@@ -98,6 +98,11 @@ public class SysRoleController extends DefaultBaseController {
       @ApiParam(value = "角色ID", required = true) @NotEmpty(message = "请选择需要停用的角色！") @RequestBody List<String> ids) {
 
     sysRoleService.batchUnable(ids);
+
+    for (String id : ids) {
+      sysRoleService.cleanCacheByKey(id);
+    }
+
     return InvokeResultBuilder.success();
   }
 
@@ -111,6 +116,11 @@ public class SysRoleController extends DefaultBaseController {
       @ApiParam(value = "角色ID", required = true) @NotEmpty(message = "请选择需要启用的角色！") @RequestBody List<String> ids) {
 
     sysRoleService.batchEnable(ids);
+
+    for (String id : ids) {
+      sysRoleService.cleanCacheByKey(id);
+    }
+
     return InvokeResultBuilder.success();
   }
 
@@ -136,6 +146,8 @@ public class SysRoleController extends DefaultBaseController {
   public InvokeResult<Void> update(@Valid UpdateSysRoleVo vo) {
 
     sysRoleService.update(vo);
+
+    sysRoleService.cleanCacheByKey(vo.getId());
 
     return InvokeResultBuilder.success();
   }

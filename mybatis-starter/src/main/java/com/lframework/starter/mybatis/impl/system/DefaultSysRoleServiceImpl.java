@@ -95,11 +95,6 @@ public class DefaultSysRoleServiceImpl extends
     }
 
     this.doBatchUnable(ids);
-
-    ISysRoleService thisService = getThis(this.getClass());
-    for (String id : ids) {
-      thisService.cleanCacheByKey(id);
-    }
   }
 
   @OpLog(type = OpLogType.OTHER, name = "启用角色，ID：{}", params = "#ids", loopFormat = true)
@@ -121,11 +116,6 @@ public class DefaultSysRoleServiceImpl extends
     }
 
     this.doBatchEnable(ids);
-
-    ISysRoleService thisService = getThis(this.getClass());
-    for (String id : ids) {
-      thisService.cleanCacheByKey(id);
-    }
   }
 
   @OpLog(type = OpLogType.OTHER, name = "新增角色，ID：{}, 编号：{}", params = {"#id", "#code"})
@@ -169,9 +159,6 @@ public class DefaultSysRoleServiceImpl extends
     OpLogUtil.setVariable("id", data.getId());
     OpLogUtil.setVariable("code", vo.getCode());
     OpLogUtil.setExtra(vo);
-
-    ISysRoleService thisService = getThis(this.getClass());
-    thisService.cleanCacheByKey(data.getId());
   }
 
   @Override

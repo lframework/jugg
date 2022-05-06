@@ -7,8 +7,8 @@ import lombok.Data;
 @Data
 public class DefaultSysUserPositionDto implements BaseDto, Serializable {
 
-  public static final String CACHE_NAME = "DefaultSysUserPositionDto";
   private static final long serialVersionUID = 1L;
+
   /**
    * ID
    */

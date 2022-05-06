@@ -102,6 +102,11 @@ public class SysUserController extends DefaultBaseController {
       @ApiParam(value = "用户ID", required = true) @NotEmpty(message = "请选择需要停用的用户！") @RequestBody List<String> ids) {
 
     sysUserService.batchUnable(ids);
+
+    for (String id : ids) {
+      sysUserService.cleanCacheByKey(id);
+    }
+
     return InvokeResultBuilder.success();
   }
 
@@ -115,6 +120,11 @@ public class SysUserController extends DefaultBaseController {
       @ApiParam(value = "用户ID", required = true) @NotEmpty(message = "请选择需要启用的用户！") @RequestBody List<String> ids) {
 
     sysUserService.batchEnable(ids);
+
+    for (String id : ids) {
+      sysUserService.cleanCacheByKey(id);
+    }
+
     return InvokeResultBuilder.success();
   }
 
@@ -141,6 +151,8 @@ public class SysUserController extends DefaultBaseController {
 
     sysUserService.update(vo);
 
+    sysUserService.cleanCacheByKey(vo.getId());
+
     return InvokeResultBuilder.success();
   }
 
@@ -154,6 +166,8 @@ public class SysUserController extends DefaultBaseController {
   public InvokeResult<Void> unlock(@NotBlank(message = "ID不能为空！") String id) {
 
     userService.unlockById(id);
+
+    userService.cleanCacheByKey(id);
 
     return InvokeResultBuilder.success();
   }

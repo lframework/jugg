@@ -94,6 +94,11 @@ public class SysDeptController extends DefaultBaseController {
       @ApiParam(value = "部门ID", required = true) @NotEmpty(message = "请选择需要停用的部门！") @RequestBody List<String> ids) {
 
     sysDeptService.batchUnable(ids);
+
+    for (String id : ids) {
+      sysDeptService.cleanCacheByKey(id);
+    }
+
     return InvokeResultBuilder.success();
   }
 
@@ -107,6 +112,11 @@ public class SysDeptController extends DefaultBaseController {
       @ApiParam(value = "部门ID", required = true) @NotEmpty(message = "请选择需要启用的部门！") @RequestBody List<String> ids) {
 
     sysDeptService.batchEnable(ids);
+
+    for (String id : ids) {
+      sysDeptService.cleanCacheByKey(id);
+    }
+
     return InvokeResultBuilder.success();
   }
 
@@ -132,6 +142,8 @@ public class SysDeptController extends DefaultBaseController {
   public InvokeResult<Void> update(@Valid UpdateSysDeptVo vo) {
 
     sysDeptService.update(vo);
+
+    sysDeptService.cleanCacheByKey(vo.getId());
 
     return InvokeResultBuilder.success();
   }

@@ -13,8 +13,6 @@ import com.lframework.starter.mybatis.mappers.system.DefaultSysUserPositionMappe
 import com.lframework.starter.mybatis.service.system.ISysUserPositionService;
 import com.lframework.starter.mybatis.vo.system.position.SysUserPositionSettingVo;
 import java.util.List;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 
 public class DefaultSysUserPositionServiceImpl
@@ -28,12 +26,8 @@ public class DefaultSysUserPositionServiceImpl
   public void setting(SysUserPositionSettingVo vo) {
 
     this.doSetting(vo);
-
-    ISysUserPositionService thisService = getThis(this.getClass());
-    thisService.cleanCacheByKey(vo.getUserId());
   }
 
-  @Cacheable(value = DefaultSysUserPositionDto.CACHE_NAME, key = "#userId")
   @Override
   public List<DefaultSysUserPositionDto> getByUserId(String userId) {
 
@@ -62,11 +56,5 @@ public class DefaultSysUserPositionServiceImpl
   protected List<DefaultSysUserPositionDto> doGetByUserId(String userId) {
 
     return getBaseMapper().getByUserId(userId);
-  }
-
-  @CacheEvict(value = DefaultSysUserPositionDto.CACHE_NAME, key = "#key")
-  @Override
-  public void cleanCacheByKey(String key) {
-
   }
 }

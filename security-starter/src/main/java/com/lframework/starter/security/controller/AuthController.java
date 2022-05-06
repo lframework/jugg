@@ -20,6 +20,7 @@ import com.lframework.starter.mybatis.entity.DefaultSysUserTelephone;
 import com.lframework.starter.mybatis.entity.SysConfig;
 import com.lframework.starter.mybatis.events.LoginEvent;
 import com.lframework.starter.mybatis.events.LogoutEvent;
+import com.lframework.starter.mybatis.events.UpdateUserEvent;
 import com.lframework.starter.mybatis.service.IMenuService;
 import com.lframework.starter.mybatis.service.IUserService;
 import com.lframework.starter.mybatis.service.system.ISysConfigService;
@@ -512,6 +513,10 @@ public class AuthController extends SecurityController {
 
     userService.updatePassword(user.getId(), password);
 
+    userService.cleanCacheByKey(user.getId());
+
+    ApplicationUtil.publishEvent(new UpdateUserEvent(this, user.getId()));
+
     return InvokeResultBuilder.success();
   }
 
@@ -652,6 +657,9 @@ public class AuthController extends SecurityController {
                   + "次！");
         } else {
           userService.lockById(user.getId());
+
+          userService.cleanCacheByKey(user.getId());
+
           redisHandler.expire(lockKey, 1L);
           // 锁定用户
           throw new UserLoginException("用户已锁定，无法登录！");

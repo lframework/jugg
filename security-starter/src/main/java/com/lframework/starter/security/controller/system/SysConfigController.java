@@ -46,6 +46,8 @@ public class SysConfigController extends DefaultBaseController {
 
     sysConfigService.update(vo);
 
+    sysConfigService.cleanCacheByKey(null);
+
     return InvokeResultBuilder.success();
   }
 }

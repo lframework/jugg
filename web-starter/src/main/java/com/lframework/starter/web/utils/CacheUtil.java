@@ -1,22 +1,22 @@
 package com.lframework.starter.web.utils;
 
-import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CachingConfigurer;
 
 /**
  * 缓存工具类 基于SpringCache
  */
 public class CacheUtil {
 
-  private static CacheManager cacheManager = ApplicationUtil.getBean(CacheManager.class);
+  private static final CachingConfigurer configurer = ApplicationUtil.getBean(CachingConfigurer.class);
 
   public static <T> T get(String cacheName, Object key, Class<T> clazz) {
 
-    return cacheManager.getCache(cacheName).get(key, clazz);
+    return configurer.cacheManager().getCache(cacheName).get(key, clazz);
   }
 
   public static void put(String cacheName, Object key, Object value) {
 
-    cacheManager.getCache(cacheName).put(key, value);
+    configurer.cacheManager().getCache(cacheName).put(key, value);
   }
 
   public static void putIfNotEmpty(String cacheName, Object key, Object value) {
@@ -30,6 +30,6 @@ public class CacheUtil {
 
   public static void evict(String cacheName, Object key) {
 
-    cacheManager.getCache(cacheName).evict(key);
+    configurer.cacheManager().getCache(cacheName).evict(key);
   }
 }

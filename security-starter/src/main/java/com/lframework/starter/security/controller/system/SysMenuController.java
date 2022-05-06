@@ -114,6 +114,8 @@ public class SysMenuController extends DefaultBaseController {
 
     sysMenuService.update(vo);
 
+    sysMenuService.cleanCacheByKey(vo.getId());
+
     return InvokeResultBuilder.success();
   }
 
@@ -127,6 +129,9 @@ public class SysMenuController extends DefaultBaseController {
   public InvokeResult<Void> delete(@NotBlank(message = "ID不能为空！") String id) {
 
     sysMenuService.deleteById(id);
+
+    sysMenuService.cleanCacheByKey(id);
+
     return InvokeResultBuilder.success();
   }
 
@@ -141,6 +146,10 @@ public class SysMenuController extends DefaultBaseController {
 
     sysMenuService.batchEnable(ids, SecurityUtil.getCurrentUser().getId());
 
+    for (String id : ids) {
+      sysMenuService.cleanCacheByKey(id);
+    }
+
     return InvokeResultBuilder.success();
   }
 
@@ -154,6 +163,10 @@ public class SysMenuController extends DefaultBaseController {
       @ApiParam(value = "菜单ID", required = true) @NotEmpty(message = "请选择需要停用的菜单！") @RequestBody List<String> ids) {
 
     sysMenuService.batchUnable(ids, SecurityUtil.getCurrentUser().getId());
+
+    for (String id : ids) {
+      sysMenuService.cleanCacheByKey(id);
+    }
 
     return InvokeResultBuilder.success();
   }

@@ -98,6 +98,11 @@ public class SysPositionController extends DefaultBaseController {
       @ApiParam(value = "岗位ID", required = true) @NotEmpty(message = "请选择需要停用的岗位！") @RequestBody List<String> ids) {
 
     sysPositionService.batchUnable(ids);
+
+    for (String id : ids) {
+      sysPositionService.cleanCacheByKey(id);
+    }
+
     return InvokeResultBuilder.success();
   }
 
@@ -111,6 +116,11 @@ public class SysPositionController extends DefaultBaseController {
       @ApiParam(value = "岗位ID", required = true) @NotEmpty(message = "请选择需要启用的岗位！") @RequestBody List<String> ids) {
 
     sysPositionService.batchEnable(ids);
+
+    for (String id : ids) {
+      sysPositionService.cleanCacheByKey(id);
+    }
+
     return InvokeResultBuilder.success();
   }
 
@@ -136,6 +146,8 @@ public class SysPositionController extends DefaultBaseController {
   public InvokeResult<Void> update(@Valid UpdateSysPositionVo vo) {
 
     sysPositionService.update(vo);
+
+    sysPositionService.cleanCacheByKey(vo.getId());
 
     return InvokeResultBuilder.success();
   }

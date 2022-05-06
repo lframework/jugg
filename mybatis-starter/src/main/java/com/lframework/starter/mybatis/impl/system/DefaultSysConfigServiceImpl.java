@@ -28,8 +28,6 @@ public class DefaultSysConfigServiceImpl extends
   @Override
   public void update(UpdateSysConfigVo vo) {
 
-    ISysConfigService thisService = getThis(this.getClass());
-
     Wrapper<SysConfig> updateWrapper = Wrappers.lambdaUpdate(SysConfig.class)
         .set(SysConfig::getAllowRegist, vo.getAllowRegist())
         .set(SysConfig::getAllowLock, vo.getAllowLock())
@@ -46,11 +44,9 @@ public class DefaultSysConfigServiceImpl extends
     getBaseMapper().update(updateWrapper);
 
     OpLogUtil.setExtra(vo);
-
-    thisService.cleanCacheByKey("config");
   }
 
-  @CacheEvict(value = SysConfig.CACHE_NAME, key = "#key")
+  @CacheEvict(value = SysConfig.CACHE_NAME, key = "'config'")
   @Override
   public void cleanCacheByKey(String key) {
 

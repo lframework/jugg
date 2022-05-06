@@ -8,6 +8,7 @@ import com.lframework.common.utils.StringUtil;
 import com.lframework.starter.mybatis.annotations.OpLog;
 import com.lframework.starter.mybatis.dto.DefaultOpLogsDto;
 import com.lframework.starter.mybatis.enums.OpLogType;
+import com.lframework.starter.mybatis.events.UpdateUserEvent;
 import com.lframework.starter.mybatis.resp.PageResult;
 import com.lframework.starter.mybatis.service.IOpLogsService;
 import com.lframework.starter.mybatis.service.IUserService;
@@ -19,6 +20,7 @@ import com.lframework.starter.web.components.security.PasswordEncoderWrapper;
 import com.lframework.starter.web.dto.UserInfoDto;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
+import com.lframework.starter.web.utils.ApplicationUtil;
 import com.lframework.web.common.security.AbstractUserDetails;
 import com.lframework.web.common.security.SecurityUtil;
 import io.swagger.annotations.Api;
@@ -128,6 +130,10 @@ public class DefaultUserCenterController extends DefaultBaseController {
 
     userService.updateEmail(user.getId(), newEmail);
 
+    userService.cleanCacheByKey(user.getId());
+
+    ApplicationUtil.publishEvent(new UpdateUserEvent(this, user.getId()));
+
     return InvokeResultBuilder.success();
   }
 
@@ -154,6 +160,10 @@ public class DefaultUserCenterController extends DefaultBaseController {
     }
 
     userService.updateTelephone(user.getId(), newTelephone);
+
+    userService.cleanCacheByKey(user.getId());
+
+    ApplicationUtil.publishEvent(new UpdateUserEvent(this, user.getId()));
 
     return InvokeResultBuilder.success();
   }

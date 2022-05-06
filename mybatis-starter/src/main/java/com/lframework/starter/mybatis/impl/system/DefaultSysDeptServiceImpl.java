@@ -76,11 +76,6 @@ public class DefaultSysDeptServiceImpl extends
     batchIds.addAll(ids);
 
     this.doBatchUnable(ids);
-
-    ISysDeptService thisService = getThis(this.getClass());
-    for (String id : ids) {
-      thisService.cleanCacheByKey(id);
-    }
   }
 
   @OpLog(type = OpLogType.OTHER, name = "启用部门，ID：{}", params = "#ids", loopFormat = true)
@@ -106,11 +101,6 @@ public class DefaultSysDeptServiceImpl extends
     batchIds.addAll(ids);
 
     this.doBatchEnable(batchIds);
-
-    ISysDeptService thisService = getThis(this.getClass());
-    for (String id : ids) {
-      thisService.cleanCacheByKey(id);
-    }
   }
 
   @OpLog(type = OpLogType.OTHER, name = "新增部门，ID：{}, 编号：{}", params = {"#id", "#code"})
@@ -153,9 +143,6 @@ public class DefaultSysDeptServiceImpl extends
     OpLogUtil.setVariable("id", vo.getId());
     OpLogUtil.setVariable("code", vo.getCode());
     OpLogUtil.setExtra(vo);
-
-    ISysDeptService thisService = getThis(this.getClass());
-    thisService.cleanCacheByKey(vo.getId());
   }
 
   protected List<DefaultSysDeptDto> doSelector() {

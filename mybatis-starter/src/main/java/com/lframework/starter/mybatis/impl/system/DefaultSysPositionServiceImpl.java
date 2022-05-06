@@ -81,11 +81,6 @@ public class DefaultSysPositionServiceImpl extends
     }
 
     this.doBatchUnable(ids);
-
-    ISysPositionService thisService = getThis(this.getClass());
-    for (String id : ids) {
-      thisService.cleanCacheByKey(id);
-    }
   }
 
   @OpLog(type = OpLogType.OTHER, name = "启用岗位，ID：{}", params = "#ids", loopFormat = true)
@@ -98,11 +93,6 @@ public class DefaultSysPositionServiceImpl extends
     }
 
     this.doBatchEnable(ids);
-
-    ISysPositionService thisService = getThis(this.getClass());
-    for (String id : ids) {
-      thisService.cleanCacheByKey(id);
-    }
   }
 
   @OpLog(type = OpLogType.OTHER, name = "新增岗位，ID：{}, 编号：{}", params = {"#id", "#code"})
@@ -129,9 +119,6 @@ public class DefaultSysPositionServiceImpl extends
     OpLogUtil.setVariable("id", vo.getId());
     OpLogUtil.setVariable("code", vo.getCode());
     OpLogUtil.setExtra(vo);
-
-    ISysPositionService thisService = getThis(this.getClass());
-    thisService.cleanCacheByKey(vo.getId());
   }
 
   protected List<DefaultSysPositionDto> doQuery(QuerySysPositionVo vo) {

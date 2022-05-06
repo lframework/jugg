@@ -103,11 +103,6 @@ public class DefaultSysUserServiceImpl extends
     }
 
     this.doBatchEnable(ids);
-
-    ISysUserService thisService = getThis(this.getClass());
-    for (String id : ids) {
-      thisService.cleanCacheByKey(id);
-    }
   }
 
   @OpLog(type = OpLogType.OTHER, name = "停用用户，ID：{}", params = "#ids", loopFormat = true)
@@ -120,11 +115,6 @@ public class DefaultSysUserServiceImpl extends
     }
 
     this.doBatchUnable(ids);
-
-    ISysUserService thisService = getThis(this.getClass());
-    for (String id : ids) {
-      thisService.cleanCacheByKey(id);
-    }
   }
 
   @OpLog(type = OpLogType.OTHER, name = "新增用户，ID：{}, 编号：{}", params = {"#id", "#code"})
@@ -199,9 +189,6 @@ public class DefaultSysUserServiceImpl extends
     OpLogUtil.setVariable("id", data.getId());
     OpLogUtil.setVariable("code", vo.getCode());
     OpLogUtil.setExtra(vo);
-
-    ISysUserService thisService = getThis(this.getClass());
-    thisService.cleanCacheByKey(data.getId());
   }
 
   @Override
