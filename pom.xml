@@ -13,7 +13,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
     <spring.version>2.2.2.RELEASE</spring.version>
-    <jugg.version>2.1.6</jugg.version>
+    <jugg.version>2.1.7</jugg.version>
     <lombok.version>1.18.10</lombok.version>
     <slf4j.version>1.7.21</slf4j.version>
     <logback.version>1.1.7</logback.version>
@@ -51,7 +51,7 @@
     Jugg是基于SpringBoot、SpringSecurity、SpringSession、Vue、ElementUI的前后端分离的后台管理系统模板，将常用的开发框架整合并配置，以此来简化后台管理系统的搭建工作。
   </description>
 
-  <version>2.1.6</version>
+  <version>2.1.7</version>
 
   <dependencyManagement>
     <dependencies>
