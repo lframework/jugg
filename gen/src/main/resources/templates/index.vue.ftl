@@ -66,18 +66,18 @@
       </vxe-grid>
     </div>
     <#if create??>
-      <!-- 新增窗口 -->
-      <add ref="addDialog" @confirm="search" />
+    <!-- 新增窗口 -->
+    <add ref="addDialog" @confirm="search" />
 
     </#if>
     <#if update??>
-      <!-- 修改窗口 -->
-      <modify :id="id" ref="updateDialog" @confirm="search" />
+    <!-- 修改窗口 -->
+    <modify :id="id" ref="updateDialog" @confirm="search" />
 
     </#if>
     <#if detail??>
-      <!-- 查看窗口 -->
-      <detail :id="id" ref="viewDialog" />
+    <!-- 查看窗口 -->
+    <detail :id="id" ref="viewDialog" />
 
     </#if>
   </div>

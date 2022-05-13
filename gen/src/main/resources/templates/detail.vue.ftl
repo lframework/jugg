@@ -3,17 +3,17 @@
     <div v-if="visible" v-permission="['${moduleName}:${bizName}:query']" v-loading="loading">
       <a-descriptions :column="${detailSpan}" bordered>
         <#list columns as column>
-          <a-descriptions-item label="${column.description}" :span="${column.span}">
-              <#if column.fixEnum>
-            {{ $enums.${column.frontType}.getDesc(formData.${column.name}) }}
-              <#else>
-                  <#if column.hasAvailableTag>
-            <available-tag :available="formData.available" />
-                  <#else>
-            {{ formData.${column.name} }}
-                  </#if>
-              </#if>
-          </a-descriptions-item>
+        <a-descriptions-item label="${column.description}" :span="${column.span}">
+            <#if column.fixEnum>
+          {{ $enums.${column.frontType}.getDesc(formData.${column.name}) }}
+            <#else>
+                <#if column.hasAvailableTag>
+          <available-tag :available="formData.available" />
+                <#else>
+          {{ formData.${column.name} }}
+                </#if>
+            </#if>
+        </a-descriptions-item>
         </#list>
       </a-descriptions>
     </div>

@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>web-starter</artifactId>
-    <name>【${artifactId}】Web应用Starter</name>
+    <name>【${project.artifactId}】Web应用Starter</name>
 
     <dependencies>
         <dependency>

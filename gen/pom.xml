@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>gen</artifactId>
-    <name>【${artifactId}】代码生成器</name>
+    <name>【${project.artifactId}】代码生成器</name>
 
     <dependencies>
         <dependency>

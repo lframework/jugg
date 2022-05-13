@@ -124,6 +124,10 @@ public class ${className}Controller extends DefaultBaseController {
     public ${r"InvokeResult<Void>"} update(@Valid Update${className}Vo vo) {
 
         ${classNameProperty}Service.update(vo);
+        <#if isCache>
+
+        ${classNameProperty}Service.cleanCacheByKey(vo.get${keys[0].nameProperty}());
+        </#if>
 
         return InvokeResultBuilder.success();
     }
@@ -140,6 +144,10 @@ public class ${className}Controller extends DefaultBaseController {
     public ${r"InvokeResult<Void>"} deleteById(<#if keys[0].type == 'String'>@NotBlank<#else>@NotNull</#if>(message = "${keys[0].name}不能为空！") ${keys[0].type} ${keys[0].name}) {
 
         ${classNameProperty}Service.deleteById(${keys[0].name});
+        <#if isCache>
+
+        ${classNameProperty}Service.cleanCacheByKey(${keys[0].name});
+        </#if>
 
         return InvokeResultBuilder.success();
     }

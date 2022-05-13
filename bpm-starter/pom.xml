@@ -10,7 +10,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>bpm-starter</artifactId>
-  <name>【${artifactId}】用于集成BPM</name>
+  <name>【${project.artifactId}】用于集成BPM</name>
 
   <dependencies>
     <dependency>

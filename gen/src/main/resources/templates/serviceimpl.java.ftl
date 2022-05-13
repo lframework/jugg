@@ -66,6 +66,14 @@ public class ${className}ServiceImpl extends BaseMpServiceImpl${r"<"}${className
     }
 </#if>
 
+<#if isCache>
+    @Cacheable(value = ${className}.CACHE_NAME, key = "#${keys[0].name}", unless = "#result == null")
+</#if>
+    @Override
+    public ${className} findById(<#list keys as key>${key.type} ${key.name}<#if key_index != keys?size - 1>, </#if></#list>) {
+
+        return getBaseMapper().selectById(${keys[0].name});
+    }
 <#if create??>
 
     @OpLog(type = OpLogType.OTHER, name = "新增${classDescription}，ID：{}", params = ${r'{"#'}${create.keys[0].name}${r'"}'})
@@ -147,12 +155,6 @@ public class ${className}ServiceImpl extends BaseMpServiceImpl${r"<"}${className
 
         OpLogUtil.setVariable("${update.keys[0].name}", <#if update.keys[0].type == 'String'>data.get${update.keys[0].nameProperty}()<#else>String.valueOf(data.get${update.keys[0].nameProperty}())</#if>);
         OpLogUtil.setExtra(vo);
-        <#if isCache>
-
-        I${className}Service thisService = getThis(this.getClass());
-        thisService.cleanCacheByKey(<#if update.keys[0].type == 'String'>data.get${update.keys[0].nameProperty}()<#else>String.valueOf(data.get${update.keys[0].nameProperty}())</#if>);
-
-        </#if>
     }
 </#if>
     <#if hasDelete>
@@ -163,11 +165,6 @@ public class ${className}ServiceImpl extends BaseMpServiceImpl${r"<"}${className
     public void deleteById(<#list keys as key>${key.type} ${key.name}<#if key_index != keys?size - 1>, </#if></#list>) {
 
         getBaseMapper().deleteById(<#list keys as key>${key.name}<#if key_index != keys?size - 1>, </#if></#list>);
-        <#if isCache>
-
-        I${className}Service thisService = getThis(this.getClass());
-        thisService.cleanCacheByKey(<#if keys[0].type == 'String'>${keys[0].name}<#else>String.valueOf(${keys[0].name})</#if>);
-        </#if>
     }
     </#if>
 

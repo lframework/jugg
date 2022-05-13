@@ -3,11 +3,12 @@
     <div v-if="visible" v-permission="['${moduleName}:${bizName}:add']" v-loading="loading">
       <a-form-model ref="form" :label-col="{span: 4}" :wrapper-col="{span: 16}" :model="formData" :rules="rules">
         <#list columns as column>
-          <a-form-model-item label="${column.description}" prop="${column.name}">
-            <#assign formData="formData"/>
-            <@format><#include "input-components.ftl" /></@format>
-          </a-form-model-item>
+        <a-form-model-item label="${column.description}" prop="${column.name}">
+          <#assign formData="formData"/>
+          <@format><#include "input-components.ftl" /></@format>
+        </a-form-model-item>
         </#list>
+      </a-form-model>
     </div>
     <template slot="footer">
       <div class="form-modal-footer">

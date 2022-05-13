@@ -23,6 +23,7 @@ import java.util.List;
 /**
  * ${classDescription} Service
 <#if author??>
+ *
  * @author ${author}
 </#if>
  */
@@ -44,6 +45,13 @@ public interface I${className}Service extends BaseMpService${r"<"}${className}${
      */
     ${r"List<"}${className}${r">"} query(Query${className}Vo vo);
     </#if>
+
+    /**
+     * 根据ID查询
+     * @param ${keys[0].name}
+     * @return
+     */
+    ${className} findById(<#list keys as key>${key.type} ${key.name}<#if key_index != keys?size - 1>, </#if></#list>);
 
     <#if create??>
     /**
