@@ -1252,6 +1252,7 @@ public class Generator {
     controllerTemplate.setBizName(dataObject.getGenerateInfo().getBizName());
     controllerTemplate.setClassDescription(dataObject.getGenerateInfo().getClassDescription());
     controllerTemplate.setAuthor(dataObject.getGenerateInfo().getAuthor());
+    controllerTemplate.setIsCache(dataObject.getGenerateInfo().getIsCache());
     controllerTemplate.setHasDelete(dataObject.getGenerateInfo().getHasDelete());
     if (controllerTemplate.getHasDelete()) {
       importPackages.add(DeleteMapping.class.getName());
@@ -1269,6 +1270,8 @@ public class Generator {
       // 主键不会是枚举
       key.setType(t.getDataType().getDesc());
       key.setName(t.getColumnName());
+      key.setNameProperty(t.getColumnName().substring(0, 1).toUpperCase() + t.getColumnName()
+          .substring(1));
 
       if (t.getDataType() == GenDataType.STRING) {
         importPackages.add(NotBlank.class.getName());

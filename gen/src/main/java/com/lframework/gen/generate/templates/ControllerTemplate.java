@@ -46,6 +46,11 @@ public class ControllerTemplate {
   private String author;
 
   /**
+   * 是否应用缓存
+   */
+  private Boolean isCache;
+
+  /**
    * 是否内置删除功能
    */
   private Boolean hasDelete;
@@ -102,5 +107,10 @@ public class ControllerTemplate {
      * 字段名称
      */
     private String name;
+
+    /**
+     * 字段名称（首字母大写）
+     */
+    private String nameProperty;
   }
 }

@@ -31,7 +31,7 @@ public class CacheConfiguration extends CachingConfigurerSupport {
     }
 
     // 引入配置
-    J2CacheConfig config = J2CacheConfig.initFromConfig(resources[0].getFile());
+    J2CacheConfig config = J2CacheConfig.initFromConfig(resources[0].getInputStream());
     // 生成 J2CacheBuilder
     J2CacheBuilder j2CacheBuilder = J2CacheBuilder.init(config);
     // 构建适配器
