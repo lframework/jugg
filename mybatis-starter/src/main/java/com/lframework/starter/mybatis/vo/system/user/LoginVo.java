@@ -32,13 +32,11 @@ public class LoginVo implements BaseVo, Serializable {
    * sn
    */
   @ApiModelProperty(value = "sn，验证码流水号", required = true)
-  @NotBlank(message = "请先获取验证码！")
   private String sn;
 
   /**
    * 验证码
    */
   @ApiModelProperty(value = "验证码", required = true)
-  @NotBlank(message = "验证码不能为空！")
   private String captcha;
 }
