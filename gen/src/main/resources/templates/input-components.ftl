@@ -28,10 +28,16 @@
 	<a-select-option v-for="item in $enums.${column.frontType}.values()" :key="item.code" :value="item.code">{{ item.desc }}</a-select-option>
 </a-select>
 <#else>
+<#if column.hasAvailableTag>
 <a-select v-model="${formData}.${column.name}" allow-clear>
-	<a-select-option :value="true"><#if column.hasAvailableTag>启用<#else>是</#if></a-select-option>
-	<a-select-option :value="false"><#if column.hasAvailableTag>停用<#else>否</#if></a-select-option>
+	<a-select-option v-for="item in $enums.AVAILABLE.values()" :key="item.code" :value="item.code">{{ item.desc }}</a-select-option>
 </a-select>
+<#else>
+<a-select v-model="${formData}.${column.name}" allow-clear>
+	<a-select-option :value="true">是</a-select-option>
+	<a-select-option :value="false">否</a-select-option>
+</a-select>
+</#if>
 </#if>
 <#elseif column.viewType == 6>
 <#if column.type == 'LocalDateTime'>

@@ -128,6 +128,7 @@ export default {
       },
       // 列表数据配置
       tableColumn: [
+        { type: 'seq', width: 40 },
         <#if query??>
         <#list query.columns as column>
         { field: '${column.name}', title: '${column.description}', <#if column.widthType == 0>width<#else>minWidth</#if>: ${column.width}<#if column.sortable>, sortable: true</#if><#if column.isNumberType>, align: 'right'</#if><#if column.hasAvailableTag>, slots: {default: 'available_default'}</#if><#if column.fixEnum>, formatter: ({ cellValue }) => { return this.${r"$enums"}.${column.frontType}.getDesc(cellValue) }</#if> },
