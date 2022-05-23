@@ -172,7 +172,7 @@ public class ${className}ServiceImpl extends BaseMpServiceImpl${r"<"}${className
     @CacheEvict(value = ${className}.CACHE_NAME, key = "#key")
     </#if>
     @Override
-    public void cleanCacheByKey(String key) {
+    public void cleanCacheByKey(Serializable key) {
 
     }
 }

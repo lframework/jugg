@@ -60,7 +60,7 @@
           <a-button v-permission="['${moduleName}:${bizName}:modify']" type="link" @click="e => { id = row.${keys[0].name};$nextTick(() => $refs.updateDialog.openDialog()) }">修改</a-button>
           </#if>
           <#if hasDelete>
-            <a-button v-permission="['${moduleName}:${bizName}:delete']" type="link" @click="e => { deleteRow(row.${keys[0].name}) }">删除</a-button>
+            <a-button v-permission="['${moduleName}:${bizName}:delete']" type="link" class="ant-btn-link-danger" @click="e => { deleteRow(row.${keys[0].name}) }">删除</a-button>
           </#if>
         </template>
       </vxe-grid>

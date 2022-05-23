@@ -88,7 +88,7 @@ public class ${className}Controller extends DefaultBaseController {
     @GetMapping
     public ${r"InvokeResult<Get"}${className}${r"Bo>"} get(<#if keys[0].type == 'String'>@NotBlank<#else>@NotNull</#if>(message = "${keys[0].name}不能为空！") ${keys[0].type} ${keys[0].name}) {
 
-        ${className} data = ${classNameProperty}Service.getById(${keys[0].name});
+        ${className} data = ${classNameProperty}Service.findById(${keys[0].name});
         if (data == null) {
             throw new DefaultClientException("${classDescription}不存在！");
         }
