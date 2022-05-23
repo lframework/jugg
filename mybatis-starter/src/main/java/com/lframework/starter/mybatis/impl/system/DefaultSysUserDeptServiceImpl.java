@@ -12,6 +12,7 @@ import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.mybatis.mappers.system.DefaultSysUserDeptMapper;
 import com.lframework.starter.mybatis.service.system.ISysUserDeptService;
 import com.lframework.starter.mybatis.vo.system.dept.SysUserDeptSettingVo;
+import java.io.Serializable;
 import java.util.List;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -76,7 +77,7 @@ public class DefaultSysUserDeptServiceImpl extends
 
   @CacheEvict(value = DefaultSysUserDeptDto.CACHE_NAME, key = "#key")
   @Override
-  public void cleanCacheByKey(String key) {
+  public void cleanCacheByKey(Serializable key) {
 
   }
 }

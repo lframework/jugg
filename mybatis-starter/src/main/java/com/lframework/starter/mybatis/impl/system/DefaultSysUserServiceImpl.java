@@ -44,6 +44,7 @@ import com.lframework.starter.web.dto.UserDto;
 import com.lframework.starter.web.dto.UserInfoDto;
 import com.lframework.starter.web.service.IGenerateCodeService;
 import com.lframework.starter.web.utils.EnumUtil;
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -350,7 +351,7 @@ public class DefaultSysUserServiceImpl extends
   @CacheEvict(value = {DefaultSysUserDto.CACHE_NAME, UserDto.CACHE_NAME,
       UserInfoDto.CACHE_NAME}, key = "#key")
   @Override
-  public void cleanCacheByKey(String key) {
+  public void cleanCacheByKey(Serializable key) {
 
   }
 

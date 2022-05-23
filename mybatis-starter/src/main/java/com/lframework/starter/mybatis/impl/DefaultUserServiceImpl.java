@@ -7,6 +7,7 @@ import com.lframework.starter.mybatis.service.IUserService;
 import com.lframework.starter.web.components.security.PasswordEncoderWrapper;
 import com.lframework.starter.web.dto.UserDto;
 import com.lframework.starter.web.dto.UserInfoDto;
+import java.io.Serializable;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -79,7 +80,7 @@ public class DefaultUserServiceImpl extends BaseMpServiceImpl<DefaultUserMapper,
 
   @CacheEvict(value = {UserInfoDto.CACHE_NAME, UserDto.CACHE_NAME}, key = "#key")
   @Override
-  public void cleanCacheByKey(String key) {
+  public void cleanCacheByKey(Serializable key) {
 
   }
 

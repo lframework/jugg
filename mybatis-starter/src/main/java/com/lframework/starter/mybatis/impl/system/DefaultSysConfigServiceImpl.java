@@ -10,6 +10,7 @@ import com.lframework.starter.mybatis.mappers.DefaultSysConfigMapper;
 import com.lframework.starter.mybatis.service.system.ISysConfigService;
 import com.lframework.starter.mybatis.utils.OpLogUtil;
 import com.lframework.starter.mybatis.vo.system.config.UpdateSysConfigVo;
+import java.io.Serializable;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
@@ -48,7 +49,7 @@ public class DefaultSysConfigServiceImpl extends
 
   @CacheEvict(value = SysConfig.CACHE_NAME, key = "'config'")
   @Override
-  public void cleanCacheByKey(String key) {
+  public void cleanCacheByKey(Serializable key) {
 
   }
 }

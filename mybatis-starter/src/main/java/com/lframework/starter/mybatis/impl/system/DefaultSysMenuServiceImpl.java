@@ -22,6 +22,7 @@ import com.lframework.starter.mybatis.vo.system.menu.SysMenuSelectorVo;
 import com.lframework.starter.mybatis.vo.system.menu.UpdateSysMenuVo;
 import com.lframework.starter.web.utils.EnumUtil;
 import com.lframework.web.common.security.SecurityConstants;
+import java.io.Serializable;
 import java.util.List;
 import lombok.NonNull;
 import org.springframework.cache.annotation.CacheEvict;
@@ -287,7 +288,7 @@ public class DefaultSysMenuServiceImpl extends
 
   @CacheEvict(value = DefaultSysMenuDto.CACHE_NAME, key = "#key")
   @Override
-  public void cleanCacheByKey(String key) {
+  public void cleanCacheByKey(Serializable key) {
 
   }
 }

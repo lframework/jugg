@@ -27,6 +27,7 @@ import com.lframework.starter.mybatis.vo.system.role.QuerySysRoleVo;
 import com.lframework.starter.mybatis.vo.system.role.SysRoleSelectorVo;
 import com.lframework.starter.mybatis.vo.system.role.UpdateSysRoleVo;
 import com.lframework.web.common.security.SecurityConstants;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import org.springframework.cache.annotation.CacheEvict;
@@ -275,7 +276,7 @@ public class DefaultSysRoleServiceImpl extends
 
   @CacheEvict(value = DefaultSysRoleDto.CACHE_NAME, key = "#key")
   @Override
-  public void cleanCacheByKey(String key) {
+  public void cleanCacheByKey(Serializable key) {
 
   }
 }

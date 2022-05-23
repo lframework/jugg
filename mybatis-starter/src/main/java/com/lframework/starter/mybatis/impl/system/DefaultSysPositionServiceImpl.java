@@ -26,6 +26,7 @@ import com.lframework.starter.mybatis.vo.system.position.CreateSysPositionVo;
 import com.lframework.starter.mybatis.vo.system.position.QuerySysPositionVo;
 import com.lframework.starter.mybatis.vo.system.position.SysPositionSelectorVo;
 import com.lframework.starter.mybatis.vo.system.position.UpdateSysPositionVo;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import org.springframework.cache.annotation.CacheEvict;
@@ -212,7 +213,7 @@ public class DefaultSysPositionServiceImpl extends
 
   @CacheEvict(value = DefaultSysPositionDto.CACHE_NAME, key = "#key")
   @Override
-  public void cleanCacheByKey(String key) {
+  public void cleanCacheByKey(Serializable key) {
 
   }
 }

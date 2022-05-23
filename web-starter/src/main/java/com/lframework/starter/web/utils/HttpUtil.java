@@ -54,6 +54,13 @@ public class HttpUtil {
    */
   private static final int DEFAULT_SOCKET_TIME_OUT = 30000;
 
+  public static String doGet(String url) throws IOException {
+
+    return doGet(url, null, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
+        DEFAULT_CONNECT_TIME_OUT,
+        DEFAULT_SOCKET_TIME_OUT, null, null);
+  }
+
   public static String doGet(String url, Map<String, Object> params) throws IOException {
 
     return doGet(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
@@ -187,6 +194,13 @@ public class HttpUtil {
     return doGet(url, params, headers, CHARSET, connectionRequestTimeout, connectionTimeout,
         socketTimeout,
         certStream, certPsw);
+  }
+
+  public static String doPost(String url) throws IOException {
+
+    return doPost(url, null, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
+        DEFAULT_CONNECT_TIME_OUT,
+        DEFAULT_SOCKET_TIME_OUT, null, null);
   }
 
   public static String doPost(String url, Map<String, Object> params) throws IOException {
@@ -630,7 +644,7 @@ public class HttpUtil {
       InputStream certStream,
       String certPsw) throws IOException {
 
-    SimpleMap<String, Object> params = new SimpleMap<>(requestParams);
+    SimpleMap<String, Object> params = CollectionUtil.isEmpty(requestParams) ? null : new SimpleMap<>(requestParams);
     if (StringUtil.isBlank(url)) {
       throw new IllegalArgumentException("url不能为空！");
     }
@@ -696,7 +710,7 @@ public class HttpUtil {
       InputStream certStream,
       String certPsw) throws IOException {
 
-    SimpleMap<String, Object> params = new SimpleMap<>(requestParams);
+    SimpleMap<String, Object> params = CollectionUtil.isEmpty(requestParams) ? null : new SimpleMap<>(requestParams);
     if (StringUtil.isBlank(url)) {
       return null;
     }

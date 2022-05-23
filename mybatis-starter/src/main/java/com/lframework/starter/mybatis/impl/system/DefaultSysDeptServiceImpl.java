@@ -22,6 +22,7 @@ import com.lframework.starter.mybatis.utils.OpLogUtil;
 import com.lframework.starter.mybatis.vo.system.dept.CreateSysDeptVo;
 import com.lframework.starter.mybatis.vo.system.dept.UpdateSysDeptVo;
 import com.lframework.starter.web.utils.ApplicationUtil;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -281,7 +282,7 @@ public class DefaultSysDeptServiceImpl extends
 
   @CacheEvict(value = DefaultSysDeptDto.CACHE_NAME, key = "#key")
   @Override
-  public void cleanCacheByKey(String key) {
+  public void cleanCacheByKey(Serializable key) {
 
   }
 }
