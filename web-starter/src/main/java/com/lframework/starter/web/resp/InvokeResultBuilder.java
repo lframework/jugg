@@ -23,6 +23,7 @@ public class InvokeResultBuilder {
     InvokeResult<Void> invokeResult = new InvokeResult<>();
     invokeResult.setCode(ResponseConstants.INVOKE_RESULT_SUCCESS_CODE);
     invokeResult.setMsg(ResponseConstants.INVOKE_RESULT_SUCCESS_MSG);
+    invokeResult.setTraceId(LogUtil.getTraceId(false));
 
     return invokeResult;
   }
@@ -39,6 +40,7 @@ public class InvokeResultBuilder {
     invokeResult.setCode(ResponseConstants.INVOKE_RESULT_SUCCESS_CODE);
     invokeResult.setMsg(ResponseConstants.INVOKE_RESULT_SUCCESS_MSG);
     invokeResult.setData(data);
+    invokeResult.setTraceId(LogUtil.getTraceId(false));
 
     return invokeResult;
   }

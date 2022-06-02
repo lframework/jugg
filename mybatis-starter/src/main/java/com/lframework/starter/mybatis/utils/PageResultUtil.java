@@ -1,5 +1,6 @@
 package com.lframework.starter.mybatis.utils;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.github.pagehelper.PageInfo;
 import com.lframework.common.utils.BeanUtil;
 import com.lframework.common.utils.ObjectUtil;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import javax.validation.constraints.NotNull;
 import lombok.NonNull;
 
 /**
@@ -17,9 +19,32 @@ import lombok.NonNull;
  */
 public class PageResultUtil {
 
+  public static <T> PageResult<T> convert(@NonNull IPage<T> page) {
+
+    return convert(page, null);
+  }
+
   public static <T> PageResult<T> convert(@NonNull PageInfo<T> pageInfo) {
 
     return convert(pageInfo, null);
+  }
+
+  public static <T> PageResult<T> convert(@NotNull IPage<T> page,
+      Map<Object, Object> extra) {
+    PageResult<T> pageResult = new PageResult<>();
+    List<T> datas = new ArrayList<T>(page.getRecords());
+    pageResult.setDatas(datas);
+    pageResult.setHasNext(page.getCurrent() > 1);
+    pageResult.setHasPrev(page.getCurrent() < page.getPages());
+    pageResult.setPageIndex(page.getCurrent());
+    pageResult.setPageSize(page.getSize());
+    pageResult.setTotalCount(page.getTotal());
+    pageResult.setTotalPage((int) page.getPages());
+    if (!ObjectUtil.isEmpty(extra)) {
+      pageResult.setExtra(extra);
+    }
+
+    return pageResult;
   }
 
   public static <T> PageResult<T> convert(@NonNull PageInfo<T> pageInfo,
