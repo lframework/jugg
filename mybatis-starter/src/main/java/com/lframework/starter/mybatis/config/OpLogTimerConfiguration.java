@@ -29,6 +29,7 @@ public class OpLogTimerConfiguration implements ApplicationListener<ApplicationR
   @Override
   public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
 
+    // 没有使用@Bean的配置方式是因为当enabled==false时，需要移除定时任务
     JobDetail jobDetail = QrtzHandler.getJob(JOB_NAME, JOB_GROUP_NAME);
     if (jobDetail == null) {
       // 没有任务

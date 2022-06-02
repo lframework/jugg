@@ -2,6 +2,7 @@ package com.lframework.starter.web.components.qrtz;
 
 import com.lframework.common.exceptions.ClientException;
 import lombok.extern.slf4j.Slf4j;
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -10,6 +11,7 @@ import org.quartz.JobExecutionException;
  * 定时任务
  */
 @Slf4j
+@DisallowConcurrentExecution
 public abstract class QrtzJob implements Job {
 
   @Override
