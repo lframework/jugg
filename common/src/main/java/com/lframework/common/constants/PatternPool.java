@@ -139,7 +139,7 @@ public class PatternPool extends cn.hutool.core.lang.PatternPool {
   /**
    * 编号
    */
-  public static final String PATTERN_STR_CODE = "^[A-Za-z0-9]{1,20}$";
+  public static final String PATTERN_STR_CODE = "^[-_.A-Za-z0-9]{1,20}$";
 
   public static final Pattern PATTERN_CODE = Pattern.compile(PATTERN_STR_CODE);
 }

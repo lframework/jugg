@@ -21,7 +21,7 @@ public @interface IsCode {
 
   Class<?>[] groups() default {};
 
-  String message() default "编号必须由字母或数字组成，长度不能超过20位";
+  String message() default "编号必须由字母、数字、“-_.”组成，长度不能超过20位";
 
   Class<? extends Payload>[] payload() default {};
 }
