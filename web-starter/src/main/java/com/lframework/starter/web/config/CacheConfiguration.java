@@ -1,43 +1,49 @@
 package com.lframework.starter.web.config;
 
-import com.lframework.common.utils.ArrayUtil;
-import lombok.SneakyThrows;
-import net.oschina.j2cache.J2CacheBuilder;
-import net.oschina.j2cache.J2CacheConfig;
-import net.oschina.j2cache.springcache.J2CacheSpringCacheManageAdapter;
-import org.springframework.beans.factory.annotation.Value;
+import com.lframework.common.utils.CollectionUtil;
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.cache.RedisCacheWriter;
+import org.springframework.data.redis.core.RedisTemplate;
 
 @Configuration
 @EnableCaching
+@EnableConfigurationProperties(CacheProperties.class)
 public class CacheConfiguration extends CachingConfigurerSupport {
 
-  @Value("${j2cache.config-path:classpath:j2cache.properties}")
-  private String configPath;
+  @Autowired
+  private RedisTemplate redisTemplate;
 
-  @SneakyThrows
-  @Override
-  public CacheManager cacheManager() {
+  @Bean
+  public RedisCacheWriter writer() {
+    return RedisCacheWriter.nonLockingRedisCacheWriter(redisTemplate.getConnectionFactory());
+  }
 
-    PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-    Resource[] resources = resolver.getResources(configPath);
-    if (ArrayUtil.isEmpty(resources) || !resources[0].exists()) {
-      throw new RuntimeException("j2cache配置文件不存在！");
+  @Bean
+  public CacheManager cacheManager(CacheProperties properties) {
+    Map<String, RedisCacheConfiguration> configurationMap = new HashMap<>();
+    if (!CollectionUtil.isEmpty(properties.getRegions())) {
+      properties.getRegions().forEach((k, v) -> {
+        configurationMap.put(k, RedisCacheConfiguration
+            .defaultCacheConfig().entryTtl(Duration.ofSeconds(v)));
+      });
     }
 
-    // 引入配置
-    J2CacheConfig config = J2CacheConfig.initFromConfig(resources[0].getInputStream());
-    // 生成 J2CacheBuilder
-    J2CacheBuilder j2CacheBuilder = J2CacheBuilder.init(config);
-    // 构建适配器
-    J2CacheSpringCacheManageAdapter j2CacheSpringCacheManageAdapter = new J2CacheSpringCacheManageAdapter(
-        j2CacheBuilder, config.isDefaultCacheNullObject());
-
-    return j2CacheSpringCacheManageAdapter;
+    return RedisCacheManager.builder(writer())
+        .initialCacheNames(configurationMap.keySet())
+        .cacheDefaults(RedisCacheConfiguration.defaultCacheConfig()
+            .entryTtl(Duration.ofSeconds(properties.getTtl())))
+        .withInitialCacheConfigurations(configurationMap)
+        .build();
   }
 }
