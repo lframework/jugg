@@ -22,6 +22,7 @@ import com.lframework.starter.mybatis.utils.PageResultUtil;
 import com.lframework.starter.mybatis.vo.system.parameter.CreateSysParameterVo;
 import com.lframework.starter.mybatis.vo.system.parameter.QuerySysParameterVo;
 import com.lframework.starter.mybatis.vo.system.parameter.UpdateSysParameterVo;
+import com.lframework.starter.web.service.SysParameterService;
 import java.io.Serializable;
 import java.util.List;
 import org.springframework.cache.annotation.CacheEvict;
@@ -31,7 +32,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SysParameterServiceImpl extends
-    BaseMpServiceImpl<SysParameterMapper, SysParameter> implements ISysParameterService {
+    BaseMpServiceImpl<SysParameterMapper, SysParameter> implements ISysParameterService,
+    SysParameterService {
 
   @Override
   public PageResult<SysParameter> query(Integer pageIndex, Integer pageSize,
@@ -61,19 +63,32 @@ public class SysParameterServiceImpl extends
 
   @Cacheable(value = SysParameter.CACHE_NAME, key = "#key", unless = "#result == null")
   @Override
-  public SysParameter findByKey(String key) {
+  public String findByKey(String key) {
 
     Wrapper<SysParameter> queryWrapper = Wrappers.lambdaQuery(SysParameter.class)
         .eq(SysParameter::getPmKey, key);
-    return getBaseMapper().selectOne(queryWrapper);
+    SysParameter data = getBaseMapper().selectOne(queryWrapper);
+
+    return data == null ? null : data.getPmValue();
   }
 
   @Override
-  public SysParameter findRequiredByKey(String key) throws ParameterNotFoundException {
-    ISysParameterService thisService = getThis(this.getClass());
-    SysParameter data = thisService.findByKey(key);
+  public String findRequiredByKey(String key) throws ParameterNotFoundException {
+    SysParameterService thisService = getThis(this.getClass());
+    String data = thisService.findByKey(key);
     if (data == null) {
       throw new ParameterNotFoundException();
+    }
+
+    return data;
+  }
+
+  @Override
+  public String findByKey(String key, String defaultValue) {
+    SysParameterService thisService = getThis(this.getClass());
+    String data = thisService.findByKey(key);
+    if (data == null) {
+      return defaultValue;
     }
 
     return data;

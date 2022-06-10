@@ -40,22 +40,6 @@ public interface ISysParameterService extends BaseMpService<SysParameter> {
   SysParameter findById(Long id);
 
   /**
-   * 根据Key查询
-   *
-   * @param key
-   * @return 如果不存在则返回null
-   */
-  SysParameter findByKey(String key);
-
-  /**
-   * 根据Key查询
-   *
-   * @param key
-   * @return 如果不存在则抛异常
-   */
-  SysParameter findRequiredByKey(String key) throws ParameterNotFoundException;
-
-  /**
    * 创建
    *
    * @param vo
