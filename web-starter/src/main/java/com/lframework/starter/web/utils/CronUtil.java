@@ -1,8 +1,14 @@
 package com.lframework.starter.web.utils;
 
+import com.lframework.common.utils.DateUtil;
+import com.lframework.common.utils.StringUtil;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import lombok.extern.slf4j.Slf4j;
+import org.quartz.CronExpression;
 
+@Slf4j
 public class CronUtil {
 
   /**
@@ -37,5 +43,22 @@ public class CronUtil {
   public static String getDateMaxCron(LocalDate date) {
 
     return "59 59 23 " + date.getDayOfMonth() + " " + date.getMonthValue() + " ? " + date.getYear();
+  }
+
+  public static Boolean match(String cron, LocalDateTime dateTime) {
+    if (StringUtil.isBlank(cron) || dateTime == null) {
+      return false;
+
+    }
+
+    CronExpression exp = null;
+    try {
+      exp = new CronExpression(cron);
+    } catch (ParseException e) {
+      log.error(e.getMessage(), e);
+      return false;
+    }
+
+    return exp.isSatisfiedBy(DateUtil.toDate(dateTime));
   }
 }

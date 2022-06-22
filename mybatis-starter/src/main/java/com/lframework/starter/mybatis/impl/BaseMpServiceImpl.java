@@ -9,7 +9,7 @@ public abstract class BaseMpServiceImpl<M extends BaseMapper<T>, T> extends Serv
     implements BaseMpService<T> {
 
   @Override
-  public T getOne(Wrapper<T> queryWrapper, boolean throwEx) {
+  public T getOne(Wrapper<T> queryWrapper) {
     // 重写，默认不抛异常
     return super.getOne(queryWrapper, false);
   }
