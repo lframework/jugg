@@ -67,6 +67,11 @@ public abstract class ExcelImportListener<T extends ExcelModel> extends ExcelEve
           sysParameterService.findRequiredByKey("excel-import.max-size"));
     }
 
+    if (this.totalRows == 0) {
+      this.interrupt = true;
+      throw new DefaultClientException("导入文件不能为空，请检查");
+    }
+
     if (this.totalRows > limitRows) {
       this.interrupt = true;
       throw new DefaultClientException("一次最多允许导入" + limitRows + "条");
@@ -179,6 +184,15 @@ public abstract class ExcelImportListener<T extends ExcelModel> extends ExcelEve
       } else {
         this.afterAllAnalysed(context);
       }
+      try {
+        this.doComplete();
+      } catch (Exception e) {
+        try {
+          this.onException(e, context);
+        } catch (Exception ex) {
+          throw new RuntimeException(e);
+        }
+      }
     } finally {
       ExcelImportUtil.finished(this.taskId);
     }
@@ -199,5 +213,8 @@ public abstract class ExcelImportListener<T extends ExcelModel> extends ExcelEve
     this.taskId = taskId;
 
     ExcelImportUtil.initUploadTask(taskId);
+  }
+
+  protected void doComplete() {
   }
 }

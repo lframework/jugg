@@ -26,6 +26,20 @@ public class DateUtil extends cn.hutool.core.date.DateUtil {
     return LocalDateTimeUtil.format(localDate, format);
   }
 
+  public static LocalTime toLocalTime(Date date) {
+    if (date == null) {
+      return null;
+    }
+    return LocalDateTimeUtil.of(date).toLocalTime();
+  }
+
+  public static LocalDate toLocalDate(Date date) {
+    if (date == null) {
+      return null;
+    }
+    return LocalDateTimeUtil.of(date).toLocalDate();
+  }
+
   public static Date toDate(LocalDateTime dateTime) {
 
     if (dateTime == null) {

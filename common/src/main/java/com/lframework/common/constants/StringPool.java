@@ -38,6 +38,11 @@ public interface StringPool {
   String CHARACTER_ENCODING_UTF_8 = "utf-8";
 
   /**
+   * Excel中的日期格式
+   */
+  String EXCEL_DATE_PATTERN = "yyyy/MM/dd";
+
+  /**
    * 日期格式
    */
   String DATE_PATTERN = "yyyy-MM-dd";
