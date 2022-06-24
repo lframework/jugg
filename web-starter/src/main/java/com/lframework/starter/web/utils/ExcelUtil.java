@@ -1,5 +1,8 @@
 package com.lframework.starter.web.utils;
 
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.read.builder.ExcelReaderBuilder;
+import com.alibaba.excel.read.listener.ReadListener;
 import com.alibaba.excel.support.ExcelTypeEnum;
 import com.alibaba.excel.write.handler.WriteHandler;
 import com.alibaba.excel.write.metadata.style.WriteCellStyle;
@@ -27,6 +30,7 @@ import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Excel工具类
@@ -40,6 +44,22 @@ public class ExcelUtil {
    * 默认列宽策略
    */
   private static final WriteHandler DEFAULT_COLUMN_WIDTH_STYLE_STRATEGY = new LongestMatchColumnWidthStyleStrategy();
+
+  /**
+   * 读取Excel
+   *
+   * @param file
+   * @param listener
+   */
+  public static <T> ExcelReaderBuilder read(MultipartFile file, Class<T> clazz,
+      ReadListener<T> listener) {
+    try {
+      return EasyExcel.read(file.getInputStream(), clazz, listener);
+    } catch (IOException e) {
+      log.error(e.getMessage(), e);
+      throw new DefaultSysException(e.getMessage());
+    }
+  }
 
   /**
    * 导出Xls至Response
@@ -468,6 +488,7 @@ public class ExcelUtil {
     writeHandlers.forEach(builder::registerWriteHandler);
 
     builder.doWrite(datas);
+    builder.finish();
   }
 
   /**

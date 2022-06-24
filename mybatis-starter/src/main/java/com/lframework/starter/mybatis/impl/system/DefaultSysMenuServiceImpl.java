@@ -173,6 +173,8 @@ public class DefaultSysMenuServiceImpl extends
 
     this.setDataForCreate(vo, data);
 
+    data.setAvailable(vo.getAvailable());
+
     ISysMenuService thisService = getThis(this.getClass());
 
     DefaultSysMenuDto record = thisService.findById(vo.getId());
