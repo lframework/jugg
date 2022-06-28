@@ -36,7 +36,7 @@ public class UploadUtil {
     }
     String baseLocation = ApplicationUtil.getProperty("upload.location");
 
-    return upload(file, baseLocation, getDefaultLocations(), IdUtil.getId(), domain + baseUrl);
+    return upload(file, baseLocation, getDefaultLocations(), IdUtil.getUUID(), domain + baseUrl);
   }
 
   /**

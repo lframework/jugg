@@ -6,7 +6,7 @@ public class LogUtil {
 
   public static String getTraceId() {
     if (TRACE_ID_THREAD_LOCAL.get() == null) {
-      TRACE_ID_THREAD_LOCAL.set(IdUtil.getId());
+      TRACE_ID_THREAD_LOCAL.set(IdUtil.getUUID());
     }
 
     return TRACE_ID_THREAD_LOCAL.get();

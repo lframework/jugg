@@ -46,7 +46,7 @@ public class OpLogAspector {
 
     try {
       //生成logId，多层嵌套时，隔离不同bean的数据
-      String logId = IdUtil.getId();
+      String logId = IdUtil.getUUID();
       OpLogUtil.init(logId);
 
       AbstractUserDetails currentUser = SecurityUtil.getCurrentUser();

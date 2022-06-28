@@ -56,7 +56,7 @@ public class RedisLockBuilder implements LockBuilder {
 
     private final byte[] key;
 
-    private final byte[] requestId = IdUtil.getId().getBytes();
+    private final byte[] requestId = IdUtil.getUUID().getBytes();
 
     private final long expireTime;
 

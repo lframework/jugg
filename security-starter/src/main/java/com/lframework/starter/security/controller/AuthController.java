@@ -171,7 +171,7 @@ public class AuthController extends SecurityController {
       throw new DefaultClientException("验证码生成失败，请稍后重试！");
     }
 
-    String sn = IdUtil.getId();
+    String sn = IdUtil.getUUID();
     //将验证码存至redis
     redisHandler.set(StringUtil.format(StringPool.LOGIN_CAPTCHA_KEY, sn), code,
         kaptchaProperties.getExpireTime() * 60 * 1000L);

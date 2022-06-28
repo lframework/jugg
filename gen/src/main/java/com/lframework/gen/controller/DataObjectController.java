@@ -200,7 +200,7 @@ public class DataObjectController extends DefaultBaseController {
   public void download(@NotNull(message = "ID不能为空！") String id) {
 
     String fileLocation = location.endsWith(File.separator) ? location : location + File.separator;
-    String filePath = fileLocation + IdUtil.getId() + File.separator;
+    String filePath = fileLocation + IdUtil.getUUID() + File.separator;
 
     Generator generator = Generator.getInstance(id);
 
@@ -211,7 +211,7 @@ public class DataObjectController extends DefaultBaseController {
       FileUtil.writeString(data.getContent(), file, StandardCharsets.UTF_8);
     }
 
-    File zipFile = ZipUtil.zip(filePath, fileLocation + IdUtil.getId() + ".zip", false);
+    File zipFile = ZipUtil.zip(filePath, fileLocation + IdUtil.getUUID() + ".zip", false);
 
     ResponseUtil.download(zipFile);
   }
