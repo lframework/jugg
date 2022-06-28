@@ -85,6 +85,7 @@ public abstract class ExcelImportListener<T extends ExcelModel> extends ExcelEve
   }
 
   protected void checkHeadMap(Map<Integer, String> headMap, Class<T> clazz) {
+    List<String> fieldNameList = new ArrayList<>();
     Field[] fields = ReflectUtil.getFields(clazz);
     for (int i = 0; i < fields.length; i++) {
       Field field = fields[i];
@@ -92,9 +93,14 @@ public abstract class ExcelImportListener<T extends ExcelModel> extends ExcelEve
       if (excelProperty != null) {
         String headerName =
             ArrayUtil.isEmpty(excelProperty.value()) ? null : excelProperty.value()[0];
-        if (!StringUtil.equals(headerName, headMap.get(i))) {
-          throw new DefaultClientException("第" + (i + 1) + "列应为【" + headerName + "】，请检查文件");
-        }
+        fieldNameList.add(headerName);
+      }
+    }
+
+    for (int i = 0; i < fieldNameList.size(); i++) {
+      String fieldName = fieldNameList.get(i);
+      if (!StringUtil.equals(fieldName, headMap.get(i))) {
+        throw new DefaultClientException("第" + (i + 1) + "列应为【" + fieldName + "】，请检查文件");
       }
     }
   }
@@ -215,6 +221,5 @@ public abstract class ExcelImportListener<T extends ExcelModel> extends ExcelEve
     ExcelImportUtil.initUploadTask(taskId);
   }
 
-  protected void doComplete() {
-  }
+  protected abstract void doComplete();
 }

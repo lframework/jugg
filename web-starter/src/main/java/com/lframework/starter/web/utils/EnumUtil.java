@@ -4,6 +4,7 @@ import com.lframework.common.exceptions.impl.DefaultSysException;
 import com.lframework.common.utils.ArrayUtil;
 import com.lframework.common.utils.CollectionUtil;
 import com.lframework.common.utils.ObjectUtil;
+import com.lframework.common.utils.StringUtil;
 import com.lframework.starter.web.enums.BaseEnum;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
@@ -13,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -58,6 +60,28 @@ public class EnumUtil {
     }
 
     return null;
+  }
+
+  public static <C extends BaseEnum<? extends Serializable>> C getByDesc(Class<C> clazz,
+      String desc) {
+
+    if (StringUtil.isNullOrUndefined(desc)) {
+      return null;
+    }
+
+    List<C> enumList = getEnumList(clazz);
+    for (C c : enumList) {
+      if (c.getDesc().equals(desc)) {
+        return c;
+      }
+    }
+
+    return null;
+  }
+
+  public static <C extends BaseEnum<? extends Serializable>> List<String> getDescs(Class<C> clazz) {
+    List<C> enumList = getEnumList(clazz);
+    return enumList.stream().map(t -> t.getDesc()).collect(Collectors.toList());
   }
 
   private static <C extends BaseEnum<? extends Serializable>> List<C> getEnumList(Class<C> clazz) {
