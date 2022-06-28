@@ -2,7 +2,7 @@ package com.lframework.starter.web.components.redis.locker;
 
 import com.lframework.common.locker.LockBuilder;
 import com.lframework.common.locker.Locker;
-import com.lframework.common.utils.IdUtil;
+import com.lframework.starter.web.utils.IdUtil;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Resource;
@@ -52,13 +52,13 @@ public class RedisLockBuilder implements LockBuilder {
 
     private static final Long INTERVAL_TIME = 100L;
 
-    private RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
-    private byte[] key;
+    private final byte[] key;
 
-    private byte[] requestId = IdUtil.getId().getBytes();
+    private final byte[] requestId = IdUtil.getId().getBytes();
 
-    private long expireTime;
+    private final long expireTime;
 
     private boolean lock;
 

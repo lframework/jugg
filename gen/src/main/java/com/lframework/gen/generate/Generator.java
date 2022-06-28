@@ -7,8 +7,6 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.lframework.common.constants.StringPool;
 import com.lframework.common.exceptions.impl.DefaultSysException;
 import com.lframework.common.utils.CollectionUtil;
-import com.lframework.common.utils.IdUtil;
-import com.lframework.common.utils.IdWorker;
 import com.lframework.common.utils.StringUtil;
 import com.lframework.gen.builders.DataObjectBuilder;
 import com.lframework.gen.components.DataObject;
@@ -35,6 +33,7 @@ import com.lframework.starter.web.components.validation.Pattern;
 import com.lframework.starter.web.components.validation.TypeMismatch;
 import com.lframework.starter.web.utils.ApplicationUtil;
 import com.lframework.starter.web.utils.EnumUtil;
+import com.lframework.starter.web.utils.IdUtil;
 import com.lframework.starter.web.utils.JsonUtil;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.Configuration;
@@ -814,14 +813,11 @@ public class Generator {
     if (dataObject.getGenerateInfo().getKeyType() == GenKeyType.UUID) {
       // 如果是UUID，则引入IdUtil包
       importPackages.add(IdUtil.class.getName());
-      createTemplate.setIdCode(IdUtil.class.getSimpleName() + ".getId()");
+      createTemplate.setIdCode(IdUtil.class.getSimpleName() + ".getUUID()");
     } else if (dataObject.getGenerateInfo().getKeyType() == GenKeyType.SNOW_FLAKE) {
       // 如果是雪花算法，则引入IdWorker包
-      importPackages.add(IdWorker.class.getName());
-      importPackages.add(ApplicationUtil.class.getName());
-      createTemplate.setIdCode(
-          ApplicationUtil.class.getSimpleName() + ".getBean(" + IdWorker.class.getSimpleName()
-              + ".class).nextIdStr()");
+      importPackages.add(IdUtil.class.getName());
+      createTemplate.setIdCode(IdUtil.class.getSimpleName() + ".getId()");
     }
     createTemplate.setPackageName(dataObject.getGenerateInfo().getPackageName());
     createTemplate.setClassName(dataObject.getGenerateInfo().getClassName());

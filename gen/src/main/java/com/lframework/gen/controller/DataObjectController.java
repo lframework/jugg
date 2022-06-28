@@ -2,7 +2,6 @@ package com.lframework.gen.controller;
 
 import com.lframework.common.utils.CollectionUtil;
 import com.lframework.common.utils.FileUtil;
-import com.lframework.common.utils.IdUtil;
 import com.lframework.common.utils.ZipUtil;
 import com.lframework.gen.bo.dataobj.DataObjectGenerateBo;
 import com.lframework.gen.bo.dataobj.GetDataObjectBo;
@@ -23,6 +22,7 @@ import com.lframework.starter.security.controller.DefaultBaseController;
 import com.lframework.starter.web.dto.UserDto;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
+import com.lframework.starter.web.utils.IdUtil;
 import com.lframework.starter.web.utils.ResponseUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;

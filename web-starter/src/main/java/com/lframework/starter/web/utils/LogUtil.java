@@ -1,7 +1,5 @@
 package com.lframework.starter.web.utils;
 
-import com.lframework.common.utils.IdUtil;
-
 public class LogUtil {
 
   private static final ThreadLocal<String> TRACE_ID_THREAD_LOCAL = new ThreadLocal<>();

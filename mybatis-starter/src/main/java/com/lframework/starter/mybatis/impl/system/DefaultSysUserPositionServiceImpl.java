@@ -3,7 +3,6 @@ package com.lframework.starter.mybatis.impl.system;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.lframework.common.utils.CollectionUtil;
-import com.lframework.common.utils.IdUtil;
 import com.lframework.starter.mybatis.annotations.OpLog;
 import com.lframework.starter.mybatis.dto.system.position.DefaultSysUserPositionDto;
 import com.lframework.starter.mybatis.entity.DefaultSysUserPosition;
@@ -12,6 +11,7 @@ import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.mybatis.mappers.system.DefaultSysUserPositionMapper;
 import com.lframework.starter.mybatis.service.system.ISysUserPositionService;
 import com.lframework.starter.mybatis.vo.system.position.SysUserPositionSettingVo;
+import com.lframework.starter.web.utils.IdUtil;
 import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 

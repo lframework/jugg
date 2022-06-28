@@ -2,7 +2,6 @@ package com.lframework.starter.mybatis.impl;
 
 import com.lframework.common.constants.StringPool;
 import com.lframework.common.utils.CollectionUtil;
-import com.lframework.common.utils.IdUtil;
 import com.lframework.common.utils.RegUtil;
 import com.lframework.common.utils.StringUtil;
 import com.lframework.starter.mybatis.entity.DefaultSysMenu;
@@ -11,6 +10,7 @@ import com.lframework.starter.mybatis.service.IMenuService;
 import com.lframework.starter.web.components.security.IUserTokenResolver;
 import com.lframework.starter.web.dto.MenuDto;
 import com.lframework.starter.web.utils.ApplicationUtil;
+import com.lframework.starter.web.utils.IdUtil;
 import com.lframework.starter.web.utils.SpelUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
