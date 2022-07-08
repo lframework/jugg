@@ -49,7 +49,7 @@ public class JsonUtil {
 
     try {
       return OBJECT_MAPPER.readValue(jsonStr,
-          OBJECT_MAPPER.getTypeFactory().constructCollectionType(List.class, String.class));
+          OBJECT_MAPPER.getTypeFactory().constructCollectionType(List.class, clazz));
     } catch (JsonProcessingException e) {
       log.error(e.getMessage(), e);
       throw new DefaultSysException(e.getMessage());
