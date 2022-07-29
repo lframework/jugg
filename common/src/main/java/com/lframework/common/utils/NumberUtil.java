@@ -37,7 +37,7 @@ public class NumberUtil {
         str = str.substring(0, str.length() - 1);
       }
 
-      if (StringPool.DECIMAL_POINT.equals(str.substring(str.length() - 1, str.length()))) {
+      if (StringPool.DECIMAL_POINT.equals(str.substring(str.length() - 1))) {
         return true;
       }
 
@@ -112,6 +112,19 @@ public class NumberUtil {
    */
   public static BigDecimal div(Number n1, Number... numbers) {
 
+    return div(RoundingMode.HALF_UP, n1, numbers);
+  }
+
+  /**
+   * 除法
+   *
+   * @param mode    小数位处理方式
+   * @param n1      被除数
+   * @param numbers 除数
+   * @return
+   */
+  public static BigDecimal div(RoundingMode mode, Number n1, Number... numbers) {
+
     Assert.notNull(n1);
     Assert.notEmpty(numbers);
 
@@ -123,7 +136,7 @@ public class NumberUtil {
         throw new DefaultSysException("除数不能等于0");
       }
 
-      result = result.divide(tmp, 16, RoundingMode.HALF_UP);
+      result = result.divide(tmp, 16, mode);
     }
 
     return result;
