@@ -55,8 +55,8 @@ public class PageResultUtil {
     pageResult.setDatas(datas);
     pageResult.setHasNext(pageInfo.isHasNextPage());
     pageResult.setHasPrev(pageInfo.isHasPreviousPage());
-    pageResult.setPageIndex((long) pageInfo.getPageNum());
-    pageResult.setPageSize((long) pageInfo.getPageSize());
+    pageResult.setPageIndex(pageInfo.getPageNum());
+    pageResult.setPageSize(pageInfo.getPageSize());
     pageResult.setTotalCount(pageInfo.getTotal());
     pageResult.setTotalPage(pageInfo.getPages());
     if (!ObjectUtil.isEmpty(extra)) {
@@ -78,5 +78,26 @@ public class PageResultUtil {
     pageResult.setDatas(datas);
 
     return result;
+  }
+
+  public static <T> PageResult<T> newInstance(long pageIndex, long pageSize, long totalCount,
+      List<T> datas) {
+
+    return newInstance(pageIndex, pageSize, totalCount, datas, null);
+  }
+
+  public static <T> PageResult<T> newInstance(long pageIndex, long pageSize, long totalCount,
+      List<T> datas, Map<Object, Object> extra) {
+    PageResult<T> pageResult = new PageResult<>();
+    pageResult.setTotalCount(totalCount);
+    pageResult.setPageSize(pageSize);
+    pageResult.setPageIndex(pageIndex);
+    pageResult.setTotalPage((int) (totalCount / pageSize) + (totalCount % pageSize > 0 ? 1 : 0));
+    pageResult.setDatas(datas);
+    pageResult.setExtra(extra);
+    pageResult.setHasNext(pageResult.getPageIndex() < pageResult.getTotalPage());
+    pageResult.setHasPrev(pageResult.getPageIndex() > 1);
+
+    return pageResult;
   }
 }

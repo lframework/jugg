@@ -44,4 +44,13 @@ public class SecurityUtil {
 
     StpUtil.logout();
   }
+
+  /**
+   * 获取租户ID
+   *
+   * @return
+   */
+  public static String getTenantId() {
+    return "";
+  }
 }
