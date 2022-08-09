@@ -7,6 +7,7 @@
         <result column="code" property="code"/>
         <result column="name" property="name"/>
         <result column="title" property="title"/>
+        <result column="icon" property="icon"/>
         <result column="component" property="component"/>
         <result column="parent_id" property="parentId"/>
         <result column="path" property="path"/>
@@ -25,6 +26,7 @@
             code,
             name,
             title,
+            icon,
             component,
             parent_id,
             path,

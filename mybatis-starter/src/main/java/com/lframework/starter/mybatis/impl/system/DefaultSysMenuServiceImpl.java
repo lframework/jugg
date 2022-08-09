@@ -242,7 +242,7 @@ public class DefaultSysMenuServiceImpl extends
       }
 
       data.setName(vo.getName());
-      /*data.setIcon(vo.getIcon());*/
+      data.setIcon(vo.getIcon());
       data.setPath(vo.getPath());
       data.setHidden(vo.getHidden());
 

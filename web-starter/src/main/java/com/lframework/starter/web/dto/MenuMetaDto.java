@@ -19,6 +19,12 @@ public class MenuMetaDto implements BaseDto, Serializable {
   private String title;
 
   /**
+   * 图标
+   */
+  @ApiModelProperty("图标")
+  private String icon;
+
+  /**
    * 是否不缓存
    */
   @ApiModelProperty("是否不缓存")

@@ -40,6 +40,12 @@ public class GetSysMenuBo extends BaseBo<DefaultSysMenuDto> {
   private String title;
 
   /**
+   * 图标
+   */
+  @ApiModelProperty("图标")
+  private String icon;
+
+  /**
    * 组件（前端使用）
    */
   @ApiModelProperty("组件（前端使用）")

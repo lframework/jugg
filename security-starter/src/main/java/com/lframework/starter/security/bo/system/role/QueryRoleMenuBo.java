@@ -29,6 +29,12 @@ public class QueryRoleMenuBo extends BaseBo<DefaultSysMenuDto> {
   private String title;
 
   /**
+   * 图标
+   */
+  @ApiModelProperty("图标")
+  private String icon;
+
+  /**
    * 类型
    */
   @ApiModelProperty("类型")

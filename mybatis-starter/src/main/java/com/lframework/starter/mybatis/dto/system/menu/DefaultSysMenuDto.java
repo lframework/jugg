@@ -33,6 +33,11 @@ public class DefaultSysMenuDto implements BaseDto, Serializable {
   private String title;
 
   /**
+   * 图标
+   */
+  private String icon;
+
+  /**
    * 组件（前端使用）
    */
   private String component;

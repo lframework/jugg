@@ -34,6 +34,12 @@ public class CreateSysMenuVo implements BaseVo, Serializable {
   private String title;
 
   /**
+   * 图标
+   */
+  @ApiModelProperty("图标")
+  private String icon;
+
+  /**
    * 类型
    */
   @ApiModelProperty(value = "类型", required = true)

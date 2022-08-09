@@ -45,6 +45,11 @@ public class DefaultSysMenu extends BaseEntity implements BaseDto {
   private String title;
 
   /**
+   * 图标
+   */
+  private String icon;
+
+  /**
    * 组件（前端使用）
    */
   private String component;

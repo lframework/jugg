@@ -31,6 +31,12 @@ public class QuerySysMenuBo extends BaseBo<DefaultSysMenuDto> {
   private String title;
 
   /**
+   * 图标
+   */
+  @ApiModelProperty("图标")
+  private String icon;
+
+  /**
    * 父级ID
    */
   @ApiModelProperty("父级ID")

@@ -10,6 +10,7 @@
         <result property="component" column="component"/>
         <result property="parentId" column="parent_id"/>
         <result property="meta.title" column="title"/>
+        <result property="meta.icon" column="icon"/>
         <result property="meta.noCache" column="no_cache"/>
     </resultMap>
 
@@ -17,6 +18,7 @@
         SELECT id,
                name,
                path,
+               icon,
                hidden,
                display,
                component,
