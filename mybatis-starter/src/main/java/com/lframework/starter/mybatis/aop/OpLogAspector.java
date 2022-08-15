@@ -3,6 +3,7 @@ package com.lframework.starter.mybatis.aop;
 import com.lframework.common.utils.ArrayUtil;
 import com.lframework.common.utils.CollectionUtil;
 import com.lframework.common.utils.StringUtil;
+import com.lframework.common.utils.ThreadUtil;
 import com.lframework.starter.mybatis.annotations.OpLog;
 import com.lframework.starter.mybatis.utils.OpLogUtil;
 import com.lframework.starter.mybatis.vo.CreateOpLogsVo;
@@ -143,14 +144,18 @@ public class OpLogAspector {
           }
 
           for (String[] strArr : paramsList) {
-            CreateOpLogsVo vo = new CreateOpLogsVo();
-            vo.setName(StringUtil.format(opLog.name(), strArr));
-            vo.setLogType(opLog.type().getCode());
-            vo.setCreateBy(currentUser.getId());
-            vo.setExtra(OpLogUtil.getExtra());
-            vo.setIp(currentUser.getIp());
+            String extra = OpLogUtil.getExtra();
 
-            OpLogUtil.addLog(vo);
+            ThreadUtil.execAsync(() -> {
+              CreateOpLogsVo vo = new CreateOpLogsVo();
+              vo.setName(StringUtil.format(opLog.name(), strArr));
+              vo.setLogType(opLog.type().getCode());
+              vo.setCreateBy(currentUser.getId());
+              vo.setExtra(extra);
+              vo.setIp(currentUser.getIp());
+
+              OpLogUtil.addLog(vo);
+            });
           }
         } catch (Exception e) {
           log.error(e.getMessage(), e);
