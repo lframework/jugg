@@ -1,6 +1,6 @@
 package com.lframework.starter.mybatis.utils;
 
-import com.lframework.starter.mybatis.config.OpLogConfiguration;
+import com.lframework.common.utils.ThreadUtil;
 import com.lframework.starter.mybatis.service.IOpLogsService;
 import com.lframework.starter.mybatis.vo.CreateOpLogsVo;
 import com.lframework.starter.web.utils.ApplicationUtil;
@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -37,13 +36,9 @@ public class OpLogUtil {
 
   public static void addLog(CreateOpLogsVo vo) {
 
-    ExecutorService pool = (ExecutorService) ApplicationUtil.getBean(
-        OpLogConfiguration.OP_LOG_THREAD_POOL_NAME);
     IOpLogsService opLogsService = ApplicationUtil.getBean(IOpLogsService.class);
 
-    pool.execute(() -> {
-      opLogsService.create(vo);
-    });
+    ThreadUtil.execAsync(() -> opLogsService.create(vo));
   }
 
   public static void setVariable(String key, Object value) {
