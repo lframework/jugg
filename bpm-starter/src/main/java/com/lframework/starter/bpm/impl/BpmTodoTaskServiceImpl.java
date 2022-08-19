@@ -7,6 +7,7 @@ import com.lframework.starter.web.components.security.IUserTokenResolver;
 import com.lframework.starter.web.utils.HttpUtil;
 import com.lframework.starter.web.utils.JsonUtil;
 import com.lframework.starter.web.utils.RequestUtil;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,13 @@ public class BpmTodoTaskServiceImpl implements ITodoTaskService {
   private IUserTokenResolver userTokenResolver;
 
   @Override
-  public PageResult<TodoTaskDto> queryTodoTasks() {
+  public String getType() {
+    // 待办事项
+    return "todo";
+  }
+
+  @Override
+  public PageResult<TodoTaskDto> queryList() {
 
     Map<String, Object> reqParams = new HashMap<>();
     reqParams.put("limit", 10);
@@ -64,5 +71,11 @@ public class BpmTodoTaskServiceImpl implements ITodoTaskService {
       log.error(e.getMessage(), e);
     }
     return new PageResult<>();
+  }
+
+  @Override
+  public TodoTaskDto findById(Serializable id) {
+    // 空实现
+    return null;
   }
 }

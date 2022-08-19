@@ -11,6 +11,7 @@ import com.lframework.starter.web.utils.IdUtil;
 import com.lframework.starter.web.utils.SpelUtil;
 import com.lframework.web.common.security.AbstractUserDetails;
 import com.lframework.web.common.security.SecurityUtil;
+import com.lframework.web.common.threads.DefaultRunnable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -146,7 +147,7 @@ public class OpLogAspector {
           for (String[] strArr : paramsList) {
             String extra = OpLogUtil.getExtra();
 
-            ThreadUtil.execAsync(() -> {
+            ThreadUtil.execAsync(new DefaultRunnable(SecurityUtil.getCurrentUser(), () -> {
               CreateOpLogsVo vo = new CreateOpLogsVo();
               vo.setName(StringUtil.format(opLog.name(), strArr));
               vo.setLogType(opLog.type().getCode());
@@ -155,7 +156,7 @@ public class OpLogAspector {
               vo.setIp(currentUser.getIp());
 
               OpLogUtil.addLog(vo);
-            });
+            }));
           }
         } catch (Exception e) {
           log.error(e.getMessage(), e);

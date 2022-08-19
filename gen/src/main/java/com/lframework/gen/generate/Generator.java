@@ -50,6 +50,7 @@ import io.swagger.annotations.ApiOperation;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -96,41 +97,39 @@ public class Generator {
 
     List<GenerateDto> results = new ArrayList<>();
     // Java代码
-    GenerateDto controllerJava = this.generateController();
-    GenerateDto serviceJava = this.generateService();
-    GenerateDto serviceImplJava = this.generateServiceImpl();
+    GenerateDto entityJava = this.generateEntity();
     GenerateDto mapperJava = this.generateMapper();
     GenerateDto mapperXml = this.generateListMapperXml();
-    GenerateDto entityJava = this.generateEntity();
-
     GenerateDto queryVoJava = this.generateQueryVo();
     GenerateDto createVoJava = this.generateCreateVo();
     GenerateDto updateVoJava = this.generateUpdateVo();
+    GenerateDto serviceJava = this.generateService();
+    GenerateDto serviceImplJava = this.generateServiceImpl();
     GenerateDto queryBoJava = this.generateQueryBo();
     GenerateDto getBoJava = this.generateGetBo();
+    GenerateDto controllerJava = this.generateController();
 
-    results.add(controllerJava);
-    results.add(serviceJava);
-    results.add(serviceImplJava);
-    results.add(mapperJava);
-    results.add(mapperXml);
     results.add(entityJava);
-
     if (queryVoJava != null) {
       results.add(queryVoJava);
     }
+    results.add(mapperJava);
+    results.add(mapperXml);
     if (createVoJava != null) {
       results.add(createVoJava);
     }
     if (updateVoJava != null) {
       results.add(updateVoJava);
     }
+    results.add(serviceJava);
+    results.add(serviceImplJava);
     if (queryBoJava != null) {
       results.add(queryBoJava);
     }
     if (getBoJava != null) {
       results.add(getBoJava);
     }
+    results.add(controllerJava);
 
     // Vue代码
     GenerateDto apiJs = this.generateApiJs();
@@ -714,6 +713,9 @@ public class Generator {
     serviceTemplate.setQueryParams(this.getQueryParamsTemplate());
     serviceTemplate.setCreate(this.getCreateTemplate());
     serviceTemplate.setUpdate(this.getUpdateTemplate());
+    if (serviceTemplate.getIsCache()) {
+      importPackages.add(Serializable.class.getName());
+    }
     if (serviceTemplate.getQueryParams() != null) {
       serviceTemplate.getImportPackages()
           .addAll(serviceTemplate.getQueryParams().getImportPackages());

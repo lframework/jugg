@@ -14,4 +14,10 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
    * Excel文件后缀名
    */
   public static final List<String> EXCEL_SUFFIX = Arrays.asList("xls", "xlsx");
+
+  /**
+   * 视频文件后缀名
+   */
+  public static final List<String> VIDEO_SUFFIX = Arrays.asList("avi", "wmv", "mpeg", "mp4", "m4v",
+      "mov", "asf", "flv", "f4v", "rmvb", "rm", "3gp", "vob");
 }

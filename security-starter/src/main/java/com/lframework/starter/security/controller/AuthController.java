@@ -52,6 +52,7 @@ import com.lframework.starter.web.utils.IdUtil;
 import com.lframework.web.common.security.AbstractUserDetails;
 import com.lframework.web.common.security.SecurityConstants;
 import com.lframework.web.common.security.SecurityUtil;
+import com.lframework.web.common.threads.DefaultRunnable;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -324,10 +325,10 @@ public class AuthController extends SecurityController {
       log.debug("手机号登录验证码={}", captcha);
     }
 
-    ThreadUtil.execAsync(() -> {
+    ThreadUtil.execAsync(new DefaultRunnable(SecurityUtil.getCurrentUser(), () -> {
       aliSmsService.send(telephone, sysConfig.getTelephoneLoginSignName(),
           sysConfig.getTelephoneLoginTemplateCode(), Collections.singletonMap("code", captcha));
-    });
+    }));
 
     return InvokeResultBuilder.success();
   }
@@ -471,9 +472,9 @@ public class AuthController extends SecurityController {
 
     String content = "您正在重置密码，验证码【" + code + "】，切勿将验证码泄露于他人，本条验证码有效期15分钟。";
 
-    ThreadUtil.execAsync(() -> {
+    ThreadUtil.execAsync(new DefaultRunnable(SecurityUtil.getCurrentUser(), () -> {
       mailService.send(user.getEmail(), "重置密码", content);
-    });
+    }));
 
     return InvokeResultBuilder.success();
   }
@@ -562,10 +563,10 @@ public class AuthController extends SecurityController {
 
     String captcha = code;
 
-    ThreadUtil.execAsync(() -> {
+    ThreadUtil.execAsync(new DefaultRunnable(SecurityUtil.getCurrentUser(), () -> {
       aliSmsService.send(user.getTelephone(), sysConfig.getSignName(), sysConfig.getTemplateCode(),
           Collections.singletonMap("code", captcha));
-    });
+    }));
 
     return InvokeResultBuilder.success();
   }

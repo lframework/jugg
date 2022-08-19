@@ -5,6 +5,8 @@ import com.lframework.starter.mybatis.service.IOpLogsService;
 import com.lframework.starter.mybatis.vo.CreateOpLogsVo;
 import com.lframework.starter.web.utils.ApplicationUtil;
 import com.lframework.starter.web.utils.JsonUtil;
+import com.lframework.web.common.security.SecurityUtil;
+import com.lframework.web.common.threads.DefaultRunnable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +40,8 @@ public class OpLogUtil {
 
     IOpLogsService opLogsService = ApplicationUtil.getBean(IOpLogsService.class);
 
-    ThreadUtil.execAsync(() -> opLogsService.create(vo));
+    ThreadUtil.execAsync(
+        new DefaultRunnable(SecurityUtil.getCurrentUser(), () -> opLogsService.create(vo)));
   }
 
   public static void setVariable(String key, Object value) {

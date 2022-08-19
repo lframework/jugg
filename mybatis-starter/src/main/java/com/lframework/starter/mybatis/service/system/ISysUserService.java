@@ -24,6 +24,14 @@ public interface ISysUserService extends BaseMpService<DefaultSysUser> {
   PageResult<DefaultSysUserDto> query(Integer pageIndex, Integer pageSize, QuerySysUserVo vo);
 
   /**
+   * 查询列表
+   *
+   * @param vo
+   * @return
+   */
+  List<DefaultSysUserDto> query(QuerySysUserVo vo);
+
+  /**
    * 根据ID查询
    *
    * @param id

@@ -87,6 +87,12 @@ public class DefaultSysUserServiceImpl extends
     return PageResultUtil.convert(new PageInfo<>(datas));
   }
 
+  @Override
+  public List<DefaultSysUserDto> query(QuerySysUserVo vo) {
+
+    return this.doQuery(vo);
+  }
+
   @Cacheable(value = DefaultSysUserDto.CACHE_NAME, key = "#id", unless = "#result == null")
   @Override
   public DefaultSysUserDto findById(String id) {

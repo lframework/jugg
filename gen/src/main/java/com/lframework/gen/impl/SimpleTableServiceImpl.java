@@ -1,16 +1,23 @@
 package com.lframework.gen.impl;
 
+import com.lframework.common.constants.StringPool;
 import com.lframework.common.exceptions.impl.DefaultClientException;
 import com.lframework.common.utils.ObjectUtil;
+import com.lframework.common.utils.StringUtil;
+import com.lframework.gen.converters.GenStringConverter;
 import com.lframework.gen.dto.simpledb.SimpleTableColumnDto;
 import com.lframework.gen.dto.simpledb.SimpleTableDto;
 import com.lframework.gen.entity.GenSimpleTable;
 import com.lframework.gen.enums.DataObjectGenStatus;
 import com.lframework.gen.enums.GenConvertType;
+import com.lframework.gen.enums.GenKeyType;
+import com.lframework.gen.enums.GenTemplateType;
 import com.lframework.gen.mappers.GenSimpleTableMapper;
 import com.lframework.gen.service.IDataObjectService;
+import com.lframework.gen.service.IGenerateInfoService;
 import com.lframework.gen.service.ISimpleTableColumnService;
 import com.lframework.gen.service.ISimpleTableService;
+import com.lframework.gen.vo.dataobj.UpdateGenerateInfoVo;
 import com.lframework.gen.vo.simpledb.CreateSimpleTableVo;
 import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.web.utils.EnumUtil;
@@ -29,6 +36,9 @@ public class SimpleTableServiceImpl extends BaseMpServiceImpl<GenSimpleTableMapp
 
   @Autowired
   private IDataObjectService dataObjectService;
+
+  @Autowired
+  private IGenerateInfoService generateInfoService;
 
   @Override
   public SimpleTableDto getByDataObjId(String id) {
@@ -77,6 +87,30 @@ public class SimpleTableServiceImpl extends BaseMpServiceImpl<GenSimpleTableMapp
 
     //设置DataObj状态
     dataObjectService.setStatus(vo.getDataObjId(), DataObjectGenStatus.SET_TABLE);
+
+    // 设置默认的基础设置
+    UpdateGenerateInfoVo updateGenerateInfoVo = new UpdateGenerateInfoVo();
+    updateGenerateInfoVo.setTemplateType(GenTemplateType.LIST.getCode());
+    updateGenerateInfoVo.setPackageName("com.lframework");
+    updateGenerateInfoVo.setModuleName(StringPool.EMPTY_STR);
+    updateGenerateInfoVo.setBizName(GenStringConverter.convertToNormalLowerCase(
+        EnumUtil.getByCode(GenConvertType.class, vo.getConvertType()), simpleTable.getTableName()));
+    // 强制转驼峰并且首字母大写
+    String className = GenStringConverter.convertToCamelCase(
+        EnumUtil.getByCode(GenConvertType.class, vo.getConvertType()), simpleTable.getTableName());
+    updateGenerateInfoVo.setClassName(
+        className.substring(0, 1).toUpperCase() + className.substring(1));
+    updateGenerateInfoVo.setClassDescription(
+        StringUtil.isEmpty(simpleTable.getTableComment()) ? StringPool.EMPTY_STR
+            : simpleTable.getTableComment());
+    updateGenerateInfoVo.setKeyType(GenKeyType.SNOW_FLAKE.getCode());
+    updateGenerateInfoVo.setMenuCode(StringPool.EMPTY_STR);
+    updateGenerateInfoVo.setMenuName(StringPool.EMPTY_STR);
+    updateGenerateInfoVo.setDetailSpan(4);
+    updateGenerateInfoVo.setIsCache(true);
+    updateGenerateInfoVo.setHasDelete(false);
+
+    generateInfoService.updateGenerate(vo.getDataObjId(), updateGenerateInfoVo);
 
     return simpleTable.getId();
   }

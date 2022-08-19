@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.lframework.common.exceptions.impl.DefaultClientException;
 import com.lframework.common.utils.CollectionUtil;
-import com.lframework.common.utils.StringUtil;
 import com.lframework.gen.converters.GenMysqlDataTypeConverter;
+import com.lframework.gen.converters.GenStringConverter;
 import com.lframework.gen.dto.simpledb.OriSimpleTableColumnDto;
 import com.lframework.gen.dto.simpledb.SimpleTableColumnDto;
 import com.lframework.gen.entity.GenSimpleTableColumn;
@@ -17,6 +17,7 @@ import com.lframework.gen.service.ISimpleTableColumnService;
 import com.lframework.gen.vo.dataobj.CreateDataObjectColumnVo;
 import com.lframework.gen.vo.simpledb.CreateSimpleTableVo;
 import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
+import com.lframework.starter.web.utils.EnumUtil;
 import com.lframework.starter.web.utils.IdUtil;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -84,8 +85,9 @@ public class SimpleTableColumnServiceImpl extends
         createDataObjectColumnVo.setName(genSimpleTableColumn.getColumnComment());
         //属性名转换
         if (vo.getConvertType() == GenConvertType.UNDERLINE_TO_CAMEL.getCode().intValue()) {
-          createDataObjectColumnVo.setPropertyName(
-              StringUtil.toCamelCase(genSimpleTableColumn.getColumnName()));
+          createDataObjectColumnVo.setPropertyName(GenStringConverter.convert(
+              EnumUtil.getByCode(GenConvertType.class, vo.getConvertType()),
+              genSimpleTableColumn.getColumnName()));
         }
 
         createDataObjectColumnVo.setIsKey(genSimpleTableColumn.getIsKey());
