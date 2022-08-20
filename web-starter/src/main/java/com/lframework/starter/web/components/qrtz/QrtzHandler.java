@@ -1,5 +1,6 @@
 package com.lframework.starter.web.components.qrtz;
 
+import com.lframework.common.constants.StringPool;
 import com.lframework.common.exceptions.impl.DefaultSysException;
 import com.lframework.common.utils.CollectionUtil;
 import com.lframework.common.utils.StringUtil;
@@ -25,7 +26,7 @@ public class QrtzHandler {
       SchedulerFactoryBean.class);
 
   public static void addJob(Class<? extends QrtzJob> jobClass, String cron,
-      Map<String, String> jobDatas) {
+      Map<String, Object> jobDatas) {
 
     addJob(null, null, jobClass, null, null, cron, jobDatas);
   }
@@ -41,6 +42,12 @@ public class QrtzHandler {
     addJob(jobName, jobGroupName, jobClass, triggerName, triggerGroupName, cron, null);
   }
 
+  public static void addJob(String jobName, String jobGroupName, Class<? extends QrtzJob> jobClass,
+      String triggerName, String triggerGroupName, String cron, Map<String, Object> jobDatas) {
+
+    addJob(jobName, jobGroupName, jobClass, triggerName, triggerGroupName, cron, jobDatas, null);
+  }
+
   /**
    * 添加任务
    *
@@ -53,7 +60,8 @@ public class QrtzHandler {
    * @param jobDatas         附加数据
    */
   public static void addJob(String jobName, String jobGroupName, Class<? extends QrtzJob> jobClass,
-      String triggerName, String triggerGroupName, String cron, Map<String, String> jobDatas) {
+      String triggerName, String triggerGroupName, String cron, Map<String, Object> jobDatas,
+      String description) {
 
     try {
       Scheduler sched = SCHEDULER_FACTORY.getScheduler();
@@ -61,11 +69,12 @@ public class QrtzHandler {
       if (!StringUtil.isBlank(jobName)) {
         jobBuilder.withIdentity(jobName, jobGroupName);
       }
-      if (!CollectionUtil.isEmpty(jobDatas)) {
-        jobDatas.forEach(jobBuilder::usingJobData);
-      }
 
-      JobDetail jobDetail = jobBuilder.build();
+      JobDetail jobDetail = jobBuilder.withDescription(
+          StringUtil.isBlank(description) ? StringPool.EMPTY_STR : description).build();
+      if (!CollectionUtil.isEmpty(jobDatas)) {
+        jobDatas.forEach((k, v) -> jobDetail.getJobDataMap().put(k, v));
+      }
 
       TriggerBuilder<Trigger> triggerBuilder = TriggerBuilder.newTrigger();
       if (!StringUtil.isBlank(triggerName)) {
@@ -222,5 +231,53 @@ public class QrtzHandler {
     int executingJobSize = SCHEDULER_FACTORY.getScheduler().getCurrentlyExecutingJobs().size();
     log.info("当前运行任务个数：{}，等待完成后关闭", executingJobSize);
     SCHEDULER_FACTORY.getScheduler().shutdown(true);
+  }
+
+  /**
+   * 恢复任务
+   *
+   * @param jobName
+   * @param jobGroupName
+   */
+  public static void resume(String jobName, String jobGroupName) {
+    Scheduler sched = SCHEDULER_FACTORY.getScheduler();
+    try {
+      sched.resumeJob(JobKey.jobKey(jobName, jobGroupName));
+    } catch (SchedulerException e) {
+      log.error(e.getMessage(), e);
+      throw new DefaultSysException(e.getMessage());
+    }
+  }
+
+  /**
+   * 暂停任务
+   *
+   * @param jobName
+   * @param jobGroupName
+   */
+  public static void pause(String jobName, String jobGroupName) {
+    Scheduler sched = SCHEDULER_FACTORY.getScheduler();
+    try {
+      sched.pauseJob(JobKey.jobKey(jobName, jobGroupName));
+    } catch (SchedulerException e) {
+      log.error(e.getMessage(), e);
+      throw new DefaultSysException(e.getMessage());
+    }
+  }
+
+  /**
+   * 触发任务
+   *
+   * @param jobName
+   * @param jobGroupName
+   */
+  public static void trigger(String jobName, String jobGroupName) {
+    Scheduler sched = SCHEDULER_FACTORY.getScheduler();
+    try {
+      sched.triggerJob(JobKey.jobKey(jobName, jobGroupName));
+    } catch (SchedulerException e) {
+      log.error(e.getMessage(), e);
+      throw new DefaultSysException(e.getMessage());
+    }
   }
 }
