@@ -37,7 +37,7 @@
   </properties>
   <modules>
     <module>common</module>
-    <module>gen</module>
+    <module>gen-starter</module>
     <module>web-starter</module>
     <module>mybatis-starter</module>
     <module>security-starter</module>
@@ -95,7 +95,7 @@
 
       <dependency>
         <groupId>com.lframework</groupId>
-        <artifactId>gen</artifactId>
+        <artifactId>gen-starter</artifactId>
         <version>${jugg.version}</version>
       </dependency>
 
