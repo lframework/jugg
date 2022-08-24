@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 public class IdWorker extends Snowflake {
 
   public IdWorker() {
+    super();
   }
 
   public IdWorker(long workerId) {

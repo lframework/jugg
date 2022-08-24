@@ -12,7 +12,7 @@ import com.lframework.starter.mybatis.vo.system.user.QuerySysUserVo;
 import com.lframework.starter.mybatis.vo.system.user.UpdateSysUserVo;
 import com.lframework.starter.security.bo.system.user.GetSysUserBo;
 import com.lframework.starter.security.bo.system.user.QuerySysUserBo;
-import com.lframework.starter.security.controller.DefaultBaseController;
+import com.lframework.starter.web.controller.DefaultBaseController;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
 import io.swagger.annotations.Api;

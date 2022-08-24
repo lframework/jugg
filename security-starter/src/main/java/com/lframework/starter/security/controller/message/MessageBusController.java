@@ -3,7 +3,7 @@ package com.lframework.starter.security.controller.message;
 import com.lframework.common.utils.ThreadUtil;
 import com.lframework.starter.mybatis.resp.PageResult;
 import com.lframework.starter.mybatis.service.message.IMessageBusService;
-import com.lframework.starter.security.controller.DefaultBaseController;
+import com.lframework.starter.web.controller.DefaultBaseController;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
 import com.lframework.starter.web.utils.ApplicationUtil;

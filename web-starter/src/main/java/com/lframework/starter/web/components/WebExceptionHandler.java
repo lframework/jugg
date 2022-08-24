@@ -9,7 +9,10 @@ import com.lframework.common.exceptions.impl.InputErrorException;
 import com.lframework.starter.web.components.validation.TypeMismatch;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
 import com.lframework.starter.web.resp.Response;
+import com.lframework.starter.web.resp.ResponseBuilder;
+import com.lframework.starter.web.utils.ApplicationUtil;
 import com.lframework.starter.web.utils.ResponseUtil;
+import java.util.Map;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.UnexpectedTypeException;
@@ -69,7 +72,7 @@ public class WebExceptionHandler {
     BaseException ex = new DefaultSysException();
     this.setResponseCode(ex);
 
-    return InvokeResultBuilder.fail(ex);
+    return getBuilder(method.getBean()).fail(ex);
   }
 
   /**
@@ -87,7 +90,8 @@ public class WebExceptionHandler {
     BaseException ex = new InputErrorException();
 
     this.setResponseCode(ex);
-    return InvokeResultBuilder.fail(ex);
+
+    return getBuilder(method.getBean()).fail(ex);
   }
 
   @ExceptionHandler(BindException.class)
@@ -129,7 +133,7 @@ public class WebExceptionHandler {
 
     this.setResponseCode(exception);
 
-    return InvokeResultBuilder.fail(exception);
+    return getBuilder(method.getBean()).fail(exception);
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -149,7 +153,7 @@ public class WebExceptionHandler {
 
     this.setResponseCode(exception);
 
-    return InvokeResultBuilder.fail(exception);
+    return getBuilder(method.getBean()).fail(exception);
   }
 
   /**
@@ -176,7 +180,7 @@ public class WebExceptionHandler {
 
     this.setResponseCode(exception);
 
-    return InvokeResultBuilder.fail(exception);
+    return getBuilder(method.getBean()).fail(exception);
   }
 
   /**
@@ -214,7 +218,7 @@ public class WebExceptionHandler {
 
     this.setResponseCode(ex);
 
-    return InvokeResultBuilder.fail(ex);
+    return getBuilder(method.getBean()).fail(ex);
   }
 
   /**
@@ -232,7 +236,7 @@ public class WebExceptionHandler {
     BaseException ex = new InputErrorException();
     this.setResponseCode(ex);
 
-    return InvokeResultBuilder.fail(ex);
+    return getBuilder(method.getBean()).fail(ex);
   }
 
   /**
@@ -252,7 +256,7 @@ public class WebExceptionHandler {
 
     this.setResponseCode(ex);
 
-    return InvokeResultBuilder.fail();
+    return getBuilder(method.getBean()).fail();
   }
 
   @ExceptionHandler(FileUploadException.class)
@@ -264,7 +268,7 @@ public class WebExceptionHandler {
 
     this.setResponseCode(ex);
 
-    return InvokeResultBuilder.fail(ex);
+    return getBuilder(method.getBean()).fail(ex);
   }
 
   /**
@@ -283,7 +287,7 @@ public class WebExceptionHandler {
 
     this.setResponseCode(ex);
 
-    return InvokeResultBuilder.fail(ex);
+    return getBuilder(method.getBean()).fail(ex);
   }
 
   /**
@@ -302,7 +306,7 @@ public class WebExceptionHandler {
 
     this.setResponseCode(ex);
 
-    return InvokeResultBuilder.fail(ex);
+    return getBuilder(method.getBean()).fail(ex);
   }
 
   protected void logException(Throwable e, HandlerMethod method) {
@@ -323,5 +327,26 @@ public class WebExceptionHandler {
   protected void setResponseCode(BaseException e) {
 
     ResponseUtil.getResponse().setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+  }
+
+  protected ResponseBuilder getBuilder(Object bean) {
+
+    Map<String, ResponseBuilder> builders = ApplicationUtil.getBeansOfType(ResponseBuilder.class);
+    ResponseBuilder builder = null;
+    for (ResponseBuilder value : builders.values()) {
+      if (value.isDefault()) {
+        builder = value;
+        break;
+      }
+    }
+
+    for (ResponseBuilder value : builders.values()) {
+      if (value.isMatch(bean)) {
+        builder = value;
+        break;
+      }
+    }
+
+    return builder;
   }
 }

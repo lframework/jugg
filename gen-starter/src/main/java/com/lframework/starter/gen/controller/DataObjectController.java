@@ -18,7 +18,7 @@ import com.lframework.starter.gen.vo.dataobj.UpdateDataObjectVo;
 import com.lframework.starter.mybatis.resp.PageResult;
 import com.lframework.starter.mybatis.service.IUserService;
 import com.lframework.starter.mybatis.utils.PageResultUtil;
-import com.lframework.starter.security.controller.DefaultBaseController;
+import com.lframework.starter.web.controller.DefaultBaseController;
 import com.lframework.starter.web.dto.UserDto;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;

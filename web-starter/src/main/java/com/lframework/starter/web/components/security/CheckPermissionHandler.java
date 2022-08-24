@@ -1,4 +1,4 @@
-package com.lframework.starter.security.components;
+package com.lframework.starter.web.components.security;
 
 /**
  * 权限验证

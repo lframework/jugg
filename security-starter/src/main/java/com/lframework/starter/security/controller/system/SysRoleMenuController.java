@@ -7,7 +7,7 @@ import com.lframework.starter.mybatis.service.system.ISysMenuService;
 import com.lframework.starter.mybatis.service.system.ISysRoleMenuService;
 import com.lframework.starter.mybatis.vo.system.role.SysRoleMenuSettingVo;
 import com.lframework.starter.security.bo.system.role.QueryRoleMenuBo;
-import com.lframework.starter.security.controller.DefaultBaseController;
+import com.lframework.starter.web.controller.DefaultBaseController;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
 import io.swagger.annotations.Api;

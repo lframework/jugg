@@ -11,7 +11,7 @@ import com.lframework.starter.mybatis.vo.system.role.QuerySysRoleVo;
 import com.lframework.starter.mybatis.vo.system.role.UpdateSysRoleVo;
 import com.lframework.starter.security.bo.system.role.GetSysRoleBo;
 import com.lframework.starter.security.bo.system.role.QuerySysRoleBo;
-import com.lframework.starter.security.controller.DefaultBaseController;
+import com.lframework.starter.web.controller.DefaultBaseController;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
 import io.swagger.annotations.Api;

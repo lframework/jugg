@@ -22,7 +22,7 @@ import com.lframework.starter.security.bo.system.menu.SysMenuSelectorBo;
 import com.lframework.starter.security.bo.system.position.SysPositionSelectorBo;
 import com.lframework.starter.security.bo.system.role.SysRoleSelectorBo;
 import com.lframework.starter.security.bo.system.user.SysUserSelectorBo;
-import com.lframework.starter.security.controller.DefaultBaseController;
+import com.lframework.starter.web.controller.DefaultBaseController;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
 import io.swagger.annotations.Api;

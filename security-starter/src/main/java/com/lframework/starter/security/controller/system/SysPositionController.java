@@ -11,7 +11,7 @@ import com.lframework.starter.mybatis.vo.system.position.QuerySysPositionVo;
 import com.lframework.starter.mybatis.vo.system.position.UpdateSysPositionVo;
 import com.lframework.starter.security.bo.system.position.GetSysPositionBo;
 import com.lframework.starter.security.bo.system.position.QuerySysPositionBo;
-import com.lframework.starter.security.controller.DefaultBaseController;
+import com.lframework.starter.web.controller.DefaultBaseController;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
 import io.swagger.annotations.Api;

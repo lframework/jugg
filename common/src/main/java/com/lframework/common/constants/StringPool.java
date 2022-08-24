@@ -78,11 +78,6 @@ public interface StringPool {
   String LOGIN_CAPTCHA_KEY = "login_captcha_key_{}";
 
   /**
-   * SessionId在Header中的key值
-   */
-  String HEADER_NAME_SESSION_ID = "X-Auth-Token";
-
-  /**
    * 请求ID再Header中的key值
    */
   String HEADER_NAME_REQUEST_ID = "Request-Id";

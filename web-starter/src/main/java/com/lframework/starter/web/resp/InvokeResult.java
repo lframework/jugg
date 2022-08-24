@@ -12,6 +12,8 @@ import lombok.Data;
 @Data
 public class InvokeResult<T> implements Response<T> {
 
+  private static final long serialVersionUID = 1L;
+
   /**
    * 响应码
    */

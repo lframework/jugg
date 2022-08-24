@@ -17,6 +17,7 @@ import com.lframework.starter.mybatis.vo.QueryOpLogsVo;
 import com.lframework.starter.security.bo.oplog.OpLogInUserCenterBo;
 import com.lframework.starter.security.bo.usercenter.UserInfoBo;
 import com.lframework.starter.web.components.security.PasswordEncoderWrapper;
+import com.lframework.starter.web.controller.DefaultBaseController;
 import com.lframework.starter.web.dto.UserInfoDto;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;

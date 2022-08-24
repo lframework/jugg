@@ -1,22 +1,33 @@
 package com.lframework.starter.web.config;
 
-import cn.dev33.satoken.interceptor.SaAnnotationInterceptor;
+import static cn.hutool.core.date.DatePattern.NORM_DATETIME_PATTERN;
+import static cn.hutool.core.date.DatePattern.NORM_DATE_PATTERN;
+import static cn.hutool.core.date.DatePattern.NORM_TIME_PATTERN;
+
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jdk8.PackageVersion;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import com.lframework.common.constants.StringPool;
 import com.lframework.common.utils.IdWorker;
 import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.web.components.security.CheckPermissionHandler;
+import com.lframework.starter.web.components.security.CheckPermissionHandlerImpl;
 import com.lframework.starter.web.components.security.PermitAllService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -27,8 +38,6 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * Web配置
@@ -36,24 +45,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @author zmj
  */
 @Configuration
-public class WebConfiguration implements WebMvcConfigurer {
+public class WebConfiguration {
 
-  @Value("${worker-id:1}")
+  @Value("${worker-id:-1}")
   private Long workerId;
 
-  @Value("${center-id:1}")
+  @Value("${center-id:-1}")
   private Long centerId;
 
   @Autowired
   private PermitAllService permitAllService;
-
-  @Override
-  public void addInterceptors(InterceptorRegistry registry) {
-
-    registry.addInterceptor(new SaAnnotationInterceptor()).addPathPatterns("/**")
-        .excludePathPatterns(
-            permitAllService.getUrls().stream().map(Entry::getValue).collect(Collectors.toList()));
-  }
 
   @Bean
   @ConditionalOnMissingBean(CorsFilter.class)
@@ -134,13 +135,37 @@ public class WebConfiguration implements WebMvcConfigurer {
         .configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true)
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         .registerModule(new ParameterNamesModule()).registerModule(new Jdk8Module())
-        .registerModule(new JavaTimeModule());
+        .registerModule(new JavaTimeModule()).registerModule(new JavaLocalDateTimeModule());
     return om;
+  }
+
+  class JavaLocalDateTimeModule extends SimpleModule {
+
+    public JavaLocalDateTimeModule() {
+      super(PackageVersion.VERSION);
+      this.addSerializer(LocalDateTime.class,
+          new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(
+              NORM_DATETIME_PATTERN)));
+      this.addSerializer(LocalDate.class,
+          new LocalDateSerializer(DateTimeFormatter.ofPattern(NORM_DATE_PATTERN)));
+      this.addSerializer(LocalTime.class,
+          new LocalTimeSerializer(DateTimeFormatter.ofPattern(NORM_TIME_PATTERN)));
+      this.addDeserializer(LocalDateTime.class,
+          new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(NORM_DATETIME_PATTERN)));
+      this.addDeserializer(LocalDate.class,
+          new LocalDateDeserializer(DateTimeFormatter.ofPattern(NORM_DATE_PATTERN)));
+      this.addDeserializer(LocalTime.class,
+          new LocalTimeDeserializer(DateTimeFormatter.ofPattern(NORM_TIME_PATTERN)));
+
+    }
   }
 
   @Bean
   public IdWorker getIdWorker() {
 
+    if (workerId <= 0 || centerId <= 0) {
+      return new IdWorker();
+    }
     return new IdWorker(workerId, centerId);
   }
 
@@ -149,5 +174,12 @@ public class WebConfiguration implements WebMvcConfigurer {
   public PermitAllService permitAllService() {
 
     return new PermitAllService();
+  }
+
+  @Bean("permission")
+  @ConditionalOnMissingBean(CheckPermissionHandler.class)
+  public CheckPermissionHandler checkPermissionHandler() {
+
+    return new CheckPermissionHandlerImpl();
   }
 }

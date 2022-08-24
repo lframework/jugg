@@ -2,6 +2,8 @@ package com.lframework.starter.web.controller;
 
 import com.lframework.common.utils.ObjectUtil;
 import com.lframework.starter.web.vo.PageVo;
+import com.lframework.web.common.security.AbstractUserDetails;
+import com.lframework.web.common.security.SecurityUtil;
 
 /**
  * BaseController
@@ -78,5 +80,15 @@ public abstract class BaseController {
   public int getExportSize() {
 
     return DEFAULT_EXPORT_SIZE;
+  }
+
+  /**
+   * 获取当前登录用户信息
+   *
+   * @return
+   */
+  public AbstractUserDetails getCurrentUser() {
+
+    return SecurityUtil.getCurrentUser();
   }
 }
