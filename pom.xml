@@ -34,6 +34,8 @@
     <sa-token.version>1.29.0</sa-token.version>
     <j2cache.version>2.8.4-release</j2cache.version>
     <j2cache-spring.version>2.8.0-release</j2cache-spring.version>
+    <spring-cloud.version>Hoxton.SR12</spring-cloud.version>
+    <spring-cloud-alibaba-nacos.version>2.2.5.RELEASE</spring-cloud-alibaba-nacos.version>
   </properties>
   <modules>
     <module>common</module>
@@ -43,6 +45,7 @@
     <module>security-starter</module>
     <module>bpm-starter</module>
     <module>web-common</module>
+    <module>cloud-starter</module>
   </modules>
   <packaging>pom</packaging>
 
@@ -61,6 +64,14 @@
         <version>${spring.version}</version>
         <type>pom</type>
         <scope>import</scope>
+      </dependency>
+
+      <dependency>
+          <groupId>org.springframework.cloud</groupId>
+          <artifactId>spring-cloud-dependencies</artifactId>
+          <version>${spring-cloud.version}</version>
+          <type>pom</type>
+          <scope>import</scope>
       </dependency>
 
       <dependency>
@@ -102,6 +113,12 @@
       <dependency>
         <groupId>com.lframework</groupId>
         <artifactId>bpm-starter</artifactId>
+        <version>${jugg.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.lframework</groupId>
+        <artifactId>cloud-starter</artifactId>
         <version>${jugg.version}</version>
       </dependency>
 
@@ -262,6 +279,18 @@
         <groupId>net.oschina.j2cache</groupId>
         <artifactId>j2cache-springcache</artifactId>
         <version>${j2cache-spring.version}</version>
+      </dependency>
+
+      <dependency>
+          <groupId>com.alibaba.cloud</groupId>
+          <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+          <version>${spring-cloud-alibaba-nacos.version}</version>
+      </dependency>
+
+      <dependency>
+          <groupId>com.alibaba.cloud</groupId>
+          <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+          <version>${spring-cloud-alibaba-nacos.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
