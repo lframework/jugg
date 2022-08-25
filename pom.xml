@@ -46,6 +46,7 @@
     <module>bpm-starter</module>
     <module>web-common</module>
     <module>cloud-starter</module>
+    <module>mq-starter</module>
   </modules>
   <packaging>pom</packaging>
 
@@ -119,6 +120,12 @@
       <dependency>
         <groupId>com.lframework</groupId>
         <artifactId>cloud-starter</artifactId>
+        <version>${jugg.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.lframework</groupId>
+        <artifactId>mq-starter</artifactId>
         <version>${jugg.version}</version>
       </dependency>
 
