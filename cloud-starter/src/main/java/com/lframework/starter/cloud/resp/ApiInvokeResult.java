@@ -1,16 +1,12 @@
-package com.lframework.starter.web.resp;
+package com.lframework.starter.cloud.resp;
 
 import com.lframework.common.constants.ResponseConstants;
+import com.lframework.starter.web.resp.Response;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-/**
- * 统一响应数据
- *
- * @author zmj
- */
 @Data
-public class InvokeResult<T> implements Response<T> {
+public class ApiInvokeResult<T> implements Response<T> {
 
   private static final long serialVersionUID = 1L;
 
@@ -33,8 +29,17 @@ public class InvokeResult<T> implements Response<T> {
   private T data;
 
   /**
-   * TraceId
+   * 来源 子系统名称
    */
-  @ApiModelProperty("TraceId")
-  private String traceId;
+  @ApiModelProperty("来源 子系统名称")
+  private String source;
+
+  /**
+   * 是否响应成功
+   *
+   * @return
+   */
+  public boolean success() {
+    return code >= 200 & code <= 299;
+  }
 }
