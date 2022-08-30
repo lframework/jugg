@@ -35,13 +35,19 @@
     </dependency>
 
     <dependency>
-        <groupId>io.github.openfeign</groupId>
-        <artifactId>feign-httpclient</artifactId>
+      <groupId>io.github.openfeign</groupId>
+      <artifactId>feign-httpclient</artifactId>
     </dependency>
 
     <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-actuator</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-actuator</artifactId>
+    </dependency>
+
+    <dependency>
+      <artifactId>spring-cloud-alibaba-seata</artifactId>
+      <groupId>com.alibaba.cloud</groupId>
+      <version>${spring-cloud-alibaba.version}</version>
     </dependency>
   </dependencies>
 </project>
