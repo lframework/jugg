@@ -1,9 +1,9 @@
 package com.lframework.starter.security.config;
 
 import com.github.xiaoymin.knife4j.spring.extension.OpenApiExtensionResolver;
-import com.lframework.starter.security.components.CheckPermissionHandler;
-import com.lframework.starter.security.components.CheckPermissionHandlerImpl;
-import com.lframework.starter.security.components.LoginInterceptor;
+import com.lframework.starter.web.components.security.CheckPermissionHandler;
+import com.lframework.starter.web.components.security.CheckPermissionHandlerImpl;
+import com.lframework.starter.web.components.security.LoginInterceptor;
 import com.lframework.starter.web.components.security.PermitAllService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -43,12 +43,5 @@ public class SecurityConfiguration implements WebMvcConfigurer {
         .paths(PathSelectors.any())
         .build().extensions(openApiExtensionResolver.buildSettingExtensions());
     return docket;
-  }
-
-  @Bean("permission")
-  @ConditionalOnMissingBean(CheckPermissionHandler.class)
-  public CheckPermissionHandler checkPermissionHandler() {
-
-    return new CheckPermissionHandlerImpl();
   }
 }

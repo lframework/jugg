@@ -1,4 +1,4 @@
-package com.lframework.starter.security.components;
+package com.lframework.starter.web.components.security;
 
 import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.stp.StpUtil;

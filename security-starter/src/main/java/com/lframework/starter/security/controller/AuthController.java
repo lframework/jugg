@@ -84,7 +84,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @Validated
 @RestController
-public class AuthController extends SecurityController {
+public class AuthController extends DefaultBaseController {
 
   @Autowired
   private Producer producer;

@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(tags = "定时器管理")
 @RestController
 @RequestMapping("/qrtz")
-public class QrtzController extends SecurityController {
+public class QrtzController extends DefaultBaseController {
 
   @Autowired
   private IQrtzService qrtzService;
