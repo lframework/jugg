@@ -40,6 +40,7 @@ import com.lframework.starter.web.components.security.PasswordEncoderWrapper;
 import com.lframework.starter.web.components.security.UserDetailsService;
 import com.lframework.starter.web.components.validation.Pattern;
 import com.lframework.starter.web.config.KaptchaProperties;
+import com.lframework.starter.web.controller.DefaultBaseController;
 import com.lframework.starter.web.dto.GenerateCaptchaDto;
 import com.lframework.starter.web.dto.LoginDto;
 import com.lframework.starter.web.dto.MenuDto;

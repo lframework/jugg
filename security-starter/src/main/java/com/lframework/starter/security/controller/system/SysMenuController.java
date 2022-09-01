@@ -12,7 +12,7 @@ import com.lframework.starter.mybatis.vo.system.menu.CreateSysMenuVo;
 import com.lframework.starter.mybatis.vo.system.menu.UpdateSysMenuVo;
 import com.lframework.starter.security.bo.system.menu.GetSysMenuBo;
 import com.lframework.starter.security.bo.system.menu.QuerySysMenuBo;
-import com.lframework.starter.security.controller.DefaultBaseController;
+import com.lframework.starter.web.controller.DefaultBaseController;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
 import com.lframework.starter.web.utils.EnumUtil;

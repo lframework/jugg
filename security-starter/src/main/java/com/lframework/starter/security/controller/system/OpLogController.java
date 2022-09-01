@@ -9,7 +9,7 @@ import com.lframework.starter.mybatis.utils.PageResultUtil;
 import com.lframework.starter.mybatis.vo.QueryOpLogsVo;
 import com.lframework.starter.security.bo.system.oplog.GetOpLogBo;
 import com.lframework.starter.security.bo.system.oplog.QueryOpLogBo;
-import com.lframework.starter.security.controller.DefaultBaseController;
+import com.lframework.starter.web.controller.DefaultBaseController;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
 import io.swagger.annotations.Api;

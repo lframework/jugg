@@ -1,6 +1,4 @@
-package com.lframework.starter.security.controller;
-
-import com.lframework.starter.web.controller.BaseController;
+package com.lframework.starter.web.controller;
 
 /**
  * 具有Security能力的BaseController
