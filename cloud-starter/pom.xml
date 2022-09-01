@@ -20,18 +20,23 @@
     </dependency>
 
     <dependency>
-        <groupId>com.alibaba.cloud</groupId>
-        <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+      <groupId>com.alibaba.cloud</groupId>
+      <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
     </dependency>
 
     <dependency>
-        <groupId>com.alibaba.cloud</groupId>
-        <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+      <groupId>com.alibaba.cloud</groupId>
+      <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
     </dependency>
 
     <dependency>
-        <groupId>org.springframework.cloud</groupId>
-        <artifactId>spring-cloud-starter-openfeign</artifactId>
+      <artifactId>nacos-client</artifactId>
+      <groupId>com.alibaba.nacos</groupId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-openfeign</artifactId>
     </dependency>
 
     <dependency>
@@ -47,7 +52,11 @@
     <dependency>
       <artifactId>spring-cloud-alibaba-seata</artifactId>
       <groupId>com.alibaba.cloud</groupId>
-      <version>${spring-cloud-alibaba.version}</version>
+    </dependency>
+
+    <dependency>
+      <artifactId>seata-spring-boot-starter</artifactId>
+      <groupId>io.seata</groupId>
     </dependency>
   </dependencies>
 </project>

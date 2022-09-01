@@ -18,11 +18,11 @@
       </dependency>
 
       <dependency>
-          <groupId>org.springframework.cloud</groupId>
-          <artifactId>spring-cloud-dependencies</artifactId>
-          <version>${spring-cloud.version}</version>
-          <type>pom</type>
-          <scope>import</scope>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <groupId>org.springframework.cloud</groupId>
+        <scope>import</scope>
+        <type>pom</type>
+        <version>${spring-cloud.version}</version>
       </dependency>
 
       <dependency>
@@ -239,15 +239,51 @@
       </dependency>
 
       <dependency>
-          <groupId>com.alibaba.cloud</groupId>
-          <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        <exclusions>
+          <exclusion>
+            <artifactId>nacos-client</artifactId>
+            <groupId>com.alibaba.nacos</groupId>
+          </exclusion>
+        </exclusions>
         <version>${spring-cloud-alibaba.version}</version>
+        <groupId>com.alibaba.cloud</groupId>
       </dependency>
 
       <dependency>
         <groupId>com.alibaba.cloud</groupId>
         <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
         <version>${spring-cloud-alibaba.version}</version>
+        <exclusions>
+          <exclusion>
+            <artifactId>nacos-client</artifactId>
+            <groupId>com.alibaba.nacos</groupId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <artifactId>nacos-client</artifactId>
+        <groupId>com.alibaba.nacos</groupId>
+        <version>${spring-cloud-alibaba-nacos.version}</version>
+      </dependency>
+
+      <dependency>
+        <artifactId>spring-cloud-alibaba-seata</artifactId>
+        <exclusions>
+          <exclusion>
+            <artifactId>seata-spring-boot-starter</artifactId>
+            <groupId>io.seata</groupId>
+          </exclusion>
+        </exclusions>
+        <groupId>com.alibaba.cloud</groupId>
+        <version>${spring-cloud-alibaba.version}</version>
+      </dependency>
+
+      <dependency>
+        <artifactId>seata-spring-boot-starter</artifactId>
+        <groupId>io.seata</groupId>
+        <version>${spring-cloud-alibaba-seata.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -299,6 +335,8 @@
     <j2cache.version>2.8.4-release</j2cache.version>
     <j2cache-spring.version>2.8.0-release</j2cache-spring.version>
     <spring-cloud-alibaba.version>2.2.0.RELEASE</spring-cloud-alibaba.version>
+    <spring-cloud-alibaba-nacos.version>1.4.4</spring-cloud-alibaba-nacos.version>
+    <spring-cloud-alibaba-seata.version>1.5.2</spring-cloud-alibaba-seata.version>
     <spring-cloud.version>Hoxton.RELEASE</spring-cloud.version>
   </properties>
 
