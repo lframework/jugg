@@ -1,6 +1,5 @@
 package com.lframework.starter.mybatis.impl;
 
-import com.lframework.common.constants.StringPool;
 import com.lframework.common.utils.CollectionUtil;
 import com.lframework.common.utils.RegUtil;
 import com.lframework.common.utils.StringUtil;
@@ -19,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -29,6 +29,9 @@ import org.springframework.transaction.annotation.Transactional;
 public abstract class AbstractMenuServiceImpl extends
     BaseMpServiceImpl<DefaultMenuMapper, DefaultSysMenu>
     implements IMenuService {
+
+  @Value("${session.token-key:'X-Auth-Token'}")
+  private String tokenKey;
 
   @Autowired
   private IUserTokenResolver userTokenResolver;
@@ -131,7 +134,7 @@ public abstract class AbstractMenuServiceImpl extends
 
     vars.put("_token", userTokenResolver.getToken());
     vars.put("_fullToken", userTokenResolver.getFullToken());
-    vars.put("_tokenKey", StringPool.HEADER_NAME_SESSION_ID);
+    vars.put("_tokenKey", tokenKey);
 
     return vars;
   }
