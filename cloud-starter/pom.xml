@@ -46,7 +46,7 @@
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-actuator</artifactId>
+      <artifactId>spring-boot-actuator-autoconfigure</artifactId>
     </dependency>
 
     <dependency>
@@ -57,6 +57,11 @@
     <dependency>
       <artifactId>seata-spring-boot-starter</artifactId>
       <groupId>io.seata</groupId>
+    </dependency>
+
+    <dependency>
+      <artifactId>spring-cloud-starter-zipkin</artifactId>
+      <groupId>org.springframework.cloud</groupId>
     </dependency>
   </dependencies>
 </project>

@@ -4,7 +4,6 @@ import cn.dev33.satoken.exception.NotPermissionException;
 import com.lframework.common.exceptions.BaseException;
 import com.lframework.common.exceptions.impl.AccessDeniedException;
 import com.lframework.starter.web.components.WebExceptionHandler;
-import com.lframework.starter.web.resp.InvokeResultBuilder;
 import com.lframework.starter.web.resp.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -34,7 +33,7 @@ public class SecurityExceptionHandler extends WebExceptionHandler {
     BaseException ex = new AccessDeniedException();
     this.setResponseCode(ex);
 
-    return InvokeResultBuilder.fail(ex);
+    return super.getBuilder(method.getBean()).fail(ex);
   }
 
   @ExceptionHandler(NotPermissionException.class)
@@ -46,6 +45,6 @@ public class SecurityExceptionHandler extends WebExceptionHandler {
 
     this.setResponseCode(ex);
 
-    return InvokeResultBuilder.fail(ex);
+    return super.getBuilder(method.getBean()).fail(ex);
   }
 }

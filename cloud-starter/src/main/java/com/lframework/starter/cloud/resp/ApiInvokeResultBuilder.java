@@ -70,22 +70,6 @@ public class ApiInvokeResultBuilder {
   }
 
   /**
-   * 响应失败-有信息和数据
-   *
-   * @param msg
-   * @return
-   */
-  public static <T> ApiInvokeResult<T> fail(String msg, T data) {
-
-    ApiInvokeResult<T> ApiInvokeResult = new ApiInvokeResult<>();
-    ApiInvokeResult.setCode(ResponseConstants.API_INVOKE_RESULT_FAIL_CODE);
-    ApiInvokeResult.setMsg(msg);
-    ApiInvokeResult.setData(data);
-
-    return ApiInvokeResult;
-  }
-
-  /**
    * 响应失败-根据异常
    *
    * @param e
@@ -97,6 +81,7 @@ public class ApiInvokeResultBuilder {
     apiInvokeResult.setCode(e.getCode());
     apiInvokeResult.setMsg(e.getMsg());
     apiInvokeResult.setSource(ApplicationUtil.getProperty("spring.application.name"));
+    apiInvokeResult.setExClass(e.getClass().getName());
 
     return apiInvokeResult;
   }

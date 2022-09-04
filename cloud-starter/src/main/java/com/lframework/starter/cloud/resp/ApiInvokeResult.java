@@ -35,11 +35,8 @@ public class ApiInvokeResult<T> implements Response<T> {
   private String source;
 
   /**
-   * 是否响应成功
-   *
-   * @return
+   * 异常类型
    */
-  public boolean success() {
-    return code >= 200 & code <= 299;
-  }
+  @ApiModelProperty("异常类型")
+  private String exClass;
 }
