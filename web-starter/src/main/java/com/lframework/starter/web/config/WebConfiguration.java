@@ -24,6 +24,8 @@ import com.lframework.common.utils.StringUtil;
 import com.lframework.starter.web.components.security.CheckPermissionHandler;
 import com.lframework.starter.web.components.security.CheckPermissionHandlerImpl;
 import com.lframework.starter.web.components.security.PermitAllService;
+import com.lframework.starter.web.components.trace.DefaultTraceBuilder;
+import com.lframework.starter.web.components.trace.TraceBuilder;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -181,5 +183,11 @@ public class WebConfiguration {
   public CheckPermissionHandler checkPermissionHandler() {
 
     return new CheckPermissionHandlerImpl();
+  }
+
+  @Bean
+  @ConditionalOnMissingBean(TraceBuilder.class)
+  public TraceBuilder getTraceBuilder() {
+    return new DefaultTraceBuilder();
   }
 }
