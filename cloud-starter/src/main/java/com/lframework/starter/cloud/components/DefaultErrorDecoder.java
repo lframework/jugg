@@ -21,6 +21,9 @@ public class DefaultErrorDecoder implements ErrorDecoder {
   public Exception decode(String methodKey, Response response) {
     try {
       String resp = Util.toString(response.body().asReader());
+      if (log.isDebugEnabled()) {
+        log.debug("开始处理Feign异常请求, methodKey={}, resp={}", methodKey, resp);
+      }
       ApiInvokeResult result = JsonUtil.parseObject(resp, ApiInvokeResult.class);
       if (StringUtil.isEmpty(result.getExClass())) {
         return new DefaultClientException(result.getMsg());
@@ -30,10 +33,13 @@ public class DefaultErrorDecoder implements ErrorDecoder {
       }
 
     } catch (Exception e) {
-      log.error(e.getMessage(), e);
       if (e instanceof BaseException) {
+        if (log.isDebugEnabled()) {
+          log.debug(e.getMessage(), e);
+        }
         return e;
       } else {
+        log.error(e.getMessage(), e);
         return new DefaultSysException(e.getMessage());
       }
     }
