@@ -9,6 +9,8 @@ Jugg是用来开发业务系统的脚手架，将常用的开发框架整合并�
 * web-common
 * bpm-starter
 * gen
+* cloud-starter
+* mq-starter
 
 以上是项目中所有的module。
 
@@ -72,4 +74,4 @@ Jugg是用来开发业务系统的脚手架，将常用的开发框架整合并�
 * 作者是一个只有几年开发经验的菜鸡，如有错误之处，望斧正。
 * 前端项目Gitee地址：[点此进入][frontGitee]
 
-[frontGitee]: https://gitee.com/lframework/jugg-front
+[frontGitee]: https://gitee.com/lframework/xingyun-front
