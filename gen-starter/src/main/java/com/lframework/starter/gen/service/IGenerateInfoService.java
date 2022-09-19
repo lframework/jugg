@@ -8,12 +8,12 @@ import com.lframework.starter.mybatis.service.BaseMpService;
 public interface IGenerateInfoService extends BaseMpService<GenGenerateInfo> {
 
   /**
-   * 根据数据对象ID查询
+   * 根据数据实体ID查询
    *
-   * @param dataObjId
+   * @param entityId
    * @return
    */
-  GenGenerateInfoDto getByDataObjId(String dataObjId);
+  GenGenerateInfoDto getByEntityId(String entityId);
 
   /**
    * 修改生成器配置信息
@@ -23,9 +23,9 @@ public interface IGenerateInfoService extends BaseMpService<GenGenerateInfo> {
   void updateGenerate(String dataObjId, UpdateGenerateInfoVo vo);
 
   /**
-   * 根据数据对象ID删除
+   * 根据数据实体ID删除
    *
-   * @param dataObjId
+   * @param entityId
    */
-  void deleteByDataObjId(String dataObjId);
+  void deleteByEntityId(String entityId);
 }

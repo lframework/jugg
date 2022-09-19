@@ -96,4 +96,11 @@ public interface IGenDataEntityService extends BaseMpService<GenDataEntity> {
    */
   void updateGenerate(UpdateDataEntityGenerateVo vo);
 
+  /**
+   * 同步数据表
+   *
+   * @param id
+   */
+  void syncTable(String id);
+
 }

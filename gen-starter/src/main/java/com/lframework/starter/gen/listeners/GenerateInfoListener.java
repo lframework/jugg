@@ -6,15 +6,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-@Component
-public class GenerateInfoListener implements ApplicationListener<DataEntityDeleteEvent> {
+public class GenerateInfoListener {
 
-  @Autowired
-  private IGenerateInfoService generateInfoService;
+  @Component
+  public static class DeleteEntityListener implements ApplicationListener<DataEntityDeleteEvent> {
 
-  @Override
-  public void onApplicationEvent(DataEntityDeleteEvent event) {
+    @Autowired
+    private IGenerateInfoService generateInfoService;
 
-    generateInfoService.deleteByDataObjId(event.getId());
+    @Override
+    public void onApplicationEvent(DataEntityDeleteEvent event) {
+
+      generateInfoService.deleteByEntityId(event.getId());
+    }
   }
 }

@@ -1,22 +1,40 @@
 package com.lframework.starter.gen.listeners;
 
 import com.lframework.starter.gen.events.DataEntityDeleteEvent;
+import com.lframework.starter.gen.events.DataEntityDetailDeleteEvent;
 import com.lframework.starter.gen.service.IGenCreateColumnConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-@Component
-public class CreateColumnConfigListener implements ApplicationListener<DataEntityDeleteEvent> {
+public class CreateColumnConfigListener {
 
-  @Autowired
-  private IGenCreateColumnConfigService genCreateColumnConfigService;
+  @Component
+  public static class DeleteEntityListener implements ApplicationListener<DataEntityDeleteEvent> {
 
-  @Override
-  public void onApplicationEvent(DataEntityDeleteEvent event) {
+    @Autowired
+    private IGenCreateColumnConfigService genCreateColumnConfigService;
 
-    for (String columnId : event.getColumnIds()) {
-      genCreateColumnConfigService.deleteById(columnId);
+    @Override
+    public void onApplicationEvent(DataEntityDeleteEvent event) {
+
+      for (String columnId : event.getColumnIds()) {
+        genCreateColumnConfigService.deleteById(columnId);
+      }
+    }
+  }
+
+  @Component
+  public static class DeleteEntityDetailListener implements
+      ApplicationListener<DataEntityDetailDeleteEvent> {
+
+    @Autowired
+    private IGenCreateColumnConfigService genCreateColumnConfigService;
+
+    @Override
+    public void onApplicationEvent(DataEntityDetailDeleteEvent event) {
+
+      genCreateColumnConfigService.deleteById(event.getId());
     }
   }
 }

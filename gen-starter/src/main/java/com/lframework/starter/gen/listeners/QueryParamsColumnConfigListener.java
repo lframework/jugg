@@ -1,22 +1,40 @@
 package com.lframework.starter.gen.listeners;
 
 import com.lframework.starter.gen.events.DataEntityDeleteEvent;
+import com.lframework.starter.gen.events.DataEntityDetailDeleteEvent;
 import com.lframework.starter.gen.service.IGenQueryParamsColumnConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-@Component
-public class QueryParamsColumnConfigListener implements ApplicationListener<DataEntityDeleteEvent> {
+public class QueryParamsColumnConfigListener {
 
-  @Autowired
-  private IGenQueryParamsColumnConfigService genQueryParamsColumnConfigService;
+  @Component
+  public static class DeleteEntityListener implements ApplicationListener<DataEntityDeleteEvent> {
 
-  @Override
-  public void onApplicationEvent(DataEntityDeleteEvent event) {
+    @Autowired
+    private IGenQueryParamsColumnConfigService genQueryParamsColumnConfigService;
 
-    for (String columnId : event.getColumnIds()) {
-      genQueryParamsColumnConfigService.deleteById(columnId);
+    @Override
+    public void onApplicationEvent(DataEntityDeleteEvent event) {
+
+      for (String columnId : event.getColumnIds()) {
+        genQueryParamsColumnConfigService.deleteById(columnId);
+      }
+    }
+  }
+
+  @Component
+  public static class DeleteEntityDetailListener implements
+      ApplicationListener<DataEntityDetailDeleteEvent> {
+
+    @Autowired
+    private IGenQueryParamsColumnConfigService genQueryParamsColumnConfigService;
+
+    @Override
+    public void onApplicationEvent(DataEntityDetailDeleteEvent event) {
+
+      genQueryParamsColumnConfigService.deleteById(event.getId());
     }
   }
 }

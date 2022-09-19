@@ -254,4 +254,12 @@ public class GenDataEntityController extends DefaultBaseController {
 
     ResponseUtil.download(zipFile);
   }
+
+  @ApiOperation("同步数据表")
+  @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
+  @PutMapping("/sync/table")
+  public InvokeResult<Void> syncTable(@NotNull(message = "ID不能为空！") String id) {
+    genDataEntityService.syncTable(id);
+    return InvokeResultBuilder.success();
+  }
 }

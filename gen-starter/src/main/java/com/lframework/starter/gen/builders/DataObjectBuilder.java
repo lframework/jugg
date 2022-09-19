@@ -75,7 +75,7 @@ public class DataObjectBuilder {
 
   private GenGenerateInfoDto buildGenerateInfo(String dataObjId) {
 
-    return generateInfoService.getByDataObjId(dataObjId);
+    return generateInfoService.getByEntityId(dataObjId);
   }
 
   private List<DataObjectColumn> buildColumns(String entityId, TableBuilder tableBuilder) {

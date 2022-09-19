@@ -19,9 +19,9 @@ public class GenerateInfoServiceImpl extends
     implements IGenerateInfoService {
 
   @Override
-  public GenGenerateInfoDto getByDataObjId(String dataObjId) {
+  public GenGenerateInfoDto getByEntityId(String entityId) {
 
-    return getBaseMapper().getByDataObjId(dataObjId);
+    return getBaseMapper().getByDataObjId(entityId);
   }
 
   @Transactional
@@ -60,8 +60,8 @@ public class GenerateInfoServiceImpl extends
 
   @Transactional
   @Override
-  public void deleteByDataObjId(String dataObjId) {
+  public void deleteByEntityId(String entityId) {
 
-    getBaseMapper().deleteById(dataObjId);
+    getBaseMapper().deleteById(entityId);
   }
 }
