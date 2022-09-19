@@ -16,20 +16,10 @@ import org.apache.ibatis.annotations.Param;
 public interface GenSimpleTableMapper extends BaseMapper<GenSimpleTable> {
 
   /**
-   * 根据数据对象ID查询
+   * 根据数据实体ID查询
    *
    * @param id
    * @return
    */
-  SimpleTableDto getByDataObjId(@Param("id") String id);
-
-  /**
-   * 根据TableSchema、TableName
-   *
-   * @param tableSchema
-   * @param tableName
-   * @return
-   */
-  SimpleTableDto get(@Param("tableSchema") String tableSchema,
-      @Param("tableName") String tableName);
+  SimpleTableDto getByEntityId(@Param("id") String id);
 }

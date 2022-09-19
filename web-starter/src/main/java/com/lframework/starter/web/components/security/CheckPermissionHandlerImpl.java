@@ -2,6 +2,7 @@ package com.lframework.starter.web.components.security;
 
 import com.lframework.common.utils.ArrayUtil;
 import com.lframework.common.utils.CollectionUtil;
+import com.lframework.common.utils.StringUtil;
 import com.lframework.web.common.security.AbstractUserDetails;
 import com.lframework.web.common.security.SecurityUtil;
 import java.util.Arrays;
@@ -36,8 +37,9 @@ public class CheckPermissionHandlerImpl implements CheckPermissionHandler {
     }
     Set<String> permissionSet = user.getPermissions();
 
-    boolean valid = CollectionUtil.isNotEmpty(permissionSet) && Arrays.stream(permissions)
-        .anyMatch(permissionSet::contains);
+    boolean valid = CollectionUtil.isNotEmpty(permissionSet)
+        && Arrays.stream(permissions).anyMatch(
+        pattern -> permissionSet.stream().anyMatch(item -> StringUtil.strMatch(pattern, item)));
 
     if (log.isDebugEnabled()) {
       log.debug("当前用户权限={}, 需要权限={}, 是否通过权限校验={}", permissionSet, permissions, valid);

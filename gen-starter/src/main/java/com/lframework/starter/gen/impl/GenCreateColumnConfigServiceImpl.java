@@ -1,13 +1,13 @@
 package com.lframework.starter.gen.impl;
 
 import com.lframework.common.utils.CollectionUtil;
-import com.lframework.starter.gen.dto.dataobj.GenCreateColumnConfigDto;
-import com.lframework.starter.gen.dto.dataobj.GenDataObjectColumnDto;
+import com.lframework.starter.gen.dto.gen.GenCreateColumnConfigDto;
 import com.lframework.starter.gen.entity.GenCreateColumnConfig;
+import com.lframework.starter.gen.entity.GenDataEntityDetail;
 import com.lframework.starter.gen.mappers.GenCreateColumnConfigMapper;
-import com.lframework.starter.gen.service.IDataObjectColumnService;
 import com.lframework.starter.gen.service.IGenCreateColumnConfigService;
-import com.lframework.starter.gen.vo.dataobj.UpdateCreateColumnConfigVo;
+import com.lframework.starter.gen.service.IGenDataEntityDetailService;
+import com.lframework.starter.gen.vo.gen.UpdateCreateColumnConfigVo;
 import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import java.util.Collections;
 import java.util.List;
@@ -23,28 +23,28 @@ public class GenCreateColumnConfigServiceImpl
 
 
   @Autowired
-  private IDataObjectColumnService dataObjectColumnService;
+  private IGenDataEntityDetailService genDataEntityDetailService;
 
   @Override
-  public List<GenCreateColumnConfigDto> getByDataObjId(String dataObjId) {
+  public List<GenCreateColumnConfigDto> getByDataEntityId(String entityId) {
 
-    List<GenDataObjectColumnDto> columns = dataObjectColumnService.getByDataObjId(dataObjId);
+    List<GenDataEntityDetail> columns = genDataEntityDetailService.getByEntityId(entityId);
     if (CollectionUtil.isEmpty(columns)) {
       return Collections.EMPTY_LIST;
     }
 
     return getBaseMapper().getByIds(
-        columns.stream().map(GenDataObjectColumnDto::getId).collect(Collectors.toList()));
+        columns.stream().map(GenDataEntityDetail::getId).collect(Collectors.toList()));
   }
 
   @Transactional
   @Override
-  public void updateGenerate(String dataObjId, List<UpdateCreateColumnConfigVo> vo) {
+  public void updateGenerate(String entityId, List<UpdateCreateColumnConfigVo> vo) {
 
-    List<GenDataObjectColumnDto> columns = dataObjectColumnService.getByDataObjId(dataObjId);
+    List<GenDataEntityDetail> columns = genDataEntityDetailService.getByEntityId(entityId);
     if (!CollectionUtil.isEmpty(columns)) {
       getBaseMapper().deleteBatchIds(
-          columns.stream().map(GenDataObjectColumnDto::getId).collect(Collectors.toList()));
+          columns.stream().map(GenDataEntityDetail::getId).collect(Collectors.toList()));
     }
 
     if (!CollectionUtil.isEmpty(vo)) {

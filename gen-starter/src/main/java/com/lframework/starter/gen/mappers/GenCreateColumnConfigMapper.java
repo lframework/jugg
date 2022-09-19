@@ -1,6 +1,6 @@
 package com.lframework.starter.gen.mappers;
 
-import com.lframework.starter.gen.dto.dataobj.GenCreateColumnConfigDto;
+import com.lframework.starter.gen.dto.gen.GenCreateColumnConfigDto;
 import com.lframework.starter.gen.entity.GenCreateColumnConfig;
 import com.lframework.starter.mybatis.mapper.BaseMapper;
 import java.util.List;

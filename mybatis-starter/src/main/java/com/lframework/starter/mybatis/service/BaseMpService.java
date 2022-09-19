@@ -3,6 +3,7 @@ package com.lframework.starter.mybatis.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lframework.starter.web.utils.ApplicationUtil;
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * Service基类
@@ -23,5 +24,15 @@ public interface BaseMpService<T> extends IService<T> {
    */
   default void cleanCacheByKey(Serializable key) {
 
+  }
+
+  /**
+   * 批量根据Key清除缓存
+   *
+   * @param keys
+   */
+  default void cleanCacheByKeys(Serializable... keys) {
+    BaseMpService<T> thisService = getThis(getClass());
+    Arrays.stream(keys).forEach(thisService::cleanCacheByKey);
   }
 }

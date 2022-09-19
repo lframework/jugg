@@ -1,14 +1,14 @@
 package com.lframework.starter.gen.impl;
 
 import com.lframework.common.utils.CollectionUtil;
-import com.lframework.starter.gen.dto.dataobj.GenDataObjectColumnDto;
-import com.lframework.starter.gen.dto.dataobj.GenQueryParamsColumnConfigDto;
+import com.lframework.starter.gen.dto.gen.GenQueryParamsColumnConfigDto;
+import com.lframework.starter.gen.entity.GenDataEntityDetail;
 import com.lframework.starter.gen.entity.GenQueryParamsColumnConfig;
 import com.lframework.starter.gen.enums.GenQueryType;
 import com.lframework.starter.gen.mappers.GenQueryParamsColumnConfigMapper;
-import com.lframework.starter.gen.service.IDataObjectColumnService;
+import com.lframework.starter.gen.service.IGenDataEntityDetailService;
 import com.lframework.starter.gen.service.IGenQueryParamsColumnConfigService;
-import com.lframework.starter.gen.vo.dataobj.UpdateQueryParamsColumnConfigVo;
+import com.lframework.starter.gen.vo.gen.UpdateQueryParamsColumnConfigVo;
 import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.web.utils.EnumUtil;
 import java.util.Collections;
@@ -24,28 +24,28 @@ public class GenQueryParamsColumnConfigServiceImpl
     implements IGenQueryParamsColumnConfigService {
 
   @Autowired
-  private IDataObjectColumnService dataObjectColumnService;
+  private IGenDataEntityDetailService genDataEntityDetailService;
 
   @Override
-  public List<GenQueryParamsColumnConfigDto> getByDataObjId(String dataObjId) {
+  public List<GenQueryParamsColumnConfigDto> getByDataEntityId(String entityId) {
 
-    List<GenDataObjectColumnDto> columns = dataObjectColumnService.getByDataObjId(dataObjId);
+    List<GenDataEntityDetail> columns = genDataEntityDetailService.getByEntityId(entityId);
     if (CollectionUtil.isEmpty(columns)) {
       return Collections.EMPTY_LIST;
     }
 
     return getBaseMapper().getByIds(
-        columns.stream().map(GenDataObjectColumnDto::getId).collect(Collectors.toList()));
+        columns.stream().map(GenDataEntityDetail::getId).collect(Collectors.toList()));
   }
 
   @Transactional
   @Override
-  public void updateGenerate(String dataObjId, List<UpdateQueryParamsColumnConfigVo> vo) {
+  public void updateGenerate(String entityId, List<UpdateQueryParamsColumnConfigVo> vo) {
 
-    List<GenDataObjectColumnDto> columns = dataObjectColumnService.getByDataObjId(dataObjId);
+    List<GenDataEntityDetail> columns = genDataEntityDetailService.getByEntityId(entityId);
     if (!CollectionUtil.isEmpty(columns)) {
       getBaseMapper().deleteBatchIds(
-          columns.stream().map(GenDataObjectColumnDto::getId).collect(Collectors.toList()));
+          columns.stream().map(GenDataEntityDetail::getId).collect(Collectors.toList()));
     }
 
     if (!CollectionUtil.isEmpty(vo)) {

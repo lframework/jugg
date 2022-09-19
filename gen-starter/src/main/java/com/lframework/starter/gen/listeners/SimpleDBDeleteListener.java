@@ -1,22 +1,22 @@
 package com.lframework.starter.gen.listeners;
 
-import com.lframework.starter.gen.events.DataObjectDeleteEvent;
+import com.lframework.starter.gen.events.DataEntityDeleteEvent;
 import com.lframework.starter.gen.service.ISimpleTableService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SimpleDBDeleteListener implements ApplicationListener<DataObjectDeleteEvent> {
+public class SimpleDBDeleteListener implements ApplicationListener<DataEntityDeleteEvent> {
 
   @Autowired
   private ISimpleTableService simpleTableService;
 
   @Override
-  public void onApplicationEvent(DataObjectDeleteEvent event) {
+  public void onApplicationEvent(DataEntityDeleteEvent event) {
 
     String id = event.getId();
 
-    simpleTableService.deleteByDataObjId(id);
+    simpleTableService.deleteByEntityId(id);
   }
 }

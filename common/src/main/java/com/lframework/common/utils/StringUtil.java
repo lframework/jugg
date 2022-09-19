@@ -22,7 +22,7 @@ public class StringUtil extends StrUtil {
       return null;
     }
 
-    return email.substring(0, 1) + "******" + "@" + email.split("@")[1];
+    return email.charAt(0) + "******" + "@" + email.split("@")[1];
   }
 
   /**
@@ -38,5 +38,34 @@ public class StringUtil extends StrUtil {
     }
 
     return telephone.substring(0, 3) + "****" + telephone.substring(7);
+  }
+
+  /**
+   * 字符串匹配，支持* ?通配符
+   *
+   * @param str
+   * @param pattern
+   * @return
+   */
+  public static boolean strMatch(String str, String pattern) {
+    if (StringUtil.isEmpty(str) && StringUtil.isEmpty(pattern)) {
+      return true;
+    }
+    if ("*".equals(str)) {
+      return true;
+    }
+    if (StringUtil.isEmpty(str) || StringUtil.isEmpty(pattern)) {
+      return false;
+    }
+    if ("?".equals(str.substring(0, 1))) {
+      return strMatch(str.substring(1), pattern.substring(1));
+    } else if ("*".equals(str.substring(0, 1))) {
+      return strMatch(str.substring(1), pattern) || strMatch(str.substring(1), pattern.substring(1))
+          || strMatch(str, pattern.substring(1));
+    } else if (pattern.substring(0, 1).equals(str.substring(0, 1))) {
+      return strMatch(str.substring(1), pattern.substring(1));
+    } else {
+      return false;
+    }
   }
 }

@@ -1,13 +1,13 @@
 package com.lframework.starter.gen.impl;
 
 import com.lframework.common.utils.StringUtil;
-import com.lframework.starter.gen.dto.dataobj.GenGenerateInfoDto;
+import com.lframework.starter.gen.dto.gen.GenGenerateInfoDto;
 import com.lframework.starter.gen.entity.GenGenerateInfo;
 import com.lframework.starter.gen.enums.GenKeyType;
 import com.lframework.starter.gen.enums.GenTemplateType;
 import com.lframework.starter.gen.mappers.GenGenerateInfoMapper;
 import com.lframework.starter.gen.service.IGenerateInfoService;
-import com.lframework.starter.gen.vo.dataobj.UpdateGenerateInfoVo;
+import com.lframework.starter.gen.vo.gen.UpdateGenerateInfoVo;
 import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.web.utils.EnumUtil;
 import org.springframework.stereotype.Service;

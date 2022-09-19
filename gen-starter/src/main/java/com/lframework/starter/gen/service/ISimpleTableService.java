@@ -2,30 +2,22 @@ package com.lframework.starter.gen.service;
 
 import com.lframework.starter.gen.dto.simpledb.SimpleTableDto;
 import com.lframework.starter.gen.entity.GenSimpleTable;
-import com.lframework.starter.gen.vo.simpledb.CreateSimpleTableVo;
 import com.lframework.starter.mybatis.service.BaseMpService;
 
 public interface ISimpleTableService extends BaseMpService<GenSimpleTable> {
 
   /**
-   * 根据数据对象ID查询
+   * 根据数据实体ID查询
    *
    * @param id
    * @return
    */
-  SimpleTableDto getByDataObjId(String id);
+  SimpleTableDto getByEntityId(String id);
 
   /**
-   * 创建数据表对象
+   * 根据实体ID删除
    *
-   * @param vo
+   * @param entityId
    */
-  String create(CreateSimpleTableVo vo);
-
-  /**
-   * 根据DataObjId删除
-   *
-   * @param dataObjId
-   */
-  void deleteByDataObjId(String dataObjId);
+  void deleteByEntityId(String entityId);
 }

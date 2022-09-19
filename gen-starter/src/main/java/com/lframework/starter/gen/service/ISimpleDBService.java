@@ -1,23 +1,32 @@
 package com.lframework.starter.gen.service;
 
+import com.lframework.starter.gen.dto.simpledb.OriSimpleTableDto;
 import com.lframework.starter.gen.dto.simpledb.SimpleDBDto;
+import com.lframework.starter.gen.vo.simpledb.SimpleTableSelectorVo;
+import com.lframework.starter.mybatis.resp.PageResult;
 import com.lframework.starter.web.service.BaseService;
-import java.util.List;
 
 public interface ISimpleDBService extends BaseService {
 
   /**
-   * 指定数据库名称查询数据库表名称
+   * 查询当前数据库名称
    *
-   * @param dbName
    * @return
    */
-  List<SimpleDBDto> getTables(String dbName);
+  String getCurrentDBName();
 
   /**
-   * 查询当前数据库表名称
+   * 选择器
+   *
+   * @param vo
+   * @return
+   */
+  PageResult<SimpleDBDto> selector(Integer pageIndex, Integer pageSize, SimpleTableSelectorVo vo);
+
+  /**
+   * 根据表名查询
    *
    * @return
    */
-  List<SimpleDBDto> getCurrentTables();
+  OriSimpleTableDto getByTableName(String tableName);
 }

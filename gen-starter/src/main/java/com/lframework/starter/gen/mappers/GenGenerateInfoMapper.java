@@ -1,6 +1,6 @@
 package com.lframework.starter.gen.mappers;
 
-import com.lframework.starter.gen.dto.dataobj.GenGenerateInfoDto;
+import com.lframework.starter.gen.dto.gen.GenGenerateInfoDto;
 import com.lframework.starter.gen.entity.GenGenerateInfo;
 import com.lframework.starter.mybatis.mapper.BaseMapper;
 

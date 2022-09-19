@@ -2,7 +2,7 @@ package com.lframework.starter.gen.builders;
 
 import com.lframework.starter.gen.components.Table;
 import com.lframework.starter.gen.components.TableColumn;
-import com.lframework.starter.gen.enums.DataObjectType;
+import com.lframework.starter.gen.enums.GenType;
 
 public interface TableBuilder {
 
@@ -12,7 +12,7 @@ public interface TableBuilder {
    * @param type
    * @return
    */
-  boolean canBuild(DataObjectType type);
+  boolean canBuild(GenType type);
 
   /**
    * 构建Table

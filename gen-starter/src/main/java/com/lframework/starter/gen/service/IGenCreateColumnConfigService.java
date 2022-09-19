@@ -1,27 +1,27 @@
 package com.lframework.starter.gen.service;
 
-import com.lframework.starter.gen.dto.dataobj.GenCreateColumnConfigDto;
+import com.lframework.starter.gen.dto.gen.GenCreateColumnConfigDto;
 import com.lframework.starter.gen.entity.GenCreateColumnConfig;
-import com.lframework.starter.gen.vo.dataobj.UpdateCreateColumnConfigVo;
+import com.lframework.starter.gen.vo.gen.UpdateCreateColumnConfigVo;
 import com.lframework.starter.mybatis.service.BaseMpService;
 import java.util.List;
 
 public interface IGenCreateColumnConfigService extends BaseMpService<GenCreateColumnConfig> {
 
   /**
-   * 根据数据对象ID查询
+   * 根据数据实体ID查询
    *
-   * @param dataObjId
+   * @param entityId
    * @return
    */
-  List<GenCreateColumnConfigDto> getByDataObjId(String dataObjId);
+  List<GenCreateColumnConfigDto> getByDataEntityId(String entityId);
 
   /**
    * 修改生成器配置信息
    *
    * @param vo
    */
-  void updateGenerate(String dataObjId, List<UpdateCreateColumnConfigVo> vo);
+  void updateGenerate(String entityId, List<UpdateCreateColumnConfigVo> vo);
 
   /**
    * 根据ID查询

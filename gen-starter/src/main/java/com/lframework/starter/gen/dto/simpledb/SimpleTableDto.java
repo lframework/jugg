@@ -1,6 +1,7 @@
 package com.lframework.starter.gen.dto.simpledb;
 
 import com.lframework.starter.gen.components.Table;
+import com.lframework.starter.gen.entity.GenSimpleTableColumn;
 import com.lframework.starter.gen.enums.GenConvertType;
 import com.lframework.starter.web.dto.BaseDto;
 import java.io.Serializable;
@@ -27,7 +28,7 @@ public class SimpleTableDto implements BaseDto, Table, Serializable {
   /**
    * 字段信息
    */
-  private List<SimpleTableColumnDto> columns;
+  private List<GenSimpleTableColumn> columns;
 
   /**
    * 数据库引擎

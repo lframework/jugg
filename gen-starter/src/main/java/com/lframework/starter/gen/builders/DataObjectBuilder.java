@@ -2,12 +2,13 @@ package com.lframework.starter.gen.builders;
 
 import com.lframework.starter.gen.components.DataObject;
 import com.lframework.starter.gen.components.DataObjectColumn;
-import com.lframework.starter.gen.dto.dataobj.DataObjectDto;
-import com.lframework.starter.gen.dto.dataobj.GenDataObjectColumnDto;
-import com.lframework.starter.gen.dto.dataobj.GenGenerateInfoDto;
-import com.lframework.starter.gen.service.IDataObjectColumnService;
-import com.lframework.starter.gen.service.IDataObjectService;
+import com.lframework.starter.gen.dto.gen.GenGenerateInfoDto;
+import com.lframework.starter.gen.entity.GenDataEntity;
+import com.lframework.starter.gen.entity.GenDataEntityDetail;
+import com.lframework.starter.gen.enums.GenType;
 import com.lframework.starter.gen.service.IGenCreateColumnConfigService;
+import com.lframework.starter.gen.service.IGenDataEntityDetailService;
+import com.lframework.starter.gen.service.IGenDataEntityService;
 import com.lframework.starter.gen.service.IGenDetailColumnConfigService;
 import com.lframework.starter.gen.service.IGenQueryColumnConfigService;
 import com.lframework.starter.gen.service.IGenQueryParamsColumnConfigService;
@@ -25,13 +26,13 @@ import org.springframework.stereotype.Component;
 public class DataObjectBuilder {
 
   @Autowired
-  private IDataObjectService dataObjectService;
+  private IGenDataEntityService genDataEntityService;
 
   @Autowired
   private IGenerateInfoService generateInfoService;
 
   @Autowired
-  private IDataObjectColumnService dataObjectColumnService;
+  private IGenDataEntityDetailService genDataEntityDetailService;
 
   @Autowired
   private IGenCreateColumnConfigService genCreateColumnConfigService;
@@ -57,15 +58,13 @@ public class DataObjectBuilder {
   public DataObject build(String id) {
 
     // 根据ID查询数据对象
-    DataObjectDto dataObject = dataObjectService.findById(id);
+    GenDataEntity dataObject = genDataEntityService.findById(id);
     DataObject result = new DataObject();
     result.setId(dataObject.getId());
-    result.setCode(dataObject.getCode());
     result.setName(dataObject.getName());
-    result.setType(dataObject.getType());
     result.setDescription(dataObject.getDescription());
 
-    TableBuilder tableBuilder = TableBuilderFactory.getBuilder(dataObject.getType());
+    TableBuilder tableBuilder = TableBuilderFactory.getBuilder(GenType.SIMPLE_DB);
 
     result.setTable(tableBuilder.buildTable(dataObject.getId()));
     result.setColumns(this.buildColumns(dataObject.getId(), tableBuilder));
@@ -79,11 +78,12 @@ public class DataObjectBuilder {
     return generateInfoService.getByDataObjId(dataObjId);
   }
 
-  private List<DataObjectColumn> buildColumns(String dataObjId, TableBuilder tableBuilder) {
+  private List<DataObjectColumn> buildColumns(String entityId, TableBuilder tableBuilder) {
 
     List<DataObjectColumn> results = new ArrayList<>();
-    List<GenDataObjectColumnDto> columns = dataObjectColumnService.getByDataObjId(dataObjId);
-    for (GenDataObjectColumnDto column : columns) {
+
+    List<GenDataEntityDetail> columns = genDataEntityDetailService.getByEntityId(entityId);
+    for (GenDataEntityDetail column : columns) {
       DataObjectColumn result = new DataObjectColumn();
       result.setId(column.getId());
       result.setName(column.getName());

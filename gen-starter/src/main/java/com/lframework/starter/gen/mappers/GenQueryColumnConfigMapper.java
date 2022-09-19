@@ -1,6 +1,6 @@
 package com.lframework.starter.gen.mappers;
 
-import com.lframework.starter.gen.dto.dataobj.GenQueryColumnConfigDto;
+import com.lframework.starter.gen.dto.gen.GenQueryColumnConfigDto;
 import com.lframework.starter.gen.entity.GenQueryColumnConfig;
 import com.lframework.starter.mybatis.mapper.BaseMapper;
 import java.util.List;

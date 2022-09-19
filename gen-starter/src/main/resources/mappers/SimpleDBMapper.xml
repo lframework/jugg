@@ -7,13 +7,36 @@
         <result column="TABLE_NAME" property="tableName"/>
     </resultMap>
 
-    <select id="getTables" resultMap="SimpleDBDto">
+    <resultMap id="OriSimpleTableDto" type="com.lframework.starter.gen.dto.simpledb.OriSimpleTableDto">
+        <id column="id" property="id"/>
+        <result column="table_schema" property="tableSchema"/>
+        <result column="table_name" property="tableName"/>
+        <result column="engine" property="engine"/>
+        <result column="table_collation" property="tableCollation"/>
+        <result column="table_comment" property="tableComment"/>
+        <result column="convert_type" property="convertType"/>
+    </resultMap>
+
+    <select id="selector" resultMap="SimpleDBDto">
         select TABLE_SCHEMA, TABLE_NAME from information_schema.tables
         <where>
-            <if test="dbName != null and dbName != ''">
-                AND TABLE_SCHEMA = #{dbName}
+            AND TABLE_SCHEMA = database()
+            <if test="name != null and name != ''">
+                AND TABLE_NAME LIKE CONCAT('%', #{name}, '%')
             </if>
         </where>
         ORDER BY TABLE_SCHEMA, TABLE_NAME
+    </select>
+
+    <select id="getByTableName" resultMap="OriSimpleTableDto">
+        select
+            TABLE_SCHEMA AS table_schema,
+            TABLE_NAME AS table_name,
+            ENGINE AS engine,
+            TABLE_COLLATION AS table_collation,
+            TABLE_COMMENT AS table_comment
+        FROM information_schema.tables
+        WHERE TABLE_SCHEMA = database()
+        AND TABLE_NAME = #{tableName}
     </select>
 </mapper>

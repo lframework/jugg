@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lframework.starter.gen.mappers.GenDetailColumnConfigMapper">
-    <resultMap id="GenDetailColumnConfigDto" type="com.lframework.starter.gen.dto.dataobj.GenDetailColumnConfigDto">
+    <resultMap id="GenDetailColumnConfigDto" type="com.lframework.starter.gen.dto.gen.GenDetailColumnConfigDto">
         <id column="id" property="id"/>
         <result column="span" property="span"/>
         <result column="order_no" property="orderNo"/>

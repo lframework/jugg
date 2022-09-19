@@ -2,13 +2,13 @@ package com.lframework.starter.gen.builders;
 
 import com.lframework.common.exceptions.impl.DefaultSysException;
 import com.lframework.common.utils.CollectionUtil;
-import com.lframework.starter.gen.enums.DataObjectType;
+import com.lframework.starter.gen.enums.GenType;
 import com.lframework.starter.web.utils.ApplicationUtil;
 import java.util.Map;
 
 public class TableBuilderFactory {
 
-  public static TableBuilder getBuilder(DataObjectType type) {
+  public static TableBuilder getBuilder(GenType type) {
 
     Map<String, TableBuilder> builders = ApplicationUtil.getBeansOfType(TableBuilder.class);
     if (CollectionUtil.isEmpty(builders)) {

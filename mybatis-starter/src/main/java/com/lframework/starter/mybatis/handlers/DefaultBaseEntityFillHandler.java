@@ -6,6 +6,8 @@ import com.lframework.starter.mybatis.constants.MyBatisStringPool;
 import com.lframework.web.common.security.AbstractUserDetails;
 import com.lframework.web.common.security.SecurityUtil;
 import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.function.Supplier;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,14 +50,30 @@ public class DefaultBaseEntityFillHandler implements MetaObjectHandler {
 
     AbstractUserDetails user = SecurityUtil.getCurrentUser();
     if (ObjectUtil.isNotNull(user)) {
-      this.strictInsertFill(metaObject, MyBatisStringPool.COLUMN_UPDATE_BY, String.class,
+      this.strictUpdateFill(metaObject, MyBatisStringPool.COLUMN_UPDATE_BY, String.class,
           user.getId());
     } else {
-      this.strictInsertFill(metaObject, MyBatisStringPool.COLUMN_UPDATE_BY, String.class,
+      this.strictUpdateFill(metaObject, MyBatisStringPool.COLUMN_UPDATE_BY, String.class,
           defaultUserId);
     }
 
-    this.strictInsertFill(metaObject, MyBatisStringPool.COLUMN_UPDATE_TIME, LocalDateTime.class,
+    this.strictUpdateFill(metaObject, MyBatisStringPool.COLUMN_UPDATE_TIME, LocalDateTime.class,
         LocalDateTime.now());
+  }
+
+  @Override
+  public MetaObjectHandler strictFillStrategy(MetaObject metaObject, String fieldName,
+      Supplier<?> fieldVal) {
+    if (MyBatisStringPool.COLUMN_UPDATE_BY.equals(fieldName)
+        || MyBatisStringPool.COLUMN_UPDATE_TIME.equals(fieldName)) {
+      Object obj = fieldVal.get();
+      if (Objects.nonNull(obj)) {
+        metaObject.setValue(fieldName, obj);
+      }
+    } else {
+      return MetaObjectHandler.super.strictFillStrategy(metaObject, fieldName, fieldVal);
+    }
+
+    return this;
   }
 }

@@ -1,7 +1,6 @@
 package com.lframework.starter.gen.components;
 
-import com.lframework.starter.gen.dto.dataobj.GenGenerateInfoDto;
-import com.lframework.starter.gen.enums.DataObjectType;
+import com.lframework.starter.gen.dto.gen.GenGenerateInfoDto;
 import java.util.List;
 import lombok.Data;
 
@@ -17,19 +16,9 @@ public class DataObject {
   private String id;
 
   /**
-   * 编号
-   */
-  private String code;
-
-  /**
    * 名称
    */
   private String name;
-
-  /**
-   * 类型
-   */
-  private DataObjectType type;
 
   /**
    * 备注

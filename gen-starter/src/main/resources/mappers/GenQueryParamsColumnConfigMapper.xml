@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lframework.starter.gen.mappers.GenQueryParamsColumnConfigMapper">
     <resultMap id="GenQueryParamsColumnConfigDto"
-               type="com.lframework.starter.gen.dto.dataobj.GenQueryParamsColumnConfigDto">
+               type="com.lframework.starter.gen.dto.gen.GenQueryParamsColumnConfigDto">
         <id column="id" property="id"/>
         <result column="query_type" property="queryType"/>
         <result column="order_no" property="orderNo"/>

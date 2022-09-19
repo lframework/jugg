@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lframework.starter.gen.mappers.GenGenerateInfoMapper">
-    <resultMap id="GenGenerateInfoDto" type="com.lframework.starter.gen.dto.dataobj.GenGenerateInfoDto">
+    <resultMap id="GenGenerateInfoDto" type="com.lframework.starter.gen.dto.gen.GenGenerateInfoDto">
         <id column="id" property="id"/>
         <result column="template_type" property="templateType"/>
         <result column="package_name" property="packageName"/>

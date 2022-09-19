@@ -1,8 +1,8 @@
 package com.lframework.starter.gen.service;
 
-import com.lframework.starter.gen.dto.dataobj.GenQueryColumnConfigDto;
+import com.lframework.starter.gen.dto.gen.GenQueryColumnConfigDto;
 import com.lframework.starter.gen.entity.GenQueryColumnConfig;
-import com.lframework.starter.gen.vo.dataobj.UpdateQueryColumnConfigVo;
+import com.lframework.starter.gen.vo.gen.UpdateQueryColumnConfigVo;
 import com.lframework.starter.mybatis.service.BaseMpService;
 import java.util.List;
 
@@ -11,17 +11,17 @@ public interface IGenQueryColumnConfigService extends BaseMpService<GenQueryColu
   /**
    * 根据数据对象ID查询
    *
-   * @param dataObjId
+   * @param entityId
    * @return
    */
-  List<GenQueryColumnConfigDto> getByDataObjId(String dataObjId);
+  List<GenQueryColumnConfigDto> getByDataEntityId(String entityId);
 
   /**
    * 修改生成器配置信息
    *
    * @param vo
    */
-  void updateGenerate(String dataObjId, List<UpdateQueryColumnConfigVo> vo);
+  void updateGenerate(String entityId, List<UpdateQueryColumnConfigVo> vo);
 
   /**
    * 根据ID查询
