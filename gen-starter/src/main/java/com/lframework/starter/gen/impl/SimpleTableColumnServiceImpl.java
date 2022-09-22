@@ -68,6 +68,8 @@ public class SimpleTableColumnServiceImpl extends
         column.setOrdinalPosition(t.getOrdinalPosition());
         column.setColumnComment(t.getColumnComment());
         column.setDataType(t.getDataType().getDataType());
+        column.setLen(t.getLen());
+        column.setDecimals(t.getDecimals());
 
         return column;
       }).collect(Collectors.toList());

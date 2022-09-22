@@ -6,21 +6,25 @@ import com.lframework.starter.mybatis.dto.system.menu.DefaultSysMenuDto;
 import com.lframework.starter.mybatis.dto.system.position.DefaultSysPositionDto;
 import com.lframework.starter.mybatis.dto.system.role.DefaultSysRoleDto;
 import com.lframework.starter.mybatis.dto.system.user.DefaultSysUserDto;
+import com.lframework.starter.mybatis.entity.SysDataDic;
 import com.lframework.starter.mybatis.entity.SysDataDicCategory;
 import com.lframework.starter.mybatis.resp.PageResult;
 import com.lframework.starter.mybatis.service.system.ISysDataDicCategoryService;
+import com.lframework.starter.mybatis.service.system.ISysDataDicService;
 import com.lframework.starter.mybatis.service.system.ISysDeptService;
 import com.lframework.starter.mybatis.service.system.ISysMenuService;
 import com.lframework.starter.mybatis.service.system.ISysPositionService;
 import com.lframework.starter.mybatis.service.system.ISysRoleService;
 import com.lframework.starter.mybatis.service.system.ISysUserService;
 import com.lframework.starter.mybatis.utils.PageResultUtil;
+import com.lframework.starter.mybatis.vo.system.dic.SysDataDicSelectorVo;
 import com.lframework.starter.mybatis.vo.system.dic.category.SysDataDicCategorySelectorVo;
 import com.lframework.starter.mybatis.vo.system.menu.SysMenuSelectorVo;
 import com.lframework.starter.mybatis.vo.system.position.SysPositionSelectorVo;
 import com.lframework.starter.mybatis.vo.system.role.SysRoleSelectorVo;
 import com.lframework.starter.mybatis.vo.system.user.SysUserSelectorVo;
 import com.lframework.starter.security.bo.system.dept.SysDeptSelectorBo;
+import com.lframework.starter.security.bo.system.dic.SysDataDicSelectorBo;
 import com.lframework.starter.security.bo.system.dic.category.SysDataDicCategorySelectorBo;
 import com.lframework.starter.security.bo.system.menu.SysMenuSelectorBo;
 import com.lframework.starter.security.bo.system.position.SysPositionSelectorBo;
@@ -69,6 +73,9 @@ public class DefaultSysSelectorController extends DefaultBaseController {
 
   @Autowired
   private ISysDataDicCategoryService sysDataDicCategoryService;
+
+  @Autowired
+  private ISysDataDicService sysDataDicService;
 
   /**
    * 系统菜单
@@ -149,7 +156,7 @@ public class DefaultSysSelectorController extends DefaultBaseController {
 
   @ApiOperation("数据字典分类")
   @GetMapping("/dic/category")
-  public InvokeResult<PageResult<SysDataDicCategorySelectorBo>> position(
+  public InvokeResult<PageResult<SysDataDicCategorySelectorBo>> dataDicCategory(
       @Valid SysDataDicCategorySelectorVo vo) {
 
     PageResult<SysDataDicCategory> pageResult = sysDataDicCategoryService.selector(getPageIndex(vo),
@@ -159,6 +166,23 @@ public class DefaultSysSelectorController extends DefaultBaseController {
 
     if (!CollectionUtil.isEmpty(datas)) {
       results = datas.stream().map(SysDataDicCategorySelectorBo::new).collect(Collectors.toList());
+    }
+
+    return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
+  }
+
+  @ApiOperation("数据字典")
+  @GetMapping("/dic")
+  public InvokeResult<PageResult<SysDataDicSelectorBo>> dataDic(
+      @Valid SysDataDicSelectorVo vo) {
+
+    PageResult<SysDataDic> pageResult = sysDataDicService.selector(getPageIndex(vo),
+        getPageSize(vo), vo);
+    List<SysDataDic> datas = pageResult.getDatas();
+    List<SysDataDicSelectorBo> results = null;
+
+    if (!CollectionUtil.isEmpty(datas)) {
+      results = datas.stream().map(SysDataDicSelectorBo::new).collect(Collectors.toList());
     }
 
     return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));

@@ -5,11 +5,14 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageInfo;
 import com.lframework.common.exceptions.impl.DefaultClientException;
 import com.lframework.common.utils.Assert;
+import com.lframework.common.utils.CollectionUtil;
+import com.lframework.starter.mybatis.entity.SysDataDic;
 import com.lframework.starter.mybatis.entity.SysDataDicItem;
 import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.mybatis.mappers.system.SysDataDicItemMapper;
 import com.lframework.starter.mybatis.resp.PageResult;
 import com.lframework.starter.mybatis.service.system.ISysDataDicItemService;
+import com.lframework.starter.mybatis.service.system.ISysDataDicService;
 import com.lframework.starter.mybatis.utils.PageHelperUtil;
 import com.lframework.starter.mybatis.utils.PageResultUtil;
 import com.lframework.starter.mybatis.vo.system.dic.item.CreateSysDataDicItemVo;
@@ -18,6 +21,7 @@ import com.lframework.starter.mybatis.vo.system.dic.item.UpdateSysDataDicItemVo;
 import com.lframework.starter.web.utils.IdUtil;
 import java.io.Serializable;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -25,8 +29,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SysDataDicItemServiceImpl extends
-    BaseMpServiceImpl<SysDataDicItemMapper, SysDataDicItem> implements
-    ISysDataDicItemService {
+    BaseMpServiceImpl<SysDataDicItemMapper, SysDataDicItem> implements ISysDataDicItemService {
+
+  @Autowired
+  private ISysDataDicService sysDataDicService;
 
   @Override
   public PageResult<SysDataDicItem> query(Integer pageIndex, Integer pageSize,
@@ -49,6 +55,34 @@ public class SysDataDicItemServiceImpl extends
   @Override
   public SysDataDicItem findById(String id) {
     return getBaseMapper().selectById(id);
+  }
+
+  @Override
+  public SysDataDicItem findByCode(String dicCode, String code) {
+    ISysDataDicItemService thisService = getThis(getClass());
+    List<SysDataDicItem> items = thisService.findByDicCode(dicCode);
+    if (CollectionUtil.isEmpty(items)) {
+      return null;
+    }
+
+    return items.stream().filter(t -> t.getCode().equals(code)).findFirst().orElse(null);
+  }
+
+  @Cacheable(value = SysDataDicItem.CACHE_NAME, key = "#dicCode")
+  @Override
+  public List<SysDataDicItem> findByDicCode(String dicCode) {
+    Wrapper<SysDataDic> queryDicWrapper = Wrappers.lambdaQuery(SysDataDic.class)
+        .eq(SysDataDic::getCode, dicCode);
+    SysDataDic dic = sysDataDicService.getOne(queryDicWrapper);
+    if (dic == null) {
+      throw new DefaultClientException("数据字典不存在！");
+    }
+
+    Wrapper<SysDataDicItem> queryWrapper = Wrappers.lambdaQuery(SysDataDicItem.class)
+        .eq(SysDataDicItem::getDicId, dic.getId()).orderByAsc(SysDataDicItem::getOrderNo);
+    List<SysDataDicItem> datas = this.list(queryWrapper);
+
+    return datas;
   }
 
   @Transactional
@@ -101,8 +135,7 @@ public class SysDataDicItemServiceImpl extends
 
     Wrapper<SysDataDicItem> updateWrapper = Wrappers.lambdaUpdate(SysDataDicItem.class)
         .set(SysDataDicItem::getCode, vo.getCode()).set(SysDataDicItem::getName, vo.getName())
-        .set(SysDataDicItem::getOrderNo, vo.getOrderNo())
-        .eq(SysDataDicItem::getId, vo.getId());
+        .set(SysDataDicItem::getOrderNo, vo.getOrderNo()).eq(SysDataDicItem::getId, vo.getId());
     this.update(updateWrapper);
   }
 

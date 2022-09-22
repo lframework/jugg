@@ -96,4 +96,19 @@ public class GenDataEntityDetail extends BaseEntity implements BaseDto {
    * 排序类型
    */
   private GenOrderType orderType;
+
+  /**
+   * 数据字典ID
+   */
+  private String dataDicId;
+
+  /**
+   * 长度
+   */
+  private Long len;
+
+  /**
+   * 小数位数
+   */
+  private Integer decimals;
 }

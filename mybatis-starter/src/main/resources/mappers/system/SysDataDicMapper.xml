@@ -43,4 +43,21 @@
     </where>
     ORDER BY tb.code ASC
   </select>
+  <select id="selector" resultMap="SysDataDic">
+      <include refid="SysDataDic_sql"/>
+      <where>
+        <if test="vo != null">
+          <if test="vo.code != null and vo.code != ''">
+            AND tb.code = #{vo.code}
+          </if>
+          <if test="vo.name != null and vo.name != ''">
+            AND tb.name LIKE CONCAT('%', #{vo.name}, '%')
+          </if>
+          <if test="vo.categoryId != null and vo.categoryId != ''">
+            AND tb.category_id = #{vo.categoryId}
+          </if>
+        </if>
+      </where>
+      ORDER BY tb.code ASC
+    </select>
 </mapper>

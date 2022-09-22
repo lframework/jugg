@@ -41,6 +41,23 @@ public interface ISysDataDicItemService extends BaseMpService<SysDataDicItem> {
   SysDataDicItem findById(String id);
 
   /**
+   * 根据字典Code、字典值Code查询
+   *
+   * @param dicCode
+   * @param code
+   * @return
+   */
+  SysDataDicItem findByCode(String dicCode, String code);
+
+  /**
+   * 根据字典编号查询
+   *
+   * @param dicCode
+   * @return
+   */
+  List<SysDataDicItem> findByDicCode(String dicCode);
+
+  /**
    * 创建
    *
    * @param vo

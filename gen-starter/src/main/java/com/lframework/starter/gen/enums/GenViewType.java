@@ -6,7 +6,7 @@ import com.lframework.starter.web.enums.BaseEnum;
 public enum GenViewType implements BaseEnum<Integer> {
   INPUT(0, "输入框"), TEXTATREA(1, "文本域"), DATETIME(2, "日期时间选择器"), DATE(3, "日期选择器"), TIME(4,
       "时间选择器"), SELECT(5,
-      "选择器"), DATE_RANGE(6, "日期范围选择器");
+      "选择器"), DATE_RANGE(6, "日期范围选择器"), DATA_DIC(7, "数据字典");
 
   @EnumValue
   private final Integer code;

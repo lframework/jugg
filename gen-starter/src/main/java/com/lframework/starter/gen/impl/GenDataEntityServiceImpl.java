@@ -480,6 +480,11 @@ public class GenDataEntityServiceImpl extends
     detail.setRegularExpression(column.getRegularExpression());
     detail.setIsOrder(column.getIsOrder());
     detail.setOrderType(EnumUtil.getByCode(GenOrderType.class, column.getOrderType()));
+    detail.setLen(column.getLen());
+    detail.setDecimals(column.getDecimals());
+    if (!StringUtil.isBlank(column.getDataDicId())) {
+      detail.setDataDicId(column.getDataDicId());
+    }
 
     if (!genViewTypeConverter.canConvert(detail.getViewType(), detail.getDataType())) {
       List<GenViewType> viewTypes = genViewTypeConverter.convert(detail.getDataType());
@@ -502,6 +507,8 @@ public class GenDataEntityServiceImpl extends
     simpleTableColumn.setColumnDefault(columnDto.getColumnDefault());
     simpleTableColumn.setOrdinalPosition(columnDto.getOrdinalPosition());
     simpleTableColumn.setColumnComment(columnDto.getColumnComment());
+    simpleTableColumn.setLen(columnDto.getLen());
+    simpleTableColumn.setDecimals(columnDto.getDecimals());
 
     return simpleTableColumn;
   }

@@ -12,6 +12,8 @@
         <result column="column_default" property="columnDefault"/>
         <result column="ordinal_position" property="ordinalPosition"/>
         <result column="column_comment" property="columnComment"/>
+        <result column="len" property="len"/>
+        <result column="decimals" property="decimals"/>
     </resultMap>
 
     <select id="query" resultMap="OriSimpleTableColumnDto">
@@ -22,7 +24,13 @@
             c.COLUMN_DEFAULT AS column_default,
             c.ORDINAL_POSITION AS ordinal_position,
             u.CONSTRAINT_NAME IS NOT NULL AS is_key,
-            c.COLUMN_COMMENT AS column_comment
+            c.COLUMN_COMMENT AS column_comment,
+            (CASE
+            WHEN c.CHARACTER_MAXIMUM_LENGTH IS NULL THEN c.NUMERIC_PRECISION
+            ELSE c.CHARACTER_MAXIMUM_LENGTH END) AS len,
+            (CASE
+            WHEN c.CHARACTER_MAXIMUM_LENGTH IS NULL THEN c.NUMERIC_SCALE
+            ELSE c.NUMERIC_SCALE END) AS decimals
         FROM information_schema.COLUMNS AS c
         LEFT JOIN information_schema.KEY_COLUMN_USAGE AS u ON u.TABLE_SCHEMA = c.TABLE_SCHEMA AND u.TABLE_NAME = c.TABLE_NAME AND u.COLUMN_NAME = c.COLUMN_NAME AND u.CONSTRAINT_NAME = 'PRIMARY'
         <where>

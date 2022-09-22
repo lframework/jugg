@@ -5,6 +5,7 @@ import com.lframework.starter.mybatis.resp.PageResult;
 import com.lframework.starter.mybatis.service.BaseMpService;
 import com.lframework.starter.mybatis.vo.system.dic.CreateSysDataDicVo;
 import com.lframework.starter.mybatis.vo.system.dic.QuerySysDataDicVo;
+import com.lframework.starter.mybatis.vo.system.dic.SysDataDicSelectorVo;
 import com.lframework.starter.mybatis.vo.system.dic.UpdateSysDataDicVo;
 import java.util.List;
 
@@ -31,6 +32,16 @@ public interface ISysDataDicService extends BaseMpService<SysDataDic> {
    * @return
    */
   List<SysDataDic> query(QuerySysDataDicVo vo);
+
+  /**
+   * 选择器
+   *
+   * @param pageIndex
+   * @param pageSize
+   * @param vo
+   * @return
+   */
+  PageResult<SysDataDic> selector(Integer pageIndex, Integer pageSize, SysDataDicSelectorVo vo);
 
   /**
    * 根据ID查询

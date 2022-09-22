@@ -17,6 +17,7 @@ import com.lframework.starter.mybatis.utils.PageHelperUtil;
 import com.lframework.starter.mybatis.utils.PageResultUtil;
 import com.lframework.starter.mybatis.vo.system.dic.CreateSysDataDicVo;
 import com.lframework.starter.mybatis.vo.system.dic.QuerySysDataDicVo;
+import com.lframework.starter.mybatis.vo.system.dic.SysDataDicSelectorVo;
 import com.lframework.starter.mybatis.vo.system.dic.UpdateSysDataDicVo;
 import com.lframework.starter.web.utils.IdUtil;
 import java.io.Serializable;
@@ -49,6 +50,18 @@ public class SysDataDicServiceImpl extends
   @Override
   public List<SysDataDic> query(QuerySysDataDicVo vo) {
     return getBaseMapper().query(vo);
+  }
+
+  @Override
+  public PageResult<SysDataDic> selector(Integer pageIndex, Integer pageSize,
+      SysDataDicSelectorVo vo) {
+    Assert.greaterThanZero(pageIndex);
+    Assert.greaterThanZero(pageSize);
+
+    PageHelperUtil.startPage(pageIndex, pageSize);
+    List<SysDataDic> datas = getBaseMapper().selector(vo);
+
+    return PageResultUtil.convert(new PageInfo<>(datas));
   }
 
   @Cacheable(value = SysDataDic.CACHE_NAME, key = "#id", unless = "#result == null")

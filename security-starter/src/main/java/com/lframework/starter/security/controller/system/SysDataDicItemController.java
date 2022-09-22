@@ -2,15 +2,18 @@ package com.lframework.starter.security.controller.system;
 
 import com.lframework.common.exceptions.impl.DefaultClientException;
 import com.lframework.common.utils.CollectionUtil;
+import com.lframework.starter.mybatis.entity.SysDataDic;
 import com.lframework.starter.mybatis.entity.SysDataDicItem;
 import com.lframework.starter.mybatis.resp.PageResult;
 import com.lframework.starter.mybatis.service.system.ISysDataDicItemService;
+import com.lframework.starter.mybatis.service.system.ISysDataDicService;
 import com.lframework.starter.mybatis.utils.PageResultUtil;
 import com.lframework.starter.mybatis.vo.system.dic.item.CreateSysDataDicItemVo;
 import com.lframework.starter.mybatis.vo.system.dic.item.QuerySysDataDicItemVo;
 import com.lframework.starter.mybatis.vo.system.dic.item.UpdateSysDataDicItemVo;
 import com.lframework.starter.security.bo.system.dic.item.GetSysDataDicItemBo;
 import com.lframework.starter.security.bo.system.dic.item.QuerySysDataDicItemBo;
+import com.lframework.starter.security.bo.system.dic.item.SysDataDicItemBo;
 import com.lframework.starter.web.controller.DefaultBaseController;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
@@ -45,6 +48,9 @@ public class SysDataDicItemController extends DefaultBaseController {
 
   @Autowired
   private ISysDataDicItemService sysDataDicItemService;
+
+  @Autowired
+  private ISysDataDicService sysDataDicService;
 
   /**
    * 查询列表
@@ -84,6 +90,22 @@ public class SysDataDicItemController extends DefaultBaseController {
   }
 
   /**
+   * 根据字典编号查询
+   */
+  @ApiOperation("根据字典编号查询")
+  @ApiImplicitParam(value = "字典编号", name = "code", paramType = "query", required = true)
+  @GetMapping("/bydic")
+  public InvokeResult<List<SysDataDicItemBo>> getByDicCode(
+      @NotBlank(message = "字典编号不能为空！") String code) {
+    List<SysDataDicItem> datas = sysDataDicItemService.findByDicCode(code);
+
+    List<SysDataDicItemBo> results = datas.stream().map(SysDataDicItemBo::new)
+        .collect(Collectors.toList());
+
+    return InvokeResultBuilder.success(results);
+  }
+
+  /**
    * 新增数据字典值
    */
   @ApiOperation("新增数据字典值")
@@ -92,6 +114,9 @@ public class SysDataDicItemController extends DefaultBaseController {
   public InvokeResult<Void> create(@Valid CreateSysDataDicItemVo vo) {
 
     sysDataDicItemService.create(vo);
+
+    SysDataDic dic = sysDataDicService.findById(vo.getDicId());
+    sysDataDicItemService.cleanCacheByKey(dic.getCode());
 
     return InvokeResultBuilder.success();
   }
@@ -104,7 +129,12 @@ public class SysDataDicItemController extends DefaultBaseController {
   @PutMapping
   public InvokeResult<Void> update(@Valid UpdateSysDataDicItemVo vo) {
 
+    SysDataDicItem item = sysDataDicItemService.findById(vo.getId());
+
     sysDataDicItemService.update(vo);
+
+    SysDataDic dic = sysDataDicService.findById(item.getDicId());
+    sysDataDicItemService.cleanCacheByKey(dic.getCode());
 
     sysDataDicItemService.cleanCacheByKey(vo.getId());
 
@@ -119,7 +149,12 @@ public class SysDataDicItemController extends DefaultBaseController {
   @DeleteMapping
   public InvokeResult<Void> delete(@NotBlank(message = "ID不能为空！") String id) {
 
+    SysDataDicItem item = sysDataDicItemService.findById(id);
+
     sysDataDicItemService.deleteById(id);
+
+    SysDataDic dic = sysDataDicService.findById(item.getDicId());
+    sysDataDicItemService.cleanCacheByKey(dic.getCode());
 
     sysDataDicItemService.cleanCacheByKey(id);
 

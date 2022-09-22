@@ -9,6 +9,8 @@
             <#else>
                 <#if column.hasAvailableTag>
           <available-tag :available="formData.available" />
+                <#elseif column.dataDicCode??>
+          {{ formData.${column.name}DicValue }}
                 <#else>
           {{ formData.${column.name} }}
                 </#if>

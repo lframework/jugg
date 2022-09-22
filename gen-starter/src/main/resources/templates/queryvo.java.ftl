@@ -25,13 +25,13 @@ public class Query${className}Vo extends PageVo implements BaseVo, Serializable 
     @ApiModelProperty("${column.description}")
      </#if>
     <#if column.fixEnum>
-    <#if column.type != 'String'>
+    <#if column.dataType != 'String'>
     @TypeMismatch(message = "${column.description}格式有误！")
     </#if>
     <#if column.regularExpression??>
     @Pattern(regexp = "${column.regularExpression}", message = "${column.description}格式有误！")
     </#if>
-    @IsEnum(message = "${column.description}格式有误！", enumClass = ${column.type}.class)
+    @IsEnum(message = "${column.description}格式有误！", enumClass = ${column.dataType}.class)
     private ${column.enumCodeType} ${column.name};
     <#else>
     <#if column.viewType == 6>
@@ -39,33 +39,33 @@ public class Query${className}Vo extends PageVo implements BaseVo, Serializable 
      * ${column.description} 起始时间
      */
     @ApiModelProperty("${column.description} 起始时间")
-    <#if column.type != 'String'>
+    <#if column.dataType != 'String'>
     @TypeMismatch(message = "${column.description}起始时间格式有误！")
     </#if>
     <#if column.regularExpression??>
     @Pattern(regexp = "${column.regularExpression}", message = "${column.description}格式有误！")
     </#if>
-    private ${column.type} ${column.name}Start;
+    private ${column.dataType} ${column.name}Start;
 
     /**
      * ${column.description} 截止时间
      */
     @ApiModelProperty("${column.description} 截止时间")
-    <#if column.type != 'String'>
+    <#if column.dataType != 'String'>
     @TypeMismatch(message = "${column.description}截止时间格式有误！")
     </#if>
     <#if column.regularExpression??>
     @Pattern(regexp = "${column.regularExpression}", message = "${column.description}格式有误！")
     </#if>
-    private ${column.type} ${column.name}End;
+    private ${column.dataType} ${column.name}End;
     <#else>
-    <#if column.type != 'String'>
+    <#if column.dataType != 'String'>
     @TypeMismatch(message = "${column.description}格式有误！")
     </#if>
     <#if column.regularExpression??>
     @Pattern(regexp = "${column.regularExpression}", message = "${column.description}格式有误！")
     </#if>
-    private ${column.type} ${column.name};
+    private ${column.dataType} ${column.name};
     </#if>
     </#if>
 

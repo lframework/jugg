@@ -1,7 +1,7 @@
 <#if column.viewType == 0>
-<a-input v-model="${formData}.${column.name}" allow-clear />
+<a-input v-model="${formData}.${column.name}"<#if column.dataType == 'String' && (column.len??) && column.len gt 0> max-length="${column.len}"</#if> allow-clear />
 <#elseif column.viewType == 1>
-<a-textarea v-model="${formData}.${column.name}" allow-clear />
+<a-textarea v-model="${formData}.${column.name}"<#if column.dataType == 'String' && (column.len??) && column.len gt 0> max-length="${column.len}"</#if> allow-clear />
 <#elseif column.viewType == 2>
 <a-date-picker
 	v-model="${formData}.${column.name}"
@@ -40,7 +40,7 @@
 </#if>
 </#if>
 <#elseif column.viewType == 6>
-<#if column.type == 'LocalDateTime'>
+<#if column.dataType == 'LocalDateTime'>
 <div class="date-range-container">
 	<a-date-picker
 		v-model="${formData}.${column.name}Start"
@@ -71,4 +71,6 @@
 	/>
 </div>
 </#if>
+<#elseif column.viewType == 7>
+<data-dic-picker code="${column.dataDicCode}" v-model="${formData}.${column.name}" />
 </#if>

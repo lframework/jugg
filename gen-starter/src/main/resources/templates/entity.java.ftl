@@ -47,7 +47,7 @@ public class ${className} extends BaseEntity implements BaseDto {
     <#if column.defaultConvertType && column.isKey && column.autoIncrKey>
     @TableId(value = "${column.columnName}", type = IdType.AUTO)
     </#if>
-    private ${column.type} ${column.name};
+    private ${column.dataType} ${column.name};
 
     </#list>
 }

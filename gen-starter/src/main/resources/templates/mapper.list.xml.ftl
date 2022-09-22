@@ -35,7 +35,7 @@
             ]]>
             </if>
                 <#else>
-            <if test="vo.${column.name} != null<#if column.type == 'String'> and vo.${column.name} != ''</#if>">
+            <if test="vo.${column.name} != null<#if column.dataType == 'String'> and vo.${column.name} != ''</#if>">
             <@format><#include "query-type-sql.ftl"/></@format>
             </if>
                 </#if>

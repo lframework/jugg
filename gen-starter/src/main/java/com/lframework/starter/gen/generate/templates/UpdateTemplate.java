@@ -61,7 +61,7 @@ public class UpdateTemplate {
     /**
      * 字段类型
      */
-    private String type;
+    private String dataType;
 
     /**
      * 字段名称
@@ -120,7 +120,7 @@ public class UpdateTemplate {
     /**
      * 字段类型
      */
-    private String type;
+    private String dataType;
 
     /**
      * 前端字段类型 只有字段是枚举时生效，此值为前端枚举类型
@@ -161,5 +161,30 @@ public class UpdateTemplate {
      * 是否包含状态Tag
      */
     private Boolean hasAvailableTag = Boolean.FALSE;
+
+    /**
+     * 是否数字类型
+     */
+    private Boolean isNumberType = Boolean.FALSE;
+
+    /**
+     * 是否小数类型
+     */
+    private Boolean isDecimalType = Boolean.FALSE;
+
+    /**
+     * 数据字典编号
+     */
+    private String dataDicCode;
+
+    /**
+     * 长度
+     */
+    private Long len;
+
+    /**
+     * 小数点位数
+     */
+    private Integer decimals;
   }
 }

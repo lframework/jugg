@@ -70,7 +70,7 @@ public class ${className}ServiceImpl extends BaseMpServiceImpl${r"<"}${className
     @Cacheable(value = ${className}.CACHE_NAME, key = "#${keys[0].name}", unless = "#result == null")
 </#if>
     @Override
-    public ${className} findById(<#list keys as key>${key.type} ${key.name}<#if key_index != keys?size - 1>, </#if></#list>) {
+    public ${className} findById(<#list keys as key>${key.dataType} ${key.name}<#if key_index != keys?size - 1>, </#if></#list>) {
 
         return getBaseMapper().selectById(${keys[0].name});
     }
@@ -79,7 +79,7 @@ public class ${className}ServiceImpl extends BaseMpServiceImpl${r"<"}${className
     @OpLog(type = OpLogType.OTHER, name = "新增${classDescription}，ID：{}", params = ${r'{"#'}${create.keys[0].name}${r'"}'})
     @Transactional
     @Override
-    public ${create.keys[0].type} create(Create${className}Vo vo) {
+    public ${create.keys[0].dataType} create(Create${className}Vo vo) {
 
         ${className} data = new ${className}();
         <#if create.appointId>
@@ -88,19 +88,19 @@ public class ${className}ServiceImpl extends BaseMpServiceImpl${r"<"}${className
         <#list create.columns as column>
             <#if column.required>
                 <#if column.fixEnum>
-        data.set${column.nameProperty}(EnumUtil.getByCode(${column.type}.class, vo.get${column.nameProperty}()));
+        data.set${column.nameProperty}(EnumUtil.getByCode(${column.dataType}.class, vo.get${column.nameProperty}()));
                 <#else>
         data.set${column.nameProperty}(vo.get${column.nameProperty}());
                 </#if>
             <#else>
-                <#if column.type == 'String'>
+                <#if column.dataType == 'String'>
         if (!StringUtil.isBlank(vo.get${column.nameProperty}())) {
             data.set${column.nameProperty}(vo.get${column.nameProperty}());
         }
                 <#else>
         if (vo.get${column.nameProperty}() != null) {
                     <#if column.fixEnum>
-            data.set${column.nameProperty}(EnumUtil.getByCode(${column.type}.class, vo.get${column.nameProperty}()));
+            data.set${column.nameProperty}(EnumUtil.getByCode(${column.dataType}.class, vo.get${column.nameProperty}()));
                     <#else>
             data.set${column.nameProperty}(vo.get${column.nameProperty}());
                     </#if>
@@ -111,7 +111,7 @@ public class ${className}ServiceImpl extends BaseMpServiceImpl${r"<"}${className
 
         getBaseMapper().insert(data);
 
-        OpLogUtil.setVariable("${create.keys[0].name}", <#if create.keys[0].type == 'String'>data.get${create.keys[0].nameProperty}()<#else>String.valueOf(data.get${create.keys[0].nameProperty}())</#if>);
+        OpLogUtil.setVariable("${create.keys[0].name}", <#if create.keys[0].dataType == 'String'>data.get${create.keys[0].nameProperty}()<#else>String.valueOf(data.get${create.keys[0].nameProperty}())</#if>);
         OpLogUtil.setExtra(vo);
 
         return data.get${create.keys[0].nameProperty}();
@@ -133,16 +133,16 @@ public class ${className}ServiceImpl extends BaseMpServiceImpl${r"<"}${className
     <#list update.columns as column>
         <#if column.required>
             <#if column.fixEnum>
-                .set(${className}::get${column.nameProperty}, EnumUtil.getByCode(${column.type}.class, vo.get${column.nameProperty}()))
+                .set(${className}::get${column.nameProperty}, EnumUtil.getByCode(${column.dataType}.class, vo.get${column.nameProperty}()))
             <#else>
                 .set(${className}::get${column.nameProperty}, vo.get${column.nameProperty}())
             </#if>
         <#else>
-            <#if column.type == 'String'>
+            <#if column.dataType == 'String'>
                 .set(${className}::get${column.nameProperty}, StringUtil.isBlank(vo.get${column.nameProperty}()) ? null : vo.get${column.nameProperty}())
             <#else>
                 <#if column.fixEnum>
-                .set(${className}::get${column.nameProperty}, vo.get${column.nameProperty}() == null ? null : EnumUtil.getByCode(${column.type}.class, vo.get${column.nameProperty}()))
+                .set(${className}::get${column.nameProperty}, vo.get${column.nameProperty}() == null ? null : EnumUtil.getByCode(${column.dataType}.class, vo.get${column.nameProperty}()))
                 <#else>
                 .set(${className}::get${column.nameProperty}, vo.get${column.nameProperty}() == null ? null : vo.get${column.nameProperty}())
                 </#if>
@@ -153,7 +153,7 @@ public class ${className}ServiceImpl extends BaseMpServiceImpl${r"<"}${className
 
         getBaseMapper().update(updateWrapper);
 
-        OpLogUtil.setVariable("${update.keys[0].name}", <#if update.keys[0].type == 'String'>data.get${update.keys[0].nameProperty}()<#else>String.valueOf(data.get${update.keys[0].nameProperty}())</#if>);
+        OpLogUtil.setVariable("${update.keys[0].name}", <#if update.keys[0].dataType == 'String'>data.get${update.keys[0].nameProperty}()<#else>String.valueOf(data.get${update.keys[0].nameProperty}())</#if>);
         OpLogUtil.setExtra(vo);
     }
 </#if>
@@ -162,7 +162,7 @@ public class ${className}ServiceImpl extends BaseMpServiceImpl${r"<"}${className
     @OpLog(type = OpLogType.OTHER, name = "删除${classDescription}，ID：{}", params = ${r'{"#'}${keys[0].name}${r'"}'})
     @Transactional
     @Override
-    public void deleteById(<#list keys as key>${key.type} ${key.name}<#if key_index != keys?size - 1>, </#if></#list>) {
+    public void deleteById(<#list keys as key>${key.dataType} ${key.name}<#if key_index != keys?size - 1>, </#if></#list>) {
 
         getBaseMapper().deleteById(<#list keys as key>${key.name}<#if key_index != keys?size - 1>, </#if></#list>);
     }

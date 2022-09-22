@@ -1,7 +1,7 @@
 package com.lframework.starter.gen.builders;
 
-import com.lframework.starter.gen.components.DataObject;
-import com.lframework.starter.gen.components.DataObjectColumn;
+import com.lframework.starter.gen.components.DataEntity;
+import com.lframework.starter.gen.components.DataEntityColumn;
 import com.lframework.starter.gen.dto.gen.GenGenerateInfoDto;
 import com.lframework.starter.gen.entity.GenDataEntity;
 import com.lframework.starter.gen.entity.GenDataEntityDetail;
@@ -55,11 +55,11 @@ public class DataObjectBuilder {
    * @param id
    * @return
    */
-  public DataObject build(String id) {
+  public DataEntity build(String id) {
 
     // 根据ID查询数据对象
     GenDataEntity dataObject = genDataEntityService.findById(id);
-    DataObject result = new DataObject();
+    DataEntity result = new DataEntity();
     result.setId(dataObject.getId());
     result.setName(dataObject.getName());
     result.setDescription(dataObject.getDescription());
@@ -78,13 +78,13 @@ public class DataObjectBuilder {
     return generateInfoService.getByEntityId(dataObjId);
   }
 
-  private List<DataObjectColumn> buildColumns(String entityId, TableBuilder tableBuilder) {
+  private List<DataEntityColumn> buildColumns(String entityId, TableBuilder tableBuilder) {
 
-    List<DataObjectColumn> results = new ArrayList<>();
+    List<DataEntityColumn> results = new ArrayList<>();
 
     List<GenDataEntityDetail> columns = genDataEntityDetailService.getByEntityId(entityId);
     for (GenDataEntityDetail column : columns) {
-      DataObjectColumn result = new DataObjectColumn();
+      DataEntityColumn result = new DataEntityColumn();
       result.setId(column.getId());
       result.setName(column.getName());
       result.setColumnName(column.getColumnName());
@@ -108,6 +108,9 @@ public class DataObjectBuilder {
       result.setQueryConfig(genQueryColumnConfigService.findById(column.getId()));
       result.setQueryParamsConfig(genQueryParamsColumnConfigService.findById(column.getId()));
       result.setDetailConfig(genDetailColumnConfigService.findById(column.getId()));
+      result.setLen(column.getLen());
+      result.setDataDicId(column.getDataDicId());
+      result.setDecimals(column.getDecimals());
 
       results.add(result);
     }

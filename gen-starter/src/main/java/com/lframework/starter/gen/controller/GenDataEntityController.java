@@ -119,6 +119,8 @@ public class GenDataEntityController extends DefaultBaseController {
       detail.setViewType(viewTypes.get(0));
       detail.setFixEnum(Boolean.FALSE);
       detail.setIsOrder(Boolean.FALSE);
+      detail.setLen(t.getLen());
+      detail.setDecimals(t.getDecimals());
 
       return detail;
     }).collect(Collectors.toList());

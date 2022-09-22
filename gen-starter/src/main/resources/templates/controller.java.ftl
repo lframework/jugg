@@ -86,7 +86,7 @@ public class ${className}Controller extends DefaultBaseController {
     @ApiImplicitParam(value = "${keys[0].name}", name = "${keys[0].name}", paramType = "query", required = true)
     @PreAuthorize("@permission.valid('${moduleName}:${bizName}:query')")
     @GetMapping
-    public ${r"InvokeResult<Get"}${className}${r"Bo>"} get(<#if keys[0].type == 'String'>@NotBlank<#else>@NotNull</#if>(message = "${keys[0].name}不能为空！") ${keys[0].type} ${keys[0].name}) {
+    public ${r"InvokeResult<Get"}${className}${r"Bo>"} get(<#if keys[0].dataType == 'String'>@NotBlank<#else>@NotNull</#if>(message = "${keys[0].name}不能为空！") ${keys[0].dataType} ${keys[0].name}) {
 
         ${className} data = ${classNameProperty}Service.findById(${keys[0].name});
         if (data == null) {
@@ -141,7 +141,7 @@ public class ${className}Controller extends DefaultBaseController {
     @ApiImplicitParam(value = "${keys[0].name}", name = "${keys[0].name}", paramType = "query", required = true)
     @PreAuthorize("@permission.valid('${moduleName}:${bizName}:delete')")
     @DeleteMapping
-    public ${r"InvokeResult<Void>"} deleteById(<#if keys[0].type == 'String'>@NotBlank<#else>@NotNull</#if>(message = "${keys[0].name}不能为空！") ${keys[0].type} ${keys[0].name}) {
+    public ${r"InvokeResult<Void>"} deleteById(<#if keys[0].dataType == 'String'>@NotBlank<#else>@NotNull</#if>(message = "${keys[0].name}不能为空！") ${keys[0].dataType} ${keys[0].name}) {
 
         ${classNameProperty}Service.deleteById(${keys[0].name});
         <#if isCache>

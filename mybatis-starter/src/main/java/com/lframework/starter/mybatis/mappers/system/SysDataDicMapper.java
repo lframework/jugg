@@ -3,6 +3,7 @@ package com.lframework.starter.mybatis.mappers.system;
 import com.lframework.starter.mybatis.entity.SysDataDic;
 import com.lframework.starter.mybatis.mapper.BaseMapper;
 import com.lframework.starter.mybatis.vo.system.dic.QuerySysDataDicVo;
+import com.lframework.starter.mybatis.vo.system.dic.SysDataDicSelectorVo;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
@@ -21,4 +22,11 @@ public interface SysDataDicMapper extends BaseMapper<SysDataDic> {
    * @return
    */
   List<SysDataDic> query(@Param("vo") QuerySysDataDicVo vo);
+
+  /**
+   * 选择器
+   *
+   * @return
+   */
+  List<SysDataDic> selector(@Param("vo") SysDataDicSelectorVo vo);
 }

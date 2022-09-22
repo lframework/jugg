@@ -6,7 +6,7 @@ import com.lframework.starter.gen.enums.GenViewType;
 import lombok.Data;
 
 @Data
-public class DataObjectColumn {
+public class DataEntityColumn {
 
   /**
    * ID
@@ -107,4 +107,19 @@ public class DataObjectColumn {
    * 详情配置
    */
   private DetailColumnConfig detailConfig;
+
+  /**
+   * 数据字典ID
+   */
+  private String dataDicId;
+
+  /**
+   * 长度
+   */
+  private Long len;
+
+  /**
+   * 小数点位数
+   */
+  private Integer decimals;
 }

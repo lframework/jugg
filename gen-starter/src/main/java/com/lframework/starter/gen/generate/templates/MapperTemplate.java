@@ -71,7 +71,7 @@ public class MapperTemplate {
     /**
      * 类型
      */
-    private String type;
+    private String dataType;
 
     /**
      * 字段名称

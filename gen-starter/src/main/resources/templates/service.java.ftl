@@ -51,7 +51,7 @@ public interface I${className}Service extends BaseMpService${r"<"}${className}${
      * @param ${keys[0].name}
      * @return
      */
-    ${className} findById(<#list keys as key>${key.type} ${key.name}<#if key_index != keys?size - 1>, </#if></#list>);
+    ${className} findById(<#list keys as key>${key.dataType} ${key.name}<#if key_index != keys?size - 1>, </#if></#list>);
 
     <#if create??>
     /**
@@ -59,7 +59,7 @@ public interface I${className}Service extends BaseMpService${r"<"}${className}${
      * @param vo
      * @return
      */
-    ${create.keys[0].type} create(Create${className}Vo vo);
+    ${create.keys[0].dataType} create(Create${className}Vo vo);
     </#if>
 
     <#if update??>
@@ -76,6 +76,6 @@ public interface I${className}Service extends BaseMpService${r"<"}${className}${
      * @param ${keys[0].name}
      * @return
      */
-    void deleteById(<#list keys as key>${key.type} ${key.name}<#if key_index != keys?size - 1>, </#if></#list>);
+    void deleteById(<#list keys as key>${key.dataType} ${key.name}<#if key_index != keys?size - 1>, </#if></#list>);
     </#if>
 }

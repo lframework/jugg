@@ -27,16 +27,27 @@ public class Create${className}Vo implements BaseVo, Serializable {
     <#if column.required>
     @${column.validateAnno}(message = "${column.validateMsg}${column.description}！")
     <#if column.fixEnum>
-    @IsEnum(message = "${column.validateMsg}${column.description}！", enumClass = ${column.type}.class)
+    @IsEnum(message = "${column.validateMsg}${column.description}！", enumClass = ${column.dataType}.class)
     </#if>
     </#if>
     <#if column.regularExpression??>
     @Pattern(regexp = "${column.regularExpression}", message = "${column.description}格式有误！")
     </#if>
-    <#if column.type != 'String'>
+    <#if column.dataType != 'String'>
     @TypeMismatch(message = "${column.description}格式有误！")
     </#if>
-    private <#if column.fixEnum>${column.enumCodeType}<#else>${column.type}</#if> ${column.name};
+    <#if column.isDecimalType>
+      <#if (column.decimals??) && column.decimals gt 0>
+    @IsNumberPrecision(message = "${column.description}最多允许${column.decimals}位小数！", value = ${column.decimals})
+      </#if>
+    <#else>
+      <#if column.dataType == 'String' && (column.viewType == 0 || column.viewType == 1)>
+        <#if (column.len??) && column.len gt 0>
+    @Length(message = "${column.description}最多允许${column.len}个字符！")
+        </#if>
+      </#if>
+    </#if>
+    private <#if column.fixEnum>${column.enumCodeType}<#else>${column.dataType}</#if> ${column.name};
 
     </#list>
 }

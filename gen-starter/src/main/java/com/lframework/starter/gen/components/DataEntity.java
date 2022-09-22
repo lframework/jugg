@@ -8,7 +8,7 @@ import lombok.Data;
  * 数据对象
  */
 @Data
-public class DataObject {
+public class DataEntity {
 
   /**
    * ID
@@ -33,7 +33,7 @@ public class DataObject {
   /**
    * 字段信息
    */
-  private List<DataObjectColumn> columns;
+  private List<DataEntityColumn> columns;
 
   /**
    * 配置信息

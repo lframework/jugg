@@ -9,8 +9,8 @@ import com.lframework.common.exceptions.impl.DefaultSysException;
 import com.lframework.common.utils.CollectionUtil;
 import com.lframework.common.utils.StringUtil;
 import com.lframework.starter.gen.builders.DataObjectBuilder;
-import com.lframework.starter.gen.components.DataObject;
-import com.lframework.starter.gen.components.DataObjectColumn;
+import com.lframework.starter.gen.components.DataEntity;
+import com.lframework.starter.gen.components.DataEntityColumn;
 import com.lframework.starter.gen.directives.FormatDirective;
 import com.lframework.starter.gen.dto.generate.GenerateDto;
 import com.lframework.starter.gen.enums.GenConvertType;
@@ -28,7 +28,10 @@ import com.lframework.starter.gen.generate.templates.ServiceTemplate;
 import com.lframework.starter.gen.generate.templates.SqlTemplate;
 import com.lframework.starter.gen.generate.templates.UpdateTemplate;
 import com.lframework.starter.mybatis.constants.MyBatisStringPool;
+import com.lframework.starter.mybatis.entity.SysDataDic;
+import com.lframework.starter.mybatis.service.system.ISysDataDicService;
 import com.lframework.starter.web.components.validation.IsEnum;
+import com.lframework.starter.web.components.validation.IsNumberPrecision;
 import com.lframework.starter.web.components.validation.Pattern;
 import com.lframework.starter.web.components.validation.TypeMismatch;
 import com.lframework.starter.web.utils.ApplicationUtil;
@@ -66,31 +69,32 @@ import java.util.stream.Collectors;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 
 @Slf4j
 public class Generator {
 
-  private DataObject dataObject;
+  private DataEntity dataEntity;
 
   private Generator() {
 
   }
 
-  public static Generator getInstance(String dataObjId) {
+  public static Generator getInstance(String entityId) {
 
     DataObjectBuilder builder = ApplicationUtil.getBean(DataObjectBuilder.class);
     Generator generator = new Generator();
 
-    generator.setDataObject(builder.build(dataObjId));
+    generator.setDataEntity(builder.build(entityId));
 
     return generator;
   }
 
-  private void setDataObject(DataObject dataObject) {
+  private void setDataEntity(DataEntity dataEntity) {
 
-    this.dataObject = dataObject;
+    this.dataEntity = dataEntity;
   }
 
   public List<GenerateDto> generateAll() {
@@ -527,22 +531,22 @@ public class Generator {
   private EntityTemplate getEntityTemplate() {
 
     EntityTemplate entityTemplate = new EntityTemplate();
-    entityTemplate.setPackageName(dataObject.getGenerateInfo().getPackageName());
-    entityTemplate.setTableName(dataObject.getTable().getTableName());
-    entityTemplate.setClassName(dataObject.getGenerateInfo().getClassName());
-    entityTemplate.setModuleName(dataObject.getGenerateInfo().getModuleName());
-    entityTemplate.setBizName(dataObject.getGenerateInfo().getBizName());
-    entityTemplate.setClassDescription(dataObject.getGenerateInfo().getClassDescription());
-    entityTemplate.setAuthor(dataObject.getGenerateInfo().getAuthor());
+    entityTemplate.setPackageName(dataEntity.getGenerateInfo().getPackageName());
+    entityTemplate.setTableName(dataEntity.getTable().getTableName());
+    entityTemplate.setClassName(dataEntity.getGenerateInfo().getClassName());
+    entityTemplate.setModuleName(dataEntity.getGenerateInfo().getModuleName());
+    entityTemplate.setBizName(dataEntity.getGenerateInfo().getBizName());
+    entityTemplate.setClassDescription(dataEntity.getGenerateInfo().getClassDescription());
+    entityTemplate.setAuthor(dataEntity.getGenerateInfo().getAuthor());
 
     Set<String> importPackages = new HashSet<>();
     List<EntityTemplate.Column> columns = new ArrayList<>();
-    for (DataObjectColumn column : dataObject.getColumns()) {
+    for (DataEntityColumn column : dataEntity.getColumns()) {
       EntityTemplate.Column columnObj = new EntityTemplate.Column();
       columnObj.setIsKey(column.getIsKey());
       if (columnObj.getIsKey()) {
         // 如果是主键，判断是否是自增主键
-        columnObj.setAutoIncrKey(dataObject.getGenerateInfo().getKeyType() == GenKeyType.AUTO);
+        columnObj.setAutoIncrKey(dataEntity.getGenerateInfo().getKeyType() == GenKeyType.AUTO);
         if (columnObj.getAutoIncrKey()) {
           importPackages.add(TableId.class.getName());
           importPackages.add(IdType.class.getName());
@@ -550,12 +554,12 @@ public class Generator {
       }
       if (column.getFixEnum()) {
         // 如果是枚举类型
-        columnObj.setType(
+        columnObj.setDataType(
             column.getEnumBack().substring(column.getEnumBack().lastIndexOf(".") + 1));
         columnObj.setFrontType(column.getEnumFront());
         importPackages.add(column.getEnumBack());
       } else {
-        columnObj.setType(column.getDataType().getDesc());
+        columnObj.setDataType(column.getDataType().getDesc());
       }
       // 以下类型需要单独引包
       if (column.getDataType() == GenDataType.LOCAL_DATE) {
@@ -571,7 +575,7 @@ public class Generator {
       // MybatisPlus默认命名规则是下划线转驼峰，所以如果不是这个规则的话，需要单独指定TableField和TableId
       columnObj.setColumnName(column.getTableColumn().getColumnName());
       columnObj.setDefaultConvertType(
-          dataObject.getTable().getConvertType() == GenConvertType.UNDERLINE_TO_CAMEL);
+          dataEntity.getTable().getConvertType() == GenConvertType.UNDERLINE_TO_CAMEL);
       if (!columnObj.getDefaultConvertType()) {
         importPackages.add(TableId.class.getName());
         importPackages.add(TableField.class.getName());
@@ -611,19 +615,19 @@ public class Generator {
   private MapperTemplate getMapperTemplate() {
 
     MapperTemplate mapperTemplate = new MapperTemplate();
-    mapperTemplate.setPackageName(dataObject.getGenerateInfo().getPackageName());
-    mapperTemplate.setClassName(dataObject.getGenerateInfo().getClassName());
-    mapperTemplate.setModuleName(dataObject.getGenerateInfo().getModuleName());
-    mapperTemplate.setBizName(dataObject.getGenerateInfo().getBizName());
-    mapperTemplate.setClassDescription(dataObject.getGenerateInfo().getClassDescription());
-    mapperTemplate.setAuthor(dataObject.getGenerateInfo().getAuthor());
+    mapperTemplate.setPackageName(dataEntity.getGenerateInfo().getPackageName());
+    mapperTemplate.setClassName(dataEntity.getGenerateInfo().getClassName());
+    mapperTemplate.setModuleName(dataEntity.getGenerateInfo().getModuleName());
+    mapperTemplate.setBizName(dataEntity.getGenerateInfo().getBizName());
+    mapperTemplate.setClassDescription(dataEntity.getGenerateInfo().getClassDescription());
+    mapperTemplate.setAuthor(dataEntity.getGenerateInfo().getAuthor());
     Set<String> importPackages = new HashSet<>();
     List<MapperTemplate.Key> keys = new ArrayList<>();
-    for (DataObjectColumn column : dataObject.getColumns()) {
+    for (DataEntityColumn column : dataEntity.getColumns()) {
       if (column.getIsKey()) {
         MapperTemplate.Key key = new MapperTemplate.Key();
         // 主键不允许是枚举，所以直接取desc
-        key.setType(column.getDataType().getDesc());
+        key.setDataType(column.getDataType().getDesc());
         key.setName(column.getColumnName());
         key.setColumnName(column.getTableColumn().getColumnName());
         // 以下类型需要单独引包
@@ -642,7 +646,7 @@ public class Generator {
 
     mapperTemplate.setKeys(keys);
     List<MapperTemplate.OrderColumn> orderColumns = new ArrayList<>();
-    for (DataObjectColumn column : dataObject.getColumns()) {
+    for (DataEntityColumn column : dataEntity.getColumns()) {
       if (!column.getIsOrder()) {
         continue;
       }
@@ -666,29 +670,29 @@ public class Generator {
   private ServiceTemplate getServiceTemplate() {
 
     ServiceTemplate serviceTemplate = new ServiceTemplate();
-    serviceTemplate.setPackageName(dataObject.getGenerateInfo().getPackageName());
-    serviceTemplate.setClassName(dataObject.getGenerateInfo().getClassName());
+    serviceTemplate.setPackageName(dataEntity.getGenerateInfo().getPackageName());
+    serviceTemplate.setClassName(dataEntity.getGenerateInfo().getClassName());
     serviceTemplate.setClassNameProperty(
-        dataObject.getGenerateInfo().getClassName().substring(0, 1).toLowerCase()
-            + dataObject.getGenerateInfo()
+        dataEntity.getGenerateInfo().getClassName().substring(0, 1).toLowerCase()
+            + dataEntity.getGenerateInfo()
             .getClassName().substring(1));
-    serviceTemplate.setModuleName(dataObject.getGenerateInfo().getModuleName());
-    serviceTemplate.setBizName(dataObject.getGenerateInfo().getBizName());
-    serviceTemplate.setClassDescription(dataObject.getGenerateInfo().getClassDescription());
-    serviceTemplate.setAuthor(dataObject.getGenerateInfo().getAuthor());
-    serviceTemplate.setIsCache(dataObject.getGenerateInfo().getIsCache());
-    serviceTemplate.setHasDelete(dataObject.getGenerateInfo().getHasDelete());
+    serviceTemplate.setModuleName(dataEntity.getGenerateInfo().getModuleName());
+    serviceTemplate.setBizName(dataEntity.getGenerateInfo().getBizName());
+    serviceTemplate.setClassDescription(dataEntity.getGenerateInfo().getClassDescription());
+    serviceTemplate.setAuthor(dataEntity.getGenerateInfo().getAuthor());
+    serviceTemplate.setIsCache(dataEntity.getGenerateInfo().getIsCache());
+    serviceTemplate.setHasDelete(dataEntity.getGenerateInfo().getHasDelete());
     Set<String> importPackages = new HashSet<>();
     importPackages.add(StringUtil.class.getName());
     if (serviceTemplate.getHasDelete()) {
       importPackages.add(Transactional.class.getName());
     }
     List<ServiceTemplate.Key> keys = new ArrayList<>();
-    for (DataObjectColumn column : dataObject.getColumns()) {
+    for (DataEntityColumn column : dataEntity.getColumns()) {
       if (column.getIsKey()) {
         ServiceTemplate.Key key = new ServiceTemplate.Key();
         // 主键不允许是枚举，所以直接取desc
-        key.setType(column.getDataType().getDesc());
+        key.setDataType(column.getDataType().getDesc());
         key.setName(column.getColumnName());
         key.setNameProperty(
             column.getColumnName().substring(0, 1).toUpperCase() + column.getColumnName()
@@ -732,7 +736,7 @@ public class Generator {
 
   private QueryParamsTemplate getQueryParamsTemplate() {
 
-    List<DataObjectColumn> targetColumns = dataObject.getColumns().stream()
+    List<DataEntityColumn> targetColumns = dataEntity.getColumns().stream()
         .filter(t -> t.getQueryParamsConfig() != null)
         .sorted(Comparator.comparing(t -> t.getQueryParamsConfig().getOrderNo()))
         .collect(Collectors.toList());
@@ -740,21 +744,21 @@ public class Generator {
       return null;
     }
     QueryParamsTemplate queryParamsTemplate = new QueryParamsTemplate();
-    queryParamsTemplate.setPackageName(dataObject.getGenerateInfo().getPackageName());
-    queryParamsTemplate.setClassName(dataObject.getGenerateInfo().getClassName());
-    queryParamsTemplate.setModuleName(dataObject.getGenerateInfo().getModuleName());
-    queryParamsTemplate.setBizName(dataObject.getGenerateInfo().getBizName());
-    queryParamsTemplate.setClassDescription(dataObject.getGenerateInfo().getClassDescription());
-    queryParamsTemplate.setAuthor(dataObject.getGenerateInfo().getAuthor());
+    queryParamsTemplate.setPackageName(dataEntity.getGenerateInfo().getPackageName());
+    queryParamsTemplate.setClassName(dataEntity.getGenerateInfo().getClassName());
+    queryParamsTemplate.setModuleName(dataEntity.getGenerateInfo().getModuleName());
+    queryParamsTemplate.setBizName(dataEntity.getGenerateInfo().getBizName());
+    queryParamsTemplate.setClassDescription(dataEntity.getGenerateInfo().getClassDescription());
+    queryParamsTemplate.setAuthor(dataEntity.getGenerateInfo().getAuthor());
     Set<String> importPackages = new HashSet<>();
     importPackages.add(TypeMismatch.class.getName());
     importPackages.add(ApiModelProperty.class.getName());
     List<QueryParamsTemplate.Column> columns = new ArrayList<>();
-    for (DataObjectColumn column : targetColumns) {
+    for (DataEntityColumn column : targetColumns) {
       QueryParamsTemplate.Column columnObj = new QueryParamsTemplate.Column();
       if (column.getFixEnum()) {
         // 如果是枚举类型
-        columnObj.setType(
+        columnObj.setDataType(
             column.getEnumBack().substring(column.getEnumBack().lastIndexOf(".") + 1));
         columnObj.setFrontType(column.getEnumFront());
         columnObj.setViewType(column.getViewType().getCode());
@@ -762,7 +766,7 @@ public class Generator {
         importPackages.add(column.getEnumBack());
         importPackages.add(IsEnum.class.getName());
       } else {
-        columnObj.setType(column.getDataType().getDesc());
+        columnObj.setDataType(column.getDataType().getDesc());
         columnObj.setViewType(column.getViewType().getCode());
       }
       // 以下类型需要单独引包
@@ -790,6 +794,11 @@ public class Generator {
         columnObj.setRegularExpression(column.getRegularExpression());
         importPackages.add(Pattern.class.getName());
       }
+      if (column.getViewType() == GenViewType.DATA_DIC) {
+        ISysDataDicService sysDataDicService = ApplicationUtil.getBean(ISysDataDicService.class);
+        SysDataDic dic = sysDataDicService.findById(column.getDataDicId());
+        columnObj.setDataDicCode(dic.getCode());
+      }
 
       columns.add(columnObj);
     }
@@ -801,7 +810,7 @@ public class Generator {
 
   private CreateTemplate getCreateTemplate() {
 
-    List<DataObjectColumn> targetColumns = dataObject.getColumns().stream()
+    List<DataEntityColumn> targetColumns = dataEntity.getColumns().stream()
         .filter(t -> t.getCreateConfig() != null)
         .sorted(Comparator.comparing(t -> t.getCreateConfig().getOrderNo()))
         .collect(Collectors.toList());
@@ -811,39 +820,39 @@ public class Generator {
     Set<String> importPackages = new HashSet<>();
     importPackages.add(ApiModelProperty.class.getName());
     CreateTemplate createTemplate = new CreateTemplate();
-    createTemplate.setAppointId(dataObject.getGenerateInfo().getKeyType() != GenKeyType.AUTO);
-    if (dataObject.getGenerateInfo().getKeyType() == GenKeyType.UUID) {
+    createTemplate.setAppointId(dataEntity.getGenerateInfo().getKeyType() != GenKeyType.AUTO);
+    if (dataEntity.getGenerateInfo().getKeyType() == GenKeyType.UUID) {
       // 如果是UUID，则引入IdUtil包
       importPackages.add(IdUtil.class.getName());
       createTemplate.setIdCode(IdUtil.class.getSimpleName() + ".getUUID()");
-    } else if (dataObject.getGenerateInfo().getKeyType() == GenKeyType.SNOW_FLAKE) {
+    } else if (dataEntity.getGenerateInfo().getKeyType() == GenKeyType.SNOW_FLAKE) {
       // 如果是雪花算法，则引入IdWorker包
       importPackages.add(IdUtil.class.getName());
       createTemplate.setIdCode(IdUtil.class.getSimpleName() + ".getId()");
     }
-    createTemplate.setPackageName(dataObject.getGenerateInfo().getPackageName());
-    createTemplate.setClassName(dataObject.getGenerateInfo().getClassName());
-    createTemplate.setModuleName(dataObject.getGenerateInfo().getModuleName());
-    createTemplate.setBizName(dataObject.getGenerateInfo().getBizName());
-    createTemplate.setClassDescription(dataObject.getGenerateInfo().getClassDescription());
-    createTemplate.setAuthor(dataObject.getGenerateInfo().getAuthor());
+    createTemplate.setPackageName(dataEntity.getGenerateInfo().getPackageName());
+    createTemplate.setClassName(dataEntity.getGenerateInfo().getClassName());
+    createTemplate.setModuleName(dataEntity.getGenerateInfo().getModuleName());
+    createTemplate.setBizName(dataEntity.getGenerateInfo().getBizName());
+    createTemplate.setClassDescription(dataEntity.getGenerateInfo().getClassDescription());
+    createTemplate.setAuthor(dataEntity.getGenerateInfo().getAuthor());
     importPackages.add(TypeMismatch.class.getName());
 
     List<CreateTemplate.Column> columns = new ArrayList<>();
-    for (DataObjectColumn column : targetColumns) {
+    for (DataEntityColumn column : targetColumns) {
       CreateTemplate.Column columnObj = new CreateTemplate.Column();
       columnObj.setIsKey(column.getIsKey());
       columnObj.setRequired(column.getCreateConfig().getRequired());
       if (column.getFixEnum()) {
         // 如果是枚举类型
-        columnObj.setType(
+        columnObj.setDataType(
             column.getEnumBack().substring(column.getEnumBack().lastIndexOf(".") + 1));
         columnObj.setFrontType(column.getEnumFront());
         columnObj.setViewType(column.getViewType().getCode());
         importPackages.add(column.getEnumBack());
         importPackages.add(EnumUtil.class.getName());
       } else {
-        columnObj.setType(column.getDataType().getDesc());
+        columnObj.setDataType(column.getDataType().getDesc());
         columnObj.setViewType(column.getViewType().getCode());
       }
       if (column.getViewType() == GenViewType.DATE_RANGE) {
@@ -879,7 +888,8 @@ public class Generator {
           importPackages.add(NotNull.class.getName());
         }
 
-        if (column.getViewType() == GenViewType.SELECT) {
+        if (column.getViewType() == GenViewType.SELECT
+            || column.getViewType() == GenViewType.DATA_DIC) {
           columnObj.setValidateMsg("请选择");
         } else {
           columnObj.setValidateMsg("请输入");
@@ -904,18 +914,37 @@ public class Generator {
         importPackages.add(Pattern.class.getName());
       }
 
+      columnObj.setIsNumberType(GenDataType.isNumberType(column.getDataType()));
+      columnObj.setIsDecimalType(GenDataType.isDecimalType(column.getDataType()));
+      if (column.getViewType() == GenViewType.DATA_DIC) {
+        ISysDataDicService sysDataDicService = ApplicationUtil.getBean(ISysDataDicService.class);
+        SysDataDic dic = sysDataDicService.findById(column.getDataDicId());
+        columnObj.setDataDicCode(dic.getCode());
+      }
+      columnObj.setLen(column.getLen());
+      columnObj.setDecimals(column.getDecimals());
+      if (columnObj.getIsNumberType()) {
+        if (columnObj.getIsDecimalType()) {
+          importPackages.add(IsNumberPrecision.class.getName());
+        }
+      } else if (column.getDataType() == GenDataType.STRING) {
+        if (column.getViewType() == GenViewType.INPUT
+            || column.getViewType() == GenViewType.TEXTATREA) {
+          importPackages.add(Length.class.getName());
+        }
+      }
       columns.add(columnObj);
     }
 
     createTemplate.setColumns(columns);
     createTemplate.setImportPackages(importPackages);
-    List<DataObjectColumn> keyColumns = dataObject.getColumns().stream()
-        .filter(DataObjectColumn::getIsKey)
+    List<DataEntityColumn> keyColumns = dataEntity.getColumns().stream()
+        .filter(DataEntityColumn::getIsKey)
         .collect(Collectors.toList());
     List<CreateTemplate.Key> keys = keyColumns.stream().map(t -> {
       CreateTemplate.Key key = new CreateTemplate.Key();
       // 主键不会是枚举
-      key.setType(t.getDataType().getDesc());
+      key.setDataType(t.getDataType().getDesc());
       key.setName(t.getColumnName());
       key.setNameProperty(
           t.getColumnName().substring(0, 1).toUpperCase() + t.getColumnName().substring(1));
@@ -932,7 +961,7 @@ public class Generator {
 
   private UpdateTemplate getUpdateTemplate() {
 
-    List<DataObjectColumn> targetColumns = dataObject.getColumns().stream()
+    List<DataEntityColumn> targetColumns = dataEntity.getColumns().stream()
         .filter(t -> t.getUpdateConfig() != null)
         .sorted(Comparator.comparing(t -> t.getUpdateConfig().getOrderNo()))
         .collect(Collectors.toList());
@@ -941,30 +970,30 @@ public class Generator {
     }
     Set<String> importPackages = new HashSet<>();
     UpdateTemplate updateTemplate = new UpdateTemplate();
-    updateTemplate.setPackageName(dataObject.getGenerateInfo().getPackageName());
-    updateTemplate.setClassName(dataObject.getGenerateInfo().getClassName());
-    updateTemplate.setModuleName(dataObject.getGenerateInfo().getModuleName());
-    updateTemplate.setBizName(dataObject.getGenerateInfo().getBizName());
-    updateTemplate.setClassDescription(dataObject.getGenerateInfo().getClassDescription());
-    updateTemplate.setAuthor(dataObject.getGenerateInfo().getAuthor());
+    updateTemplate.setPackageName(dataEntity.getGenerateInfo().getPackageName());
+    updateTemplate.setClassName(dataEntity.getGenerateInfo().getClassName());
+    updateTemplate.setModuleName(dataEntity.getGenerateInfo().getModuleName());
+    updateTemplate.setBizName(dataEntity.getGenerateInfo().getBizName());
+    updateTemplate.setClassDescription(dataEntity.getGenerateInfo().getClassDescription());
+    updateTemplate.setAuthor(dataEntity.getGenerateInfo().getAuthor());
     importPackages.add(TypeMismatch.class.getName());
     importPackages.add(ApiModelProperty.class.getName());
 
     List<UpdateTemplate.Column> columns = new ArrayList<>();
-    for (DataObjectColumn column : targetColumns) {
+    for (DataEntityColumn column : targetColumns) {
       UpdateTemplate.Column columnObj = new UpdateTemplate.Column();
       columnObj.setIsKey(column.getIsKey());
       columnObj.setRequired(column.getUpdateConfig().getRequired());
       if (column.getFixEnum()) {
         // 如果是枚举类型
-        columnObj.setType(
+        columnObj.setDataType(
             column.getEnumBack().substring(column.getEnumBack().lastIndexOf(".") + 1));
         columnObj.setFrontType(column.getEnumFront());
         columnObj.setViewType(column.getViewType().getCode());
         importPackages.add(column.getEnumBack());
         importPackages.add(EnumUtil.class.getName());
       } else {
-        columnObj.setType(column.getDataType().getDesc());
+        columnObj.setDataType(column.getDataType().getDesc());
         columnObj.setViewType(column.getViewType().getCode());
       }
       if (column.getViewType() == GenViewType.DATE_RANGE) {
@@ -1000,7 +1029,8 @@ public class Generator {
           importPackages.add(NotNull.class.getName());
         }
 
-        if (column.getViewType() == GenViewType.SELECT) {
+        if (column.getViewType() == GenViewType.SELECT
+            || column.getViewType() == GenViewType.DATA_DIC) {
           columnObj.setValidateMsg("请选择");
         } else {
           columnObj.setValidateMsg("请输入");
@@ -1024,19 +1054,39 @@ public class Generator {
         columnObj.setRegularExpression(column.getRegularExpression());
         importPackages.add(Pattern.class.getName());
       }
+      columnObj.setIsNumberType(GenDataType.isNumberType(column.getDataType()));
+      columnObj.setIsDecimalType(GenDataType.isDecimalType(column.getDataType()));
+      columnObj.setLen(column.getLen());
+      columnObj.setDecimals(column.getDecimals());
+      if (columnObj.getIsNumberType()) {
+        if (columnObj.getIsDecimalType()) {
+          importPackages.add(IsNumberPrecision.class.getName());
+        }
+      } else if (column.getDataType() == GenDataType.STRING) {
+        if (column.getViewType() == GenViewType.INPUT
+            || column.getViewType() == GenViewType.TEXTATREA) {
+          importPackages.add(Length.class.getName());
+        }
+      }
+
+      if (column.getViewType() == GenViewType.DATA_DIC) {
+        ISysDataDicService sysDataDicService = ApplicationUtil.getBean(ISysDataDicService.class);
+        SysDataDic dic = sysDataDicService.findById(column.getDataDicId());
+        columnObj.setDataDicCode(dic.getCode());
+      }
 
       columns.add(columnObj);
     }
 
     updateTemplate.setColumns(columns);
     updateTemplate.setImportPackages(importPackages);
-    List<DataObjectColumn> keyColumns = dataObject.getColumns().stream()
-        .filter(DataObjectColumn::getIsKey)
+    List<DataEntityColumn> keyColumns = dataEntity.getColumns().stream()
+        .filter(DataEntityColumn::getIsKey)
         .collect(Collectors.toList());
     List<UpdateTemplate.Key> keys = keyColumns.stream().map(t -> {
       UpdateTemplate.Key key = new UpdateTemplate.Key();
       // 主键不会是枚举
-      key.setType(t.getDataType().getDesc());
+      key.setDataType(t.getDataType().getDesc());
       key.setName(t.getColumnName());
       key.setNameProperty(
           t.getColumnName().substring(0, 1).toUpperCase() + t.getColumnName().substring(1));
@@ -1058,7 +1108,7 @@ public class Generator {
 
   private QueryTemplate getQueryTemplate() {
 
-    List<DataObjectColumn> targetColumns = dataObject.getColumns().stream()
+    List<DataEntityColumn> targetColumns = dataEntity.getColumns().stream()
         .filter(t -> t.getQueryConfig() != null)
         .sorted(Comparator.comparing(t -> t.getQueryConfig().getOrderNo()))
         .collect(Collectors.toList());
@@ -1066,29 +1116,29 @@ public class Generator {
       return null;
     }
     QueryTemplate queryTemplate = new QueryTemplate();
-    queryTemplate.setPackageName(dataObject.getGenerateInfo().getPackageName());
-    queryTemplate.setClassName(dataObject.getGenerateInfo().getClassName());
-    queryTemplate.setModuleName(dataObject.getGenerateInfo().getModuleName());
-    queryTemplate.setBizName(dataObject.getGenerateInfo().getBizName());
-    queryTemplate.setClassDescription(dataObject.getGenerateInfo().getClassDescription());
-    queryTemplate.setAuthor(dataObject.getGenerateInfo().getAuthor());
+    queryTemplate.setPackageName(dataEntity.getGenerateInfo().getPackageName());
+    queryTemplate.setClassName(dataEntity.getGenerateInfo().getClassName());
+    queryTemplate.setModuleName(dataEntity.getGenerateInfo().getModuleName());
+    queryTemplate.setBizName(dataEntity.getGenerateInfo().getBizName());
+    queryTemplate.setClassDescription(dataEntity.getGenerateInfo().getClassDescription());
+    queryTemplate.setAuthor(dataEntity.getGenerateInfo().getAuthor());
 
     Set<String> importPackages = new HashSet<>();
     importPackages.add(TypeMismatch.class.getName());
     importPackages.add(ApiModelProperty.class.getName());
     List<QueryTemplate.Column> columns = new ArrayList<>();
-    for (DataObjectColumn column : targetColumns) {
+    for (DataEntityColumn column : targetColumns) {
       QueryTemplate.Column columnObj = new QueryTemplate.Column();
       if (column.getFixEnum()) {
         // 如果是枚举类型
-        columnObj.setType(
+        columnObj.setDataType(
             column.getEnumBack().substring(column.getEnumBack().lastIndexOf(".") + 1));
         columnObj.setFrontType(column.getEnumFront());
         columnObj.setViewType(column.getViewType().getCode());
         importPackages.add(column.getEnumBack());
         importPackages.add(EnumUtil.class.getName());
       } else {
-        columnObj.setType(column.getDataType().getDesc());
+        columnObj.setDataType(column.getDataType().getDesc());
         columnObj.setIsNumberType(GenDataType.isNumberType(column.getDataType()));
         columnObj.setViewType(column.getViewType().getCode());
         columnObj.setHasAvailableTag(
@@ -1118,6 +1168,13 @@ public class Generator {
       columnObj.setWidth(column.getQueryConfig().getWidth());
       columnObj.setSortable(column.getQueryConfig().getSortable());
       columnObj.setDescription(column.getName());
+      if (column.getViewType() == GenViewType.DATA_DIC) {
+        ISysDataDicService sysDataDicService = ApplicationUtil.getBean(ISysDataDicService.class);
+        SysDataDic dic = sysDataDicService.findById(column.getDataDicId());
+        columnObj.setDataDicCode(dic.getCode());
+        importPackages.add(ISysDataDicService.class.getName());
+        importPackages.add(ApplicationUtil.class.getName());
+      }
 
       columns.add(columnObj);
     }
@@ -1125,13 +1182,13 @@ public class Generator {
     queryTemplate.setColumns(columns);
     queryTemplate.setHasFixEnum(columns.stream().anyMatch(QueryTemplate.Column::getFixEnum));
 
-    List<DataObjectColumn> keyColumns = dataObject.getColumns().stream()
-        .filter(DataObjectColumn::getIsKey)
+    List<DataEntityColumn> keyColumns = dataEntity.getColumns().stream()
+        .filter(DataEntityColumn::getIsKey)
         .collect(Collectors.toList());
     List<QueryTemplate.Key> keys = keyColumns.stream().map(t -> {
       QueryTemplate.Key key = new QueryTemplate.Key();
       // 主键不会是枚举
-      key.setType(t.getDataType().getDesc());
+      key.setDataType(t.getDataType().getDesc());
       key.setName(t.getColumnName());
       key.setNameProperty(
           t.getColumnName().substring(0, 1).toUpperCase() + t.getColumnName().substring(1));
@@ -1149,7 +1206,7 @@ public class Generator {
 
   private DetailTemplate getDetailTemplate() {
 
-    List<DataObjectColumn> targetColumns = dataObject.getColumns().stream()
+    List<DataEntityColumn> targetColumns = dataEntity.getColumns().stream()
         .filter(t -> t.getDetailConfig() != null)
         .sorted(Comparator.comparing(t -> t.getDetailConfig().getOrderNo()))
         .collect(Collectors.toList());
@@ -1157,28 +1214,28 @@ public class Generator {
       return null;
     }
     DetailTemplate detailTemplate = new DetailTemplate();
-    detailTemplate.setPackageName(dataObject.getGenerateInfo().getPackageName());
-    detailTemplate.setClassName(dataObject.getGenerateInfo().getClassName());
-    detailTemplate.setModuleName(dataObject.getGenerateInfo().getModuleName());
-    detailTemplate.setBizName(dataObject.getGenerateInfo().getBizName());
-    detailTemplate.setClassDescription(dataObject.getGenerateInfo().getClassDescription());
-    detailTemplate.setAuthor(dataObject.getGenerateInfo().getAuthor());
+    detailTemplate.setPackageName(dataEntity.getGenerateInfo().getPackageName());
+    detailTemplate.setClassName(dataEntity.getGenerateInfo().getClassName());
+    detailTemplate.setModuleName(dataEntity.getGenerateInfo().getModuleName());
+    detailTemplate.setBizName(dataEntity.getGenerateInfo().getBizName());
+    detailTemplate.setClassDescription(dataEntity.getGenerateInfo().getClassDescription());
+    detailTemplate.setAuthor(dataEntity.getGenerateInfo().getAuthor());
 
     Set<String> importPackages = new HashSet<>();
     importPackages.add(TypeMismatch.class.getName());
     importPackages.add(ApiModelProperty.class.getName());
     List<DetailTemplate.Column> columns = new ArrayList<>();
-    for (DataObjectColumn column : targetColumns) {
+    for (DataEntityColumn column : targetColumns) {
       DetailTemplate.Column columnObj = new DetailTemplate.Column();
       if (column.getFixEnum()) {
         // 如果是枚举类型
-        columnObj.setType(
+        columnObj.setDataType(
             column.getEnumBack().substring(column.getEnumBack().lastIndexOf(".") + 1));
         columnObj.setFrontType(column.getEnumFront());
         importPackages.add(column.getEnumBack());
         importPackages.add(EnumUtil.class.getName());
       } else {
-        columnObj.setType(column.getDataType().getDesc());
+        columnObj.setDataType(column.getDataType().getDesc());
         columnObj.setHasAvailableTag(
             column.getViewType() == GenViewType.SELECT
                 && column.getDataType() == GenDataType.BOOLEAN
@@ -1208,19 +1265,27 @@ public class Generator {
       columnObj.setDescription(column.getName());
       columnObj.setSpan(column.getDetailConfig().getSpan());
 
+      if (column.getViewType() == GenViewType.DATA_DIC) {
+        ISysDataDicService sysDataDicService = ApplicationUtil.getBean(ISysDataDicService.class);
+        SysDataDic dic = sysDataDicService.findById(column.getDataDicId());
+        columnObj.setDataDicCode(dic.getCode());
+        importPackages.add(ISysDataDicService.class.getName());
+        importPackages.add(ApplicationUtil.class.getName());
+      }
+
       columns.add(columnObj);
     }
 
     detailTemplate.setColumns(columns);
     detailTemplate.setHasFixEnum(columns.stream().anyMatch(DetailTemplate.Column::getFixEnum));
-    detailTemplate.setDetailSpan(dataObject.getGenerateInfo().getDetailSpan());
-    List<DataObjectColumn> keyColumns = dataObject.getColumns().stream()
-        .filter(DataObjectColumn::getIsKey)
+    detailTemplate.setDetailSpan(dataEntity.getGenerateInfo().getDetailSpan());
+    List<DataEntityColumn> keyColumns = dataEntity.getColumns().stream()
+        .filter(DataEntityColumn::getIsKey)
         .collect(Collectors.toList());
     List<DetailTemplate.Key> keys = keyColumns.stream().map(t -> {
       DetailTemplate.Key key = new DetailTemplate.Key();
       // 主键不会是枚举
-      key.setType(t.getDataType().getDesc());
+      key.setDataType(t.getDataType().getDesc());
       key.setName(t.getColumnName());
       key.setNameProperty(
           t.getColumnName().substring(0, 1).toUpperCase() + t.getColumnName().substring(1));
@@ -1240,18 +1305,18 @@ public class Generator {
 
     Set<String> importPackages = new HashSet<>();
     ControllerTemplate controllerTemplate = new ControllerTemplate();
-    controllerTemplate.setPackageName(dataObject.getGenerateInfo().getPackageName());
-    controllerTemplate.setClassName(dataObject.getGenerateInfo().getClassName());
+    controllerTemplate.setPackageName(dataEntity.getGenerateInfo().getPackageName());
+    controllerTemplate.setClassName(dataEntity.getGenerateInfo().getClassName());
     controllerTemplate.setClassNameProperty(
-        dataObject.getGenerateInfo().getClassName().substring(0, 1).toLowerCase()
-            + dataObject.getGenerateInfo()
+        dataEntity.getGenerateInfo().getClassName().substring(0, 1).toLowerCase()
+            + dataEntity.getGenerateInfo()
             .getClassName().substring(1));
-    controllerTemplate.setModuleName(dataObject.getGenerateInfo().getModuleName());
-    controllerTemplate.setBizName(dataObject.getGenerateInfo().getBizName());
-    controllerTemplate.setClassDescription(dataObject.getGenerateInfo().getClassDescription());
-    controllerTemplate.setAuthor(dataObject.getGenerateInfo().getAuthor());
-    controllerTemplate.setIsCache(dataObject.getGenerateInfo().getIsCache());
-    controllerTemplate.setHasDelete(dataObject.getGenerateInfo().getHasDelete());
+    controllerTemplate.setModuleName(dataEntity.getGenerateInfo().getModuleName());
+    controllerTemplate.setBizName(dataEntity.getGenerateInfo().getBizName());
+    controllerTemplate.setClassDescription(dataEntity.getGenerateInfo().getClassDescription());
+    controllerTemplate.setAuthor(dataEntity.getGenerateInfo().getAuthor());
+    controllerTemplate.setIsCache(dataEntity.getGenerateInfo().getIsCache());
+    controllerTemplate.setHasDelete(dataEntity.getGenerateInfo().getHasDelete());
     if (controllerTemplate.getHasDelete()) {
       importPackages.add(DeleteMapping.class.getName());
     }
@@ -1260,13 +1325,13 @@ public class Generator {
     importPackages.add(ApiImplicitParam.class.getName());
     importPackages.add(ApiImplicitParams.class.getName());
 
-    List<DataObjectColumn> keyColumns = dataObject.getColumns().stream()
-        .filter(DataObjectColumn::getIsKey)
+    List<DataEntityColumn> keyColumns = dataEntity.getColumns().stream()
+        .filter(DataEntityColumn::getIsKey)
         .collect(Collectors.toList());
     List<ControllerTemplate.Key> keys = keyColumns.stream().map(t -> {
       ControllerTemplate.Key key = new ControllerTemplate.Key();
       // 主键不会是枚举
-      key.setType(t.getDataType().getDesc());
+      key.setDataType(t.getDataType().getDesc());
       key.setName(t.getColumnName());
       key.setNameProperty(t.getColumnName().substring(0, 1).toUpperCase() + t.getColumnName()
           .substring(1));
@@ -1318,14 +1383,14 @@ public class Generator {
   private SqlTemplate getSqlTemplate() {
 
     SqlTemplate sqlTemplate = new SqlTemplate();
-    sqlTemplate.setModuleName(dataObject.getGenerateInfo().getModuleName());
-    sqlTemplate.setBizName(dataObject.getGenerateInfo().getBizName());
-    sqlTemplate.setClassName(dataObject.getGenerateInfo().getClassName());
-    sqlTemplate.setClassDescription(dataObject.getGenerateInfo().getClassDescription());
-    sqlTemplate.setParentMenuId(dataObject.getGenerateInfo().getParentMenuId());
-    sqlTemplate.setMenuId(dataObject.getGenerateInfo().getId());
-    sqlTemplate.setMenuCode(dataObject.getGenerateInfo().getMenuCode());
-    sqlTemplate.setMenuName(dataObject.getGenerateInfo().getMenuName());
+    sqlTemplate.setModuleName(dataEntity.getGenerateInfo().getModuleName());
+    sqlTemplate.setBizName(dataEntity.getGenerateInfo().getBizName());
+    sqlTemplate.setClassName(dataEntity.getGenerateInfo().getClassName());
+    sqlTemplate.setClassDescription(dataEntity.getGenerateInfo().getClassDescription());
+    sqlTemplate.setParentMenuId(dataEntity.getGenerateInfo().getParentMenuId());
+    sqlTemplate.setMenuId(dataEntity.getGenerateInfo().getId());
+    sqlTemplate.setMenuCode(dataEntity.getGenerateInfo().getMenuCode());
+    sqlTemplate.setMenuName(dataEntity.getGenerateInfo().getMenuName());
     sqlTemplate.setCreate(this.getCreateTemplate());
     sqlTemplate.setUpdate(this.getUpdateTemplate());
 

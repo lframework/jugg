@@ -1,7 +1,11 @@
 package com.lframework.starter.gen.bo.data.entity;
 
+import com.lframework.common.utils.StringUtil;
 import com.lframework.starter.gen.entity.GenDataEntityDetail;
+import com.lframework.starter.mybatis.entity.SysDataDic;
+import com.lframework.starter.mybatis.service.system.ISysDataDicService;
 import com.lframework.starter.web.bo.BaseBo;
+import com.lframework.starter.web.utils.ApplicationUtil;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -94,6 +98,28 @@ public class GenDataEntityDetailBo extends BaseBo<GenDataEntityDetail> {
   @ApiModelProperty("排序类型")
   private String orderType;
 
+  /**
+   * 数据字典ID
+   */
+  private String dataDicId;
+
+  /**
+   * 数据字典名称
+   */
+  private String dataDicName;
+
+  /**
+   * 长度
+   */
+  @ApiModelProperty("长度")
+  private Long len;
+
+  /**
+   * 小数位数
+   */
+  @ApiModelProperty("小数位数")
+  private Integer decimals;
+
   public GenDataEntityDetailBo() {
 
   }
@@ -116,5 +142,11 @@ public class GenDataEntityDetailBo extends BaseBo<GenDataEntityDetail> {
     this.dataType = dto.getDataType().getCode();
     this.viewType = dto.getViewType().getCode();
     this.orderType = dto.getOrderType() == null ? null : dto.getOrderType().getCode();
+
+    if (!StringUtil.isBlank(dto.getDataDicId())) {
+      ISysDataDicService sysDataDicService = ApplicationUtil.getBean(ISysDataDicService.class);
+      SysDataDic dic = sysDataDicService.findById(dto.getDataDicId());
+      this.dataDicName = dic.getName();
+    }
   }
 }

@@ -6,6 +6,7 @@ import com.lframework.starter.web.components.validation.IsEnum;
 import com.lframework.starter.web.vo.BaseVo;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
@@ -89,4 +90,24 @@ public class GenDataEntityDetailVo implements BaseVo, Serializable {
   @ApiModelProperty("排序类型")
   @IsEnum(message = "排序类型格式不正确！", enumClass = GenOrderType.class)
   private String orderType;
+
+  /**
+   * 数据字典ID
+   */
+  @ApiModelProperty("数据字典ID")
+  private String dataDicId;
+
+  /**
+   * 长度
+   */
+  @ApiModelProperty("长度")
+  @Min(value = 1, message = "长度必须大于0！")
+  private Long len;
+
+  /**
+   * 小数位数
+   */
+  @ApiModelProperty("小数位数")
+  @Min(value = 1, message = "小数位数必须大于0！")
+  private Integer decimals;
 }

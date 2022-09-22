@@ -67,4 +67,14 @@ public class GenSimpleTableColumn extends BaseEntity implements BaseDto, TableCo
    * 字段备注
    */
   private String columnComment;
+
+  /**
+   * 长度
+   */
+  private Long len;
+
+  /**
+   * 小数位数
+   */
+  private Integer decimals;
 }
