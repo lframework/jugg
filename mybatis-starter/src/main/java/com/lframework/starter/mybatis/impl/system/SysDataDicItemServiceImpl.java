@@ -90,12 +90,14 @@ public class SysDataDicItemServiceImpl extends
   public String create(CreateSysDataDicItemVo vo) {
 
     Wrapper<SysDataDicItem> checkWrapper = Wrappers.lambdaQuery(SysDataDicItem.class)
+        .eq(SysDataDicItem::getDicId, vo.getDicId())
         .eq(SysDataDicItem::getCode, vo.getCode());
     if (this.count(checkWrapper) > 0) {
       throw new DefaultClientException("编号重复，请重新输入！");
     }
 
     checkWrapper = Wrappers.lambdaQuery(SysDataDicItem.class)
+        .eq(SysDataDicItem::getDicId, vo.getDicId())
         .eq(SysDataDicItem::getName, vo.getName());
     if (this.count(checkWrapper) > 0) {
       throw new DefaultClientException("名称重复，请重新输入！");
@@ -116,21 +118,23 @@ public class SysDataDicItemServiceImpl extends
   @Transactional
   @Override
   public void update(UpdateSysDataDicItemVo vo) {
+
+    SysDataDicItem record = this.getById(vo.getId());
+    if (record == null) {
+      throw new DefaultClientException("数据字典值不存在！");
+    }
     Wrapper<SysDataDicItem> checkWrapper = Wrappers.lambdaQuery(SysDataDicItem.class)
+        .eq(SysDataDicItem::getDicId, record.getDicId())
         .eq(SysDataDicItem::getCode, vo.getCode()).ne(SysDataDicItem::getId, vo.getId());
     if (this.count(checkWrapper) > 0) {
       throw new DefaultClientException("编号重复，请重新输入！");
     }
 
     checkWrapper = Wrappers.lambdaQuery(SysDataDicItem.class)
+        .eq(SysDataDicItem::getDicId, record.getDicId())
         .eq(SysDataDicItem::getName, vo.getName()).ne(SysDataDicItem::getId, vo.getId());
     if (this.count(checkWrapper) > 0) {
       throw new DefaultClientException("名称重复，请重新输入！");
-    }
-
-    SysDataDicItem record = this.getById(vo.getId());
-    if (record == null) {
-      throw new DefaultClientException("数据字典不存在！");
     }
 
     Wrapper<SysDataDicItem> updateWrapper = Wrappers.lambdaUpdate(SysDataDicItem.class)

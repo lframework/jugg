@@ -90,8 +90,10 @@ public class Get${className}Bo extends BaseBo${r"<"}${className}${r">"} {
         this.${column.name} = dto.get${column.nameProperty}().getCode();
 
             <#elseif column.dataDicCode??>
-        String[] ${column.name}DicArr = dto.get${column.nameProperty}().split(StringPool.DATA_DIC_SPLIT);
-        this.${column.name}DicValue = sysDataDicItemService.findByCode(${column.name}DicArr[0], ${column.name}DicArr[1]).getName();
+        if (!StringUtil.isBlank(dto.get${column.nameProperty}())) {
+          String[] ${column.name}DicArr = dto.get${column.nameProperty}().split(StringPool.DATA_DIC_SPLIT);
+          this.${column.name}DicValue = sysDataDicItemService.findByCode(${column.name}DicArr[0], ${column.name}DicArr[1]).getName();
+        }
 
             </#if>
         </#list>

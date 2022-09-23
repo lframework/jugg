@@ -45,7 +45,7 @@ public class Update${className}Vo implements BaseVo, Serializable {
         </#if>
     </#if>
     <#if column.regularExpression??>
-    @Pattern(regexp = "${column.regularExpression}", message = "${column.description}格式有误！")
+    @Pattern(regexp = "${column.regularExpression?replace("\\", "\\\\")}", message = "${column.description}格式有误！")
     </#if>
     <#if column.isDecimalType>
       <#if (column.decimals??) && column.decimals gt 0>

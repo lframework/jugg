@@ -29,6 +29,7 @@ import com.lframework.starter.gen.generate.templates.SqlTemplate;
 import com.lframework.starter.gen.generate.templates.UpdateTemplate;
 import com.lframework.starter.mybatis.constants.MyBatisStringPool;
 import com.lframework.starter.mybatis.entity.SysDataDic;
+import com.lframework.starter.mybatis.service.system.ISysDataDicItemService;
 import com.lframework.starter.mybatis.service.system.ISysDataDicService;
 import com.lframework.starter.web.components.validation.IsEnum;
 import com.lframework.starter.web.components.validation.IsNumberPrecision;
@@ -1172,7 +1173,8 @@ public class Generator {
         ISysDataDicService sysDataDicService = ApplicationUtil.getBean(ISysDataDicService.class);
         SysDataDic dic = sysDataDicService.findById(column.getDataDicId());
         columnObj.setDataDicCode(dic.getCode());
-        importPackages.add(ISysDataDicService.class.getName());
+        importPackages.add(ISysDataDicItemService.class.getName());
+        importPackages.add(StringUtil.class.getName());
         importPackages.add(ApplicationUtil.class.getName());
         importPackages.add(StringPool.class.getName());
       }
@@ -1270,7 +1272,8 @@ public class Generator {
         ISysDataDicService sysDataDicService = ApplicationUtil.getBean(ISysDataDicService.class);
         SysDataDic dic = sysDataDicService.findById(column.getDataDicId());
         columnObj.setDataDicCode(dic.getCode());
-        importPackages.add(ISysDataDicService.class.getName());
+        importPackages.add(ISysDataDicItemService.class.getName());
+        importPackages.add(StringUtil.class.getName());
         importPackages.add(ApplicationUtil.class.getName());
         importPackages.add(StringPool.class.getName());
       }

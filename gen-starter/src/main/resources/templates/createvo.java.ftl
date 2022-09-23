@@ -31,7 +31,7 @@ public class Create${className}Vo implements BaseVo, Serializable {
     </#if>
     </#if>
     <#if column.regularExpression??>
-    @Pattern(regexp = "${column.regularExpression}", message = "${column.description}格式有误！")
+    @Pattern(regexp = "${column.regularExpression?replace("\\", "\\\\")}", message = "${column.description}格式有误！")
     </#if>
     <#if column.dataType != 'String'>
     @TypeMismatch(message = "${column.description}格式有误！")

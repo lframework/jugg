@@ -28,9 +28,6 @@ public class Query${className}Vo extends PageVo implements BaseVo, Serializable 
     <#if column.dataType != 'String'>
     @TypeMismatch(message = "${column.description}格式有误！")
     </#if>
-    <#if column.regularExpression??>
-    @Pattern(regexp = "${column.regularExpression}", message = "${column.description}格式有误！")
-    </#if>
     @IsEnum(message = "${column.description}格式有误！", enumClass = ${column.dataType}.class)
     private ${column.enumCodeType} ${column.name};
     <#else>
@@ -42,9 +39,6 @@ public class Query${className}Vo extends PageVo implements BaseVo, Serializable 
     <#if column.dataType != 'String'>
     @TypeMismatch(message = "${column.description}起始时间格式有误！")
     </#if>
-    <#if column.regularExpression??>
-    @Pattern(regexp = "${column.regularExpression}", message = "${column.description}格式有误！")
-    </#if>
     private ${column.dataType} ${column.name}Start;
 
     /**
@@ -54,16 +48,10 @@ public class Query${className}Vo extends PageVo implements BaseVo, Serializable 
     <#if column.dataType != 'String'>
     @TypeMismatch(message = "${column.description}截止时间格式有误！")
     </#if>
-    <#if column.regularExpression??>
-    @Pattern(regexp = "${column.regularExpression}", message = "${column.description}格式有误！")
-    </#if>
     private ${column.dataType} ${column.name}End;
     <#else>
     <#if column.dataType != 'String'>
     @TypeMismatch(message = "${column.description}格式有误！")
-    </#if>
-    <#if column.regularExpression??>
-    @Pattern(regexp = "${column.regularExpression}", message = "${column.description}格式有误！")
     </#if>
     private ${column.dataType} ${column.name};
     </#if>
