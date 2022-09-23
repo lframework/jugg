@@ -81,4 +81,9 @@ public interface StringPool {
    * 请求ID再Header中的key值
    */
   String HEADER_NAME_REQUEST_ID = "Request-Id";
+
+  /**
+   * 数据字典分隔符
+   */
+  String DATA_DIC_SPLIT = "@";
 }

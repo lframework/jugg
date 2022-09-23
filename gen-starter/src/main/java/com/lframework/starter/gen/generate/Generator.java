@@ -1174,6 +1174,7 @@ public class Generator {
         columnObj.setDataDicCode(dic.getCode());
         importPackages.add(ISysDataDicService.class.getName());
         importPackages.add(ApplicationUtil.class.getName());
+        importPackages.add(StringPool.class.getName());
       }
 
       columns.add(columnObj);
@@ -1271,6 +1272,7 @@ public class Generator {
         columnObj.setDataDicCode(dic.getCode());
         importPackages.add(ISysDataDicService.class.getName());
         importPackages.add(ApplicationUtil.class.getName());
+        importPackages.add(StringPool.class.getName());
       }
 
       columns.add(columnObj);
