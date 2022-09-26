@@ -1,6 +1,7 @@
 package com.lframework.starter.gen.mappers;
 
 import com.lframework.starter.gen.entity.GenDataEntity;
+import com.lframework.starter.gen.vo.data.entity.GenDataEntitySelectorVo;
 import com.lframework.starter.gen.vo.data.entity.QueryDataEntityVo;
 import com.lframework.starter.mybatis.mapper.BaseMapper;
 import java.util.List;
@@ -23,4 +24,12 @@ public interface GenDataEntityMapper extends BaseMapper<GenDataEntity> {
    * @return
    */
   List<GenDataEntity> query(@Param("vo") QueryDataEntityVo vo);
+
+  /**
+   * 选择器
+   *
+   * @param vo
+   * @return
+   */
+  List<GenDataEntity> selector(@Param("vo") GenDataEntitySelectorVo vo);
 }

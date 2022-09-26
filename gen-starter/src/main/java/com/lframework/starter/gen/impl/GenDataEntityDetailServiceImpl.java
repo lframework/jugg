@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.lframework.starter.gen.entity.GenDataEntityDetail;
 import com.lframework.starter.gen.mappers.GenDataEntityDetailMapper;
 import com.lframework.starter.gen.service.IGenDataEntityDetailService;
+import com.lframework.starter.gen.vo.data.entity.GenDataEntityDetailSelectorVo;
 import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -30,5 +31,14 @@ public class GenDataEntityDetailServiceImpl extends
     Wrapper<GenDataEntityDetail> queryWrapper = Wrappers.lambdaQuery(GenDataEntityDetail.class)
         .eq(GenDataEntityDetail::getEntityId, entityId);
     getBaseMapper().delete(queryWrapper);
+  }
+
+  @Override
+  public List<GenDataEntityDetail> selector(GenDataEntityDetailSelectorVo vo) {
+    Wrapper<GenDataEntityDetail> queryWrapper = Wrappers.lambdaQuery(GenDataEntityDetail.class)
+        .eq(GenDataEntityDetail::getEntityId, vo.getEntityId())
+        .orderByAsc(GenDataEntityDetail::getColumnOrder);
+
+    return getBaseMapper().selectList(queryWrapper);
   }
 }

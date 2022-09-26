@@ -47,6 +47,7 @@ import com.lframework.starter.gen.service.ISimpleTableColumnService;
 import com.lframework.starter.gen.service.ISimpleTableService;
 import com.lframework.starter.gen.vo.data.entity.CreateDataEntityVo;
 import com.lframework.starter.gen.vo.data.entity.GenDataEntityDetailVo;
+import com.lframework.starter.gen.vo.data.entity.GenDataEntitySelectorVo;
 import com.lframework.starter.gen.vo.data.entity.QueryDataEntityVo;
 import com.lframework.starter.gen.vo.data.entity.UpdateDataEntityGenerateVo;
 import com.lframework.starter.gen.vo.data.entity.UpdateDataEntityVo;
@@ -119,6 +120,19 @@ public class GenDataEntityServiceImpl extends
   @Override
   public List<GenDataEntity> query(QueryDataEntityVo vo) {
     return getBaseMapper().query(vo);
+  }
+
+  @Override
+  public PageResult<GenDataEntity> selector(Integer pageIndex, Integer pageSize,
+      GenDataEntitySelectorVo vo) {
+    Assert.greaterThanZero(pageIndex);
+    Assert.greaterThanZero(pageSize);
+
+    PageHelperUtil.startPage(pageIndex, pageSize);
+
+    List<GenDataEntity> datas = getBaseMapper().selector(vo);
+
+    return PageResultUtil.convert(new PageInfo<>(datas));
   }
 
   @Override
@@ -253,6 +267,11 @@ public class GenDataEntityServiceImpl extends
   @Override
   public void delete(@NonNull String id) {
 
+    GenDataEntity record = getBaseMapper().selectById(id);
+    if (record == null) {
+      throw new DefaultClientException("数据实体不存在！");
+    }
+
     List<GenDataEntityDetail> columns = genDataEntityDetailService.getByEntityId(id);
     List<String> columnIds = columns.stream().map(GenDataEntityDetail::getId)
         .collect(Collectors.toList());
@@ -263,6 +282,7 @@ public class GenDataEntityServiceImpl extends
 
     DataEntityDeleteEvent event = new DataEntityDeleteEvent(this);
     event.setId(id);
+    event.setName(record.getName());
     event.setColumnIds(columnIds);
 
     ApplicationUtil.publishEvent(event);
@@ -402,6 +422,7 @@ public class GenDataEntityServiceImpl extends
         // 发布删除事件
         DataEntityDetailDeleteEvent event = new DataEntityDetailDeleteEvent(this);
         event.setId(deleteDbColumn.getId());
+        event.setName(deleteDbColumn.getColumnName());
         ApplicationUtil.publishEvent(event);
       }
     }

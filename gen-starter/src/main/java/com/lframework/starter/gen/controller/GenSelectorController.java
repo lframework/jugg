@@ -1,13 +1,25 @@
 package com.lframework.starter.gen.controller;
 
 import com.lframework.common.utils.CollectionUtil;
+import com.lframework.starter.gen.bo.data.entity.GenDataEntityDetailSelectorBo;
+import com.lframework.starter.gen.bo.data.entity.GenDataEntitySelectorBo;
 import com.lframework.starter.gen.bo.data.entity.category.GenDataEntityCategorySelectorBo;
+import com.lframework.starter.gen.bo.data.obj.category.GenDataObjCategorySelectorBo;
 import com.lframework.starter.gen.bo.simpledb.SimpleDBSelectorBo;
 import com.lframework.starter.gen.dto.simpledb.SimpleDBDto;
+import com.lframework.starter.gen.entity.GenDataEntity;
 import com.lframework.starter.gen.entity.GenDataEntityCategory;
+import com.lframework.starter.gen.entity.GenDataEntityDetail;
+import com.lframework.starter.gen.entity.GenDataObjCategory;
 import com.lframework.starter.gen.service.IGenDataEntityCategoryService;
+import com.lframework.starter.gen.service.IGenDataEntityDetailService;
+import com.lframework.starter.gen.service.IGenDataEntityService;
+import com.lframework.starter.gen.service.IGenDataObjCategoryService;
 import com.lframework.starter.gen.service.ISimpleDBService;
+import com.lframework.starter.gen.vo.data.entity.GenDataEntityDetailSelectorVo;
+import com.lframework.starter.gen.vo.data.entity.GenDataEntitySelectorVo;
 import com.lframework.starter.gen.vo.data.entity.category.GenDataEntityCategorySelectorVo;
+import com.lframework.starter.gen.vo.data.obj.category.GenDataObjCategorySelectorVo;
 import com.lframework.starter.gen.vo.simpledb.SimpleTableSelectorVo;
 import com.lframework.starter.mybatis.resp.PageResult;
 import com.lframework.starter.mybatis.utils.PageResultUtil;
@@ -37,11 +49,20 @@ public class GenSelectorController extends DefaultBaseController {
   private IGenDataEntityCategoryService genDataEntityCategoryService;
 
   @Autowired
+  private IGenDataObjCategoryService genDataObjCategoryService;
+
+  @Autowired
   private ISimpleDBService simpleDBService;
+
+  @Autowired
+  private IGenDataEntityService genDataEntityService;
+
+  @Autowired
+  private IGenDataEntityDetailService genDataEntityDetailService;
 
   @ApiOperation("数据实体分类")
   @GetMapping("/data/entity/category")
-  public InvokeResult<PageResult<GenDataEntityCategorySelectorBo>> position(
+  public InvokeResult<PageResult<GenDataEntityCategorySelectorBo>> dataEntityCategory(
       @Valid GenDataEntityCategorySelectorVo vo) {
 
     PageResult<GenDataEntityCategory> pageResult = genDataEntityCategoryService.selector(
@@ -52,6 +73,23 @@ public class GenSelectorController extends DefaultBaseController {
     if (!CollectionUtil.isEmpty(datas)) {
       results = datas.stream().map(GenDataEntityCategorySelectorBo::new)
           .collect(Collectors.toList());
+    }
+
+    return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
+  }
+
+  @ApiOperation("数据对象分类")
+  @GetMapping("/data/obj/category")
+  public InvokeResult<PageResult<GenDataObjCategorySelectorBo>> dataObjCategory(
+      @Valid GenDataObjCategorySelectorVo vo) {
+
+    PageResult<GenDataObjCategory> pageResult = genDataObjCategoryService.selector(getPageIndex(vo),
+        getPageSize(vo), vo);
+    List<GenDataObjCategory> datas = pageResult.getDatas();
+    List<GenDataObjCategorySelectorBo> results = null;
+
+    if (!CollectionUtil.isEmpty(datas)) {
+      results = datas.stream().map(GenDataObjCategorySelectorBo::new).collect(Collectors.toList());
     }
 
     return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
@@ -69,5 +107,33 @@ public class GenSelectorController extends DefaultBaseController {
     }
 
     return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
+  }
+
+  @ApiOperation("数据实体")
+  @GetMapping("/data/entity")
+  public InvokeResult<PageResult<GenDataEntitySelectorBo>> dataEntity(
+      @Valid GenDataEntitySelectorVo vo) {
+    PageResult<GenDataEntity> pageResult = genDataEntityService.selector(getPageIndex(vo),
+        getPageSize(vo), vo);
+    List<GenDataEntity> datas = pageResult.getDatas();
+    List<GenDataEntitySelectorBo> results = null;
+    if (!CollectionUtil.isEmpty(datas)) {
+      results = datas.stream().map(GenDataEntitySelectorBo::new).collect(Collectors.toList());
+    }
+
+    return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
+  }
+
+  @ApiOperation("数据实体明细")
+  @GetMapping("/data/entity/detail")
+  public InvokeResult<List<GenDataEntityDetailSelectorBo>> dataEntityDetail(
+      @Valid GenDataEntityDetailSelectorVo vo) {
+    List<GenDataEntityDetail> datas = genDataEntityDetailService.selector(vo);
+    List<GenDataEntityDetailSelectorBo> results = null;
+    if (!CollectionUtil.isEmpty(datas)) {
+      results = datas.stream().map(GenDataEntityDetailSelectorBo::new).collect(Collectors.toList());
+    }
+
+    return InvokeResultBuilder.success(results);
   }
 }

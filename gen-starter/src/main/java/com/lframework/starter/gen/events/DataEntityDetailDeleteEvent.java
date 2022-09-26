@@ -10,6 +10,11 @@ public class DataEntityDetailDeleteEvent extends ApplicationEvent {
   private String id;
 
   /**
+   * 显示名称
+   */
+  private String name;
+
+  /**
    * Create a new {@code ApplicationEvent}.
    *
    * @param source the object on which the event initially occurred or with which the event is
@@ -28,5 +33,13 @@ public class DataEntityDetailDeleteEvent extends ApplicationEvent {
   public void setId(String id) {
 
     this.id = id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 }

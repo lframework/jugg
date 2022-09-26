@@ -1,6 +1,7 @@
 package com.lframework.starter.gen.service;
 
 import com.lframework.starter.gen.entity.GenDataEntityDetail;
+import com.lframework.starter.gen.vo.data.entity.GenDataEntityDetailSelectorVo;
 import com.lframework.starter.mybatis.service.BaseMpService;
 import java.util.List;
 
@@ -20,4 +21,12 @@ public interface IGenDataEntityDetailService extends BaseMpService<GenDataEntity
    * @param entityId
    */
   void deleteByEntityId(String entityId);
+
+  /**
+   * 选择器
+   *
+   * @param vo
+   * @return
+   */
+  List<GenDataEntityDetail> selector(GenDataEntityDetailSelectorVo vo);
 }

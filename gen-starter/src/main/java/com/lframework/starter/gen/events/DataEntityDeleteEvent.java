@@ -10,6 +10,11 @@ public class DataEntityDeleteEvent extends ApplicationEvent {
    */
   private String id;
 
+  /**
+   * 数据实体名称
+   */
+  private String name;
+
   private List<String> columnIds;
 
   /**
@@ -31,6 +36,14 @@ public class DataEntityDeleteEvent extends ApplicationEvent {
   public void setId(String id) {
 
     this.id = id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 
   public List<String> getColumnIds() {

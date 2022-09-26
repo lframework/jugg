@@ -29,12 +29,6 @@ public class GetDataEntityBo extends BaseBo<GenDataEntity> {
   private String id;
 
   /**
-   * 编号
-   */
-  @ApiModelProperty("编号")
-  private String code;
-
-  /**
    * 名称
    */
   @ApiModelProperty("名称")

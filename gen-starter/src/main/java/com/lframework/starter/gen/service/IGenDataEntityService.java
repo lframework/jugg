@@ -3,6 +3,7 @@ package com.lframework.starter.gen.service;
 import com.lframework.starter.gen.dto.data.entity.DataEntityGenerateDto;
 import com.lframework.starter.gen.entity.GenDataEntity;
 import com.lframework.starter.gen.vo.data.entity.CreateDataEntityVo;
+import com.lframework.starter.gen.vo.data.entity.GenDataEntitySelectorVo;
 import com.lframework.starter.gen.vo.data.entity.QueryDataEntityVo;
 import com.lframework.starter.gen.vo.data.entity.UpdateDataEntityGenerateVo;
 import com.lframework.starter.gen.vo.data.entity.UpdateDataEntityVo;
@@ -29,6 +30,17 @@ public interface IGenDataEntityService extends BaseMpService<GenDataEntity> {
    * @return
    */
   List<GenDataEntity> query(QueryDataEntityVo vo);
+
+  /**
+   * 选择器
+   *
+   * @param pageIndex
+   * @param pageSize
+   * @param vo
+   * @return
+   */
+  PageResult<GenDataEntity> selector(Integer pageIndex, Integer pageSize,
+      GenDataEntitySelectorVo vo);
 
   /**
    * 根据ID查询
