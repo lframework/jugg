@@ -2,6 +2,7 @@ package com.lframework.starter.gen.service;
 
 import com.lframework.starter.gen.entity.GenDataObj;
 import com.lframework.starter.gen.vo.data.obj.CreateGenDataObjVo;
+import com.lframework.starter.gen.vo.data.obj.GenDataObjSelectorVo;
 import com.lframework.starter.gen.vo.data.obj.QueryGenDataObjVo;
 import com.lframework.starter.gen.vo.data.obj.UpdateGenDataObjVo;
 import com.lframework.starter.mybatis.resp.PageResult;
@@ -27,6 +28,16 @@ public interface IGenDataObjService extends BaseMpService<GenDataObj> {
    * @return
    */
   List<GenDataObj> query(QueryGenDataObjVo vo);
+
+  /**
+   * 选择器
+   *
+   * @param pageIndex
+   * @param pageSize
+   * @param vo
+   * @return
+   */
+  PageResult<GenDataObj> selector(Integer pageIndex, Integer pageSize, GenDataObjSelectorVo vo);
 
   /**
    * 根据ID查询
@@ -78,4 +89,10 @@ public interface IGenDataObjService extends BaseMpService<GenDataObj> {
    * @param ids
    */
   void batchUnable(List<String> ids);
+
+  /**
+   * 查询所有关联了数据实体的数据对象ID
+   * @return
+   */
+  List<String> getRelaGenDataEntityIds(String entityId);
 }

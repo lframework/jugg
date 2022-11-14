@@ -1,6 +1,7 @@
 package com.lframework.starter.gen.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.lframework.starter.gen.enums.GenDataType;
 import com.lframework.starter.mybatis.entity.BaseEntity;
 import com.lframework.starter.web.dto.BaseDto;
 import lombok.Data;
@@ -45,6 +46,11 @@ public class GenDataObjQueryDetail extends BaseEntity implements BaseDto {
    * 别名
    */
   private String customAlias;
+
+  /**
+   * 数据类型
+   */
+  private GenDataType dataType;
 
   /**
    * 排序

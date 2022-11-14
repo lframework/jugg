@@ -7,5 +7,5 @@ public interface TableColumn {
    *
    * @return
    */
-  String getColumnName();
+  String getDbColumnName();
 }

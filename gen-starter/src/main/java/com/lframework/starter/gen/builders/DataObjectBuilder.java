@@ -1,22 +1,24 @@
 package com.lframework.starter.gen.builders;
 
-import com.lframework.starter.gen.components.DataEntity;
-import com.lframework.starter.gen.components.DataEntityColumn;
-import com.lframework.starter.gen.dto.gen.GenGenerateInfoDto;
+import com.lframework.common.constants.StringPool;
+import com.lframework.common.exceptions.impl.DefaultClientException;
+import com.lframework.common.utils.CollectionUtil;
+import com.lframework.starter.gen.components.data.obj.DataObjectQueryObj;
 import com.lframework.starter.gen.entity.GenDataEntity;
 import com.lframework.starter.gen.entity.GenDataEntityDetail;
-import com.lframework.starter.gen.enums.GenType;
-import com.lframework.starter.gen.service.IGenCreateColumnConfigService;
+import com.lframework.starter.gen.entity.GenDataObj;
+import com.lframework.starter.gen.entity.GenDataObjDetail;
+import com.lframework.starter.gen.entity.GenDataObjQueryDetail;
 import com.lframework.starter.gen.service.IGenDataEntityDetailService;
 import com.lframework.starter.gen.service.IGenDataEntityService;
-import com.lframework.starter.gen.service.IGenDetailColumnConfigService;
-import com.lframework.starter.gen.service.IGenQueryColumnConfigService;
-import com.lframework.starter.gen.service.IGenQueryParamsColumnConfigService;
-import com.lframework.starter.gen.service.IGenUpdateColumnConfigService;
-import com.lframework.starter.gen.service.IGenerateInfoService;
+import com.lframework.starter.gen.service.IGenDataObjDetailService;
+import com.lframework.starter.gen.service.IGenDataObjQueryDetailService;
+import com.lframework.starter.gen.service.IGenDataObjService;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -25,96 +27,122 @@ import org.springframework.stereotype.Component;
 @Component
 public class DataObjectBuilder {
 
-  @Autowired
-  private IGenDataEntityService genDataEntityService;
+    @Autowired
+    private IGenDataObjService genDataObjService;
 
-  @Autowired
-  private IGenerateInfoService generateInfoService;
+    @Autowired
+    private IGenDataObjDetailService genDataObjDetailService;
 
-  @Autowired
-  private IGenDataEntityDetailService genDataEntityDetailService;
+    @Autowired
+    private IGenDataObjQueryDetailService genDataObjQueryDetailService;
 
-  @Autowired
-  private IGenCreateColumnConfigService genCreateColumnConfigService;
+    @Autowired
+    private IGenDataEntityService genDataEntityService;
 
-  @Autowired
-  private IGenUpdateColumnConfigService genUpdateColumnConfigService;
+    @Autowired
+    private IGenDataEntityDetailService genDataEntityDetailService;
 
-  @Autowired
-  private IGenQueryColumnConfigService genQueryColumnConfigService;
+    @Cacheable(value = DataObjectQueryObj.CACHE_NAME, key = "#id", unless = "#result == null")
+    public DataObjectQueryObj buildQueryObj(String id) {
+        // 先查询配置信息
+        GenDataObj data = genDataObjService.findById(id);
 
-  @Autowired
-  private IGenQueryParamsColumnConfigService genQueryParamsColumnConfigService;
+        if (data == null) {
+            throw new DefaultClientException("数据对象不存在！");
+        }
 
-  @Autowired
-  private IGenDetailColumnConfigService genDetailColumnConfigService;
+        List<GenDataObjDetail> details = genDataObjDetailService.getByObjId(data.getId());
+        List<GenDataObjQueryDetail> queryDetails = genDataObjQueryDetailService.getByObjId(data.getId());
 
-  /**
-   * 根据数据对象ID构建
-   *
-   * @param id
-   * @return
-   */
-  public DataEntity build(String id) {
+        String mainTableId = data.getMainTableId();
+        GenDataEntity dataEntity = genDataEntityService.findById(mainTableId);
+        if (dataEntity == null) {
+            throw new DefaultClientException("数据实体不存在！");
+        }
 
-    // 根据ID查询数据对象
-    GenDataEntity dataObject = genDataEntityService.findById(id);
-    DataEntity result = new DataEntity();
-    result.setId(dataObject.getId());
-    result.setName(dataObject.getName());
-    result.setDescription(dataObject.getDescription());
+        List<GenDataEntityDetail> entityDetails = genDataEntityDetailService.getByEntityId(dataEntity.getId());
 
-    TableBuilder tableBuilder = TableBuilderFactory.getBuilder(GenType.SIMPLE_DB);
+        DataObjectQueryObj queryObj = new DataObjectQueryObj();
+        List<DataObjectQueryObj.QueryField> fields = new ArrayList<>();
 
-    result.setTable(tableBuilder.buildTable(dataObject.getId()));
-    result.setColumns(this.buildColumns(dataObject.getId(), tableBuilder));
-    result.setGenerateInfo(this.buildGenerateInfo(dataObject.getId()));
+        // 主表字段
+        if (CollectionUtil.isNotEmpty(entityDetails)) {
+            for (GenDataEntityDetail entityDetail : entityDetails) {
+                DataObjectQueryObj.QueryField field = new DataObjectQueryObj.QueryField();
+                field.setTableAlias(data.getMainTableAlias());
+                field.setColumnName(entityDetail.getDbColumnName());
+                field.setColumnAlias(data.getMainTableAlias() + "_" + entityDetail.getDbColumnName());
+                field.setDataType(entityDetail.getDataType());
 
-    return result;
-  }
+                fields.add(field);
+            }
+        }
 
-  private GenGenerateInfoDto buildGenerateInfo(String dataObjId) {
+        // 子表字段
+        if (CollectionUtil.isNotEmpty(details)) {
+            for (GenDataObjDetail detail : details) {
+                GenDataEntity subTable = genDataEntityService.findById(detail.getSubTableId());
+                List<GenDataEntityDetail> subTableDetails = genDataEntityDetailService.getByEntityId(subTable.getId());
+                for (GenDataEntityDetail subTableDetail : subTableDetails) {
+                    DataObjectQueryObj.QueryField field = new DataObjectQueryObj.QueryField();
+                    field.setTableAlias(detail.getSubTableAlias());
+                    field.setColumnName(subTableDetail.getDbColumnName());
+                    field.setColumnAlias(detail.getSubTableAlias() + "_" + subTableDetail.getDbColumnName());
+                    field.setDataType(subTableDetail.getDataType());
 
-    return generateInfoService.getByEntityId(dataObjId);
-  }
+                    fields.add(field);
+                }
+            }
+        }
 
-  private List<DataEntityColumn> buildColumns(String entityId, TableBuilder tableBuilder) {
+        // 自定义查询字段
+        if (CollectionUtil.isNotEmpty(queryDetails)) {
+            for (GenDataObjQueryDetail queryDetail : queryDetails) {
+                DataObjectQueryObj.QueryField field = new DataObjectQueryObj.QueryField();
+                field.setColumnName(queryDetail.getCustomSql());
+                field.setColumnAlias("custom_" + queryDetail.getCustomAlias());
+                field.setDataType(queryDetail.getDataType());
 
-    List<DataEntityColumn> results = new ArrayList<>();
+                fields.add(field);
+            }
+        }
 
-    List<GenDataEntityDetail> columns = genDataEntityDetailService.getByEntityId(entityId);
-    for (GenDataEntityDetail column : columns) {
-      DataEntityColumn result = new DataEntityColumn();
-      result.setId(column.getId());
-      result.setName(column.getName());
-      result.setColumnName(column.getColumnName());
-      result.setIsKey(column.getIsKey());
-      result.setDataType(column.getDataType());
-      result.setColumnOrder(column.getColumnOrder());
-      result.setDescription(column.getDescription());
-      result.setViewType(column.getViewType());
-      result.setTableColumn(tableBuilder.buildTableColumn(column.getId()));
-      result.setFixEnum(column.getFixEnum());
-      result.setEnumBack(column.getEnumBack());
-      result.setEnumFront(column.getEnumFront());
-      result.setRegularExpression(column.getRegularExpression());
-      result.setIsOrder(column.getIsOrder());
-      if (result.getIsOrder()) {
-        result.setOrderType(column.getOrderType());
-      }
 
-      result.setCreateConfig(genCreateColumnConfigService.findById(column.getId()));
-      result.setUpdateConfig(genUpdateColumnConfigService.findById(column.getId()));
-      result.setQueryConfig(genQueryColumnConfigService.findById(column.getId()));
-      result.setQueryParamsConfig(genQueryParamsColumnConfigService.findById(column.getId()));
-      result.setDetailConfig(genDetailColumnConfigService.findById(column.getId()));
-      result.setLen(column.getLen());
-      result.setDataDicId(column.getDataDicId());
-      result.setDecimals(column.getDecimals());
+        queryObj.setFields(fields);
+        queryObj.setMainTable(dataEntity.getTableName());
+        queryObj.setMainTableAlias(data.getMainTableAlias());
 
-      results.add(result);
+        // 关联字表
+        List<DataObjectQueryObj.QuerySubTable> subTables = new ArrayList<>();
+        for (GenDataObjDetail detail : details) {
+            GenDataEntity subTable= genDataEntityService.getById(detail.getSubTableId());
+
+            DataObjectQueryObj.QuerySubTable querySubTable = new DataObjectQueryObj.QuerySubTable();
+            querySubTable.setSubTable(subTable.getTableName());
+            querySubTable.setSubTableAlias(detail.getSubTableAlias());
+            querySubTable.setJoinType(detail.getRelaMode().getSql());
+
+            String[] mainTableDetailIds = detail.getMainTableDetailIds().split(StringPool.STR_SPLIT);
+            String[] subTableDetailIds = detail.getSubTableDetailIds().split(StringPool.STR_SPLIT);
+
+            querySubTable.setJoinCondition(new ArrayList<>());
+
+            for (int i = 0; i < mainTableDetailIds.length; i++) {
+                String mainTableDetailId = mainTableDetailIds[i];
+                String subTableDetailId = subTableDetailIds[i];
+
+                GenDataEntityDetail mainTableDetail = genDataEntityDetailService.getById(mainTableDetailId);
+                GenDataEntityDetail subTableDetail = genDataEntityDetailService.getById(subTableDetailId);
+
+                querySubTable.getJoinCondition().add(new AbstractMap.SimpleEntry<>(mainTableDetail.getDbColumnName(), subTableDetail.getDbColumnName()));
+            }
+
+
+
+            subTables.add(querySubTable);
+        }
+        queryObj.setSubTables(subTables);
+
+        return queryObj;
     }
-
-    return results;
-  }
 }

@@ -1,9 +1,12 @@
 package com.lframework.starter.gen.vo.data.obj;
 
+import com.lframework.starter.gen.enums.GenDataType;
+import com.lframework.starter.web.components.validation.IsEnum;
 import com.lframework.starter.web.vo.BaseVo;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
@@ -38,5 +41,13 @@ public class GenDataObjQueryDetailVo implements BaseVo, Serializable {
   @ApiModelProperty(value = "别名", required = true)
   @NotBlank(message = "别名不能为空！")
   private String customAlias;
+
+  /**
+   * 数据类型
+   */
+  @ApiModelProperty(value = "数据类型", required = true)
+  @NotNull(message = "数据类型不能为空！")
+  @IsEnum(message = "数据类型格式不正确！", enumClass = GenDataType.class)
+  private Integer dataType;
 
 }

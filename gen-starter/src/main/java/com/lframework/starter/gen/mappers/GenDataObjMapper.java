@@ -1,6 +1,7 @@
 package com.lframework.starter.gen.mappers;
 
 import com.lframework.starter.gen.entity.GenDataObj;
+import com.lframework.starter.gen.vo.data.obj.GenDataObjSelectorVo;
 import com.lframework.starter.gen.vo.data.obj.QueryGenDataObjVo;
 import com.lframework.starter.mybatis.mapper.BaseMapper;
 import java.util.List;
@@ -23,5 +24,20 @@ public interface GenDataObjMapper extends BaseMapper<GenDataObj> {
    * @return
    */
   List<GenDataObj> query(@Param("vo") QueryGenDataObjVo vo);
+
+  /**
+   * 选择器
+   *
+   * @param vo
+   * @return
+   */
+  List<GenDataObj> selector(@Param("vo") GenDataObjSelectorVo vo);
+
+  /**
+   * 查询所有关联了数据实体的数据对象ID
+   * @param entityId
+   * @return
+   */
+  List<String> getRelaGenDataEntityIds(@Param("entityId") String entityId);
 
 }

@@ -4,10 +4,8 @@ import com.lframework.common.utils.StringUtil;
 import com.lframework.starter.gen.entity.GenDataEntity;
 import com.lframework.starter.gen.entity.GenDataEntityCategory;
 import com.lframework.starter.gen.entity.GenDataEntityDetail;
-import com.lframework.starter.gen.entity.GenSimpleTable;
 import com.lframework.starter.gen.service.IGenDataEntityCategoryService;
 import com.lframework.starter.gen.service.IGenDataEntityDetailService;
-import com.lframework.starter.gen.service.ISimpleTableService;
 import com.lframework.starter.web.bo.BaseBo;
 import com.lframework.starter.web.utils.ApplicationUtil;
 import io.swagger.annotations.ApiModelProperty;
@@ -89,9 +87,7 @@ public class GetDataEntityBo extends BaseBo<GenDataEntity> {
       this.categoryName = category.getName();
     }
 
-    ISimpleTableService simpleTableService = ApplicationUtil.getBean(ISimpleTableService.class);
-    GenSimpleTable table = simpleTableService.getById(dto.getId());
-    this.tableName = table.getTableName();
+    this.tableName = dto.getTableName();
 
     IGenDataEntityDetailService genDataEntityDetailService = ApplicationUtil.getBean(
         IGenDataEntityDetailService.class);

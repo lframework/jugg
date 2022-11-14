@@ -3,6 +3,8 @@ package com.lframework.starter.gen.entity;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.lframework.starter.gen.components.Table;
+import com.lframework.starter.gen.enums.GenConvertType;
 import com.lframework.starter.gen.enums.GenStatus;
 import com.lframework.starter.mybatis.entity.BaseEntity;
 import com.lframework.starter.web.dto.BaseDto;
@@ -21,7 +23,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("gen_data_entity")
-public class GenDataEntity extends BaseEntity implements BaseDto {
+public class GenDataEntity extends BaseEntity implements BaseDto, Table {
 
   public static final String CACHE_NAME = "GenDataEntity";
 
@@ -78,4 +80,44 @@ public class GenDataEntity extends BaseEntity implements BaseDto {
    */
   @TableField(fill = FieldFill.INSERT_UPDATE)
   private LocalDateTime updateTime;
+
+  /**
+   * 数据表所属的数据库名
+   */
+  private String tableSchema;
+
+  /**
+   * 数据库表名
+   */
+  private String tableName;
+
+  /**
+   * 数据库引擎
+   */
+  private String engine;
+
+  /**
+   * 字符校验编码集
+   */
+  private String tableCollation;
+
+  /**
+   * 备注
+   */
+  private String tableComment;
+
+  /**
+   * 转换方式
+   */
+  private GenConvertType convertType;
+
+  @Override
+  public String getSchema() {
+    return this.tableSchema;
+  }
+
+  @Override
+  public String getComment() {
+    return this.tableComment;
+  }
 }

@@ -77,4 +77,9 @@ public class GenSimpleTableColumn extends BaseEntity implements BaseDto, TableCo
    * 小数位数
    */
   private Integer decimals;
+
+  @Override
+  public String getDbColumnName() {
+    return this.columnName;
+  }
 }

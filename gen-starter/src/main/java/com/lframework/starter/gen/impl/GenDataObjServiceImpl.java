@@ -8,29 +8,42 @@ import com.lframework.common.exceptions.impl.DefaultClientException;
 import com.lframework.common.utils.Assert;
 import com.lframework.common.utils.CollectionUtil;
 import com.lframework.common.utils.StringUtil;
+import com.lframework.common.utils.ThreadUtil;
+import com.lframework.starter.gen.components.data.obj.DataObjectQueryObj;
 import com.lframework.starter.gen.entity.GenDataObj;
 import com.lframework.starter.gen.entity.GenDataObjDetail;
 import com.lframework.starter.gen.entity.GenDataObjQueryDetail;
+import com.lframework.starter.gen.enums.GenDataType;
 import com.lframework.starter.gen.enums.GenRelaMode;
 import com.lframework.starter.gen.enums.GenRelaType;
+import com.lframework.starter.gen.events.DataObjDeleteEvent;
+import com.lframework.starter.gen.events.DataObjQueryDetailDeleteEvent;
 import com.lframework.starter.gen.mappers.GenDataObjMapper;
+import com.lframework.starter.gen.service.IGenCustomListService;
 import com.lframework.starter.gen.service.IGenDataObjDetailService;
 import com.lframework.starter.gen.service.IGenDataObjQueryDetailService;
 import com.lframework.starter.gen.service.IGenDataObjService;
 import com.lframework.starter.gen.vo.data.obj.CreateGenDataObjVo;
 import com.lframework.starter.gen.vo.data.obj.GenDataObjDetailVo;
 import com.lframework.starter.gen.vo.data.obj.GenDataObjQueryDetailVo;
+import com.lframework.starter.gen.vo.data.obj.GenDataObjSelectorVo;
 import com.lframework.starter.gen.vo.data.obj.QueryGenDataObjVo;
 import com.lframework.starter.gen.vo.data.obj.UpdateGenDataObjVo;
 import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.mybatis.resp.PageResult;
 import com.lframework.starter.mybatis.utils.PageHelperUtil;
 import com.lframework.starter.mybatis.utils.PageResultUtil;
+import com.lframework.starter.web.utils.ApplicationUtil;
 import com.lframework.starter.web.utils.EnumUtil;
 import com.lframework.starter.web.utils.IdUtil;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,6 +74,20 @@ public class GenDataObjServiceImpl extends
     return getBaseMapper().query(vo);
   }
 
+  @Override
+  public PageResult<GenDataObj> selector(Integer pageIndex, Integer pageSize,
+      GenDataObjSelectorVo vo) {
+    Assert.greaterThanZero(pageIndex);
+    Assert.greaterThanZero(pageSize);
+
+    PageHelperUtil.startPage(pageIndex, pageSize);
+
+    List<GenDataObj> datas = getBaseMapper().selector(vo);
+
+    return PageResultUtil.convert(new PageInfo<>(datas));
+  }
+
+  @Cacheable(value = GenDataObj.CACHE_NAME, key = "#id", unless = "#result == null")
   @Override
   public GenDataObj findById(String id) {
     return getBaseMapper().selectById(id);
@@ -115,6 +142,7 @@ public class GenDataObjServiceImpl extends
         detail.setCustomName(queryColumn.getCustomName());
         detail.setCustomSql(queryColumn.getCustomSql());
         detail.setCustomAlias(queryColumn.getCustomAlias());
+        detail.setDataType(EnumUtil.getByCode(GenDataType.class, queryColumn.getDataType()));
         detail.setOrderNo(orderNo);
 
         genDataObjQueryDetailService.save(detail);
@@ -143,6 +171,9 @@ public class GenDataObjServiceImpl extends
             StringUtil.isBlank(data.getDescription()) ? StringPool.EMPTY_STR
                 : data.getDescription()).set(GenDataObj::getAvailable, data.getAvailable());
     this.update(updateWrapper);
+
+    List<GenDataObjQueryDetail> queryDetails = genDataObjQueryDetailService.getByObjId(
+        record.getId());
 
     Wrapper<GenDataObjDetail> deleteDetailWrapper = Wrappers.lambdaQuery(GenDataObjDetail.class)
         .eq(GenDataObjDetail::getDataObjId, record.getId());
@@ -174,6 +205,7 @@ public class GenDataObjServiceImpl extends
       }
     }
 
+    List<String> newQueryDetailIds = new ArrayList<>();
     if (!CollectionUtil.isEmpty(data.getQueryColumns())) {
       orderNo = 1;
       for (GenDataObjQueryDetailVo queryColumn : data.getQueryColumns()) {
@@ -183,11 +215,30 @@ public class GenDataObjServiceImpl extends
         detail.setCustomName(queryColumn.getCustomName());
         detail.setCustomSql(queryColumn.getCustomSql());
         detail.setCustomAlias(queryColumn.getCustomAlias());
+        detail.setDataType(EnumUtil.getByCode(GenDataType.class, queryColumn.getDataType()));
         detail.setOrderNo(orderNo);
 
         genDataObjQueryDetailService.save(detail);
 
         orderNo++;
+
+        newQueryDetailIds.add(detail.getId());
+      }
+    }
+
+    List<String> deleteQueryDetailIds = queryDetails.stream().map(GenDataObjQueryDetail::getId)
+        .filter(t -> !newQueryDetailIds.contains(t)).collect(
+            Collectors.toList());
+
+    if (!CollectionUtil.isEmpty(deleteQueryDetailIds)) {
+      for (String deleteDetailId : deleteQueryDetailIds) {
+        DataObjQueryDetailDeleteEvent event = new DataObjQueryDetailDeleteEvent(this);
+        event.setId(deleteDetailId);
+        event.setName(
+            queryDetails.stream().filter(t -> t.getId().equals(deleteDetailId)).findFirst().get()
+                .getCustomName());
+
+        ApplicationUtil.publishEvent(event);
       }
     }
   }
@@ -195,12 +246,28 @@ public class GenDataObjServiceImpl extends
   @Transactional
   @Override
   public void delete(@NonNull String id) {
+    GenDataObj record = this.getById(id);
+    if (record == null) {
+      return;
+    }
+
+    List<GenDataObjDetail> details = genDataObjDetailService.getByObjId(id);
+    List<GenDataObjQueryDetail> queryDetails = genDataObjQueryDetailService.getByObjId(id);
 
     getBaseMapper().deleteById(id);
 
     genDataObjDetailService.deleteByObjId(id);
 
     genDataObjQueryDetailService.deleteByObjId(id);
+
+    DataObjDeleteEvent event = new DataObjDeleteEvent(this);
+    event.setId(id);
+    event.setName(record.getName());
+    event.setDetailIds(details.stream().map(GenDataObjDetail::getId).collect(Collectors.toList()));
+    event.setQueryDetailIds(queryDetails.stream().map(GenDataObjQueryDetail::getId).collect(
+        Collectors.toList()));
+
+    ApplicationUtil.publishEvent(event);
   }
 
   @Transactional
@@ -238,5 +305,23 @@ public class GenDataObjServiceImpl extends
     Wrapper<GenDataObj> wrapper = Wrappers.lambdaUpdate(GenDataObj.class)
         .set(GenDataObj::getAvailable, Boolean.FALSE).in(GenDataObj::getId, ids);
     getBaseMapper().update(wrapper);
+  }
+
+  @Override
+  public List<String> getRelaGenDataEntityIds(String entityId) {
+    return getBaseMapper().getRelaGenDataEntityIds(entityId);
+  }
+
+  @CacheEvict(value = {GenDataObj.CACHE_NAME, DataObjectQueryObj.CACHE_NAME}, key = "#key")
+  @Override
+  public void cleanCacheByKey(Serializable key) {
+
+    ThreadUtil.execAsync(() -> {
+      IGenCustomListService genCustomListService = ApplicationUtil.getBean(IGenCustomListService.class);
+      List<String> ids = genCustomListService.getRelaGenDataObjIds(String.valueOf(key));
+      if (CollectionUtil.isNotEmpty(ids)) {
+        genCustomListService.cleanCacheByKeys(ids);
+      }
+    });
   }
 }

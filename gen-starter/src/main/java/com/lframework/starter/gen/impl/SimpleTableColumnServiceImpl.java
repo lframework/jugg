@@ -1,7 +1,5 @@
 package com.lframework.starter.gen.impl;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.lframework.common.utils.CollectionUtil;
 import com.lframework.common.utils.StringUtil;
 import com.lframework.starter.gen.dto.simpledb.OriSimpleTableColumnDto;
@@ -16,7 +14,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SimpleTableColumnServiceImpl extends
@@ -25,30 +22,6 @@ public class SimpleTableColumnServiceImpl extends
 
   @Autowired
   private ISimpleDBService simpleDBService;
-
-  @Override
-  public List<GenSimpleTableColumn> getByTableId(String id) {
-
-    Wrapper<GenSimpleTableColumn> queryWrapper = Wrappers.lambdaQuery(GenSimpleTableColumn.class)
-        .eq(GenSimpleTableColumn::getTableId, id)
-        .orderByAsc(GenSimpleTableColumn::getOrdinalPosition);
-    return getBaseMapper().selectList(queryWrapper);
-  }
-
-  @Transactional
-  @Override
-  public void deleteByTableId(String tableId) {
-
-    Wrapper<GenSimpleTableColumn> wrapper = Wrappers.lambdaUpdate(GenSimpleTableColumn.class)
-        .eq(GenSimpleTableColumn::getTableId, tableId);
-    getBaseMapper().delete(wrapper);
-  }
-
-  @Override
-  public GenSimpleTableColumn findById(String id) {
-
-    return getBaseMapper().selectById(id);
-  }
 
   @Override
   public List<GenSimpleTableColumn> query(QuerySimpleTableColumnVo vo) {

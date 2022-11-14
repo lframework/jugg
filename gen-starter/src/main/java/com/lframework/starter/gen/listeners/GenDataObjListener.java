@@ -39,7 +39,6 @@ public class GenDataObjListener {
       if (genDataObjDetailService.count(queryDetailWrapper) > 0) {
         throw new DefaultClientException("数据实体【" + event.getName() + "】已关联数据对象，无法删除！");
       }
-
     }
   }
 

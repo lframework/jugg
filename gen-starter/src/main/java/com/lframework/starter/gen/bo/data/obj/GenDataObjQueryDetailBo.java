@@ -34,6 +34,12 @@ public class GenDataObjQueryDetailBo extends BaseBo<GenDataObjQueryDetail> {
   @ApiModelProperty("别名")
   private String customAlias;
 
+  /**
+   * 数据类型
+   */
+  @ApiModelProperty("数据类型")
+  private Integer dataType;
+
   public GenDataObjQueryDetailBo() {
 
   }
@@ -47,5 +53,10 @@ public class GenDataObjQueryDetailBo extends BaseBo<GenDataObjQueryDetail> {
   public <A> BaseBo<GenDataObjQueryDetail> convert(GenDataObjQueryDetail dto) {
 
     return super.convert(dto);
+  }
+
+  @Override
+  protected void afterInit(GenDataObjQueryDetail dto) {
+    this.dataType = dto.getDataType().getCode();
   }
 }

@@ -3,6 +3,7 @@ package com.lframework.starter.gen.controller;
 import com.lframework.common.exceptions.impl.DefaultClientException;
 import com.lframework.common.utils.CollectionUtil;
 import com.lframework.common.utils.FileUtil;
+import com.lframework.common.utils.ThreadUtil;
 import com.lframework.common.utils.ZipUtil;
 import com.lframework.starter.gen.bo.data.entity.DataEntityGenerateBo;
 import com.lframework.starter.gen.bo.data.entity.GenDataEntityDetailBo;
@@ -18,7 +19,9 @@ import com.lframework.starter.gen.entity.GenSimpleTableColumn;
 import com.lframework.starter.gen.enums.GenConvertType;
 import com.lframework.starter.gen.enums.GenViewType;
 import com.lframework.starter.gen.generate.Generator;
+import com.lframework.starter.gen.service.IGenCustomListService;
 import com.lframework.starter.gen.service.IGenDataEntityService;
+import com.lframework.starter.gen.service.IGenDataObjService;
 import com.lframework.starter.gen.service.ISimpleTableColumnService;
 import com.lframework.starter.gen.vo.data.entity.CreateDataEntityVo;
 import com.lframework.starter.gen.vo.data.entity.QueryDataEntityVo;
@@ -30,6 +33,7 @@ import com.lframework.starter.mybatis.utils.PageResultUtil;
 import com.lframework.starter.web.controller.DefaultBaseController;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
+import com.lframework.starter.web.utils.ApplicationUtil;
 import com.lframework.starter.web.utils.IdUtil;
 import com.lframework.starter.web.utils.ResponseUtil;
 import io.swagger.annotations.Api;
@@ -105,16 +109,16 @@ public class GenDataEntityController extends DefaultBaseController {
     }
     List<GenDataEntityDetail> details = datas.stream().map(t -> {
       GenDataEntityDetail detail = new GenDataEntityDetail();
-      detail.setId(t.getColumnName());
+      detail.setId(t.getDbColumnName());
       detail.setName(t.getColumnComment());
       detail.setColumnName(GenStringConverter.convertToCamelCase(GenConvertType.UNDERLINE_TO_CAMEL,
-          t.getColumnName()));
+          t.getDbColumnName()));
       detail.setIsKey(t.getIsKey());
       detail.setDataType(t.getDataType());
       detail.setColumnOrder(t.getOrdinalPosition());
       List<GenViewType> viewTypes = genViewTypeConverter.convert(t.getDataType());
       if (CollectionUtil.isEmpty(viewTypes)) {
-        throw new DefaultClientException("字段：" + t.getColumnName() + "类型暂不支持！");
+        throw new DefaultClientException("字段：" + t.getDbColumnName() + "类型暂不支持！");
       }
       detail.setViewType(viewTypes.get(0));
       detail.setFixEnum(Boolean.FALSE);
@@ -156,6 +160,8 @@ public class GenDataEntityController extends DefaultBaseController {
 
     genDataEntityService.update(vo);
 
+    this.evictRelaCache(vo.getId());
+
     return InvokeResultBuilder.success();
   }
 
@@ -165,6 +171,8 @@ public class GenDataEntityController extends DefaultBaseController {
   public InvokeResult<Void> delete(@NotBlank(message = "ID不能为空！") String id) {
 
     genDataEntityService.delete(id);
+
+    this.evictRelaCache(id);
 
     return InvokeResultBuilder.success();
   }
@@ -176,6 +184,10 @@ public class GenDataEntityController extends DefaultBaseController {
 
     genDataEntityService.batchDelete(ids);
 
+    for (String id : ids) {
+      this.evictRelaCache(id);
+    }
+
     return InvokeResultBuilder.success();
   }
 
@@ -186,6 +198,10 @@ public class GenDataEntityController extends DefaultBaseController {
 
     genDataEntityService.batchEnable(ids);
 
+    for (String id : ids) {
+      this.evictRelaCache(id);
+    }
+
     return InvokeResultBuilder.success();
   }
 
@@ -195,6 +211,10 @@ public class GenDataEntityController extends DefaultBaseController {
       @ApiParam(value = "ID", required = true) @RequestBody @NotEmpty(message = "ID不能为空！") List<String> ids) {
 
     genDataEntityService.batchUnable(ids);
+
+    for (String id : ids) {
+      this.evictRelaCache(id);
+    }
 
     return InvokeResultBuilder.success();
   }
@@ -262,6 +282,26 @@ public class GenDataEntityController extends DefaultBaseController {
   @PutMapping("/sync/table")
   public InvokeResult<Void> syncTable(@NotNull(message = "ID不能为空！") String id) {
     genDataEntityService.syncTable(id);
+
+    this.evictRelaCache(id);
+
     return InvokeResultBuilder.success();
+  }
+
+  // 失效关联数据的缓存
+  private void evictRelaCache(String entityId) {
+    ThreadUtil.execAsync(() -> {
+      IGenDataObjService genDataObjService = ApplicationUtil.getBean(IGenDataObjService.class);
+      List<String> ids = genDataObjService.getRelaGenDataEntityIds(entityId);
+      if (CollectionUtil.isNotEmpty(ids)) {
+        genDataObjService.cleanCacheByKeys(ids);
+      }
+
+      IGenCustomListService genCustomListService = ApplicationUtil.getBean(IGenCustomListService.class);
+      ids = genCustomListService.getRelaGenDataEntityIds(entityId);
+      if (CollectionUtil.isNotEmpty(ids)) {
+        genCustomListService.cleanCacheByKeys(ids);
+      }
+    });
   }
 }

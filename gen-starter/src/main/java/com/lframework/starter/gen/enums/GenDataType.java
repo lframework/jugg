@@ -2,22 +2,29 @@ package com.lframework.starter.gen.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.lframework.starter.web.enums.BaseEnum;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public enum GenDataType implements BaseEnum<Integer> {
 
-  STRING(0, "String"), INTEGER(1, "Integer"), SHORT(2, "Short"), LONG(3, "Long"), DOUBLE(4,
-      "Double"), LOCAL_DATE(5, "LocalDate"), LOCAL_DATE_TIME(6, "LocalDateTime"), LOCAL_TIME(7,
-      "LocalTime"), BOOLEAN(8, "Boolean"), BIG_DECIMAL(9, "BigDecimal"),
+  STRING(0, String.class, "String"), INTEGER(1, Integer.class, "Integer"), SHORT(2, Short.class, "Short"), LONG(3, Long.class, "Long"), DOUBLE(4,
+      Double.class, "Double"), LOCAL_DATE(5, LocalDate.class, "LocalDate"), LOCAL_DATE_TIME(6, LocalDateTime.class, "LocalDateTime"), LOCAL_TIME(7,
+          LocalTime.class, "LocalTime"), BOOLEAN(8, Boolean.class, "Boolean"), BIG_DECIMAL(9, BigDecimal.class, "BigDecimal"),
   ;
 
   @EnumValue
   private final Integer code;
 
+  private final Class<?> clazz;
+
   private final String desc;
 
-  GenDataType(Integer code, String desc) {
+  GenDataType(Integer code, Class<?> clazz, String desc) {
 
     this.code = code;
+    this.clazz = clazz;
     this.desc = desc;
   }
 
@@ -61,5 +68,9 @@ public enum GenDataType implements BaseEnum<Integer> {
   public String getDesc() {
 
     return this.desc;
+  }
+
+  public Class<?> getClazz() {
+    return clazz;
   }
 }

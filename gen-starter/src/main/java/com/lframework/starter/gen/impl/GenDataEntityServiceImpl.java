@@ -19,10 +19,8 @@ import com.lframework.starter.gen.dto.gen.GenQueryColumnConfigDto;
 import com.lframework.starter.gen.dto.gen.GenQueryParamsColumnConfigDto;
 import com.lframework.starter.gen.dto.gen.GenUpdateColumnConfigDto;
 import com.lframework.starter.gen.dto.simpledb.OriSimpleTableDto;
-import com.lframework.starter.gen.dto.simpledb.SimpleTableDto;
 import com.lframework.starter.gen.entity.GenDataEntity;
 import com.lframework.starter.gen.entity.GenDataEntityDetail;
-import com.lframework.starter.gen.entity.GenSimpleTable;
 import com.lframework.starter.gen.entity.GenSimpleTableColumn;
 import com.lframework.starter.gen.enums.GenConvertType;
 import com.lframework.starter.gen.enums.GenDataType;
@@ -43,8 +41,6 @@ import com.lframework.starter.gen.service.IGenQueryParamsColumnConfigService;
 import com.lframework.starter.gen.service.IGenUpdateColumnConfigService;
 import com.lframework.starter.gen.service.IGenerateInfoService;
 import com.lframework.starter.gen.service.ISimpleDBService;
-import com.lframework.starter.gen.service.ISimpleTableColumnService;
-import com.lframework.starter.gen.service.ISimpleTableService;
 import com.lframework.starter.gen.vo.data.entity.CreateDataEntityVo;
 import com.lframework.starter.gen.vo.data.entity.GenDataEntityDetailVo;
 import com.lframework.starter.gen.vo.data.entity.GenDataEntitySelectorVo;
@@ -70,12 +66,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class GenDataEntityServiceImpl extends
     BaseMpServiceImpl<GenDataEntityMapper, GenDataEntity> implements IGenDataEntityService {
-
-  @Autowired
-  private ISimpleTableService simpleTableService;
-
-  @Autowired
-  private ISimpleTableColumnService simpleTableColumnService;
 
   @Autowired
   private IGenerateInfoService generateInfoService;
@@ -153,30 +143,26 @@ public class GenDataEntityServiceImpl extends
     record.setDescription(
         StringUtil.isBlank(data.getDescription()) ? StringPool.EMPTY_STR : data.getDescription());
 
-    this.save(record);
+
 
     OriSimpleTableDto table = simpleDBService.getByTableName(data.getTableName());
     if (ObjectUtil.isNull(table)) {
       throw new DefaultClientException("数据表【" + data.getTableName() + "】不存在！");
     }
 
-    table.setId(record.getId());
+    record.setTableSchema(table.getTableSchema());
+    record.setTableName(table.getTableName());
+    record.setEngine(table.getEngine());
+    record.setTableCollation(table.getTableCollation());
+    record.setTableComment(table.getTableComment());
+    record.setConvertType(GenConvertType.UNDERLINE_TO_CAMEL);
 
-    GenSimpleTable simpleTable = new GenSimpleTable();
-    simpleTable.setId(table.getId());
-    simpleTable.setTableSchema(table.getTableSchema());
-    simpleTable.setTableName(table.getTableName());
-    simpleTable.setEngine(table.getEngine());
-    simpleTable.setTableCollation(table.getTableCollation());
-    simpleTable.setTableComment(table.getTableComment());
-    simpleTable.setConvertType(GenConvertType.UNDERLINE_TO_CAMEL);
-
-    simpleTableService.save(simpleTable);
+    this.save(record);
 
     int orderNo = 1;
     for (GenDataEntityDetailVo column : data.getColumns()) {
       GenSimpleTableColumn columnDto = table.getColumns().stream()
-          .filter(t -> t.getColumnName().equals(column.getId())).findFirst().orElse(null);
+          .filter(t -> t.getDbColumnName().equals(column.getId())).findFirst().orElse(null);
       if (columnDto == null) {
         throw new DefaultClientException("字段【" + column.getId() + "】不存在！");
       }
@@ -188,13 +174,6 @@ public class GenDataEntityServiceImpl extends
 
       genDataEntityDetailService.save(detail);
 
-      // 真实列信息
-      GenSimpleTableColumn simpleTableColumn = this.buildSimpleColumn(columnDto);
-      simpleTableColumn.setId(detail.getId());
-      simpleTableColumn.setTableId(table.getId());
-
-      simpleTableColumnService.save(simpleTableColumn);
-
       orderNo++;
     }
 
@@ -205,15 +184,15 @@ public class GenDataEntityServiceImpl extends
     updateGenerateInfoVo.setModuleName(StringPool.EMPTY_STR);
     updateGenerateInfoVo.setBizName(
         GenStringConverter.convertToNormalLowerCase(GenConvertType.UNDERLINE_TO_CAMEL,
-            simpleTable.getTableName()));
+                record.getTableName()));
     // 强制转驼峰并且首字母大写
     String className = GenStringConverter.convertToCamelCase(GenConvertType.UNDERLINE_TO_CAMEL,
-        simpleTable.getTableName());
+            record.getTableName());
     updateGenerateInfoVo.setClassName(
         className.substring(0, 1).toUpperCase() + className.substring(1));
     updateGenerateInfoVo.setClassDescription(
-        StringUtil.isEmpty(simpleTable.getTableComment()) ? StringPool.EMPTY_STR
-            : simpleTable.getTableComment());
+        StringUtil.isEmpty(record.getTableComment()) ? StringPool.EMPTY_STR
+            : record.getTableComment());
     updateGenerateInfoVo.setKeyType(GenKeyType.SNOW_FLAKE.getCode());
     updateGenerateInfoVo.setMenuCode(StringPool.EMPTY_STR);
     updateGenerateInfoVo.setMenuName(StringPool.EMPTY_STR);
@@ -241,23 +220,40 @@ public class GenDataEntityServiceImpl extends
             StringUtil.isBlank(vo.getDescription()) ? StringPool.EMPTY_STR : vo.getDescription());
     this.update(updateWrapper);
 
-    Wrapper<GenDataEntityDetail> deleteDetailWrapper = Wrappers.lambdaQuery(
-        GenDataEntityDetail.class).eq(GenDataEntityDetail::getEntityId, vo.getId());
-    genDataEntityDetailService.remove(deleteDetailWrapper);
-
-    List<GenSimpleTableColumn> columnDtos = simpleTableColumnService.getByTableId(record.getId());
+    List<GenDataEntityDetail> columnDtos = genDataEntityDetailService.getByEntityId(record.getId());
 
     int orderNo = 1;
     for (GenDataEntityDetailVo column : vo.getColumns()) {
-      GenSimpleTableColumn columnDto = columnDtos.stream()
+      GenDataEntityDetail detail = columnDtos.stream()
           .filter(t -> t.getId().equals(column.getId())).findFirst().orElse(null);
+      detail.setName(column.getName());
 
-      GenDataEntityDetail detail = this.buildDetail(column, columnDto);
-      detail.setId(column.getId());
-      detail.setEntityId(record.getId());
+      detail.setDataType(EnumUtil.getByCode(GenDataType.class, column.getDataType()));
+      detail.setDescription(column.getDescription());
+      detail.setViewType(EnumUtil.getByCode(GenViewType.class, column.getViewType()));
+      detail.setFixEnum(column.getFixEnum());
+      detail.setEnumBack(column.getEnumBack());
+      detail.setEnumFront(column.getEnumFront());
+      detail.setRegularExpression(column.getRegularExpression());
+      detail.setIsOrder(column.getIsOrder());
+      detail.setOrderType(EnumUtil.getByCode(GenOrderType.class, column.getOrderType()));
+      detail.setLen(column.getLen());
+      detail.setDecimals(column.getDecimals());
+      if (!StringUtil.isBlank(column.getDataDicId())) {
+        detail.setDataDicId(column.getDataDicId());
+      }
+
+      if (!genViewTypeConverter.canConvert(detail.getViewType(), detail.getDataType())) {
+        List<GenViewType> viewTypes = genViewTypeConverter.convert(detail.getDataType());
+        throw new DefaultClientException(
+                "字段【" + detail.getName() + "】数据类型和显示类型不匹配，当前数据类型为【" + detail.getDataType().getDesc()
+                        + "】，" + (!CollectionUtil.isEmpty(viewTypes) ? "显示类型只能为【" + CollectionUtil.join(
+                        genViewTypeConverter.convert(detail.getDataType()).stream().map(GenViewType::getDesc)
+                                .collect(Collectors.toList()), StringPool.STR_SPLIT_CN) + "】" : "暂不支持显示此数据类型"));
+      }
       detail.setColumnOrder(orderNo);
 
-      genDataEntityDetailService.save(detail);
+      genDataEntityDetailService.updateById(detail);
 
       orderNo++;
     }
@@ -383,11 +379,11 @@ public class GenDataEntityServiceImpl extends
   @Override
   public void syncTable(String id) {
     // 查询simpleTable
-    SimpleTableDto table = simpleTableService.getByEntityId(id);
+    GenDataEntity table = this.getById(id);
     if (table == null) {
       throw new DefaultClientException("数据表不存在！");
     }
-    List<GenSimpleTableColumn> columns = table.getColumns();
+    List<GenDataEntityDetail> columns = genDataEntityDetailService.getByEntityId(table.getId());
 
     // 最新的数据库结构
     OriSimpleTableDto oriTable = simpleDBService.getByTableName(table.getTableName());
@@ -395,34 +391,34 @@ public class GenDataEntityServiceImpl extends
 
     // 1、列是否匹配
     // db中是否有新增列
-    List<GenSimpleTableColumn> finalColumns = columns;
+    List<GenDataEntityDetail> finalColumns = columns;
     List<GenSimpleTableColumn> newDbColumns = oriColumns.stream().filter(
-            t -> finalColumns.stream().noneMatch(c -> c.getColumnName().equals(t.getColumnName())))
+            t -> finalColumns.stream().noneMatch(c -> c.getDbColumnName().equals(t.getDbColumnName())))
         .collect(Collectors.toList());
     // 类型发生变化的列
     List<GenSimpleTableColumn> changeTypeColumns = oriColumns.stream().filter(
             t -> finalColumns.stream().anyMatch(
-                c -> c.getColumnName().equals(t.getColumnName()) && c.getDataType() != t.getDataType()))
+                c -> c.getDbColumnName().equals(t.getDbColumnName()) && c.getDbDataType() != t.getDataType()))
         .collect(Collectors.toList());
     if (!CollectionUtil.isEmpty(changeTypeColumns)) {
       newDbColumns.addAll(changeTypeColumns);
     }
 
     // db中是否有删除列
-    List<GenSimpleTableColumn> deleteDbColumns = columns.stream().filter(
-            t -> oriColumns.stream().noneMatch(c -> c.getColumnName().equals(t.getColumnName()))
+    List<GenDataEntityDetail> deleteDbColumns = columns.stream().filter(
+            t -> oriColumns.stream().noneMatch(c -> c.getDbColumnName().equals(t.getDbColumnName()))
                 || changeTypeColumns.stream()
-                .anyMatch(c2 -> c2.getColumnName().equals(t.getColumnName())))
+                .anyMatch(c2 -> c2.getDbColumnName().equals(t.getDbColumnName())))
         .collect(Collectors.toList());
 
     // 先删除、后新增
     if (!CollectionUtil.isEmpty(deleteDbColumns)) {
-      for (GenSimpleTableColumn deleteDbColumn : deleteDbColumns) {
+      for (GenDataEntityDetail deleteDbColumn : deleteDbColumns) {
         genDataEntityDetailService.removeById(deleteDbColumn.getId());
         // 发布删除事件
         DataEntityDetailDeleteEvent event = new DataEntityDetailDeleteEvent(this);
         event.setId(deleteDbColumn.getId());
-        event.setName(deleteDbColumn.getColumnName());
+        event.setName(deleteDbColumn.getDbColumnName());
         ApplicationUtil.publishEvent(event);
       }
     }
@@ -438,13 +434,13 @@ public class GenDataEntityServiceImpl extends
       orderNo++;
     }
 
-    table = simpleTableService.getByEntityId(id);
-    columns = table.getColumns();
+    table = this.getById(id);
+    columns = details;
 
     orderNo = 1;
-    for (GenSimpleTableColumn column : columns) {
+    for (GenDataEntityDetail column : columns) {
       column.setOrdinalPosition(orderNo);
-      simpleTableColumnService.updateById(column);
+      genDataEntityDetailService.updateById(column);
       orderNo++;
     }
 
@@ -456,13 +452,6 @@ public class GenDataEntityServiceImpl extends
         detail.setEntityId(table.getId());
         genDataEntityDetailService.save(detail);
 
-        // 真实列信息
-        GenSimpleTableColumn simpleTableColumn = this.buildSimpleColumn(columnDto);
-        simpleTableColumn.setId(detail.getId());
-        simpleTableColumn.setTableId(table.getId());
-
-        simpleTableColumnService.save(simpleTableColumn);
-
         orderNo++;
       }
     }
@@ -470,28 +459,42 @@ public class GenDataEntityServiceImpl extends
 
   private GenDataEntityDetail buildDetail(GenSimpleTableColumn columnDto) {
     GenDataEntityDetail detail = new GenDataEntityDetail();
+
+
     detail.setName(columnDto.getColumnComment());
     detail.setColumnName(GenStringConverter.convertToCamelCase(GenConvertType.UNDERLINE_TO_CAMEL,
-        columnDto.getColumnName()));
+        columnDto.getDbColumnName()));
     detail.setIsKey(columnDto.getIsKey());
     detail.setDataType(columnDto.getDataType());
     List<GenViewType> viewTypes = genViewTypeConverter.convert(detail.getDataType());
     if (CollectionUtil.isEmpty(viewTypes)) {
-      throw new DefaultClientException("字段：" + columnDto.getColumnName() + "类型暂不支持！");
+      throw new DefaultClientException("字段：" + columnDto.getDbColumnName() + "类型暂不支持！");
     }
     detail.setViewType(viewTypes.get(0));
     detail.setFixEnum(Boolean.FALSE);
     detail.setIsOrder(Boolean.FALSE);
+
+    detail.setDbColumnName(columnDto.getDbColumnName());
+    detail.setDbDataType(columnDto.getDataType());
+    detail.setIsNullable(columnDto.getIsNullable());
+    detail.setIsKey(columnDto.getIsKey());
+    detail.setColumnDefault(columnDto.getColumnDefault());
+    detail.setOrdinalPosition(columnDto.getOrdinalPosition());
+    detail.setColumnComment(columnDto.getColumnComment());
+    detail.setDbLen(columnDto.getLen());
+    detail.setDbDecimals(columnDto.getDecimals());
+
     return detail;
   }
 
   private GenDataEntityDetail buildDetail(GenDataEntityDetailVo column,
       GenSimpleTableColumn columnDto) {
     GenDataEntityDetail detail = new GenDataEntityDetail();
-    detail.setName(column.getName());
     detail.setColumnName(GenStringConverter.convertToCamelCase(GenConvertType.UNDERLINE_TO_CAMEL,
-        columnDto.getColumnName()));
+        columnDto.getDbColumnName()));
     detail.setIsKey(columnDto.getIsKey());
+
+    detail.setName(column.getName());
     detail.setDataType(EnumUtil.getByCode(GenDataType.class, column.getDataType()));
     detail.setDescription(column.getDescription());
     detail.setViewType(EnumUtil.getByCode(GenViewType.class, column.getViewType()));
@@ -506,6 +509,14 @@ public class GenDataEntityServiceImpl extends
     if (!StringUtil.isBlank(column.getDataDicId())) {
       detail.setDataDicId(column.getDataDicId());
     }
+    detail.setDbColumnName(columnDto.getDbColumnName());
+    detail.setDbDataType(columnDto.getDataType());
+    detail.setIsNullable(columnDto.getIsNullable());
+    detail.setColumnDefault(columnDto.getColumnDefault());
+    detail.setOrdinalPosition(columnDto.getOrdinalPosition());
+    detail.setColumnComment(columnDto.getColumnComment());
+    detail.setDbLen(columnDto.getLen());
+    detail.setDbDecimals(columnDto.getDecimals());
 
     if (!genViewTypeConverter.canConvert(detail.getViewType(), detail.getDataType())) {
       List<GenViewType> viewTypes = genViewTypeConverter.convert(detail.getDataType());
@@ -517,20 +528,5 @@ public class GenDataEntityServiceImpl extends
     }
 
     return detail;
-  }
-
-  private GenSimpleTableColumn buildSimpleColumn(GenSimpleTableColumn columnDto) {
-    GenSimpleTableColumn simpleTableColumn = new GenSimpleTableColumn();
-    simpleTableColumn.setColumnName(columnDto.getColumnName());
-    simpleTableColumn.setDataType(columnDto.getDataType());
-    simpleTableColumn.setIsNullable(columnDto.getIsNullable());
-    simpleTableColumn.setIsKey(columnDto.getIsKey());
-    simpleTableColumn.setColumnDefault(columnDto.getColumnDefault());
-    simpleTableColumn.setOrdinalPosition(columnDto.getOrdinalPosition());
-    simpleTableColumn.setColumnComment(columnDto.getColumnComment());
-    simpleTableColumn.setLen(columnDto.getLen());
-    simpleTableColumn.setDecimals(columnDto.getDecimals());
-
-    return simpleTableColumn;
   }
 }

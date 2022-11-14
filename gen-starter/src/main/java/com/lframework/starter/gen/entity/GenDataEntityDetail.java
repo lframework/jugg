@@ -1,6 +1,7 @@
 package com.lframework.starter.gen.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.lframework.starter.gen.components.TableColumn;
 import com.lframework.starter.gen.enums.GenDataType;
 import com.lframework.starter.gen.enums.GenOrderType;
 import com.lframework.starter.gen.enums.GenViewType;
@@ -20,7 +21,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("gen_data_entity_detail")
-public class GenDataEntityDetail extends BaseEntity implements BaseDto {
+public class GenDataEntityDetail extends BaseEntity implements BaseDto, TableColumn {
 
   /**
    * ID
@@ -111,4 +112,44 @@ public class GenDataEntityDetail extends BaseEntity implements BaseDto {
    * 小数位数
    */
   private Integer decimals;
+
+  /**
+   * 字段名称
+   */
+  private String dbColumnName;
+
+  /**
+   * 字段数据类型
+   */
+  private GenDataType dbDataType;
+
+  /**
+   * 是否允许为空
+   */
+  private Boolean isNullable;
+
+  /**
+   * 默认值
+   */
+  private String columnDefault;
+
+  /**
+   * 字段排序
+   */
+  private Integer ordinalPosition;
+
+  /**
+   * 字段备注
+   */
+  private String columnComment;
+
+  /**
+   * 长度
+   */
+  private Long dbLen;
+
+  /**
+   * 小数位数
+   */
+  private Integer dbDecimals;
 }

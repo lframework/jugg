@@ -1,24 +1,32 @@
 package com.lframework.starter.gen.controller;
 
 import com.lframework.common.utils.CollectionUtil;
+import com.lframework.starter.gen.bo.custom.list.category.GenCustomListCategorySelectorBo;
 import com.lframework.starter.gen.bo.data.entity.GenDataEntityDetailSelectorBo;
 import com.lframework.starter.gen.bo.data.entity.GenDataEntitySelectorBo;
 import com.lframework.starter.gen.bo.data.entity.category.GenDataEntityCategorySelectorBo;
+import com.lframework.starter.gen.bo.data.obj.GenDataObjSelectorBo;
 import com.lframework.starter.gen.bo.data.obj.category.GenDataObjCategorySelectorBo;
 import com.lframework.starter.gen.bo.simpledb.SimpleDBSelectorBo;
 import com.lframework.starter.gen.dto.simpledb.SimpleDBDto;
+import com.lframework.starter.gen.entity.GenCustomListCategory;
 import com.lframework.starter.gen.entity.GenDataEntity;
 import com.lframework.starter.gen.entity.GenDataEntityCategory;
 import com.lframework.starter.gen.entity.GenDataEntityDetail;
+import com.lframework.starter.gen.entity.GenDataObj;
 import com.lframework.starter.gen.entity.GenDataObjCategory;
+import com.lframework.starter.gen.service.IGenCustomListCategoryService;
 import com.lframework.starter.gen.service.IGenDataEntityCategoryService;
 import com.lframework.starter.gen.service.IGenDataEntityDetailService;
 import com.lframework.starter.gen.service.IGenDataEntityService;
 import com.lframework.starter.gen.service.IGenDataObjCategoryService;
+import com.lframework.starter.gen.service.IGenDataObjService;
 import com.lframework.starter.gen.service.ISimpleDBService;
+import com.lframework.starter.gen.vo.custom.list.category.GenCustomListCategorySelectorVo;
 import com.lframework.starter.gen.vo.data.entity.GenDataEntityDetailSelectorVo;
 import com.lframework.starter.gen.vo.data.entity.GenDataEntitySelectorVo;
 import com.lframework.starter.gen.vo.data.entity.category.GenDataEntityCategorySelectorVo;
+import com.lframework.starter.gen.vo.data.obj.GenDataObjSelectorVo;
 import com.lframework.starter.gen.vo.data.obj.category.GenDataObjCategorySelectorVo;
 import com.lframework.starter.gen.vo.simpledb.SimpleTableSelectorVo;
 import com.lframework.starter.mybatis.resp.PageResult;
@@ -59,6 +67,12 @@ public class GenSelectorController extends DefaultBaseController {
 
   @Autowired
   private IGenDataEntityDetailService genDataEntityDetailService;
+
+  @Autowired
+  private IGenDataObjService genDataObjService;
+
+  @Autowired
+  private IGenCustomListCategoryService genCustomListCategoryService;
 
   @ApiOperation("数据实体分类")
   @GetMapping("/data/entity/category")
@@ -135,5 +149,36 @@ public class GenSelectorController extends DefaultBaseController {
     }
 
     return InvokeResultBuilder.success(results);
+  }
+
+  @ApiOperation("数据对象")
+  @GetMapping("/data/obj")
+  public InvokeResult<PageResult<GenDataObjSelectorBo>> dataEntity(@Valid GenDataObjSelectorVo vo) {
+    PageResult<GenDataObj> pageResult = genDataObjService.selector(getPageIndex(vo),
+        getPageSize(vo), vo);
+    List<GenDataObj> datas = pageResult.getDatas();
+    List<GenDataObjSelectorBo> results = null;
+    if (!CollectionUtil.isEmpty(datas)) {
+      results = datas.stream().map(GenDataObjSelectorBo::new).collect(Collectors.toList());
+    }
+
+    return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
+  }
+
+  @ApiOperation("自定义列表分类")
+  @GetMapping("/custom/list/category")
+  public InvokeResult<PageResult<GenCustomListCategorySelectorBo>> dataEntity(
+      @Valid GenCustomListCategorySelectorVo vo) {
+    PageResult<GenCustomListCategory> pageResult = genCustomListCategoryService.selector(
+        getPageIndex(vo),
+        getPageSize(vo), vo);
+    List<GenCustomListCategory> datas = pageResult.getDatas();
+    List<GenCustomListCategorySelectorBo> results = null;
+    if (!CollectionUtil.isEmpty(datas)) {
+      results = datas.stream().map(GenCustomListCategorySelectorBo::new)
+          .collect(Collectors.toList());
+    }
+
+    return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
   }
 }

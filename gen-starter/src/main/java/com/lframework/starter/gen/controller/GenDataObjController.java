@@ -1,9 +1,21 @@
 package com.lframework.starter.gen.controller;
 
+import com.lframework.common.exceptions.impl.DefaultClientException;
 import com.lframework.common.utils.CollectionUtil;
+import com.lframework.starter.gen.bo.data.obj.GenDataObjColumnBo;
+import com.lframework.starter.gen.bo.data.obj.GenDataObjColumnBo.ColumnBo;
 import com.lframework.starter.gen.bo.data.obj.GetGenDataObjBo;
 import com.lframework.starter.gen.bo.data.obj.QueryGenDataObjBo;
+import com.lframework.starter.gen.entity.GenDataEntity;
+import com.lframework.starter.gen.entity.GenDataEntityDetail;
 import com.lframework.starter.gen.entity.GenDataObj;
+import com.lframework.starter.gen.entity.GenDataObjDetail;
+import com.lframework.starter.gen.entity.GenDataObjQueryDetail;
+import com.lframework.starter.gen.enums.GenCustomListDetailType;
+import com.lframework.starter.gen.service.IGenDataEntityDetailService;
+import com.lframework.starter.gen.service.IGenDataEntityService;
+import com.lframework.starter.gen.service.IGenDataObjDetailService;
+import com.lframework.starter.gen.service.IGenDataObjQueryDetailService;
 import com.lframework.starter.gen.service.IGenDataObjService;
 import com.lframework.starter.gen.vo.data.obj.CreateGenDataObjVo;
 import com.lframework.starter.gen.vo.data.obj.QueryGenDataObjVo;
@@ -17,6 +29,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
@@ -34,7 +47,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api(tags = "数据实体")
+@Api(tags = "数据对象")
 @Slf4j
 @Validated
 @RestController
@@ -43,6 +56,18 @@ public class GenDataObjController extends DefaultBaseController {
 
   @Autowired
   private IGenDataObjService genDataObjService;
+
+  @Autowired
+  private IGenDataObjDetailService genDataObjDetailService;
+
+  @Autowired
+  private IGenDataObjQueryDetailService genDataObjQueryDetailService;
+
+  @Autowired
+  private IGenDataEntityService genDataEntityService;
+
+  @Autowired
+  private IGenDataEntityDetailService genDataEntityDetailService;
 
   @ApiOperation("查询数据对象列表")
   @GetMapping("/query")
@@ -57,6 +82,96 @@ public class GenDataObjController extends DefaultBaseController {
     }
 
     return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
+  }
+
+  @ApiOperation("查询数据对象列")
+  @ApiImplicitParam(value = "数据对象ID", name = "id", paramType = "query", required = true)
+  @GetMapping("/columns")
+  public InvokeResult<List<GenDataObjColumnBo>> queryColumns(
+      @NotBlank(message = "ID不能为空！") String id) {
+
+    GenDataObj dataObj = genDataObjService.findById(id);
+    if (dataObj == null) {
+      throw new DefaultClientException("数据对象不存在！");
+    }
+
+    List<GenDataObjDetail> dataObjDetails = genDataObjDetailService.getByObjId(dataObj.getId());
+
+    List<GenDataObjQueryDetail> dataObjQueryDetails = genDataObjQueryDetailService.getByObjId(
+        dataObj.getId());
+
+    List<GenDataObjColumnBo> results = new ArrayList<>();
+    // 先查主表
+    GenDataEntity dataEntity = genDataEntityService.findById(dataObj.getMainTableId());
+    if (dataEntity == null) {
+      throw new DefaultClientException("主表已被删除，请检查！");
+    }
+
+    List<GenDataEntityDetail> dataEntityDetails = genDataEntityDetailService.getByEntityId(
+        dataEntity.getId());
+
+    GenDataObjColumnBo mainTable = new GenDataObjColumnBo();
+    mainTable.setColumns(new ArrayList<>());
+    mainTable.setId(dataEntity.getId());
+    mainTable.setName("【主表】" + dataEntity.getName());
+    for (GenDataEntityDetail dataEntityDetail : dataEntityDetails) {
+      ColumnBo column = new ColumnBo();
+      column.setId(dataEntityDetail.getId());
+      column.setRelaId(dataObj.getId());
+      column.setName(dataEntityDetail.getName());
+      column.setType(GenCustomListDetailType.MAIN_TABLE.getCode());
+      mainTable.getColumns().add(column);
+    }
+
+    results.add(mainTable);
+
+    // 再查子表
+    if (!CollectionUtil.isEmpty(dataObjDetails)) {
+      for (GenDataObjDetail dataObjDetail : dataObjDetails) {
+        GenDataEntity subDataEntity = genDataEntityService.findById(dataObjDetail.getSubTableId());
+        if (subDataEntity == null) {
+          throw new DefaultClientException("子表已被删除，请检查！");
+        }
+
+        List<GenDataEntityDetail> subDataEntityDetails = genDataEntityDetailService.getByEntityId(
+            subDataEntity.getId());
+
+        GenDataObjColumnBo subTable = new GenDataObjColumnBo();
+        subTable.setColumns(new ArrayList<>());
+        subTable.setId(subDataEntity.getId());
+        subTable.setName("【子表】" + subDataEntity.getName());
+        for (GenDataEntityDetail dataEntityDetail : subDataEntityDetails) {
+          ColumnBo column = new ColumnBo();
+          column.setId(dataEntityDetail.getId());
+          column.setRelaId(dataObjDetail.getId());
+          column.setName(dataEntityDetail.getName());
+          column.setType(GenCustomListDetailType.SUB_TALBE.getCode());
+          subTable.getColumns().add(column);
+        }
+
+        results.add(subTable);
+      }
+    }
+
+    // 最后查附加字段
+    if (!CollectionUtil.isEmpty(dataObjQueryDetails)) {
+      GenDataObjColumnBo customQuery = new GenDataObjColumnBo();
+      customQuery.setColumns(new ArrayList<>());
+      customQuery.setId("customQuery");
+      customQuery.setName("自定义查询");
+      for (GenDataObjQueryDetail genDataObjDetail : dataObjQueryDetails) {
+        ColumnBo column = new ColumnBo();
+        column.setId(genDataObjDetail.getId());
+        column.setRelaId(genDataObjDetail.getId());
+        column.setName(genDataObjDetail.getCustomName());
+        column.setType(GenCustomListDetailType.CUSTOM.getCode());
+        customQuery.getColumns().add(column);
+      }
+
+      results.add(customQuery);
+    }
+
+    return InvokeResultBuilder.success(results);
   }
 
   @ApiOperation("根据ID查询")
@@ -84,6 +199,8 @@ public class GenDataObjController extends DefaultBaseController {
 
     genDataObjService.update(vo);
 
+    genDataObjService.cleanCacheByKey(vo.getId());
+
     return InvokeResultBuilder.success();
   }
 
@@ -93,6 +210,8 @@ public class GenDataObjController extends DefaultBaseController {
   public InvokeResult<Void> delete(@NotBlank(message = "ID不能为空！") String id) {
 
     genDataObjService.delete(id);
+
+    genDataObjService.cleanCacheByKey(id);
 
     return InvokeResultBuilder.success();
   }
@@ -104,6 +223,8 @@ public class GenDataObjController extends DefaultBaseController {
 
     genDataObjService.batchDelete(ids);
 
+    genDataObjService.cleanCacheByKeys(ids);
+
     return InvokeResultBuilder.success();
   }
 
@@ -114,6 +235,8 @@ public class GenDataObjController extends DefaultBaseController {
 
     genDataObjService.batchEnable(ids);
 
+    genDataObjService.cleanCacheByKeys(ids);
+
     return InvokeResultBuilder.success();
   }
 
@@ -123,6 +246,8 @@ public class GenDataObjController extends DefaultBaseController {
       @ApiParam(value = "ID", required = true) @RequestBody @NotEmpty(message = "ID不能为空！") List<String> ids) {
 
     genDataObjService.batchUnable(ids);
+
+    genDataObjService.cleanCacheByKeys(ids);
 
     return InvokeResultBuilder.success();
   }

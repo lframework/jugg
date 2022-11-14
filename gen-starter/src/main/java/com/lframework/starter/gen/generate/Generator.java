@@ -8,7 +8,7 @@ import com.lframework.common.constants.StringPool;
 import com.lframework.common.exceptions.impl.DefaultSysException;
 import com.lframework.common.utils.CollectionUtil;
 import com.lframework.common.utils.StringUtil;
-import com.lframework.starter.gen.builders.DataObjectBuilder;
+import com.lframework.starter.gen.builders.DataEntityBuilder;
 import com.lframework.starter.gen.components.DataEntity;
 import com.lframework.starter.gen.components.DataEntityColumn;
 import com.lframework.starter.gen.directives.FormatDirective;
@@ -85,7 +85,7 @@ public class Generator {
 
   public static Generator getInstance(String entityId) {
 
-    DataObjectBuilder builder = ApplicationUtil.getBean(DataObjectBuilder.class);
+    DataEntityBuilder builder = ApplicationUtil.getBean(DataEntityBuilder.class);
     Generator generator = new Generator();
 
     generator.setDataEntity(builder.build(entityId));
@@ -574,7 +574,7 @@ public class Generator {
       }
       columnObj.setName(column.getColumnName());
       // MybatisPlus默认命名规则是下划线转驼峰，所以如果不是这个规则的话，需要单独指定TableField和TableId
-      columnObj.setColumnName(column.getTableColumn().getColumnName());
+      columnObj.setColumnName(column.getTableColumn().getDbColumnName());
       columnObj.setDefaultConvertType(
           dataEntity.getTable().getConvertType() == GenConvertType.UNDERLINE_TO_CAMEL);
       if (!columnObj.getDefaultConvertType()) {
@@ -630,7 +630,7 @@ public class Generator {
         // 主键不允许是枚举，所以直接取desc
         key.setDataType(column.getDataType().getDesc());
         key.setName(column.getColumnName());
-        key.setColumnName(column.getTableColumn().getColumnName());
+        key.setColumnName(column.getTableColumn().getDbColumnName());
         // 以下类型需要单独引包
         if (column.getDataType() == GenDataType.LOCAL_DATE) {
           importPackages.add(LocalDate.class.getName());
@@ -652,7 +652,7 @@ public class Generator {
         continue;
       }
       MapperTemplate.OrderColumn orderColumn = new MapperTemplate.OrderColumn();
-      orderColumn.setColumnName(column.getTableColumn().getColumnName());
+      orderColumn.setColumnName(column.getTableColumn().getDbColumnName());
       orderColumn.setOrderType(column.getOrderType().getCode());
       orderColumns.add(orderColumn);
     }
@@ -698,7 +698,7 @@ public class Generator {
         key.setNameProperty(
             column.getColumnName().substring(0, 1).toUpperCase() + column.getColumnName()
                 .substring(1));
-        key.setColumnName(column.getTableColumn().getColumnName());
+        key.setColumnName(column.getTableColumn().getDbColumnName());
         // 以下类型需要单独引包
         if (column.getDataType() == GenDataType.LOCAL_DATE) {
           importPackages.add(LocalDate.class.getName());
@@ -781,7 +781,7 @@ public class Generator {
         importPackages.add(BigDecimal.class.getName());
       }
       columnObj.setName(column.getColumnName());
-      columnObj.setColumnName(column.getTableColumn().getColumnName());
+      columnObj.setColumnName(column.getTableColumn().getDbColumnName());
       columnObj.setQueryType(column.getQueryParamsConfig().getQueryType().getCode());
       columnObj.setNameProperty(
           column.getColumnName().substring(0, 1).toUpperCase() + column.getColumnName()
@@ -902,7 +902,7 @@ public class Generator {
         }
       }
       columnObj.setName(column.getColumnName());
-      columnObj.setColumnName(column.getTableColumn().getColumnName());
+      columnObj.setColumnName(column.getTableColumn().getDbColumnName());
       columnObj.setNameProperty(
           column.getColumnName().substring(0, 1).toUpperCase() + column.getColumnName()
               .substring(1));
@@ -949,7 +949,7 @@ public class Generator {
       key.setName(t.getColumnName());
       key.setNameProperty(
           t.getColumnName().substring(0, 1).toUpperCase() + t.getColumnName().substring(1));
-      key.setColumnName(t.getTableColumn().getColumnName());
+      key.setColumnName(t.getTableColumn().getDbColumnName());
       key.setDescription(t.getName());
 
       return key;
@@ -1043,7 +1043,7 @@ public class Generator {
         }
       }
       columnObj.setName(column.getColumnName());
-      columnObj.setColumnName(column.getTableColumn().getColumnName());
+      columnObj.setColumnName(column.getTableColumn().getDbColumnName());
       columnObj.setNameProperty(
           column.getColumnName().substring(0, 1).toUpperCase() + column.getColumnName()
               .substring(1));
@@ -1091,7 +1091,7 @@ public class Generator {
       key.setName(t.getColumnName());
       key.setNameProperty(
           t.getColumnName().substring(0, 1).toUpperCase() + t.getColumnName().substring(1));
-      key.setColumnName(t.getTableColumn().getColumnName());
+      key.setColumnName(t.getTableColumn().getDbColumnName());
       key.setDescription(t.getName());
       if (t.getDataType() == GenDataType.STRING) {
         // 如果是String，则引@NotBlank注解

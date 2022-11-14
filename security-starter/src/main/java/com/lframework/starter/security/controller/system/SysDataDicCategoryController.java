@@ -14,6 +14,7 @@ import com.lframework.starter.web.resp.InvokeResultBuilder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -103,7 +104,7 @@ public class SysDataDicCategoryController extends DefaultBaseController {
 
     sysDataDicCategoryService.update(vo);
 
-    sysDataDicCategoryService.cleanCacheByKeys("all", vo.getId());
+    sysDataDicCategoryService.cleanCacheByKeys(Arrays.asList("all", vo.getId()));
 
     return InvokeResultBuilder.success();
   }
@@ -115,7 +116,7 @@ public class SysDataDicCategoryController extends DefaultBaseController {
 
     sysDataDicCategoryService.deleteById(id);
 
-    sysDataDicCategoryService.cleanCacheByKeys("all", id);
+    sysDataDicCategoryService.cleanCacheByKeys(Arrays.asList("all", id));
 
     return InvokeResultBuilder.success();
   }

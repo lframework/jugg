@@ -14,6 +14,7 @@ import com.lframework.starter.web.resp.InvokeResultBuilder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -98,7 +99,7 @@ public class GenDataEntityCategoryController extends DefaultBaseController {
 
     genDataEntityCategoryService.update(vo);
 
-    genDataEntityCategoryService.cleanCacheByKeys("all", vo.getId());
+    genDataEntityCategoryService.cleanCacheByKeys(Arrays.asList("all", vo.getId()));
 
     return InvokeResultBuilder.success();
   }
@@ -109,7 +110,7 @@ public class GenDataEntityCategoryController extends DefaultBaseController {
 
     genDataEntityCategoryService.deleteById(id);
 
-    genDataEntityCategoryService.cleanCacheByKeys("all", id);
+    genDataEntityCategoryService.cleanCacheByKeys(Arrays.asList("all", id));
 
     return InvokeResultBuilder.success();
   }
