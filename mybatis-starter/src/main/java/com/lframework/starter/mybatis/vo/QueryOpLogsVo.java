@@ -29,7 +29,7 @@ public class QueryOpLogsVo extends PageVo {
    * 创建人ID
    */
   @ApiModelProperty("创建人ID")
-  private String createBy;
+  private String createById;
 
   /**
    * 日志类别

@@ -3,10 +3,7 @@ package com.lframework.starter.security.bo.system.position;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lframework.common.constants.StringPool;
 import com.lframework.starter.mybatis.dto.system.position.DefaultSysPositionDto;
-import com.lframework.starter.mybatis.service.IUserService;
 import com.lframework.starter.web.bo.BaseBo;
-import com.lframework.starter.web.dto.UserDto;
-import com.lframework.starter.web.utils.ApplicationUtil;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDateTime;
 import lombok.Data;
@@ -83,12 +80,5 @@ public class QuerySysPositionBo extends BaseBo<DefaultSysPositionDto> {
 
   @Override
   protected void afterInit(DefaultSysPositionDto dto) {
-
-    IUserService userService = ApplicationUtil.getBean(IUserService.class);
-
-    UserDto createBy = userService.findById(this.getCreateBy());
-    UserDto updateBy = userService.findById(this.getUpdateBy());
-    this.setCreateBy(createBy.getName());
-    this.setUpdateBy(updateBy.getName());
   }
 }

@@ -3,10 +3,7 @@ package com.lframework.starter.security.bo.system.notice;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lframework.common.constants.StringPool;
 import com.lframework.starter.mybatis.entity.SysNotice;
-import com.lframework.starter.mybatis.service.IUserService;
 import com.lframework.starter.web.bo.BaseBo;
-import com.lframework.starter.web.dto.UserDto;
-import com.lframework.starter.web.utils.ApplicationUtil;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDateTime;
 import lombok.Data;
@@ -90,8 +87,5 @@ public class QuerySysNoticeBo extends BaseBo<SysNotice> {
 
   @Override
   protected void afterInit(SysNotice dto) {
-    IUserService userService = ApplicationUtil.getBean(IUserService.class);
-    UserDto createBy = userService.findById(dto.getCreateBy());
-    this.createBy = createBy.getName();
   }
 }

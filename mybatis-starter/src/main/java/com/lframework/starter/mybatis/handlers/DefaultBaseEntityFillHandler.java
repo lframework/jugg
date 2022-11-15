@@ -23,19 +23,30 @@ public class DefaultBaseEntityFillHandler implements MetaObjectHandler {
   @Value("${default-setting.default-user-id:'1'}")
   private String defaultUserId;
 
+  @Value("${default-setting.default-user-name:'系统管理员'}")
+  private String defaultUserName;
+
   @Override
   public void insertFill(MetaObject metaObject) {
 
     AbstractUserDetails user = SecurityUtil.getCurrentUser();
     if (ObjectUtil.isNotNull(user)) {
       this.strictInsertFill(metaObject, MyBatisStringPool.COLUMN_CREATE_BY, String.class,
-          user.getId());
+          user.getName());
       this.strictInsertFill(metaObject, MyBatisStringPool.COLUMN_UPDATE_BY, String.class,
+          user.getName());
+      this.strictInsertFill(metaObject, MyBatisStringPool.COLUMN_CREATE_BY_ID, String.class,
+          user.getId());
+      this.strictInsertFill(metaObject, MyBatisStringPool.COLUMN_UPDATE_BY_ID, String.class,
           user.getId());
     } else {
       this.strictInsertFill(metaObject, MyBatisStringPool.COLUMN_CREATE_BY, String.class,
-          defaultUserId);
+          defaultUserName);
       this.strictInsertFill(metaObject, MyBatisStringPool.COLUMN_UPDATE_BY, String.class,
+          defaultUserName);
+      this.strictInsertFill(metaObject, MyBatisStringPool.COLUMN_CREATE_BY_ID, String.class,
+          defaultUserId);
+      this.strictInsertFill(metaObject, MyBatisStringPool.COLUMN_UPDATE_BY_ID, String.class,
           defaultUserId);
     }
 
@@ -51,9 +62,13 @@ public class DefaultBaseEntityFillHandler implements MetaObjectHandler {
     AbstractUserDetails user = SecurityUtil.getCurrentUser();
     if (ObjectUtil.isNotNull(user)) {
       this.strictUpdateFill(metaObject, MyBatisStringPool.COLUMN_UPDATE_BY, String.class,
+          user.getName());
+      this.strictUpdateFill(metaObject, MyBatisStringPool.COLUMN_UPDATE_BY_ID, String.class,
           user.getId());
     } else {
       this.strictUpdateFill(metaObject, MyBatisStringPool.COLUMN_UPDATE_BY, String.class,
+          defaultUserName);
+      this.strictUpdateFill(metaObject, MyBatisStringPool.COLUMN_UPDATE_BY_ID, String.class,
           defaultUserId);
     }
 
@@ -65,6 +80,7 @@ public class DefaultBaseEntityFillHandler implements MetaObjectHandler {
   public MetaObjectHandler strictFillStrategy(MetaObject metaObject, String fieldName,
       Supplier<?> fieldVal) {
     if (MyBatisStringPool.COLUMN_UPDATE_BY.equals(fieldName)
+        || MyBatisStringPool.COLUMN_UPDATE_BY_ID.equals(fieldName)
         || MyBatisStringPool.COLUMN_UPDATE_TIME.equals(fieldName)) {
       Object obj = fieldVal.get();
       if (Objects.nonNull(obj)) {

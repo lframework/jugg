@@ -16,7 +16,8 @@ public class LogoutListener implements ApplicationListener<LogoutEvent> {
     CreateOpLogsVo vo = new CreateOpLogsVo();
     vo.setName("退出登录");
     vo.setLogType(OpLogType.AUTH.getCode());
-    vo.setCreateBy(event.getUser().getId());
+    vo.setCreateBy(event.getUser().getName());
+    vo.setCreateById(event.getUser().getId());
     vo.setIp(event.getUser().getIp());
 
     OpLogUtil.addLog(vo);

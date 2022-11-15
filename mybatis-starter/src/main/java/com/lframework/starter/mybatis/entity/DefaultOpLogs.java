@@ -52,6 +52,12 @@ public class DefaultOpLogs extends BaseEntity implements BaseDto {
    * 创建人ID 新增时赋值
    */
   @TableField(fill = FieldFill.INSERT)
+  private String createById;
+
+  /**
+   * 创建人 新增时赋值
+   */
+  @TableField(fill = FieldFill.INSERT)
   private String createBy;
 
   /**

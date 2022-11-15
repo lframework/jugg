@@ -61,6 +61,12 @@ public class GenDataEntity extends BaseEntity implements BaseDto, Table {
    * 创建人ID 新增时赋值
    */
   @TableField(fill = FieldFill.INSERT)
+  private String createById;
+
+  /**
+   * 创建人 新增时赋值
+   */
+  @TableField(fill = FieldFill.INSERT)
   private String createBy;
 
   /**
@@ -70,10 +76,16 @@ public class GenDataEntity extends BaseEntity implements BaseDto, Table {
   private LocalDateTime createTime;
 
   /**
-   * 修改人ID 新增和修改时赋值
+   * 修改人 新增和修改时赋值
    */
   @TableField(fill = FieldFill.INSERT_UPDATE)
   private String updateBy;
+
+  /**
+   * 修改人ID 新增和修改时赋值
+   */
+  @TableField(fill = FieldFill.INSERT_UPDATE)
+  private String updateById;
 
   /**
    * 修改时间 新增和修改时赋值

@@ -3,10 +3,7 @@ package com.lframework.starter.security.bo.system.role;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lframework.common.constants.StringPool;
 import com.lframework.starter.mybatis.dto.system.role.DefaultSysRoleDto;
-import com.lframework.starter.mybatis.service.IUserService;
 import com.lframework.starter.web.bo.BaseBo;
-import com.lframework.starter.web.dto.UserDto;
-import com.lframework.starter.web.utils.ApplicationUtil;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDateTime;
 import lombok.Data;
@@ -89,12 +86,5 @@ public class QuerySysRoleBo extends BaseBo<DefaultSysRoleDto> {
 
   @Override
   protected void afterInit(DefaultSysRoleDto dto) {
-
-    IUserService userService = ApplicationUtil.getBean(IUserService.class);
-
-    UserDto createBy = userService.findById(this.getCreateBy());
-    UserDto updateBy = userService.findById(this.getUpdateBy());
-    this.setCreateBy(createBy.getName());
-    this.setUpdateBy(updateBy.getName());
   }
 }

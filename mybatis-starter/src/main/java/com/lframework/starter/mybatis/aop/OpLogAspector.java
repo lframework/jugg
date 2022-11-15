@@ -151,7 +151,6 @@ public class OpLogAspector {
               CreateOpLogsVo vo = new CreateOpLogsVo();
               vo.setName(StringUtil.format(opLog.name(), strArr));
               vo.setLogType(opLog.type().getCode());
-              vo.setCreateBy(currentUser.getId());
               vo.setExtra(extra);
               vo.setIp(currentUser.getIp());
 

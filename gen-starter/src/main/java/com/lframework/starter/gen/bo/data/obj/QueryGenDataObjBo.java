@@ -6,9 +6,7 @@ import com.lframework.common.utils.StringUtil;
 import com.lframework.starter.gen.entity.GenDataObj;
 import com.lframework.starter.gen.entity.GenDataObjCategory;
 import com.lframework.starter.gen.service.IGenDataObjCategoryService;
-import com.lframework.starter.mybatis.service.IUserService;
 import com.lframework.starter.web.bo.BaseBo;
-import com.lframework.starter.web.dto.UserDto;
 import com.lframework.starter.web.utils.ApplicationUtil;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDateTime;
@@ -88,12 +86,6 @@ public class QueryGenDataObjBo extends BaseBo<GenDataObj> {
 
   @Override
   protected void afterInit(GenDataObj dto) {
-    IUserService userService = ApplicationUtil.getBean(IUserService.class);
-
-    UserDto createBy = userService.findById(dto.getCreateBy());
-    UserDto updateBy = userService.findById(dto.getUpdateBy());
-    this.setCreateBy(createBy.getName());
-    this.setUpdateBy(updateBy.getName());
 
     if (!StringUtil.isBlank(dto.getCategoryId())) {
       IGenDataObjCategoryService genDataObjCategoryService = ApplicationUtil.getBean(

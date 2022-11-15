@@ -176,7 +176,7 @@ public class DefaultUserCenterController extends DefaultBaseController {
   @GetMapping("/oplog")
   public InvokeResult<PageResult<OpLogInUserCenterBo>> oplog(@Valid QueryOpLogsVo vo) {
 
-    vo.setCreateBy(SecurityUtil.getCurrentUser().getId());
+    vo.setCreateById(SecurityUtil.getCurrentUser().getId());
 
     PageResult<DefaultOpLogsDto> pageResult = opLogsService.query(getPageIndex(vo), getPageSize(vo),
         vo);

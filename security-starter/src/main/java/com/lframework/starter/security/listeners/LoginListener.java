@@ -19,7 +19,8 @@ public class LoginListener implements ApplicationListener<LoginEvent> {
     CreateOpLogsVo vo = new CreateOpLogsVo();
     vo.setName("用户登录");
     vo.setLogType(OpLogType.AUTH.getCode());
-    vo.setCreateBy(currentUser.getId());
+    vo.setCreateBy(currentUser.getName());
+    vo.setCreateById(currentUser.getId());
     vo.setIp(currentUser.getIp());
 
     OpLogUtil.addLog(vo);

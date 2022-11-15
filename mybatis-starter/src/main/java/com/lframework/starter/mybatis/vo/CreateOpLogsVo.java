@@ -32,9 +32,14 @@ public class CreateOpLogsVo implements BaseVo, Serializable {
   private Integer logType;
 
   /**
-   * 创建人ID
+   * 创建人
    */
   private String createBy;
+
+  /**
+   * 创建人ID
+   */
+  private String createById;
 
   /**
    * IP地址

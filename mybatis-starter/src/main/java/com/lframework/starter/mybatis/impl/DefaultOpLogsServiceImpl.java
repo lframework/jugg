@@ -76,6 +76,10 @@ public class DefaultOpLogsServiceImpl extends BaseMpServiceImpl<DefaultOpLogsMap
       record.setCreateBy(vo.getCreateBy());
     }
 
+    if (!StringUtil.isBlank(vo.getCreateById())) {
+      record.setCreateById(vo.getCreateById());
+    }
+
     if (!StringUtil.isBlank(vo.getExtra())) {
       record.setExtra(vo.getExtra());
     }

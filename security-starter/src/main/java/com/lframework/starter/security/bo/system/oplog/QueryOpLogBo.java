@@ -3,10 +3,7 @@ package com.lframework.starter.security.bo.system.oplog;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lframework.common.constants.StringPool;
 import com.lframework.starter.mybatis.dto.DefaultOpLogsDto;
-import com.lframework.starter.mybatis.service.IUserService;
 import com.lframework.starter.web.bo.BaseBo;
-import com.lframework.starter.web.dto.UserDto;
-import com.lframework.starter.web.utils.ApplicationUtil;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDateTime;
 import lombok.Data;
@@ -72,9 +69,5 @@ public class QueryOpLogBo extends BaseBo<DefaultOpLogsDto> {
   protected void afterInit(DefaultOpLogsDto dto) {
 
     this.logType = dto.getLogType().getCode();
-
-    IUserService userService = ApplicationUtil.getBean(IUserService.class);
-    UserDto createBy = userService.findById(dto.getCreateBy());
-    this.createBy = createBy.getName();
   }
 }

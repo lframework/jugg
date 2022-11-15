@@ -13,6 +13,11 @@ public interface MyBatisStringPool {
   String COLUMN_CREATE_BY = "createBy";
 
   /**
+   * 创建人ID
+   */
+  String COLUMN_CREATE_BY_ID = "createById";
+
+  /**
    * 创建时间
    */
   String COLUMN_CREATE_TIME = "createTime";
@@ -21,6 +26,11 @@ public interface MyBatisStringPool {
    * 修改人
    */
   String COLUMN_UPDATE_BY = "updateBy";
+
+  /**
+   * 修改人ID
+   */
+  String COLUMN_UPDATE_BY_ID = "updateById";
 
   /**
    * 修改时间
