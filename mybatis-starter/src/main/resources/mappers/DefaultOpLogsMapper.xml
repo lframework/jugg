@@ -35,8 +35,8 @@
         <include refid="OpLogsDto_sql"/>
         <where>
             <if test="vo != null">
-                <if test="vo.createBy != null and vo.createBy != ''">
-                    AND create_by = #{vo.createBy}
+                <if test="vo.createById != null and vo.createById != ''">
+                    AND create_by_id = #{vo.createById}
                 </if>
                 <if test="vo.startTime != null">
                     AND create_time >= #{vo.startTime}
