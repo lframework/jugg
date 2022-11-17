@@ -23,6 +23,8 @@ import lombok.EqualsAndHashCode;
 @TableName("gen_data_entity_detail")
 public class GenDataEntityDetail extends BaseEntity implements BaseDto, TableColumn {
 
+  private static final long serialVersionUID = 1L;
+
   /**
    * ID
    */

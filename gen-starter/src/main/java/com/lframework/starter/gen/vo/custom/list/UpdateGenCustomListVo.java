@@ -45,6 +45,62 @@ public class UpdateGenCustomListVo implements BaseVo, Serializable {
   private Integer labelWidth;
 
   /**
+   * 是否分页
+   */
+  @ApiModelProperty(value = "是否分页", required = true)
+  @NotNull(message = "是否分页不能为空！")
+  private Boolean hasPage;
+
+  /**
+   * 是否树形列表
+   */
+  @ApiModelProperty(value = "是否树形列表", required = true)
+  @NotNull(message = "是否树形列表不能为空！")
+  private Boolean treeData;
+
+  /**
+   * ID字段
+   */
+  @ApiModelProperty("ID字段")
+  private String treeIdColumn;
+
+  /**
+   * ID字段关联ID
+   */
+  @ApiModelProperty("ID字段关联ID")
+  private String treeIdColumnRelaId;
+
+  /**
+   * 父级ID字段
+   */
+  @ApiModelProperty("父级ID字段")
+  private String treePidColumn;
+
+  /**
+   * 父级ID字段关联ID
+   */
+  @ApiModelProperty("父级ID字段关联ID")
+  private String treePidColumnRelaId;
+
+  /**
+   * 树形节点字段
+   */
+  @ApiModelProperty("树形节点字段")
+  private String treeNodeColumn;
+
+  /**
+   * 树形节点字段关联ID
+   */
+  @ApiModelProperty("树形节点字段关联ID")
+  private String treeNodeColumnRelaId;
+
+  /**
+   * 子节点Key值
+   */
+  @ApiModelProperty("子节点Key值")
+  private String treeChildrenKey;
+
+  /**
    * 默认值
    */
   @ApiModelProperty("默认值")

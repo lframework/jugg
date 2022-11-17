@@ -120,6 +120,8 @@ public class GenDataObjController extends DefaultBaseController {
       column.setRelaId(dataObj.getId());
       column.setName(dataEntityDetail.getName());
       column.setType(GenCustomListDetailType.MAIN_TABLE.getCode());
+      column.setDataType(dataEntityDetail.getDataType().getCode());
+      column.setViewType(dataEntityDetail.getViewType().getCode());
       mainTable.getColumns().add(column);
     }
 
@@ -146,6 +148,8 @@ public class GenDataObjController extends DefaultBaseController {
           column.setRelaId(dataObjDetail.getId());
           column.setName(dataEntityDetail.getName());
           column.setType(GenCustomListDetailType.SUB_TALBE.getCode());
+          column.setDataType(dataEntityDetail.getDataType().getCode());
+          column.setViewType(dataEntityDetail.getViewType().getCode());
           subTable.getColumns().add(column);
         }
 
@@ -165,6 +169,7 @@ public class GenDataObjController extends DefaultBaseController {
         column.setRelaId(genDataObjDetail.getId());
         column.setName(genDataObjDetail.getCustomName());
         column.setType(GenCustomListDetailType.CUSTOM.getCode());
+        column.setDataType(genDataObjDetail.getDataType().getCode());
         customQuery.getColumns().add(column);
       }
 

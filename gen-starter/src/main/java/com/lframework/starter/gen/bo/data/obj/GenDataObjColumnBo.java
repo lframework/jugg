@@ -52,5 +52,17 @@ public class GenDataObjColumnBo implements SuperBo {
      */
     @ApiModelProperty("类型")
     private Integer type;
+
+    /**
+     * 数据类型
+     */
+    @ApiModelProperty("数据对象")
+    private Integer dataType;
+
+    /**
+     * 显示类型
+     */
+    @ApiModelProperty("显示类型")
+    private Integer viewType;
   }
 }

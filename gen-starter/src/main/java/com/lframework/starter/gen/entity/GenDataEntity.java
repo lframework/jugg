@@ -25,6 +25,8 @@ import lombok.EqualsAndHashCode;
 @TableName("gen_data_entity")
 public class GenDataEntity extends BaseEntity implements BaseDto, Table {
 
+  private static final long serialVersionUID = 1L;
+
   public static final String CACHE_NAME = "GenDataEntity";
 
   /**

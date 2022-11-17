@@ -6,11 +6,13 @@ import com.lframework.starter.gen.entity.GenCustomList;
 import com.lframework.starter.gen.entity.GenCustomListCategory;
 import com.lframework.starter.gen.entity.GenCustomListDetail;
 import com.lframework.starter.gen.entity.GenCustomListQueryParams;
+import com.lframework.starter.gen.entity.GenDataEntityDetail;
 import com.lframework.starter.gen.entity.GenDataObj;
 import com.lframework.starter.gen.enums.GenCustomListDetailType;
 import com.lframework.starter.gen.service.IGenCustomListCategoryService;
 import com.lframework.starter.gen.service.IGenCustomListDetailService;
 import com.lframework.starter.gen.service.IGenCustomListQueryParamsService;
+import com.lframework.starter.gen.service.IGenDataEntityDetailService;
 import com.lframework.starter.gen.service.IGenDataObjService;
 import com.lframework.starter.web.bo.BaseBo;
 import com.lframework.starter.web.bo.SuperBo;
@@ -18,6 +20,7 @@ import com.lframework.starter.web.utils.ApplicationUtil;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
@@ -62,7 +65,44 @@ public class GetGenCustomListBo extends BaseBo<GenCustomList> {
   /**
    * 表单Label宽度
    */
+  @ApiModelProperty("表单Label宽度")
   private Integer labelWidth;
+
+  /**
+   * 是否分页
+   */
+  @ApiModelProperty("是否分页")
+  private Boolean hasPage;
+
+  /**
+   * 是否树形列表
+   */
+  @ApiModelProperty("是否树形列表")
+  private Boolean treeData;
+
+  /**
+   * ID字段
+   */
+  @ApiModelProperty("ID字段")
+  private String treeIdColumn;
+
+  /**
+   * 父级ID字段
+   */
+  @ApiModelProperty("父级ID字段")
+  private String treePidColumn;
+
+  /**
+   * 树形节点字段
+   */
+  @ApiModelProperty("树形节点字段")
+  private String treeNodeColumn;
+
+  /**
+   * 子节点Key值
+   */
+  @ApiModelProperty("子节点Key值")
+  private String treeChildrenKey;
 
   /**
    * 备注
@@ -122,6 +162,7 @@ public class GetGenCustomListBo extends BaseBo<GenCustomList> {
       this.categoryName = category.getName();
     }
 
+    IGenDataEntityDetailService genDataEntityDetailService = ApplicationUtil.getBean(IGenDataEntityDetailService.class);
     IGenDataObjService genDataObjService = ApplicationUtil.getBean(IGenDataObjService.class);
     GenDataObj dataObj = genDataObjService.findById(dto.getDataObjId());
     this.dataObjName = dataObj.getName();
@@ -132,6 +173,7 @@ public class GetGenCustomListBo extends BaseBo<GenCustomList> {
         dto.getId());
     if (!CollectionUtil.isEmpty(queryParams)) {
       this.queryParams = queryParams.stream().map(t -> {
+        GenDataEntityDetail entityDetail = genDataEntityDetailService.getById(t.getDataEntityId());
         QueryParamsBo bo = new QueryParamsBo();
         bo.setId(t.getDataEntityId());
         bo.setRelaId(t.getRelaId());
@@ -139,6 +181,8 @@ public class GetGenCustomListBo extends BaseBo<GenCustomList> {
         bo.setFormWidth(t.getFormWidth());
         bo.setDefaultValue(t.getDefaultValue());
         bo.setType(t.getType().getCode());
+        bo.setDataType(entityDetail.getDataType().getCode());
+        bo.setViewType(entityDetail.getViewType().getCode());
 
         return bo;
       }).collect(Collectors.toList());
@@ -201,6 +245,18 @@ public class GetGenCustomListBo extends BaseBo<GenCustomList> {
      */
     @ApiModelProperty(value = "类型")
     private Integer type;
+
+    /**
+     * 数据类型
+     */
+    @ApiModelProperty("数据对象")
+    private Integer dataType;
+
+    /**
+     * 显示类型
+     */
+    @ApiModelProperty("显示类型")
+    private Integer viewType;
   }
 
   @Data

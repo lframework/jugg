@@ -22,6 +22,8 @@ import lombok.EqualsAndHashCode;
 @TableName("gen_custom_list")
 public class GenCustomList extends BaseEntity implements BaseDto {
 
+  private static final long serialVersionUID = 1L;
+
   public static final String CACHE_NAME = "GenCustomList";
 
   /**
@@ -48,6 +50,51 @@ public class GenCustomList extends BaseEntity implements BaseDto {
    * 表单Label宽度
    */
   private Integer labelWidth;
+
+  /**
+   * 是否分页
+   */
+  private Boolean hasPage;
+
+  /**
+   * 是否树形列表
+   */
+  private Boolean treeData;
+
+  /**
+   * ID字段
+   */
+  private String treeIdColumn;
+
+  /**
+   * ID字段关联ID
+   */
+  private String treeIdColumnRelaId;
+
+  /**
+   * 父级ID字段
+   */
+  private String treePidColumn;
+
+  /**
+   * 父级ID字段关联ID
+   */
+  private String treePidColumnRelaId;
+
+  /**
+   * 树形节点字段
+   */
+  private String treeNodeColumn;
+
+  /**
+   * 树形节点字段关联ID
+   */
+  private String treeNodeColumnRelaId;
+
+  /**
+   * 子节点Key值
+   */
+  private String treeChildrenKey;
 
   /**
    * 状态

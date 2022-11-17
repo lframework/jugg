@@ -99,6 +99,36 @@ public class CustomListConfig implements Serializable {
     private Integer labelWidth;
 
     /**
+     * 是否分页
+     */
+    private Boolean hasPage;
+
+    /**
+     * 是否树形列表
+     */
+    private Boolean treeData;
+
+    /**
+     * ID字段
+     */
+    private String treeIdColumn;
+
+    /**
+     * 父级ID字段
+     */
+    private String treePidColumn;
+
+    /**
+     * 树形节点字段
+     */
+    private String treeNodeColumn;
+
+    /**
+     * 子节点Key值
+     */
+    private String treeChildrenKey;
+
+    /**
      * 字段
      */
     private List<FieldConfig> fields;
