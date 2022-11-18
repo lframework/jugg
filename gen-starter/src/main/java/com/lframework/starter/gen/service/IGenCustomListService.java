@@ -2,6 +2,7 @@ package com.lframework.starter.gen.service;
 
 import com.lframework.starter.gen.entity.GenCustomList;
 import com.lframework.starter.gen.vo.custom.list.CreateGenCustomListVo;
+import com.lframework.starter.gen.vo.custom.list.GenCustomListSelectorVo;
 import com.lframework.starter.gen.vo.custom.list.QueryGenCustomListVo;
 import com.lframework.starter.gen.vo.custom.list.UpdateGenCustomListVo;
 import com.lframework.starter.mybatis.resp.PageResult;
@@ -27,6 +28,17 @@ public interface IGenCustomListService extends BaseMpService<GenCustomList> {
    * @return
    */
   List<GenCustomList> query(QueryGenCustomListVo vo);
+
+  /**
+   * 选择器
+   *
+   * @param pageIndex
+   * @param pageSize
+   * @param vo
+   * @return
+   */
+  PageResult<GenCustomList> selector(Integer pageIndex, Integer pageSize,
+      GenCustomListSelectorVo vo);
 
   /**
    * 根据ID查询

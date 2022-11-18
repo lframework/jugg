@@ -1,7 +1,10 @@
 package com.lframework.starter.security.bo.system.menu;
 
 import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.gen.entity.GenCustomList;
+import com.lframework.starter.gen.service.IGenCustomListService;
 import com.lframework.starter.mybatis.dto.system.menu.DefaultSysMenuDto;
+import com.lframework.starter.mybatis.enums.system.SysMenuComponentType;
 import com.lframework.starter.mybatis.service.system.ISysMenuService;
 import com.lframework.starter.web.bo.BaseBo;
 import com.lframework.starter.web.utils.ApplicationUtil;
@@ -46,10 +49,28 @@ public class GetSysMenuBo extends BaseBo<DefaultSysMenuDto> {
   private String icon;
 
   /**
+   * 组件类型
+   */
+  @ApiModelProperty("组件类型（前端使用）")
+  private Integer componentType;
+
+  /**
    * 组件（前端使用）
    */
   @ApiModelProperty("组件（前端使用）")
   private String component;
+
+  /**
+   * 自定义列表ID
+   */
+  @ApiModelProperty("自定义列表ID")
+  private String customListId;
+
+  /**
+   * 自定义列表名称
+   */
+  @ApiModelProperty("自定义列表名称")
+  private String customListName;
 
   /**
    * 父级ID
@@ -135,5 +156,13 @@ public class GetSysMenuBo extends BaseBo<DefaultSysMenuDto> {
       this.parentName = sysMenuService.findById(dto.getParentId()).getTitle();
     }
 
+    this.componentType = dto.getComponentType() == null ? null : dto.getComponentType().getCode();
+    if (dto.getComponentType() == SysMenuComponentType.CUSTOM_LIST) {
+      this.customListId = dto.getComponent();
+      IGenCustomListService genCustomListService = ApplicationUtil
+          .getBean(IGenCustomListService.class);
+      GenCustomList customList = genCustomListService.findById(dto.getComponent());
+      this.customListName = customList.getName();
+    }
   }
 }

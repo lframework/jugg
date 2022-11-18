@@ -1,5 +1,6 @@
 package com.lframework.starter.mybatis.dto.system.menu;
 
+import com.lframework.starter.mybatis.enums.system.SysMenuComponentType;
 import com.lframework.starter.mybatis.enums.system.SysMenuDisplay;
 import com.lframework.starter.web.dto.BaseDto;
 import java.io.Serializable;
@@ -36,6 +37,11 @@ public class DefaultSysMenuDto implements BaseDto, Serializable {
    * 图标
    */
   private String icon;
+
+  /**
+   * 组件类型（前端使用）
+   */
+  private SysMenuComponentType componentType;
 
   /**
    * 组件（前端使用）

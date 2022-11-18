@@ -43,6 +43,12 @@ public class MenuDto implements BaseDto, Serializable {
   private Integer display;
 
   /**
+   * 组件类型
+   */
+  @ApiModelProperty("组件类型")
+  private Integer componentType;
+
+  /**
    * 组件
    */
   @ApiModelProperty("组件")

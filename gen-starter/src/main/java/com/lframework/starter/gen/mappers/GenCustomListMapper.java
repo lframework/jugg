@@ -1,6 +1,7 @@
 package com.lframework.starter.gen.mappers;
 
 import com.lframework.starter.gen.entity.GenCustomList;
+import com.lframework.starter.gen.vo.custom.list.GenCustomListSelectorVo;
 import com.lframework.starter.gen.vo.custom.list.QueryGenCustomListVo;
 import com.lframework.starter.mybatis.mapper.BaseMapper;
 import java.util.List;
@@ -25,7 +26,16 @@ public interface GenCustomListMapper extends BaseMapper<GenCustomList> {
   List<GenCustomList> query(@Param("vo") QueryGenCustomListVo vo);
 
   /**
+   * 选择器
+   *
+   * @param vo
+   * @return
+   */
+  List<GenCustomList> selector(@Param("vo") GenCustomListSelectorVo vo);
+
+  /**
    * 查询所有关联了数据对象的自定义列表ID
+   *
    * @param objId
    * @return
    */
@@ -33,6 +43,7 @@ public interface GenCustomListMapper extends BaseMapper<GenCustomList> {
 
   /**
    * 查询所有关联了数据实体的自定义列表ID
+   *
    * @param entityId
    * @return
    */

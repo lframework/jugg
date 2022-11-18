@@ -189,6 +189,9 @@ public class SysMenuController extends DefaultBaseController {
       }
 
       if (sysMenuDisplay == SysMenuDisplay.FUNCTION) {
+        if (vo.getComponentType() == null) {
+          throw new InputErrorException("请选择组件类型！");
+        }
         if (StringUtil.isBlank(vo.getComponent())) {
           throw new InputErrorException("请输入组件！");
         }

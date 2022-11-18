@@ -22,6 +22,7 @@ import com.lframework.starter.gen.service.IGenCustomListService;
 import com.lframework.starter.gen.vo.custom.list.CreateGenCustomListVo;
 import com.lframework.starter.gen.vo.custom.list.GenCustomLisDetailVo;
 import com.lframework.starter.gen.vo.custom.list.GenCustomListQueryParamsVo;
+import com.lframework.starter.gen.vo.custom.list.GenCustomListSelectorVo;
 import com.lframework.starter.gen.vo.custom.list.QueryGenCustomListVo;
 import com.lframework.starter.gen.vo.custom.list.UpdateGenCustomListVo;
 import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
@@ -64,6 +65,19 @@ public class GenCustomListServiceImpl extends
   @Override
   public List<GenCustomList> query(QueryGenCustomListVo vo) {
     return getBaseMapper().query(vo);
+  }
+
+  @Override
+  public PageResult<GenCustomList> selector(Integer pageIndex, Integer pageSize,
+      GenCustomListSelectorVo vo) {
+    Assert.greaterThanZero(pageIndex);
+    Assert.greaterThanZero(pageSize);
+
+    PageHelperUtil.startPage(pageIndex, pageSize);
+
+    List<GenCustomList> datas = getBaseMapper().selector(vo);
+
+    return PageResultUtil.convert(new PageInfo<>(datas));
   }
 
   @Cacheable(value = GenCustomList.CACHE_NAME, key = "#id", unless = "#result == null")
@@ -252,9 +266,11 @@ public class GenCustomListServiceImpl extends
         .set(GenCustomList::getHasPage, record.getHasPage())
         .set(GenCustomList::getTreeData, record.getTreeData())
         .set(GenCustomList::getTreeIdColumn, record.getTreeData() ? data.getTreeIdColumn() : null)
-        .set(GenCustomList::getTreeIdColumnRelaId, record.getTreeData() ? data.getTreeIdColumnRelaId() : null)
+        .set(GenCustomList::getTreeIdColumnRelaId,
+            record.getTreeData() ? data.getTreeIdColumnRelaId() : null)
         .set(GenCustomList::getTreePidColumn, record.getTreeData() ? data.getTreePidColumn() : null)
-        .set(GenCustomList::getTreePidColumnRelaId, record.getTreeData() ? data.getTreePidColumnRelaId() : null)
+        .set(GenCustomList::getTreePidColumnRelaId,
+            record.getTreeData() ? data.getTreePidColumnRelaId() : null)
         .set(GenCustomList::getTreeNodeColumn,
             record.getTreeData() ? data.getTreeNodeColumn() : null)
         .set(GenCustomList::getTreeNodeColumnRelaId,

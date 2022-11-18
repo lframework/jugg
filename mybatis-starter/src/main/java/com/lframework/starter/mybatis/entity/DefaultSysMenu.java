@@ -3,6 +3,7 @@ package com.lframework.starter.mybatis.entity;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.lframework.starter.mybatis.enums.system.SysMenuComponentType;
 import com.lframework.starter.mybatis.enums.system.SysMenuDisplay;
 import com.lframework.starter.web.dto.BaseDto;
 import java.time.LocalDateTime;
@@ -48,6 +49,11 @@ public class DefaultSysMenu extends BaseEntity implements BaseDto {
    * 图标
    */
   private String icon;
+
+  /**
+   * 组件类型
+   */
+  private SysMenuComponentType componentType;
 
   /**
    * 组件（前端使用）

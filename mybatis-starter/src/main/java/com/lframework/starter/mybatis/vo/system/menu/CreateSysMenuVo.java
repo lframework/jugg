@@ -1,5 +1,6 @@
 package com.lframework.starter.mybatis.vo.system.menu;
 
+import com.lframework.starter.mybatis.enums.system.SysMenuComponentType;
 import com.lframework.starter.mybatis.enums.system.SysMenuDisplay;
 import com.lframework.starter.web.components.validation.IsCode;
 import com.lframework.starter.web.components.validation.IsEnum;
@@ -72,6 +73,13 @@ public class CreateSysMenuVo implements BaseVo, Serializable {
    */
   @ApiModelProperty("路由名称")
   private String name;
+
+  /**
+   * 组件类型
+   */
+  @ApiModelProperty("组件类型")
+  @IsEnum(message = "组件类型格式错误！", enumClass = SysMenuComponentType.class)
+  private Integer componentType;
 
   /**
    * 组件

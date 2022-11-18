@@ -11,6 +11,7 @@ import com.lframework.starter.mybatis.annotations.OpLog;
 import com.lframework.starter.mybatis.dto.system.menu.DefaultSysMenuDto;
 import com.lframework.starter.mybatis.entity.DefaultSysMenu;
 import com.lframework.starter.mybatis.enums.OpLogType;
+import com.lframework.starter.mybatis.enums.system.SysMenuComponentType;
 import com.lframework.starter.mybatis.enums.system.SysMenuDisplay;
 import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.mybatis.mappers.system.DefaultSysMenuMapper;
@@ -253,6 +254,8 @@ public class DefaultSysMenuServiceImpl extends
               "此菜单类型是【" + SysMenuDisplay.FUNCTION.getDesc() + "】，父级菜单不能为空！");
         }
         data.setComponent(vo.getComponent());
+        data.setComponentType(
+            EnumUtil.getByCode(SysMenuComponentType.class, vo.getComponentType()));
         data.setNoCache(vo.getNoCache());
 
         if (SecurityConstants.PERMISSION_ADMIN_NAME.equals(vo.getPermission())) {
