@@ -17,5 +17,9 @@
             <groupId>com.lframework</groupId>
             <artifactId>mybatis-starter</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.lframework</groupId>
+            <artifactId>gen-starter</artifactId>
+        </dependency>
     </dependencies>
 </project>

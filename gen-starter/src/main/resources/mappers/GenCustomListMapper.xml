@@ -65,5 +65,22 @@
         UNION SELECT id FROM gen_custom_list WHERE tree_pid_column = #{entityId}
         UNION SELECT id FROM gen_custom_list WHERE tree_node_column = #{entityId}
     </select>
+    <select id="selector" resultMap="GenCustomList">
+      <include refid="GenCustomList_sql"/>
+      <where>
+          <if test="vo != null">
+              <if test="vo.categoryId != null and vo.categoryId != ''">
+                  AND o.category_id = #{vo.categoryId}
+              </if>
+              <if test="vo.name != null and vo.name != ''">
+                  AND o.name LIKE CONCAT('%', #{vo.name}, '%')
+              </if>
+              <if test="vo.available != null">
+                  AND o.available = #{vo.available}
+              </if>
+          </if>
+      </where>
+      ORDER BY o.create_time DESC
+    </select>
 
 </mapper>
