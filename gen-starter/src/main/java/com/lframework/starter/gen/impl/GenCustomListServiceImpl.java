@@ -31,6 +31,7 @@ import com.lframework.starter.mybatis.utils.PageHelperUtil;
 import com.lframework.starter.mybatis.utils.PageResultUtil;
 import com.lframework.starter.web.utils.EnumUtil;
 import com.lframework.starter.web.utils.IdUtil;
+import com.lframework.starter.web.utils.JsonUtil;
 import java.io.Serializable;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -168,7 +169,9 @@ public class GenCustomListServiceImpl extends
         genCustomListQueryParams.setQueryType(
             EnumUtil.getByCode(GenQueryType.class, queryParam.getQueryType()));
         genCustomListQueryParams.setFormWidth(queryParam.getFormWidth());
-        genCustomListQueryParams.setDefaultValue(queryParam.getDefaultValue());
+        genCustomListQueryParams.setDefaultValue(queryParam.getDefaultValue() == null ? null
+            : queryParam.getDefaultValue() instanceof String ? queryParam.getDefaultValue()
+                .toString() : JsonUtil.toJsonString(queryParam.getDefaultValue()));
         genCustomListQueryParams.setOrderNo(orderNo);
         genCustomListQueryParams.setType(
             EnumUtil.getByCode(GenCustomListDetailType.class, queryParam.getType()));
@@ -305,7 +308,9 @@ public class GenCustomListServiceImpl extends
         genCustomListQueryParams.setQueryType(
             EnumUtil.getByCode(GenQueryType.class, queryParam.getQueryType()));
         genCustomListQueryParams.setFormWidth(queryParam.getFormWidth());
-        genCustomListQueryParams.setDefaultValue(queryParam.getDefaultValue());
+        genCustomListQueryParams.setDefaultValue(queryParam.getDefaultValue() == null ? null
+            : queryParam.getDefaultValue() instanceof String ? queryParam.getDefaultValue()
+                .toString() : JsonUtil.toJsonString(queryParam.getDefaultValue()));
         genCustomListQueryParams.setOrderNo(orderNo);
         genCustomListQueryParams.setType(
             EnumUtil.getByCode(GenCustomListDetailType.class, queryParam.getType()));

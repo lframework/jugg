@@ -135,7 +135,7 @@ public class CustomListBuilder {
         queryParam.setFixEnum(entityDetail.getFixEnum());
         queryParam.setFrontType(entityDetail.getEnumFront());
         queryParam.setDefaultValue(Convert.convert(
-            entityDetail.getViewType() == GenViewType.DATE_RANGE ? Integer.class
+            entityDetail.getViewType() == GenViewType.DATE_RANGE ? String.class
                 : entityDetail.getDataType().getClazz(),
             genCustomListQueryParams.getDefaultValue()));
         queryParam.setHasAvailableTag(

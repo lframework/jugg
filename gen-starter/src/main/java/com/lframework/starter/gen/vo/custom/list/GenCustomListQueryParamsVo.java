@@ -52,7 +52,7 @@ public class GenCustomListQueryParamsVo implements BaseVo, Serializable {
    * 默认值
    */
   @ApiModelProperty("默认值")
-  private String defaultValue;
+  private Object defaultValue;
 
   /**
    * 类型
