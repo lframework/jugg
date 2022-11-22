@@ -6,6 +6,7 @@
         <result column="name" property="name"/>
         <result column="category_id" property="categoryId"/>
         <result column="data_obj_id" property="dataObjId"/>
+        <result column="list_type" property="listType"/>
         <result column="available" property="available"/>
         <result column="description" property="description"/>
         <result column="create_by" property="createBy"/>
@@ -19,6 +20,7 @@
                o.name,
                o.category_id,
                o.data_obj_id,
+               o.list_type,
                o.available,
                o.description,
                o.create_by,
@@ -51,8 +53,8 @@
         UNION SELECT custom_list_id FROM gen_custom_list_detail WHERE rela_id IN (SELECT id FROM gen_data_obj_detail WHERE data_obj_id = #{objId})
         UNION SELECT custom_list_id FROM gen_custom_list_query_params WHERE rela_id = #{objId}
         UNION SELECT custom_list_id FROM gen_custom_list_query_params WHERE rela_id IN (SELECT id FROM gen_data_obj_detail WHERE data_obj_id = #{objId})
-        UNION SELECT id FROM gen_custom_list WHERE tree_id_column_rela_id = #{objId}
-        UNION SELECT id FROM gen_custom_list WHERE tree_id_column_rela_id IN (SELECT id FROM gen_data_obj_detail WHERE data_obj_id = #{objId})
+        UNION SELECT id FROM gen_custom_list WHERE id_column_rela_id = #{objId}
+        UNION SELECT id FROM gen_custom_list WHERE id_column_rela_id IN (SELECT id FROM gen_data_obj_detail WHERE data_obj_id = #{objId})
         UNION SELECT id FROM gen_custom_list WHERE tree_pid_column_rela_id = #{objId}
         UNION SELECT id FROM gen_custom_list WHERE tree_pid_column_rela_id IN (SELECT id FROM gen_data_obj_detail WHERE data_obj_id = #{objId})
         UNION SELECT id FROM gen_custom_list WHERE tree_node_column_rela_id = #{objId}
@@ -61,7 +63,7 @@
     <select id="getRelaGenDataEntityIds" resultType="java.lang.String">
         SELECT custom_list_id FROM gen_custom_list_detail WHERE data_entity_id IN (SELECT id FROM gen_data_entity_detail WHERE entity_id = #{entityId})
         UNION SELECT custom_list_id FROM gen_custom_list_query_params WHERE data_entity_id IN (SELECT id FROM gen_data_entity_detail WHERE entity_id = #{entityId})
-        UNION SELECT id FROM gen_custom_list WHERE tree_id_column = #{entityId}
+        UNION SELECT id FROM gen_custom_list WHERE id_column = #{entityId}
         UNION SELECT id FROM gen_custom_list WHERE tree_pid_column = #{entityId}
         UNION SELECT id FROM gen_custom_list WHERE tree_node_column = #{entityId}
     </select>

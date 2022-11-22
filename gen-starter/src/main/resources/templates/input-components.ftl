@@ -73,4 +73,6 @@
 </#if>
 <#elseif column.viewType == 7>
 <data-dic-picker code="${column.dataDicCode}" v-model="${formData}.${column.name}" />
+<#elseif column.viewType == 8>
+<custom-selector custom-selector-id="${column.customSelectorId}" v-model="${formData}.${column.name}" />
 </#if>
