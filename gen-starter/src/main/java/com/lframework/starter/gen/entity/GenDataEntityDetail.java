@@ -106,6 +106,11 @@ public class GenDataEntityDetail extends BaseEntity implements BaseDto, TableCol
   private String dataDicId;
 
   /**
+   * 自定义选择器ID
+   */
+  private String customSelectorId;
+
+  /**
    * 长度
    */
   private Long len;

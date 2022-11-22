@@ -14,6 +14,7 @@ import com.lframework.starter.gen.components.data.obj.DataObjectQueryParamObj;
 import com.lframework.starter.gen.entity.GenCustomList;
 import com.lframework.starter.gen.entity.GenCustomListDetail;
 import com.lframework.starter.gen.entity.GenCustomListQueryParams;
+import com.lframework.starter.gen.entity.GenCustomSelector;
 import com.lframework.starter.gen.entity.GenDataEntityDetail;
 import com.lframework.starter.gen.entity.GenDataObj;
 import com.lframework.starter.gen.entity.GenDataObjDetail;
@@ -25,6 +26,7 @@ import com.lframework.starter.gen.enums.GenViewType;
 import com.lframework.starter.gen.service.IGenCustomListDetailService;
 import com.lframework.starter.gen.service.IGenCustomListQueryParamsService;
 import com.lframework.starter.gen.service.IGenCustomListService;
+import com.lframework.starter.gen.service.IGenCustomSelectorService;
 import com.lframework.starter.gen.service.IGenDataEntityDetailService;
 import com.lframework.starter.gen.service.IGenDataObjDetailService;
 import com.lframework.starter.gen.service.IGenDataObjQueryDetailService;
@@ -128,6 +130,7 @@ public class CustomListBuilder {
                 ? dataObjDetail.getSubTableAlias() : dataObj.getMainTableAlias());
         queryParam.setColumnName(entityDetail.getDbColumnName());
         queryParam.setName(entityDetail.getName());
+        queryParam.setFrontShow(genCustomListQueryParams.getFrontShow());
         queryParam.setQueryType(genCustomListQueryParams.getQueryType().getCode());
         queryParam.setFormWidth(genCustomListQueryParams.getFormWidth());
         queryParam.setViewType(entityDetail.getViewType().getCode());
@@ -147,6 +150,12 @@ public class CustomListBuilder {
           ISysDataDicService sysDataDicService = ApplicationUtil.getBean(ISysDataDicService.class);
           SysDataDic dic = sysDataDicService.findById(entityDetail.getDataDicId());
           queryParam.setDataDicCode(dic.getCode());
+        } else if (entityDetail.getViewType() == GenViewType.CUSTOM_SELECTOR) {
+          IGenCustomSelectorService genCustomSelectorService = ApplicationUtil
+              .getBean(IGenCustomSelectorService.class);
+          GenCustomSelector selector = genCustomSelectorService
+              .findById(entityDetail.getCustomSelectorId());
+          queryParam.setCustomSelectorId(selector.getId());
         }
 
         queryParams.add(queryParam);
@@ -156,32 +165,37 @@ public class CustomListBuilder {
     result.setQueryParams(queryParams);
 
     ListConfig listConfig = new ListConfig();
+    listConfig.setId(data.getId());
+    listConfig.setListType(data.getListType().getCode());
     listConfig.setLabelWidth(data.getLabelWidth());
     listConfig.setHasPage(data.getHasPage());
     listConfig.setTreeData(data.getTreeData());
+    GenDataEntityDetail idColumnEntityDetail = genDataEntityDetailService
+        .getById(data.getIdColumn());
+    GenDataObj idColumnDataObj = genDataObjService.findById(data.getIdColumnRelaId());
+    GenDataObjDetail idColumnDataObjDetail = genDataObjDetailService
+        .getById(data.getIdColumnRelaId());
+
+    listConfig.setIdColumn(
+        (idColumnDataObj == null ? idColumnDataObjDetail.getSubTableAlias()
+            : idColumnDataObj.getMainTableAlias()) + "_"
+            + idColumnEntityDetail.getDbColumnName());
+
     if (data.getTreeData()) {
-        GenDataEntityDetail entityDetail = genDataEntityDetailService.getById(data.getTreeIdColumn());
-        GenDataObj dataObj = genDataObjService.findById(data.getTreeIdColumnRelaId());
-        GenDataObjDetail dataObjDetail = genDataObjDetailService
-            .getById(data.getTreeIdColumnRelaId());
+      GenDataEntityDetail entityDetail = genDataEntityDetailService
+          .getById(data.getTreePidColumn());
+      GenDataObj dataObj = genDataObjService.findById(data.getTreePidColumnRelaId());
+      GenDataObjDetail dataObjDetail = genDataObjDetailService
+          .getById(data.getTreePidColumnRelaId());
 
-        listConfig.setTreeIdColumn(
-            (dataObj == null ? dataObjDetail.getSubTableAlias() : dataObj.getMainTableAlias()) + "_"
-                + entityDetail.getDbColumnName());
+      listConfig.setTreePidColumn(
+          (dataObj == null ? dataObjDetail.getSubTableAlias() : dataObj.getMainTableAlias()) + "_"
+              + entityDetail.getDbColumnName());
 
-        entityDetail = genDataEntityDetailService.getById(data.getTreePidColumn());
-        dataObj = genDataObjService.findById(data.getTreePidColumnRelaId());
-        dataObjDetail = genDataObjDetailService
-            .getById(data.getTreePidColumnRelaId());
-
-        listConfig.setTreePidColumn(
-            (dataObj == null ? dataObjDetail.getSubTableAlias() : dataObj.getMainTableAlias()) + "_"
-                + entityDetail.getDbColumnName());
-
-        entityDetail = genDataEntityDetailService.getById(data.getTreeNodeColumn());
-        dataObj = genDataObjService.findById(data.getTreeNodeColumnRelaId());
-        dataObjDetail = genDataObjDetailService
-            .getById(data.getTreeNodeColumnRelaId());
+      entityDetail = genDataEntityDetailService.getById(data.getTreeNodeColumn());
+      dataObj = genDataObjService.findById(data.getTreeNodeColumnRelaId());
+      dataObjDetail = genDataObjDetailService
+          .getById(data.getTreeNodeColumnRelaId());
 
         listConfig.setTreeNodeColumn(
             (dataObj == null ? dataObjDetail.getSubTableAlias() : dataObj.getMainTableAlias()) + "_"

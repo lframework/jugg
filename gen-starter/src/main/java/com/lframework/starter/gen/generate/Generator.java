@@ -799,6 +799,8 @@ public class Generator {
         ISysDataDicService sysDataDicService = ApplicationUtil.getBean(ISysDataDicService.class);
         SysDataDic dic = sysDataDicService.findById(column.getDataDicId());
         columnObj.setDataDicCode(dic.getCode());
+      } else if (column.getViewType() == GenViewType.CUSTOM_SELECTOR) {
+        columnObj.setCustomSelectorId(column.getCustomSelectorId());
       }
 
       columns.add(columnObj);
@@ -921,6 +923,8 @@ public class Generator {
         ISysDataDicService sysDataDicService = ApplicationUtil.getBean(ISysDataDicService.class);
         SysDataDic dic = sysDataDicService.findById(column.getDataDicId());
         columnObj.setDataDicCode(dic.getCode());
+      } else if (column.getViewType() == GenViewType.CUSTOM_SELECTOR) {
+        columnObj.setCustomSelectorId(column.getCustomSelectorId());
       }
       columnObj.setLen(column.getLen());
       columnObj.setDecimals(column.getDecimals());
@@ -1074,6 +1078,8 @@ public class Generator {
         ISysDataDicService sysDataDicService = ApplicationUtil.getBean(ISysDataDicService.class);
         SysDataDic dic = sysDataDicService.findById(column.getDataDicId());
         columnObj.setDataDicCode(dic.getCode());
+      } else if (column.getViewType() == GenViewType.CUSTOM_SELECTOR) {
+        columnObj.setCustomSelectorId(column.getCustomSelectorId());
       }
 
       columns.add(columnObj);

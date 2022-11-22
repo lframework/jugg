@@ -1,7 +1,9 @@
 package com.lframework.starter.gen.bo.data.entity;
 
 import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.gen.entity.GenCustomSelector;
 import com.lframework.starter.gen.entity.GenDataEntityDetail;
+import com.lframework.starter.gen.service.IGenCustomSelectorService;
 import com.lframework.starter.mybatis.entity.SysDataDic;
 import com.lframework.starter.mybatis.service.system.ISysDataDicService;
 import com.lframework.starter.web.bo.BaseBo;
@@ -109,6 +111,16 @@ public class GenDataEntityDetailBo extends BaseBo<GenDataEntityDetail> {
   private String dataDicName;
 
   /**
+   * 自定义选择器ID
+   */
+  private String customSelectorId;
+
+  /**
+   * 自定义选择器名称
+   */
+  private String customSelectorName;
+
+  /**
    * 长度
    */
   @ApiModelProperty("长度")
@@ -147,6 +159,13 @@ public class GenDataEntityDetailBo extends BaseBo<GenDataEntityDetail> {
       ISysDataDicService sysDataDicService = ApplicationUtil.getBean(ISysDataDicService.class);
       SysDataDic dic = sysDataDicService.findById(dto.getDataDicId());
       this.dataDicName = dic.getName();
+    }
+
+    if (!StringUtil.isBlank(dto.getCustomSelectorId())) {
+      IGenCustomSelectorService genCustomSelectorService = ApplicationUtil
+          .getBean(IGenCustomSelectorService.class);
+      GenCustomSelector selector = genCustomSelectorService.findById(dto.getCustomSelectorId());
+      this.customSelectorName = selector.getName();
     }
   }
 }

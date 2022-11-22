@@ -43,6 +43,11 @@ public class CustomListConfig implements Serializable {
     private String name;
 
     /**
+     * 前端显示
+     */
+    private Boolean frontShow;
+
+    /**
      * 查询类型
      */
     private Integer queryType;
@@ -83,6 +88,11 @@ public class CustomListConfig implements Serializable {
     private String dataDicCode;
 
     /**
+     * 自定义选择器ID
+     */
+    private String customSelectorId;
+
+    /**
      * 默认值
      */
     private Object defaultValue;
@@ -92,6 +102,16 @@ public class CustomListConfig implements Serializable {
   public static class ListConfig implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    /**
+     * ID
+     */
+    private String id;
+
+    /**
+     * 列表类型
+     */
+    private Integer listType;
 
     /**
      * 表单宽度列表
@@ -111,7 +131,7 @@ public class CustomListConfig implements Serializable {
     /**
      * ID字段
      */
-    private String treeIdColumn;
+    private String idColumn;
 
     /**
      * 父级ID字段

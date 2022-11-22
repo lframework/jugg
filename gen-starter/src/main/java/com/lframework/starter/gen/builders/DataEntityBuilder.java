@@ -110,6 +110,7 @@ public class DataEntityBuilder {
       result.setDetailConfig(genDetailColumnConfigService.findById(column.getId()));
       result.setLen(column.getLen());
       result.setDataDicId(column.getDataDicId());
+      result.setCustomSelectorId(column.getCustomSelectorId());
       result.setDecimals(column.getDecimals());
 
       results.add(result);

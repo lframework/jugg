@@ -43,6 +43,11 @@ public class GenCustomListQueryParams extends BaseEntity {
   private String dataEntityId;
 
   /**
+   * 前端显示
+   */
+  private Boolean frontShow;
+
+  /**
    * 查询类型
    */
   private GenQueryType queryType;

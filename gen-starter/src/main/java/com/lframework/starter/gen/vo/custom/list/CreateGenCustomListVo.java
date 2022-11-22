@@ -1,5 +1,7 @@
 package com.lframework.starter.gen.vo.custom.list;
 
+import com.lframework.starter.gen.enums.GenCustomListType;
+import com.lframework.starter.web.components.validation.IsEnum;
 import com.lframework.starter.web.vo.BaseVo;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
@@ -36,6 +38,14 @@ public class CreateGenCustomListVo implements BaseVo, Serializable {
   private String description;
 
   /**
+   * 列表类型
+   */
+  @ApiModelProperty(value = "列表类型", required = true)
+  @NotNull(message = "列表类型不能为空！")
+  @IsEnum(message = "列表类型不能为空！", enumClass = GenCustomListType.class)
+  private Integer listType;
+
+  /**
    * 数据对象ID
    */
   @ApiModelProperty(value = "数据对象ID", required = true)
@@ -67,14 +77,16 @@ public class CreateGenCustomListVo implements BaseVo, Serializable {
   /**
    * ID字段
    */
-  @ApiModelProperty("ID字段")
-  private String treeIdColumn;
+  @ApiModelProperty(value = "ID字段", required = true)
+  @NotBlank(message = "ID字段不能为空！")
+  private String idColumn;
 
   /**
    * ID字段关联ID
    */
-  @ApiModelProperty("ID字段关联ID")
-  private String treeIdColumnRelaId;
+  @ApiModelProperty(value = "ID字段关联ID", required = true)
+  @NotBlank(message = "ID字段不能为空！")
+  private String idColumnRelaId;
 
   /**
    * 父级ID字段

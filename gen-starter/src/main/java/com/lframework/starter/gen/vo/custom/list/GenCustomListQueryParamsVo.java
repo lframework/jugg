@@ -32,6 +32,13 @@ public class GenCustomListQueryParamsVo implements BaseVo, Serializable {
   private String relaId;
 
   /**
+   * 前端显示
+   */
+  @ApiModelProperty(value = "前端显示", required = true)
+  @NotNull(message = "前端显示不能为空！")
+  private Boolean frontShow;
+
+  /**
    * 查询类型
    */
   @ApiModelProperty(value = "查询类型", required = true)

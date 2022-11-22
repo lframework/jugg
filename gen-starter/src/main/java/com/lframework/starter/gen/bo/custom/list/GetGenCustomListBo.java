@@ -20,7 +20,6 @@ import com.lframework.starter.web.utils.ApplicationUtil;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
@@ -57,6 +56,12 @@ public class GetGenCustomListBo extends BaseBo<GenCustomList> {
   private String dataObjId;
 
   /**
+   * 列表类型
+   */
+  @ApiModelProperty("列表类型")
+  private Integer listType;
+
+  /**
    * 数据对象名称
    */
   @ApiModelProperty("数据对象名称")
@@ -84,7 +89,7 @@ public class GetGenCustomListBo extends BaseBo<GenCustomList> {
    * ID字段
    */
   @ApiModelProperty("ID字段")
-  private String treeIdColumn;
+  private String idColumn;
 
   /**
    * 父级ID字段
@@ -162,7 +167,10 @@ public class GetGenCustomListBo extends BaseBo<GenCustomList> {
       this.categoryName = category.getName();
     }
 
-    IGenDataEntityDetailService genDataEntityDetailService = ApplicationUtil.getBean(IGenDataEntityDetailService.class);
+    this.listType = dto.getListType().getCode();
+
+    IGenDataEntityDetailService genDataEntityDetailService = ApplicationUtil
+        .getBean(IGenDataEntityDetailService.class);
     IGenDataObjService genDataObjService = ApplicationUtil.getBean(IGenDataObjService.class);
     GenDataObj dataObj = genDataObjService.findById(dto.getDataObjId());
     this.dataObjName = dataObj.getName();
@@ -177,6 +185,7 @@ public class GetGenCustomListBo extends BaseBo<GenCustomList> {
         QueryParamsBo bo = new QueryParamsBo();
         bo.setId(t.getDataEntityId());
         bo.setRelaId(t.getRelaId());
+        bo.setFrontShow(t.getFrontShow());
         bo.setQueryType(t.getQueryType().getCode());
         bo.setFormWidth(t.getFormWidth());
         bo.setDefaultValue(t.getDefaultValue());
@@ -221,6 +230,12 @@ public class GetGenCustomListBo extends BaseBo<GenCustomList> {
      */
     @ApiModelProperty(value = "关联ID")
     private String relaId;
+
+    /**
+     * 前端显示
+     */
+    @ApiModelProperty(value = "前端显示")
+    private Boolean frontShow;
 
     /**
      * 查询类型

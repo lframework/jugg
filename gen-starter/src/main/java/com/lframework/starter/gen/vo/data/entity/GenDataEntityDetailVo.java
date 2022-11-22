@@ -98,6 +98,12 @@ public class GenDataEntityDetailVo implements BaseVo, Serializable {
   private String dataDicId;
 
   /**
+   * 自定义选择器ID
+   */
+  @ApiModelProperty("自定义选择器ID")
+  private String customSelectorId;
+
+  /**
    * 长度
    */
   @ApiModelProperty("长度")

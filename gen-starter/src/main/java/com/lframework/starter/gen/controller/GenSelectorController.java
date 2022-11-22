@@ -3,6 +3,8 @@ package com.lframework.starter.gen.controller;
 import com.lframework.common.utils.CollectionUtil;
 import com.lframework.starter.gen.bo.custom.list.GenCustomListSelectorBo;
 import com.lframework.starter.gen.bo.custom.list.category.GenCustomListCategorySelectorBo;
+import com.lframework.starter.gen.bo.custom.selector.GenCustomSelectorSelectorBo;
+import com.lframework.starter.gen.bo.custom.selector.category.GenCustomSelectorCategorySelectorBo;
 import com.lframework.starter.gen.bo.data.entity.GenDataEntityDetailSelectorBo;
 import com.lframework.starter.gen.bo.data.entity.GenDataEntitySelectorBo;
 import com.lframework.starter.gen.bo.data.entity.category.GenDataEntityCategorySelectorBo;
@@ -12,6 +14,8 @@ import com.lframework.starter.gen.bo.simpledb.SimpleDBSelectorBo;
 import com.lframework.starter.gen.dto.simpledb.SimpleDBDto;
 import com.lframework.starter.gen.entity.GenCustomList;
 import com.lframework.starter.gen.entity.GenCustomListCategory;
+import com.lframework.starter.gen.entity.GenCustomSelector;
+import com.lframework.starter.gen.entity.GenCustomSelectorCategory;
 import com.lframework.starter.gen.entity.GenDataEntity;
 import com.lframework.starter.gen.entity.GenDataEntityCategory;
 import com.lframework.starter.gen.entity.GenDataEntityDetail;
@@ -19,6 +23,8 @@ import com.lframework.starter.gen.entity.GenDataObj;
 import com.lframework.starter.gen.entity.GenDataObjCategory;
 import com.lframework.starter.gen.service.IGenCustomListCategoryService;
 import com.lframework.starter.gen.service.IGenCustomListService;
+import com.lframework.starter.gen.service.IGenCustomSelectorCategoryService;
+import com.lframework.starter.gen.service.IGenCustomSelectorService;
 import com.lframework.starter.gen.service.IGenDataEntityCategoryService;
 import com.lframework.starter.gen.service.IGenDataEntityDetailService;
 import com.lframework.starter.gen.service.IGenDataEntityService;
@@ -27,6 +33,8 @@ import com.lframework.starter.gen.service.IGenDataObjService;
 import com.lframework.starter.gen.service.ISimpleDBService;
 import com.lframework.starter.gen.vo.custom.list.GenCustomListSelectorVo;
 import com.lframework.starter.gen.vo.custom.list.category.GenCustomListCategorySelectorVo;
+import com.lframework.starter.gen.vo.custom.selector.GenCustomSelectorSelectorVo;
+import com.lframework.starter.gen.vo.custom.selector.category.GenCustomSelectorCategorySelectorVo;
 import com.lframework.starter.gen.vo.data.entity.GenDataEntityDetailSelectorVo;
 import com.lframework.starter.gen.vo.data.entity.GenDataEntitySelectorVo;
 import com.lframework.starter.gen.vo.data.entity.category.GenDataEntityCategorySelectorVo;
@@ -80,6 +88,12 @@ public class GenSelectorController extends DefaultBaseController {
 
   @Autowired
   private IGenCustomListService genCustomListService;
+
+  @Autowired
+  private IGenCustomSelectorCategoryService genCustomSelectorCategoryService;
+
+  @Autowired
+  private IGenCustomSelectorService genCustomSelectorService;
 
   @ApiOperation("数据实体分类")
   @GetMapping("/data/entity/category")
@@ -199,6 +213,38 @@ public class GenSelectorController extends DefaultBaseController {
     List<GenCustomListSelectorBo> results = null;
     if (!CollectionUtil.isEmpty(datas)) {
       results = datas.stream().map(GenCustomListSelectorBo::new).collect(Collectors.toList());
+    }
+
+    return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
+  }
+
+  @ApiOperation("自定义选择器分类")
+  @GetMapping("/custom/selector/category")
+  public InvokeResult<PageResult<GenCustomSelectorCategorySelectorBo>> customListCategory(
+      @Valid GenCustomSelectorCategorySelectorVo vo) {
+    PageResult<GenCustomSelectorCategory> pageResult = genCustomSelectorCategoryService.selector(
+        getPageIndex(vo),
+        getPageSize(vo), vo);
+    List<GenCustomSelectorCategory> datas = pageResult.getDatas();
+    List<GenCustomSelectorCategorySelectorBo> results = null;
+    if (!CollectionUtil.isEmpty(datas)) {
+      results = datas.stream().map(GenCustomSelectorCategorySelectorBo::new)
+          .collect(Collectors.toList());
+    }
+
+    return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
+  }
+
+  @ApiOperation("自定义选择器")
+  @GetMapping("/custom/selector")
+  public InvokeResult<PageResult<GenCustomSelectorSelectorBo>> customList(
+      @Valid GenCustomSelectorSelectorVo vo) {
+    PageResult<GenCustomSelector> pageResult = genCustomSelectorService.selector(getPageIndex(vo),
+        getPageSize(vo), vo);
+    List<GenCustomSelector> datas = pageResult.getDatas();
+    List<GenCustomSelectorSelectorBo> results = null;
+    if (!CollectionUtil.isEmpty(datas)) {
+      results = datas.stream().map(GenCustomSelectorSelectorBo::new).collect(Collectors.toList());
     }
 
     return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));

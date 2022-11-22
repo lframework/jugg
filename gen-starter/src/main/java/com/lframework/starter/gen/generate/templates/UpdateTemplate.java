@@ -178,6 +178,11 @@ public class UpdateTemplate {
     private String dataDicCode;
 
     /**
+     * 自定义选择器ID
+     */
+    private String customSelectorId;
+
+    /**
      * 长度
      */
     private Long len;

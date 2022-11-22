@@ -3,7 +3,6 @@ package com.lframework.starter.gen.entity;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.lframework.starter.gen.enums.GenCustomListType;
 import com.lframework.starter.mybatis.entity.BaseEntity;
 import com.lframework.starter.web.dto.BaseDto;
 import java.time.LocalDateTime;
@@ -12,7 +11,7 @@ import lombok.EqualsAndHashCode;
 
 /**
  * <p>
- * 自定义列表
+ * 自定义选择器
  * </p>
  *
  * @author zmj
@@ -20,13 +19,12 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName("gen_custom_list")
-public class GenCustomList extends BaseEntity implements BaseDto {
+@TableName("gen_custom_selector")
+public class GenCustomSelector extends BaseEntity implements BaseDto {
+
+  public static final String CACHE_NAME = "GenCustomSelector";
 
   private static final long serialVersionUID = 1L;
-
-  public static final String CACHE_NAME = "GenCustomList";
-
   /**
    * ID
    */
@@ -43,29 +41,24 @@ public class GenCustomList extends BaseEntity implements BaseDto {
   private String categoryId;
 
   /**
-   * 数据对象ID
+   * 自定义列表ID
    */
-  private String dataObjId;
+  private String customListId;
 
   /**
-   * 列表类型
+   * 对话框标题
    */
-  private GenCustomListType listType;
+  private String dialogTittle;
 
   /**
-   * 表单Label宽度
+   * 对话框宽度
    */
-  private Integer labelWidth;
+  private String dialogWidth;
 
   /**
-   * 是否分页
+   * 占位符
    */
-  private Boolean hasPage;
-
-  /**
-   * 是否树形列表
-   */
-  private Boolean treeData;
+  private String placeholder;
 
   /**
    * ID字段
@@ -78,29 +71,14 @@ public class GenCustomList extends BaseEntity implements BaseDto {
   private String idColumnRelaId;
 
   /**
-   * 父级ID字段
+   * 名称字段
    */
-  private String treePidColumn;
+  private String nameColumn;
 
   /**
-   * 父级ID字段关联ID
+   * 名称字段关联ID
    */
-  private String treePidColumnRelaId;
-
-  /**
-   * 树形节点字段
-   */
-  private String treeNodeColumn;
-
-  /**
-   * 树形节点字段关联ID
-   */
-  private String treeNodeColumnRelaId;
-
-  /**
-   * 子节点Key值
-   */
-  private String treeChildrenKey;
+  private String nameColumnRelaId;
 
   /**
    * 状态
@@ -111,21 +89,6 @@ public class GenCustomList extends BaseEntity implements BaseDto {
    * 备注
    */
   private String description;
-
-  /**
-   * 查询前置SQL
-   */
-  private String queryPrefixSql;
-
-  /**
-   * 查询后置SQL
-   */
-  private String querySuffixSql;
-
-  /**
-   * 后置SQL
-   */
-  private String suffixSql;
 
   /**
    * 创建人ID 新增时赋值

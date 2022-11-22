@@ -117,5 +117,10 @@ public class QueryParamsTemplate {
      * 数据字典Code
      */
     private String dataDicCode;
+
+    /**
+     * 自定义选择器ID
+     */
+    private String customSelectorId;
   }
 }

@@ -25,6 +25,12 @@ public class GenCustomListSelectorBo extends BaseBo<GenCustomList> {
   private String name;
 
   /**
+   * 数据对象ID
+   */
+  @ApiModelProperty("数据对象ID")
+  private String dataObjId;
+
+  /**
    * 分类名称
    */
   @ApiModelProperty("分类名称")

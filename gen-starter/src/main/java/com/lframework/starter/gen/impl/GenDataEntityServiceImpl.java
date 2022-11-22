@@ -239,17 +239,25 @@ public class GenDataEntityServiceImpl extends
       detail.setOrderType(EnumUtil.getByCode(GenOrderType.class, column.getOrderType()));
       detail.setLen(column.getLen());
       detail.setDecimals(column.getDecimals());
-      if (!StringUtil.isBlank(column.getDataDicId())) {
+      detail.setDataDicId(StringPool.EMPTY_STR);
+      detail.setCustomSelectorId(StringPool.EMPTY_STR);
+      if (!StringUtil.isBlank(column.getDataDicId())
+          && detail.getViewType() == GenViewType.DATA_DIC) {
         detail.setDataDicId(column.getDataDicId());
+      }
+      if (!StringUtil.isBlank(column.getCustomSelectorId())
+          && detail.getViewType() == GenViewType.CUSTOM_SELECTOR) {
+        detail.setCustomSelectorId(column.getCustomSelectorId());
       }
 
       if (!genViewTypeConverter.canConvert(detail.getViewType(), detail.getDataType())) {
         List<GenViewType> viewTypes = genViewTypeConverter.convert(detail.getDataType());
         throw new DefaultClientException(
-                "字段【" + detail.getName() + "】数据类型和显示类型不匹配，当前数据类型为【" + detail.getDataType().getDesc()
-                        + "】，" + (!CollectionUtil.isEmpty(viewTypes) ? "显示类型只能为【" + CollectionUtil.join(
-                        genViewTypeConverter.convert(detail.getDataType()).stream().map(GenViewType::getDesc)
-                                .collect(Collectors.toList()), StringPool.STR_SPLIT_CN) + "】" : "暂不支持显示此数据类型"));
+            "字段【" + detail.getName() + "】数据类型和显示类型不匹配，当前数据类型为【" + detail.getDataType().getDesc()
+                + "】，" + (!CollectionUtil.isEmpty(viewTypes) ? "显示类型只能为【" + CollectionUtil.join(
+                genViewTypeConverter.convert(detail.getDataType()).stream()
+                    .map(GenViewType::getDesc)
+                    .collect(Collectors.toList()), StringPool.STR_SPLIT_CN) + "】" : "暂不支持显示此数据类型"));
       }
       detail.setColumnOrder(orderNo);
 
@@ -460,7 +468,6 @@ public class GenDataEntityServiceImpl extends
   private GenDataEntityDetail buildDetail(GenSimpleTableColumn columnDto) {
     GenDataEntityDetail detail = new GenDataEntityDetail();
 
-
     detail.setName(columnDto.getColumnComment());
     detail.setColumnName(GenStringConverter.convertToCamelCase(GenConvertType.UNDERLINE_TO_CAMEL,
         columnDto.getDbColumnName()));
@@ -506,8 +513,15 @@ public class GenDataEntityServiceImpl extends
     detail.setOrderType(EnumUtil.getByCode(GenOrderType.class, column.getOrderType()));
     detail.setLen(column.getLen());
     detail.setDecimals(column.getDecimals());
-    if (!StringUtil.isBlank(column.getDataDicId())) {
+    detail.setDataDicId(StringPool.EMPTY_STR);
+    detail.setCustomSelectorId(StringPool.EMPTY_STR);
+    if (!StringUtil.isBlank(column.getDataDicId())
+        && detail.getViewType() == GenViewType.DATA_DIC) {
       detail.setDataDicId(column.getDataDicId());
+    }
+    if (!StringUtil.isBlank(column.getCustomSelectorId())
+        && detail.getViewType() == GenViewType.CUSTOM_SELECTOR) {
+      detail.setCustomSelectorId(column.getCustomSelectorId());
     }
     detail.setDbColumnName(columnDto.getDbColumnName());
     detail.setDbDataType(columnDto.getDataType());

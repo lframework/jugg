@@ -4,8 +4,9 @@ import cn.hutool.core.convert.Convert;
 import com.github.pagehelper.PageInfo;
 import com.lframework.common.utils.CollectionUtil;
 import com.lframework.starter.gen.builders.CustomListBuilder;
-import com.lframework.starter.gen.builders.DataObjectBuilder;
+import com.lframework.starter.gen.builders.CustomSelectorBuilder;
 import com.lframework.starter.gen.components.custom.list.CustomListConfig;
+import com.lframework.starter.gen.components.custom.selector.CustomSelectorConfig;
 import com.lframework.starter.gen.components.data.obj.DataObjectQueryObj;
 import com.lframework.starter.gen.components.data.obj.DataObjectQueryParamObj;
 import com.lframework.starter.gen.mappers.GenMapper;
@@ -42,10 +43,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class GenController extends DefaultBaseController {
 
   @Autowired
-  private DataObjectBuilder dataObjectBuilder;
+  private CustomListBuilder customListBuilder;
 
   @Autowired
-  private CustomListBuilder customListBuilder;
+  private CustomSelectorBuilder customSelectorBuilder;
 
   @Autowired
   private GenMapper genMapper;
@@ -54,7 +55,7 @@ public class GenController extends DefaultBaseController {
   @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
   @GetMapping("/custom/list/config")
   public InvokeResult<CustomListConfig> getCustomListConfig(
-          @NotBlank(message = "ID不能为空！") String id) {
+      @NotBlank(message = "ID不能为空！") String id) {
 
     CustomListConfig config = customListBuilder.buildConfig(id);
 
@@ -63,7 +64,8 @@ public class GenController extends DefaultBaseController {
 
   @ApiOperation("查询自定义列表数据（分页）")
   @PostMapping("/custom/list/query")
-  public InvokeResult<PageResult<Map<String, Object>>> customListQueryPage(@NotBlank(message = "ID不能为空！") String id,
+  public InvokeResult<PageResult<Map<String, Object>>> customListQueryPage(
+      @NotBlank(message = "ID不能为空！") String id,
       @RequestBody DataObjectQueryParamObj vo) {
 
     DataObjectQueryObj queryObj = customListBuilder.buildQueryObj(id, vo);
@@ -86,7 +88,8 @@ public class GenController extends DefaultBaseController {
 
   @ApiOperation("查询自定义列表数据（不分页）")
   @PostMapping("/custom/list/query/list")
-  public InvokeResult<List<Map<String, Object>>> customListQueryList(@NotBlank(message = "ID不能为空！") String id,
+  public InvokeResult<List<Map<String, Object>>> customListQueryList(
+      @NotBlank(message = "ID不能为空！") String id,
       @RequestBody DataObjectQueryParamObj vo) {
 
     DataObjectQueryObj queryObj = customListBuilder.buildQueryObj(id, vo);
@@ -107,7 +110,8 @@ public class GenController extends DefaultBaseController {
 
   @ApiOperation("查询自定义列表数据（树形）")
   @PostMapping("/custom/list/query/tree")
-  public InvokeResult<List<Map<String, Object>>> customListQueryTree(@NotBlank(message = "ID不能为空！") String id,
+  public InvokeResult<List<Map<String, Object>>> customListQueryTree(
+      @NotBlank(message = "ID不能为空！") String id,
       @RequestBody DataObjectQueryParamObj vo) {
 
     // 查询全量数据
@@ -132,11 +136,23 @@ public class GenController extends DefaultBaseController {
     List<Map<String, Object>> filterDatas = genMapper.findList(filterQueryObj);
 
     CustomListConfig config = customListBuilder.buildConfig(id);
-    String idColumn = config.getListConfig().getTreeIdColumn();
+    String idColumn = config.getListConfig().getIdColumn();
     List<String> ids = filterDatas.stream().map(t -> String.valueOf(t.get(idColumn))).collect(
         Collectors.toList());
-    datas.stream().filter(t -> ids.contains(String.valueOf(t.get(idColumn)))).forEach(t -> t.put("id@show", true));
+    datas.stream().filter(t -> ids.contains(String.valueOf(t.get(idColumn))))
+        .forEach(t -> t.put("id@show", true));
 
     return InvokeResultBuilder.success(datas);
+  }
+
+  @ApiOperation("自定义选择器配置")
+  @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
+  @GetMapping("/custom/selector/config")
+  public InvokeResult<CustomSelectorConfig> getCustomSelectorConfig(
+      @NotBlank(message = "ID不能为空！") String id) {
+
+    CustomSelectorConfig config = customSelectorBuilder.buildConfig(id);
+
+    return InvokeResultBuilder.success(config);
   }
 }

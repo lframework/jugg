@@ -8,17 +8,21 @@ import com.lframework.common.exceptions.impl.DefaultClientException;
 import com.lframework.common.utils.Assert;
 import com.lframework.common.utils.CollectionUtil;
 import com.lframework.common.utils.StringUtil;
+import com.lframework.common.utils.ThreadUtil;
 import com.lframework.starter.gen.components.custom.list.CustomListConfig;
 import com.lframework.starter.gen.entity.GenCustomList;
 import com.lframework.starter.gen.entity.GenCustomListDetail;
 import com.lframework.starter.gen.entity.GenCustomListQueryParams;
 import com.lframework.starter.gen.enums.GenCustomListDetailType;
+import com.lframework.starter.gen.enums.GenCustomListType;
 import com.lframework.starter.gen.enums.GenQueryType;
 import com.lframework.starter.gen.enums.GenQueryWidthType;
+import com.lframework.starter.gen.events.CustomListDeleteEvent;
 import com.lframework.starter.gen.mappers.GenCustomListMapper;
 import com.lframework.starter.gen.service.IGenCustomListDetailService;
 import com.lframework.starter.gen.service.IGenCustomListQueryParamsService;
 import com.lframework.starter.gen.service.IGenCustomListService;
+import com.lframework.starter.gen.service.IGenCustomSelectorService;
 import com.lframework.starter.gen.vo.custom.list.CreateGenCustomListVo;
 import com.lframework.starter.gen.vo.custom.list.GenCustomLisDetailVo;
 import com.lframework.starter.gen.vo.custom.list.GenCustomListQueryParamsVo;
@@ -29,6 +33,7 @@ import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.mybatis.resp.PageResult;
 import com.lframework.starter.mybatis.utils.PageHelperUtil;
 import com.lframework.starter.mybatis.utils.PageResultUtil;
+import com.lframework.starter.web.utils.ApplicationUtil;
 import com.lframework.starter.web.utils.EnumUtil;
 import com.lframework.starter.web.utils.IdUtil;
 import com.lframework.starter.web.utils.JsonUtil;
@@ -96,6 +101,7 @@ public class GenCustomListServiceImpl extends
     if (!StringUtil.isBlank(data.getCategoryId())) {
       record.setCategoryId(data.getCategoryId());
     }
+    record.setListType(EnumUtil.getByCode(GenCustomListType.class, data.getListType()));
     record.setQueryPrefixSql(StringUtil.isBlank(data.getQueryPrefixSql()) ? StringPool.EMPTY_STR
         : data.getQueryPrefixSql());
     record.setQuerySuffixSql(StringUtil.isBlank(data.getQuerySuffixSql()) ? StringPool.EMPTY_STR
@@ -116,14 +122,10 @@ public class GenCustomListServiceImpl extends
       record.setTreeData(Boolean.FALSE);
     }
 
-    if (record.getTreeData()) {
-      if (StringUtil.isBlank(data.getTreeIdColumn())) {
-        throw new DefaultClientException("ID字段不能为空！");
-      }
+    record.setIdColumn(data.getIdColumn());
+    record.setIdColumnRelaId(data.getIdColumnRelaId());
 
-      if (StringUtil.isBlank(data.getTreeIdColumnRelaId())) {
-        throw new DefaultClientException("ID字段不能为空！");
-      }
+    if (record.getTreeData()) {
 
       if (StringUtil.isBlank(data.getTreePidColumn())) {
         throw new DefaultClientException("父级ID字段不能为空！");
@@ -144,9 +146,6 @@ public class GenCustomListServiceImpl extends
       if (StringUtil.isBlank(data.getTreeChildrenKey())) {
         throw new DefaultClientException("子节点Key值不能为空！");
       }
-
-      record.setTreeIdColumn(data.getTreeIdColumn());
-      record.setTreeIdColumnRelaId(data.getTreeIdColumnRelaId());
       record.setTreePidColumn(data.getTreePidColumn());
       record.setTreePidColumnRelaId(data.getTreePidColumnRelaId());
       record.setTreeNodeColumn(data.getTreeNodeColumn());
@@ -168,6 +167,7 @@ public class GenCustomListServiceImpl extends
         genCustomListQueryParams.setDataEntityId(queryParam.getId());
         genCustomListQueryParams.setQueryType(
             EnumUtil.getByCode(GenQueryType.class, queryParam.getQueryType()));
+        genCustomListQueryParams.setFrontShow(queryParam.getFrontShow());
         genCustomListQueryParams.setFormWidth(queryParam.getFormWidth());
         genCustomListQueryParams.setDefaultValue(queryParam.getDefaultValue() == null ? null
             : queryParam.getDefaultValue() instanceof String ? queryParam.getDefaultValue()
@@ -232,13 +232,6 @@ public class GenCustomListServiceImpl extends
     }
 
     if (record.getTreeData()) {
-      if (StringUtil.isBlank(data.getTreeIdColumn())) {
-        throw new DefaultClientException("ID字段不能为空！");
-      }
-
-      if (StringUtil.isBlank(data.getTreeIdColumnRelaId())) {
-        throw new DefaultClientException("ID字段不能为空！");
-      }
 
       if (StringUtil.isBlank(data.getTreePidColumn())) {
         throw new DefaultClientException("父级ID字段不能为空！");
@@ -265,12 +258,13 @@ public class GenCustomListServiceImpl extends
         .eq(GenCustomList::getId, data.getId()).set(GenCustomList::getName, data.getName())
         .set(GenCustomList::getCategoryId,
             StringUtil.isBlank(data.getCategoryId()) ? null : data.getCategoryId())
+        .set(GenCustomList::getListType,
+            EnumUtil.getByCode(GenCustomListType.class, data.getListType()))
         .set(GenCustomList::getLabelWidth, data.getLabelWidth())
         .set(GenCustomList::getHasPage, record.getHasPage())
         .set(GenCustomList::getTreeData, record.getTreeData())
-        .set(GenCustomList::getTreeIdColumn, record.getTreeData() ? data.getTreeIdColumn() : null)
-        .set(GenCustomList::getTreeIdColumnRelaId,
-            record.getTreeData() ? data.getTreeIdColumnRelaId() : null)
+        .set(GenCustomList::getIdColumn, data.getIdColumn())
+        .set(GenCustomList::getIdColumnRelaId, data.getIdColumnRelaId())
         .set(GenCustomList::getTreePidColumn, record.getTreeData() ? data.getTreePidColumn() : null)
         .set(GenCustomList::getTreePidColumnRelaId,
             record.getTreeData() ? data.getTreePidColumnRelaId() : null)
@@ -307,6 +301,7 @@ public class GenCustomListServiceImpl extends
         genCustomListQueryParams.setDataEntityId(queryParam.getId());
         genCustomListQueryParams.setQueryType(
             EnumUtil.getByCode(GenQueryType.class, queryParam.getQueryType()));
+        genCustomListQueryParams.setFrontShow(queryParam.getFrontShow());
         genCustomListQueryParams.setFormWidth(queryParam.getFormWidth());
         genCustomListQueryParams.setDefaultValue(queryParam.getDefaultValue() == null ? null
             : queryParam.getDefaultValue() instanceof String ? queryParam.getDefaultValue()
@@ -348,9 +343,18 @@ public class GenCustomListServiceImpl extends
   @Transactional
   @Override
   public void delete(String id) {
+    GenCustomList data = this.getById(id);
+
     this.removeById(id);
     genCustomListDetailService.deleteByCustomListId(id);
     genCustomListQueryParamsService.deleteByCustomListId(id);
+
+    if (data != null) {
+      CustomListDeleteEvent event = new CustomListDeleteEvent(this);
+      event.setId(id);
+      event.setName(data.getName());
+      ApplicationUtil.publishEvent(event);
+    }
   }
 
   @Transactional
@@ -402,6 +406,13 @@ public class GenCustomListServiceImpl extends
   @CacheEvict(value = {GenCustomList.CACHE_NAME, CustomListConfig.CACHE_NAME}, key = "#key")
   @Override
   public void cleanCacheByKey(Serializable key) {
-    super.cleanCacheByKey(key);
+    ThreadUtil.execAsync(() -> {
+      IGenCustomSelectorService genCustomSelectorService = ApplicationUtil
+          .getBean(IGenCustomSelectorService.class);
+      List<String> ids = genCustomSelectorService.getRelaGenCustomListIds(String.valueOf(key));
+      if (CollectionUtil.isNotEmpty(ids)) {
+        genCustomSelectorService.cleanCacheByKeys(ids);
+      }
+    });
   }
 }
