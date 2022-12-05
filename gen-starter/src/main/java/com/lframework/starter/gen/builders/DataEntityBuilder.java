@@ -5,7 +5,6 @@ import com.lframework.starter.gen.components.DataEntityColumn;
 import com.lframework.starter.gen.dto.gen.GenGenerateInfoDto;
 import com.lframework.starter.gen.entity.GenDataEntity;
 import com.lframework.starter.gen.entity.GenDataEntityDetail;
-import com.lframework.starter.gen.enums.GenType;
 import com.lframework.starter.gen.service.IGenCreateColumnConfigService;
 import com.lframework.starter.gen.service.IGenDataEntityDetailService;
 import com.lframework.starter.gen.service.IGenDataEntityService;
@@ -63,11 +62,8 @@ public class DataEntityBuilder {
     result.setId(dataEntity.getId());
     result.setName(dataEntity.getName());
     result.setDescription(dataEntity.getDescription());
-
-    TableBuilder tableBuilder = TableBuilderFactory.getBuilder(GenType.SIMPLE_DB);
-
     result.setTable(dataEntity);
-    result.setColumns(this.buildColumns(dataEntity.getId(), tableBuilder));
+    result.setColumns(this.buildColumns(dataEntity.getId()));
     result.setGenerateInfo(this.buildGenerateInfo(dataEntity.getId()));
 
     return result;
@@ -78,7 +74,7 @@ public class DataEntityBuilder {
     return generateInfoService.getByEntityId(dataObjId);
   }
 
-  private List<DataEntityColumn> buildColumns(String entityId, TableBuilder tableBuilder) {
+  private List<DataEntityColumn> buildColumns(String entityId) {
 
     List<DataEntityColumn> results = new ArrayList<>();
 
