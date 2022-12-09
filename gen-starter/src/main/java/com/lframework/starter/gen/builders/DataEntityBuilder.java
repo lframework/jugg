@@ -83,7 +83,7 @@ public class DataEntityBuilder {
       DataEntityColumn result = new DataEntityColumn();
       result.setId(column.getId());
       result.setName(column.getName());
-      result.setColumnName(column.getDbColumnName());
+      result.setColumnName(column.getColumnName());
       result.setIsKey(column.getIsKey());
       result.setDataType(column.getDataType());
       result.setColumnOrder(column.getColumnOrder());
