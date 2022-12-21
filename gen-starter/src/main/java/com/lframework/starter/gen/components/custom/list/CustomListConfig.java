@@ -12,9 +12,19 @@ public class CustomListConfig implements Serializable {
   public static final String CACHE_NAME = "CustomListConfig";
 
   /**
+   * 工具栏
+   */
+  private List<Toolbar> toolbars;
+
+  /**
    * 查询参数
    */
   private List<QueryParam> queryParams;
+
+  /**
+   * 操作列
+   */
+  private List<HandleColumn> handleColumns;
 
   /**
    * 列表配置
@@ -149,6 +159,11 @@ public class CustomListConfig implements Serializable {
     private String treeChildrenKey;
 
     /**
+     * 是否允许导出
+     */
+    private Boolean allowExport;
+
+    /**
      * 字段
      */
     private List<FieldConfig> fields;
@@ -208,5 +223,97 @@ public class CustomListConfig implements Serializable {
      * 数据类型
      */
     private Integer dataType;
+
+    /**
+     * 格式化脚本
+     */
+    private String formatter;
+  }
+
+  @Data
+  public static class Toolbar implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * ID
+     */
+    private String id;
+
+    /**
+     * 显示名称
+     */
+    private String name;
+
+    /**
+     * 显示类型
+     */
+    private String viewType;
+
+    /**
+     * 按钮类型
+     */
+    private Integer btnType;
+
+    /**
+     * 按钮配置
+     */
+    private String btnConfig;
+
+    /**
+     * 图标
+     */
+    private String icon;
+
+    /**
+     * 请求参数
+     */
+    private String requestParam;
+  }
+
+  @Data
+  public static class HandleColumn implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * ID
+     */
+    private String id;
+
+    /**
+     * 显示名称
+     */
+    private String name;
+
+    /**
+     * 显示类型
+     */
+    private String viewType;
+
+    /**
+     * 按钮类型
+     */
+    private Integer btnType;
+
+    /**
+     * 按钮配置
+     */
+    private String btnConfig;
+
+    /**
+     * 图标
+     */
+    private String icon;
+
+    /**
+     * 宽度
+     */
+    private Integer width;
+
+    /**
+     * 请求参数
+     */
+    private String requestParam;
   }
 }

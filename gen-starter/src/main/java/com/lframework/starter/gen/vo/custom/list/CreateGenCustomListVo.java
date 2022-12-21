@@ -119,6 +119,13 @@ public class CreateGenCustomListVo implements BaseVo, Serializable {
   private String treeChildrenKey;
 
   /**
+   * 是否允许导出
+   */
+  @ApiModelProperty("是否允许导出")
+  @NotNull(message = "是否允许导出不能为空！")
+  private Boolean allowExport;
+
+  /**
    * 查询条件
    */
   @ApiModelProperty("查询条件")
@@ -131,7 +138,7 @@ public class CreateGenCustomListVo implements BaseVo, Serializable {
   @ApiModelProperty(value = "列表配置", required = true)
   @NotEmpty(message = "列表配置不能为空！")
   @Valid
-  private List<GenCustomLisDetailVo> details;
+  private List<GenCustomListDetailVo> details;
 
   /**
    * 查询前置SQL
@@ -150,4 +157,18 @@ public class CreateGenCustomListVo implements BaseVo, Serializable {
    */
   @ApiModelProperty("后置SQL")
   private String suffixSql;
+
+  /**
+   * 工具栏
+   */
+  @Valid
+  @ApiModelProperty("工具栏")
+  private List<GenCustomListToolbarVo> toolbars;
+
+  /**
+   * 操作列
+   */
+  @Valid
+  @ApiModelProperty("操作列")
+  private List<GenCustomListHandleColumnVo> handleColumns;
 }

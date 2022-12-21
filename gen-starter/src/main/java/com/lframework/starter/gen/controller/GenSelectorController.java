@@ -1,6 +1,8 @@
 package com.lframework.starter.gen.controller;
 
 import com.lframework.common.utils.CollectionUtil;
+import com.lframework.starter.gen.bo.custom.form.GenCustomFormSelectorBo;
+import com.lframework.starter.gen.bo.custom.form.category.GenCustomFormCategorySelectorBo;
 import com.lframework.starter.gen.bo.custom.list.GenCustomListSelectorBo;
 import com.lframework.starter.gen.bo.custom.list.category.GenCustomListCategorySelectorBo;
 import com.lframework.starter.gen.bo.custom.selector.GenCustomSelectorSelectorBo;
@@ -12,6 +14,8 @@ import com.lframework.starter.gen.bo.data.obj.GenDataObjSelectorBo;
 import com.lframework.starter.gen.bo.data.obj.category.GenDataObjCategorySelectorBo;
 import com.lframework.starter.gen.bo.simpledb.SimpleDBSelectorBo;
 import com.lframework.starter.gen.dto.simpledb.SimpleDBDto;
+import com.lframework.starter.gen.entity.GenCustomForm;
+import com.lframework.starter.gen.entity.GenCustomFormCategory;
 import com.lframework.starter.gen.entity.GenCustomList;
 import com.lframework.starter.gen.entity.GenCustomListCategory;
 import com.lframework.starter.gen.entity.GenCustomSelector;
@@ -21,6 +25,8 @@ import com.lframework.starter.gen.entity.GenDataEntityCategory;
 import com.lframework.starter.gen.entity.GenDataEntityDetail;
 import com.lframework.starter.gen.entity.GenDataObj;
 import com.lframework.starter.gen.entity.GenDataObjCategory;
+import com.lframework.starter.gen.service.IGenCustomFormCategoryService;
+import com.lframework.starter.gen.service.IGenCustomFormService;
 import com.lframework.starter.gen.service.IGenCustomListCategoryService;
 import com.lframework.starter.gen.service.IGenCustomListService;
 import com.lframework.starter.gen.service.IGenCustomSelectorCategoryService;
@@ -31,6 +37,8 @@ import com.lframework.starter.gen.service.IGenDataEntityService;
 import com.lframework.starter.gen.service.IGenDataObjCategoryService;
 import com.lframework.starter.gen.service.IGenDataObjService;
 import com.lframework.starter.gen.service.ISimpleDBService;
+import com.lframework.starter.gen.vo.custom.form.GenCustomFormSelectorVo;
+import com.lframework.starter.gen.vo.custom.form.category.GenCustomFormCategorySelectorVo;
 import com.lframework.starter.gen.vo.custom.list.GenCustomListSelectorVo;
 import com.lframework.starter.gen.vo.custom.list.category.GenCustomListCategorySelectorVo;
 import com.lframework.starter.gen.vo.custom.selector.GenCustomSelectorSelectorVo;
@@ -94,6 +102,12 @@ public class GenSelectorController extends DefaultBaseController {
 
   @Autowired
   private IGenCustomSelectorService genCustomSelectorService;
+
+  @Autowired
+  private IGenCustomFormCategoryService genCustomFormCategoryService;
+
+  @Autowired
+  private IGenCustomFormService genCustomFormService;
 
   @ApiOperation("数据实体分类")
   @GetMapping("/data/entity/category")
@@ -245,6 +259,38 @@ public class GenSelectorController extends DefaultBaseController {
     List<GenCustomSelectorSelectorBo> results = null;
     if (!CollectionUtil.isEmpty(datas)) {
       results = datas.stream().map(GenCustomSelectorSelectorBo::new).collect(Collectors.toList());
+    }
+
+    return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
+  }
+
+  @ApiOperation("自定义表单分类")
+  @GetMapping("/custom/form/category")
+  public InvokeResult<PageResult<GenCustomFormCategorySelectorBo>> customListCategory(
+      @Valid GenCustomFormCategorySelectorVo vo) {
+    PageResult<GenCustomFormCategory> pageResult = genCustomFormCategoryService.selector(
+        getPageIndex(vo),
+        getPageSize(vo), vo);
+    List<GenCustomFormCategory> datas = pageResult.getDatas();
+    List<GenCustomFormCategorySelectorBo> results = null;
+    if (!CollectionUtil.isEmpty(datas)) {
+      results = datas.stream().map(GenCustomFormCategorySelectorBo::new)
+          .collect(Collectors.toList());
+    }
+
+    return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
+  }
+
+  @ApiOperation("自定义表单")
+  @GetMapping("/custom/form")
+  public InvokeResult<PageResult<GenCustomFormSelectorBo>> customForm(
+      @Valid GenCustomFormSelectorVo vo) {
+    PageResult<GenCustomForm> pageResult = genCustomFormService.selector(getPageIndex(vo),
+        getPageSize(vo), vo);
+    List<GenCustomForm> datas = pageResult.getDatas();
+    List<GenCustomFormSelectorBo> results = null;
+    if (!CollectionUtil.isEmpty(datas)) {
+      results = datas.stream().map(GenCustomFormSelectorBo::new).collect(Collectors.toList());
     }
 
     return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));

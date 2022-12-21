@@ -1,17 +1,25 @@
 package com.lframework.starter.gen.bo.custom.list;
 
+import com.lframework.common.exceptions.impl.DefaultClientException;
 import com.lframework.common.utils.CollectionUtil;
 import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.gen.entity.GenCustomForm;
 import com.lframework.starter.gen.entity.GenCustomList;
 import com.lframework.starter.gen.entity.GenCustomListCategory;
 import com.lframework.starter.gen.entity.GenCustomListDetail;
+import com.lframework.starter.gen.entity.GenCustomListHandleColumn;
 import com.lframework.starter.gen.entity.GenCustomListQueryParams;
+import com.lframework.starter.gen.entity.GenCustomListToolbar;
 import com.lframework.starter.gen.entity.GenDataEntityDetail;
 import com.lframework.starter.gen.entity.GenDataObj;
+import com.lframework.starter.gen.enums.GenCustomListBtnType;
 import com.lframework.starter.gen.enums.GenCustomListDetailType;
+import com.lframework.starter.gen.service.IGenCustomFormService;
 import com.lframework.starter.gen.service.IGenCustomListCategoryService;
 import com.lframework.starter.gen.service.IGenCustomListDetailService;
+import com.lframework.starter.gen.service.IGenCustomListHandleColumnService;
 import com.lframework.starter.gen.service.IGenCustomListQueryParamsService;
+import com.lframework.starter.gen.service.IGenCustomListToolbarService;
 import com.lframework.starter.gen.service.IGenDataEntityDetailService;
 import com.lframework.starter.gen.service.IGenDataObjService;
 import com.lframework.starter.web.bo.BaseBo;
@@ -134,10 +142,28 @@ public class GetGenCustomListBo extends BaseBo<GenCustomList> {
   private String suffixSql;
 
   /**
+   * 是否允许导出
+   */
+  @ApiModelProperty("是否允许导出")
+  private Boolean allowExport;
+
+  /**
    * 状态
    */
   @ApiModelProperty("状态")
   private Boolean available;
+
+  /**
+   * 工具栏
+   */
+  @ApiModelProperty("工具栏")
+  private List<ToolbarBo> toolbars;
+
+  /**
+   * 操作列
+   */
+  @ApiModelProperty("操作列")
+  private List<HandleColumnBo> handleColumns;
 
   /**
    * 查询条件
@@ -211,9 +237,124 @@ public class GetGenCustomListBo extends BaseBo<GenCustomList> {
       if (t.getType() == GenCustomListDetailType.CUSTOM) {
         bo.setId(t.getRelaId());
       }
+      bo.setFormatter(t.getFormatter());
 
       return bo;
     }).collect(Collectors.toList());
+
+    IGenCustomListToolbarService genCustomListToolbarService = ApplicationUtil
+        .getBean(IGenCustomListToolbarService.class);
+    List<GenCustomListToolbar> toolbars = genCustomListToolbarService
+        .getByCustomListId(dto.getId());
+
+    IGenCustomFormService genCustomFormService = ApplicationUtil
+        .getBean(IGenCustomFormService.class);
+
+    this.toolbars = toolbars.stream().map(t -> {
+      ToolbarBo toolbar = new ToolbarBo();
+      toolbar.setId(t.getId());
+      toolbar.setName(t.getName());
+      toolbar.setViewType(t.getViewType().getCode());
+      toolbar.setBtnType(t.getBtnType().getCode());
+      if (t.getBtnType() == GenCustomListBtnType.CUSTOM_FORM) {
+        GenCustomForm form = genCustomFormService.findById(t.getBtnConfig());
+        if (form == null) {
+          throw new DefaultClientException("工具栏关联的自定义表单不存在！");
+        }
+        toolbar.setCustomFormId(form.getId());
+        toolbar.setCustomFormName(form.getName());
+        toolbar.setRequestParam(t.getRequestParam());
+      } else {
+        toolbar.setBtnConfig(t.getBtnConfig());
+      }
+      toolbar.setIcon(t.getIcon());
+      return toolbar;
+    }).collect(Collectors.toList());
+
+    IGenCustomListHandleColumnService genCustomListHandleColumnService = ApplicationUtil
+        .getBean(IGenCustomListHandleColumnService.class);
+    List<GenCustomListHandleColumn> handleColumns = genCustomListHandleColumnService
+        .getByCustomListId(dto.getId());
+
+    this.handleColumns = handleColumns.stream().map(t -> {
+      HandleColumnBo handleColumn = new HandleColumnBo();
+      handleColumn.setId(t.getId());
+      handleColumn.setName(t.getName());
+      handleColumn.setViewType(t.getViewType().getCode());
+      handleColumn.setBtnType(t.getBtnType().getCode());
+      if (t.getBtnType() == GenCustomListBtnType.CUSTOM_FORM) {
+        GenCustomForm form = genCustomFormService.findById(t.getBtnConfig());
+        if (form == null) {
+          throw new DefaultClientException("操作列关联的自定义表单不存在！");
+        }
+        handleColumn.setCustomFormId(form.getId());
+        handleColumn.setCustomFormName(form.getName());
+        handleColumn.setRequestParam(t.getRequestParam());
+      } else {
+        handleColumn.setBtnConfig(t.getBtnConfig());
+      }
+      handleColumn.setWidth(t.getWidth());
+      handleColumn.setIcon(t.getIcon());
+      return handleColumn;
+    }).collect(Collectors.toList());
+  }
+
+  @Data
+  public static class ToolbarBo implements SuperBo {
+
+    /**
+     * ID
+     */
+    @ApiModelProperty(value = "ID")
+    private String id;
+
+    /**
+     * 显示名称
+     */
+    @ApiModelProperty(value = "显示名称")
+    private String name;
+
+    /**
+     * 显示类型
+     */
+    @ApiModelProperty(value = "显示类型")
+    private String viewType;
+
+    /**
+     * 按钮类型
+     */
+    @ApiModelProperty(value = "按钮类型")
+    private Integer btnType;
+
+    /**
+     * 按钮配置
+     */
+    @ApiModelProperty(value = "按钮配置")
+    private String btnConfig;
+
+    /**
+     * 图标
+     */
+    @ApiModelProperty(value = "图标")
+    private String icon;
+
+    /**
+     * 请求参数
+     */
+    @ApiModelProperty(value = "请求参数")
+    private String requestParam;
+
+    /**
+     * 自定义表单ID
+     */
+    @ApiModelProperty(value = "自定义表单ID")
+    private String customFormId;
+
+    /**
+     * 自定义表单名称
+     */
+    @ApiModelProperty(value = "自定义表单名称")
+    private String customFormName;
   }
 
   @Data
@@ -312,5 +453,75 @@ public class GetGenCustomListBo extends BaseBo<GenCustomList> {
      */
     @ApiModelProperty(value = "类型")
     private Integer type;
+
+    /**
+     * 格式化脚本
+     */
+    @ApiModelProperty("格式化脚本")
+    private String formatter;
+  }
+
+  @Data
+  public static class HandleColumnBo implements SuperBo {
+
+    /**
+     * ID
+     */
+    @ApiModelProperty(value = "ID")
+    private String id;
+
+    /**
+     * 显示名称
+     */
+    @ApiModelProperty(value = "显示名称")
+    private String name;
+
+    /**
+     * 显示类型
+     */
+    @ApiModelProperty(value = "显示类型")
+    private String viewType;
+
+    /**
+     * 按钮类型
+     */
+    @ApiModelProperty(value = "按钮类型")
+    private Integer btnType;
+
+    /**
+     * 按钮配置
+     */
+    @ApiModelProperty(value = "按钮配置")
+    private String btnConfig;
+
+    /**
+     * 图标
+     */
+    @ApiModelProperty(value = "图标")
+    private String icon;
+
+    /**
+     * 请求参数
+     */
+    @ApiModelProperty(value = "请求参数")
+    private String requestParam;
+
+    /**
+     * 宽度
+     */
+    @ApiModelProperty(value = "宽度")
+    private Integer width;
+
+    /**
+     * 自定义表单ID
+     */
+    @ApiModelProperty(value = "自定义表单ID")
+    private String customFormId;
+
+    /**
+     * 自定义表单名称
+     */
+    @ApiModelProperty(value = "自定义表单名称")
+    private String customFormName;
   }
 }

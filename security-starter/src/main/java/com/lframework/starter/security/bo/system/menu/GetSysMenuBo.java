@@ -1,7 +1,9 @@
 package com.lframework.starter.security.bo.system.menu;
 
 import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.gen.entity.GenCustomForm;
 import com.lframework.starter.gen.entity.GenCustomList;
+import com.lframework.starter.gen.service.IGenCustomFormService;
 import com.lframework.starter.gen.service.IGenCustomListService;
 import com.lframework.starter.mybatis.dto.system.menu.DefaultSysMenuDto;
 import com.lframework.starter.mybatis.enums.system.SysMenuComponentType;
@@ -71,6 +73,24 @@ public class GetSysMenuBo extends BaseBo<DefaultSysMenuDto> {
    */
   @ApiModelProperty("自定义列表名称")
   private String customListName;
+
+  /**
+   * 自定义表单ID
+   */
+  @ApiModelProperty("自定义表单ID")
+  private String customFormId;
+
+  /**
+   * 自定义表单名称
+   */
+  @ApiModelProperty("自定义表单名称")
+  private String customFormName;
+
+  /**
+   * 自定义请求参数
+   */
+  @ApiModelProperty("自定义请求参数")
+  private String requestParam;
 
   /**
    * 父级ID
@@ -163,6 +183,13 @@ public class GetSysMenuBo extends BaseBo<DefaultSysMenuDto> {
           .getBean(IGenCustomListService.class);
       GenCustomList customList = genCustomListService.findById(dto.getComponent());
       this.customListName = customList.getName();
+    } else if (dto.getComponentType() == SysMenuComponentType.CUSTOM_FORM) {
+      this.customFormId = dto.getComponent();
+      IGenCustomFormService genCustomFormService = ApplicationUtil
+          .getBean(IGenCustomFormService.class);
+      GenCustomForm customForm = genCustomFormService.findById(dto.getComponent());
+      this.customFormName = customForm.getName();
+      this.requestParam = dto.getRequestParam();
     }
   }
 }

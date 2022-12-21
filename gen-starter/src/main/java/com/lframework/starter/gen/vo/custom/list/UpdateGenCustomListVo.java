@@ -125,6 +125,13 @@ public class UpdateGenCustomListVo implements BaseVo, Serializable {
   private String description;
 
   /**
+   * 是否允许导出
+   */
+  @ApiModelProperty("是否允许导出")
+  @NotNull(message = "是否允许导出不能为空！")
+  private Boolean allowExport;
+
+  /**
    * 状态
    */
   @ApiModelProperty(value = "状态", required = true)
@@ -144,7 +151,7 @@ public class UpdateGenCustomListVo implements BaseVo, Serializable {
   @ApiModelProperty(value = "列表配置", required = true)
   @NotEmpty(message = "列表配置不能为空！")
   @Valid
-  private List<GenCustomLisDetailVo> details;
+  private List<GenCustomListDetailVo> details;
 
   /**
    * 查询前置SQL
@@ -163,4 +170,18 @@ public class UpdateGenCustomListVo implements BaseVo, Serializable {
    */
   @ApiModelProperty("后置SQL")
   private String suffixSql;
+
+  /**
+   * 工具栏
+   */
+  @Valid
+  @ApiModelProperty("工具栏")
+  private List<GenCustomListToolbarVo> toolbars;
+
+  /**
+   * 操作列
+   */
+  @Valid
+  @ApiModelProperty("操作列")
+  private List<GenCustomListHandleColumnVo> handleColumns;
 }

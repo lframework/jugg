@@ -3,6 +3,7 @@ package com.lframework.starter.web.utils;
 import com.lframework.common.utils.ArrayUtil;
 import com.lframework.common.utils.CollectionUtil;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -28,7 +29,8 @@ public class RequestUtil {
    */
   public static HttpServletRequest getRequest() {
 
-    HttpServletRequest request = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getRequest();
+    HttpServletRequest request = ((ServletRequestAttributes) (RequestContextHolder
+        .currentRequestAttributes())).getRequest();
 
     return request;
   }
@@ -93,6 +95,24 @@ public class RequestUtil {
 
       return null;
     }
+  }
+
+  public static byte[] getRequestBody() {
+
+    HttpServletRequest request = getRequest();
+    return getRequestBody(request);
+  }
+
+  public static String getRequestBodyStr(HttpServletRequest request) {
+    byte[] bytes = getRequestBody(request);
+
+    return new String(bytes, StandardCharsets.UTF_8);
+  }
+
+  public static String getRequestBodyStr() {
+    byte[] bytes = getRequestBody();
+
+    return new String(bytes, StandardCharsets.UTF_8);
   }
 
   /**

@@ -585,12 +585,14 @@ public class Generator {
       if (!columnObj.getIsKey()) {
         // 如果不是主键，需要判断是否需要字段填充
         if (MyBatisStringPool.COLUMN_CREATE_BY.equals(columnObj.getName())
+            || MyBatisStringPool.COLUMN_CREATE_BY_ID.equals(columnObj.getName())
             || MyBatisStringPool.COLUMN_CREATE_TIME.equals(columnObj.getName())) {
           columnObj.setFill(Boolean.TRUE);
           columnObj.setFillStrategy(FieldFill.INSERT.name());
           importPackages.add(TableField.class.getName());
           importPackages.add(FieldFill.class.getName());
         } else if (MyBatisStringPool.COLUMN_UPDATE_BY.equals(columnObj.getName())
+            || MyBatisStringPool.COLUMN_UPDATE_BY_ID.equals(columnObj.getName())
             || MyBatisStringPool.COLUMN_UPDATE_TIME.equals(columnObj.getName())) {
           columnObj.setFill(Boolean.TRUE);
           columnObj.setFillStrategy(FieldFill.INSERT_UPDATE.name());

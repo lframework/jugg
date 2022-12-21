@@ -44,7 +44,7 @@ export default {
     return request({
       url: '/${moduleName}/${bizName}',
       method: 'post',
-      params: params
+      data: params
     })
   },
 </#if>
@@ -59,7 +59,7 @@ export default {
     return request({
       url: '/${moduleName}/${bizName}',
       method: 'put',
-      params: params
+      data: params
     })
   },
 </#if>
@@ -74,7 +74,7 @@ export default {
     return request({
       url: '/${moduleName}/${bizName}',
       method: 'delete',
-      params: {
+      data: {
         ${keys[0].name}: ${keys[0].name}
       }
     })

@@ -49,6 +49,11 @@ public class DefaultSysMenuDto implements BaseDto, Serializable {
   private String component;
 
   /**
+   * 自定义请求参数
+   */
+  private String requestParam;
+
+  /**
    * 父级ID
    */
   private String parentId;

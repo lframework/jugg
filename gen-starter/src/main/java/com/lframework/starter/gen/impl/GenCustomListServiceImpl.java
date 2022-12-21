@@ -12,7 +12,11 @@ import com.lframework.common.utils.ThreadUtil;
 import com.lframework.starter.gen.components.custom.list.CustomListConfig;
 import com.lframework.starter.gen.entity.GenCustomList;
 import com.lframework.starter.gen.entity.GenCustomListDetail;
+import com.lframework.starter.gen.entity.GenCustomListHandleColumn;
 import com.lframework.starter.gen.entity.GenCustomListQueryParams;
+import com.lframework.starter.gen.entity.GenCustomListToolbar;
+import com.lframework.starter.gen.enums.GenCustomListBtnType;
+import com.lframework.starter.gen.enums.GenCustomListBtnViewType;
 import com.lframework.starter.gen.enums.GenCustomListDetailType;
 import com.lframework.starter.gen.enums.GenCustomListType;
 import com.lframework.starter.gen.enums.GenQueryType;
@@ -20,13 +24,17 @@ import com.lframework.starter.gen.enums.GenQueryWidthType;
 import com.lframework.starter.gen.events.CustomListDeleteEvent;
 import com.lframework.starter.gen.mappers.GenCustomListMapper;
 import com.lframework.starter.gen.service.IGenCustomListDetailService;
+import com.lframework.starter.gen.service.IGenCustomListHandleColumnService;
 import com.lframework.starter.gen.service.IGenCustomListQueryParamsService;
 import com.lframework.starter.gen.service.IGenCustomListService;
+import com.lframework.starter.gen.service.IGenCustomListToolbarService;
 import com.lframework.starter.gen.service.IGenCustomSelectorService;
 import com.lframework.starter.gen.vo.custom.list.CreateGenCustomListVo;
-import com.lframework.starter.gen.vo.custom.list.GenCustomLisDetailVo;
+import com.lframework.starter.gen.vo.custom.list.GenCustomListDetailVo;
+import com.lframework.starter.gen.vo.custom.list.GenCustomListHandleColumnVo;
 import com.lframework.starter.gen.vo.custom.list.GenCustomListQueryParamsVo;
 import com.lframework.starter.gen.vo.custom.list.GenCustomListSelectorVo;
+import com.lframework.starter.gen.vo.custom.list.GenCustomListToolbarVo;
 import com.lframework.starter.gen.vo.custom.list.QueryGenCustomListVo;
 import com.lframework.starter.gen.vo.custom.list.UpdateGenCustomListVo;
 import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
@@ -54,6 +62,12 @@ public class GenCustomListServiceImpl extends
 
   @Autowired
   private IGenCustomListDetailService genCustomListDetailService;
+
+  @Autowired
+  private IGenCustomListToolbarService genCustomListToolbarService;
+
+  @Autowired
+  private IGenCustomListHandleColumnService genCustomListHandleColumnService;
 
   @Override
   public PageResult<GenCustomList> query(Integer pageIndex, Integer pageSize,
@@ -152,6 +166,7 @@ public class GenCustomListServiceImpl extends
       record.setTreeNodeColumnRelaId(data.getTreeNodeColumnRelaId());
       record.setTreeChildrenKey(data.getTreeChildrenKey());
     }
+    record.setAllowExport(data.getAllowExport());
     record.setDataObjId(data.getDataObjId());
     record.setAvailable(Boolean.TRUE);
     record.setDescription(
@@ -183,7 +198,7 @@ public class GenCustomListServiceImpl extends
     }
 
     int orderNo = 1;
-    for (GenCustomLisDetailVo detail : data.getDetails()) {
+    for (GenCustomListDetailVo detail : data.getDetails()) {
       GenCustomListDetail genCustomListDetail = new GenCustomListDetail();
       genCustomListDetail.setId(IdUtil.getId());
       genCustomListDetail.setCustomListId(record.getId());
@@ -199,10 +214,65 @@ public class GenCustomListServiceImpl extends
       if (genCustomListDetail.getType() == GenCustomListDetailType.CUSTOM) {
         genCustomListDetail.setDataEntityId(null);
       }
+      if (!StringUtil.isBlank(detail.getFormatter())) {
+        genCustomListDetail.setFormatter(detail.getFormatter());
+      }
 
       genCustomListDetailService.save(genCustomListDetail);
 
       orderNo++;
+    }
+
+    if (!CollectionUtil.isEmpty(data.getToolbars())) {
+      orderNo = 1;
+      for (GenCustomListToolbarVo tb : data.getToolbars()) {
+        GenCustomListToolbar toolbar = new GenCustomListToolbar();
+        toolbar.setId(IdUtil.getId());
+        toolbar.setCustomListId(record.getId());
+        toolbar.setName(tb.getName());
+        toolbar.setViewType(EnumUtil.getByCode(GenCustomListBtnViewType.class, tb.getViewType()));
+        toolbar.setBtnType(EnumUtil.getByCode(GenCustomListBtnType.class, tb.getBtnType()));
+        toolbar.setBtnConfig(tb.getBtnConfig());
+        if (!StringUtil.isBlank(tb.getIcon())) {
+          toolbar.setIcon(tb.getIcon());
+        }
+        if (toolbar.getBtnType() == GenCustomListBtnType.CUSTOM_FORM) {
+          if (!StringUtil.isBlank(tb.getRequestParam())) {
+            toolbar.setRequestParam(tb.getRequestParam());
+          }
+        }
+        toolbar.setOrderNo(orderNo);
+        orderNo++;
+
+        genCustomListToolbarService.save(toolbar);
+      }
+    }
+
+    if (!CollectionUtil.isEmpty(data.getHandleColumns())) {
+      orderNo = 1;
+      for (GenCustomListHandleColumnVo hd : data.getHandleColumns()) {
+        GenCustomListHandleColumn handleColumn = new GenCustomListHandleColumn();
+        handleColumn.setId(IdUtil.getId());
+        handleColumn.setCustomListId(record.getId());
+        handleColumn.setName(hd.getName());
+        handleColumn
+            .setViewType(EnumUtil.getByCode(GenCustomListBtnViewType.class, hd.getViewType()));
+        handleColumn.setBtnType(EnumUtil.getByCode(GenCustomListBtnType.class, hd.getBtnType()));
+        handleColumn.setBtnConfig(hd.getBtnConfig());
+        if (!StringUtil.isBlank(hd.getIcon())) {
+          handleColumn.setIcon(hd.getIcon());
+        }
+        if (handleColumn.getBtnType() == GenCustomListBtnType.CUSTOM_FORM) {
+          if (!StringUtil.isBlank(hd.getRequestParam())) {
+            handleColumn.setRequestParam(hd.getRequestParam());
+          }
+        }
+        handleColumn.setOrderNo(orderNo);
+        handleColumn.setWidth(hd.getWidth());
+        orderNo++;
+
+        genCustomListHandleColumnService.save(handleColumn);
+      }
     }
 
     this.save(record);
@@ -284,7 +354,8 @@ public class GenCustomListServiceImpl extends
             StringUtil.isBlank(data.getSuffixSql()) ? StringPool.EMPTY_STR : data.getSuffixSql())
         .set(GenCustomList::getDescription,
             StringUtil.isBlank(data.getDescription()) ? StringPool.EMPTY_STR
-                : data.getDescription()).set(GenCustomList::getAvailable, data.getAvailable());
+                : data.getDescription()).set(GenCustomList::getAvailable, data.getAvailable())
+        .set(GenCustomList::getAllowExport, data.getAllowExport());
 
     this.update(updateWrapper);
 
@@ -317,7 +388,7 @@ public class GenCustomListServiceImpl extends
     }
 
     int orderNo = 1;
-    for (GenCustomLisDetailVo detail : data.getDetails()) {
+    for (GenCustomListDetailVo detail : data.getDetails()) {
       GenCustomListDetail genCustomListDetail = new GenCustomListDetail();
       genCustomListDetail.setId(IdUtil.getId());
       genCustomListDetail.setCustomListId(record.getId());
@@ -333,10 +404,67 @@ public class GenCustomListServiceImpl extends
       if (genCustomListDetail.getType() == GenCustomListDetailType.CUSTOM) {
         genCustomListDetail.setDataEntityId(null);
       }
+      genCustomListDetail.setFormatter(detail.getFormatter());
 
       genCustomListDetailService.save(genCustomListDetail);
 
       orderNo++;
+    }
+
+    genCustomListToolbarService.deleteByCustomListId(record.getId());
+
+    if (!CollectionUtil.isEmpty(data.getToolbars())) {
+      orderNo = 1;
+      for (GenCustomListToolbarVo tb : data.getToolbars()) {
+        GenCustomListToolbar toolbar = new GenCustomListToolbar();
+        toolbar.setId(IdUtil.getId());
+        toolbar.setCustomListId(record.getId());
+        toolbar.setName(tb.getName());
+        toolbar.setViewType(EnumUtil.getByCode(GenCustomListBtnViewType.class, tb.getViewType()));
+        toolbar.setBtnType(EnumUtil.getByCode(GenCustomListBtnType.class, tb.getBtnType()));
+        toolbar.setBtnConfig(tb.getBtnConfig());
+        if (!StringUtil.isBlank(tb.getIcon())) {
+          toolbar.setIcon(tb.getIcon());
+        }
+        if (toolbar.getBtnType() == GenCustomListBtnType.CUSTOM_FORM) {
+          if (!StringUtil.isBlank(tb.getRequestParam())) {
+            toolbar.setRequestParam(tb.getRequestParam());
+          }
+        }
+        toolbar.setOrderNo(orderNo);
+        orderNo++;
+
+        genCustomListToolbarService.save(toolbar);
+      }
+    }
+
+    genCustomListHandleColumnService.deleteByCustomListId(record.getId());
+
+    if (!CollectionUtil.isEmpty(data.getHandleColumns())) {
+      orderNo = 1;
+      for (GenCustomListHandleColumnVo hd : data.getHandleColumns()) {
+        GenCustomListHandleColumn handleColumn = new GenCustomListHandleColumn();
+        handleColumn.setId(IdUtil.getId());
+        handleColumn.setCustomListId(record.getId());
+        handleColumn.setName(hd.getName());
+        handleColumn
+            .setViewType(EnumUtil.getByCode(GenCustomListBtnViewType.class, hd.getViewType()));
+        handleColumn.setBtnType(EnumUtil.getByCode(GenCustomListBtnType.class, hd.getBtnType()));
+        handleColumn.setBtnConfig(hd.getBtnConfig());
+        if (!StringUtil.isBlank(hd.getIcon())) {
+          handleColumn.setIcon(hd.getIcon());
+        }
+        if (handleColumn.getBtnType() == GenCustomListBtnType.CUSTOM_FORM) {
+          if (!StringUtil.isBlank(hd.getRequestParam())) {
+            handleColumn.setRequestParam(hd.getRequestParam());
+          }
+        }
+        handleColumn.setWidth(hd.getWidth());
+        handleColumn.setOrderNo(orderNo);
+        orderNo++;
+
+        genCustomListHandleColumnService.save(handleColumn);
+      }
     }
   }
 

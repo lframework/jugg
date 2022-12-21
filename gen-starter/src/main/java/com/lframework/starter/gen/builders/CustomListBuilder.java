@@ -7,13 +7,17 @@ import com.lframework.common.exceptions.impl.DefaultSysException;
 import com.lframework.common.utils.CollectionUtil;
 import com.lframework.starter.gen.components.custom.list.CustomListConfig;
 import com.lframework.starter.gen.components.custom.list.CustomListConfig.FieldConfig;
+import com.lframework.starter.gen.components.custom.list.CustomListConfig.HandleColumn;
 import com.lframework.starter.gen.components.custom.list.CustomListConfig.ListConfig;
 import com.lframework.starter.gen.components.custom.list.CustomListConfig.QueryParam;
+import com.lframework.starter.gen.components.custom.list.CustomListConfig.Toolbar;
 import com.lframework.starter.gen.components.data.obj.DataObjectQueryObj;
 import com.lframework.starter.gen.components.data.obj.DataObjectQueryParamObj;
 import com.lframework.starter.gen.entity.GenCustomList;
 import com.lframework.starter.gen.entity.GenCustomListDetail;
+import com.lframework.starter.gen.entity.GenCustomListHandleColumn;
 import com.lframework.starter.gen.entity.GenCustomListQueryParams;
+import com.lframework.starter.gen.entity.GenCustomListToolbar;
 import com.lframework.starter.gen.entity.GenCustomSelector;
 import com.lframework.starter.gen.entity.GenDataEntityDetail;
 import com.lframework.starter.gen.entity.GenDataObj;
@@ -24,8 +28,10 @@ import com.lframework.starter.gen.enums.GenDataType;
 import com.lframework.starter.gen.enums.GenQueryType;
 import com.lframework.starter.gen.enums.GenViewType;
 import com.lframework.starter.gen.service.IGenCustomListDetailService;
+import com.lframework.starter.gen.service.IGenCustomListHandleColumnService;
 import com.lframework.starter.gen.service.IGenCustomListQueryParamsService;
 import com.lframework.starter.gen.service.IGenCustomListService;
+import com.lframework.starter.gen.service.IGenCustomListToolbarService;
 import com.lframework.starter.gen.service.IGenCustomSelectorService;
 import com.lframework.starter.gen.service.IGenDataEntityDetailService;
 import com.lframework.starter.gen.service.IGenDataObjDetailService;
@@ -69,6 +75,12 @@ public class CustomListBuilder {
   @Autowired
   private DataObjectBuilder dataObjectBuilder;
 
+  @Autowired
+  private IGenCustomListToolbarService genCustomListToolbarService;
+
+  @Autowired
+  private IGenCustomListHandleColumnService genCustomListHandleColumnService;
+
   public DataObjectQueryObj buildQueryObj(String id, DataObjectQueryParamObj queryParamObj) {
     GenCustomList customList = genCustomListService.findById(id);
     if (customList == null) {
@@ -97,14 +109,49 @@ public class CustomListBuilder {
       throw new DefaultClientException("自定义列表不存在！");
     }
 
+    CustomListConfig result = new CustomListConfig();
+
+    List<GenCustomListToolbar> toolbars = genCustomListToolbarService
+        .getByCustomListId(data.getId());
+    if (!CollectionUtil.isEmpty(toolbars)) {
+      result.setToolbars(toolbars.stream().map(t -> {
+        Toolbar toolbar = new Toolbar();
+        toolbar.setId(t.getId());
+        toolbar.setName(t.getName());
+        toolbar.setViewType(t.getViewType().getCode());
+        toolbar.setBtnType(t.getBtnType().getCode());
+        toolbar.setBtnConfig(t.getBtnConfig());
+        toolbar.setRequestParam(t.getRequestParam());
+        toolbar.setIcon(t.getIcon());
+
+        return toolbar;
+      }).collect(Collectors.toList()));
+    }
+
+    List<GenCustomListHandleColumn> handleColumns = genCustomListHandleColumnService
+        .getByCustomListId(data.getId());
+    if (!CollectionUtil.isEmpty(handleColumns)) {
+      result.setHandleColumns(handleColumns.stream().map(t -> {
+        HandleColumn handleColumn = new HandleColumn();
+        handleColumn.setId(t.getId());
+        handleColumn.setName(t.getName());
+        handleColumn.setViewType(t.getViewType().getCode());
+        handleColumn.setBtnType(t.getBtnType().getCode());
+        handleColumn.setBtnConfig(t.getBtnConfig());
+        handleColumn.setRequestParam(t.getRequestParam());
+        handleColumn.setIcon(t.getIcon());
+        handleColumn.setWidth(t.getWidth());
+
+        return handleColumn;
+      }).collect(Collectors.toList()));
+    }
+
     List<GenCustomListQueryParams> genCustomListQueryParamsList = genCustomListQueryParamsService
         .getByCustomListId(
             data.getId());
     List<GenCustomListDetail> genCustomListDetailList = genCustomListDetailService
         .getByCustomListId(
             data.getId());
-
-    CustomListConfig result = new CustomListConfig();
 
     List<QueryParam> queryParams = new ArrayList<>();
 
@@ -180,6 +227,7 @@ public class CustomListBuilder {
         (idColumnDataObj == null ? idColumnDataObjDetail.getSubTableAlias()
             : idColumnDataObj.getMainTableAlias()) + "_"
             + idColumnEntityDetail.getDbColumnName());
+    listConfig.setAllowExport(data.getAllowExport());
 
     if (data.getTreeData()) {
       GenDataEntityDetail entityDetail = genDataEntityDetailService
@@ -197,11 +245,11 @@ public class CustomListBuilder {
       dataObjDetail = genDataObjDetailService
           .getById(data.getTreeNodeColumnRelaId());
 
-        listConfig.setTreeNodeColumn(
-            (dataObj == null ? dataObjDetail.getSubTableAlias() : dataObj.getMainTableAlias()) + "_"
-                + entityDetail.getDbColumnName());
+      listConfig.setTreeNodeColumn(
+          (dataObj == null ? dataObjDetail.getSubTableAlias() : dataObj.getMainTableAlias()) + "_"
+              + entityDetail.getDbColumnName());
 
-        listConfig.setTreeChildrenKey(data.getTreeChildrenKey());
+      listConfig.setTreeChildrenKey(data.getTreeChildrenKey());
     }
 
     List<FieldConfig> fieldConfigs = new ArrayList<>();
@@ -241,6 +289,7 @@ public class CustomListBuilder {
         fieldConfig.setWidthType(genCustomListDetail.getWidthType().getCode());
         fieldConfig.setWidth(genCustomListDetail.getWidth());
         fieldConfig.setSortable(genCustomListDetail.getSortable());
+        fieldConfig.setFormatter(genCustomListDetail.getFormatter());
         if (genCustomListDetail.getType() == GenCustomListDetailType.MAIN_TABLE
             || genCustomListDetail.getType() == GenCustomListDetailType.SUB_TALBE) {
           fieldConfig.setIsNumberType(GenDataType.isNumberType(entityDetail.getDataType()));

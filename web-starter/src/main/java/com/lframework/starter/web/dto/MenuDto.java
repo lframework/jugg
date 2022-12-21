@@ -54,6 +54,12 @@ public class MenuDto implements BaseDto, Serializable {
   @ApiModelProperty("组件")
   private String component;
 
+  /**
+   * 自定义请求参数
+   */
+  @ApiModelProperty("自定义请求参数")
+  private String requestParam;
+
 
   /**
    * meta

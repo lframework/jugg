@@ -88,6 +88,12 @@ public class CreateSysMenuVo implements BaseVo, Serializable {
   private String component;
 
   /**
+   * 自定义请求参数
+   */
+  @ApiModelProperty("自定义请求参数")
+  private String requestParam;
+
+  /**
    * 路径
    */
   @ApiModelProperty("路径")

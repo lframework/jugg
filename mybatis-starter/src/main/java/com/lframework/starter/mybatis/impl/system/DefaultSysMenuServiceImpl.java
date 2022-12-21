@@ -256,6 +256,9 @@ public class DefaultSysMenuServiceImpl extends
         data.setComponent(vo.getComponent());
         data.setComponentType(
             EnumUtil.getByCode(SysMenuComponentType.class, vo.getComponentType()));
+        if (data.getComponentType() == SysMenuComponentType.CUSTOM_FORM) {
+          data.setRequestParam(vo.getRequestParam());
+        }
         data.setNoCache(vo.getNoCache());
 
         if (SecurityConstants.PERMISSION_ADMIN_NAME.equals(vo.getPermission())) {

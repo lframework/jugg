@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class GenCustomLisDetailVo implements BaseVo, Serializable {
+public class GenCustomListDetailVo implements BaseVo, Serializable {
 
   private static final long serialVersionUID = 1L;
 
@@ -58,4 +58,10 @@ public class GenCustomLisDetailVo implements BaseVo, Serializable {
   @NotNull(message = "类型不能为空！")
   @IsEnum(message = "类型不能为空！", enumClass = GenCustomListDetailType.class)
   private Integer type;
+
+  /**
+   * 格式化脚本
+   */
+  @ApiModelProperty("格式化脚本")
+  private String formatter;
 }

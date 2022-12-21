@@ -103,6 +103,11 @@ public class GenCustomList extends BaseEntity implements BaseDto {
   private String treeChildrenKey;
 
   /**
+   * 是否允许导出
+   */
+  private Boolean allowExport;
+
+  /**
    * 状态
    */
   private Boolean available;

@@ -2,6 +2,7 @@ package com.lframework.starter.web.utils;
 
 import java.util.Map;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEvent;
@@ -16,6 +17,24 @@ import org.springframework.stereotype.Component;
 public class ApplicationUtil implements ApplicationContextAware {
 
   private static ApplicationContext APPLICATION_CONTEXT;
+
+  public static Object safeGetBean(String beanName) {
+
+    try {
+      return APPLICATION_CONTEXT.getBean(beanName);
+    } catch (NoSuchBeanDefinitionException e) {
+      return null;
+    }
+  }
+
+  public static <T> T safeGetBean(Class<T> clazz) {
+
+    try {
+      return APPLICATION_CONTEXT.getBean(clazz);
+    } catch (NoSuchBeanDefinitionException e) {
+      return null;
+    }
+  }
 
   public static Object getBean(String beanName) {
 

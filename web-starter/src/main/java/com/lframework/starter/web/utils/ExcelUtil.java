@@ -324,6 +324,78 @@ public class ExcelUtil {
    * 分段导出Xls至Response
    *
    * @param sheetName
+   * @param head
+   * @param <T>
+   */
+  public static <T extends ExcelModel> ExcelMultipartWriterSheetBuilder multipartExportXls(
+      String sheetName,
+      List<String> head) {
+
+    return multipartExportXls(sheetName, sheetName, head);
+  }
+
+  /**
+   * 分段导出Xls至Response
+   *
+   * @param fileName
+   * @param sheetName
+   * @param head
+   * @param <T>
+   */
+  public static <T extends ExcelModel> ExcelMultipartWriterSheetBuilder multipartExportXls(
+      String fileName,
+      String sheetName, List<String> head) {
+
+    HttpServletResponse response = ResponseUtil.getResponse();
+    try {
+      OutputStream os = response.getOutputStream();
+      fileName = URLEncoder.encode(fileName + ExcelTypeEnum.XLS.getValue(),
+          StandardCharsets.UTF_8.name());
+      response.setContentType("application/msexcel");
+      response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+      response.setHeader("FileName", fileName);
+      response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+
+      return multipartExportExcel(os, sheetName, ExcelTypeEnum.XLS, head);
+    } catch (IOException e) {
+      log.error(e.getMessage(), e);
+      throw new DefaultSysException("Xls导出异常");
+    }
+  }
+
+  /**
+   * 分段导出Excel
+   *
+   * @param os
+   * @param sheetName
+   * @param excelType
+   * @param head
+   * @param <T>
+   */
+  private static <T extends ExcelModel> ExcelMultipartWriterSheetBuilder multipartExportExcel(
+      OutputStream os,
+      String sheetName, ExcelTypeEnum excelType, List<String> head) {
+
+    List<List<String>> headWrapper = new ArrayList<>();
+    if (!CollectionUtil.isEmpty(head)) {
+      for (String s : head) {
+        headWrapper.add(Collections.singletonList(s));
+      }
+    }
+
+    ExcelMultipartWriterSheetBuilder builder = new ExcelMultipartWriterBuilder().file(os)
+        .excelType(excelType)
+        .useDefaultStyle(false).head(headWrapper).sheet(sheetName);
+    List<WriteHandler> writeHandlers = getWriteHandlers();
+    writeHandlers.forEach(builder::registerWriteHandler);
+
+    return builder;
+  }
+
+  /**
+   * 分段导出Xls至Response
+   *
+   * @param sheetName
    * @param clazz
    * @param <T>
    */

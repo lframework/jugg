@@ -67,4 +67,9 @@ public class GenCustomListDetail extends BaseEntity {
    */
   private GenCustomListDetailType type;
 
+  /**
+   * 格式化脚本
+   */
+  private String formatter;
+
 }
