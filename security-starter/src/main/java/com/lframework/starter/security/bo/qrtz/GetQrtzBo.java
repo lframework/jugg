@@ -22,11 +22,16 @@ public class GetQrtzBo extends BaseBo<QrtzDto> {
   private String group;
 
   /**
+   * 租户ID
+   */
+  @ApiModelProperty("租户ID")
+  private Integer tenantId;
+
+  /**
    * 备注
    */
   @ApiModelProperty("备注")
   private String description;
-
 
   /**
    * 执行类名

@@ -1,9 +1,9 @@
 package com.lframework.starter.gen.builders;
 
-import com.lframework.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
 import com.lframework.starter.gen.components.custom.form.CustomFormConfig;
 import com.lframework.starter.gen.entity.GenCustomForm;
-import com.lframework.starter.gen.service.IGenCustomFormService;
+import com.lframework.starter.gen.service.GenCustomFormService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
@@ -12,9 +12,9 @@ import org.springframework.stereotype.Component;
 public class CustomFormBuilder {
 
   @Autowired
-  private IGenCustomFormService genCustomFormService;
+  private GenCustomFormService genCustomFormService;
 
-  @Cacheable(value = CustomFormConfig.CACHE_NAME, key = "#id", unless = "#result == null")
+  @Cacheable(value = CustomFormConfig.CACHE_NAME, key = "@cacheVariables.tenantId() + #id", unless = "#result == null")
   public CustomFormConfig buildConfig(String id) {
 
     GenCustomForm form = genCustomFormService.findById(id);
@@ -30,6 +30,7 @@ public class CustomFormBuilder {
     config.setPrefixSubmit(form.getPrefixSubmit());
     config.setSuffixSubmit(form.getSuffixSubmit());
     config.setRequireQuery(form.getRequireQuery());
+    config.setHandleBean(form.getHandleBean());
 
     return config;
   }

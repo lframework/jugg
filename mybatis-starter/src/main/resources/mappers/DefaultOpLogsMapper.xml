@@ -1,25 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lframework.starter.mybatis.mappers.DefaultOpLogsMapper">
-    <resultMap id="OpLogsDto" type="com.lframework.starter.mybatis.dto.DefaultOpLogsDto">
-        <id column="id" property="id"/>
-        <result column="name" property="name"/>
-        <result column="log_type" property="logType"/>
-        <result column="ip" property="ip"/>
-        <result column="extra" property="extra"/>
-        <result column="create_by" property="createBy"/>
-        <result column="create_time" property="createTime"/>
-    </resultMap>
 
     <sql id="OpLogsDto_sql">
         SELECT
-            id,
-            name,
-            log_type,
-            ip,
-            extra,
-            create_by,
-            create_time
+            *
         FROM op_logs
     </sql>
     <delete id="clearLogs">
@@ -31,12 +16,12 @@
         ]]>
     </delete>
 
-    <select id="query" resultMap="OpLogsDto">
+    <select id="query" resultType="com.lframework.starter.mybatis.entity.DefaultOpLogs">
         <include refid="OpLogsDto_sql"/>
         <where>
             <if test="vo != null">
-                <if test="vo.createById != null and vo.createById != ''">
-                    AND create_by_id = #{vo.createById}
+                <if test="vo.createBy != null and vo.createBy != ''">
+                    AND create_by_id = #{vo.createBy}
                 </if>
                 <if test="vo.startTime != null">
                     AND create_time >= #{vo.startTime}
@@ -57,7 +42,7 @@
         ORDER BY create_time DESC
     </select>
 
-    <select id="findById" resultMap="OpLogsDto">
+    <select id="findById" resultType="com.lframework.starter.mybatis.entity.DefaultOpLogs">
         <include refid="OpLogsDto_sql"/>
         WHERE id = #{id}
     </select>

@@ -1,6 +1,6 @@
 package com.lframework.starter.cloud.config;
 
-import com.lframework.common.constants.StringPool;
+import com.lframework.starter.common.constants.StringPool;
 import feign.Retryer;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

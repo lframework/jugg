@@ -1,8 +1,8 @@
 package com.lframework.starter.web.utils;
 
-import com.lframework.common.utils.ArrayUtil;
-import com.lframework.common.utils.CollectionUtil;
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.utils.ArrayUtil;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import java.util.Enumeration;
 import java.util.Map;
 

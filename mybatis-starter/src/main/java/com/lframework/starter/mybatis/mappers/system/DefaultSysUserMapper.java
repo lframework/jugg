@@ -1,6 +1,5 @@
 package com.lframework.starter.mybatis.mappers.system;
 
-import com.lframework.starter.mybatis.dto.system.user.DefaultSysUserDto;
 import com.lframework.starter.mybatis.entity.DefaultSysUser;
 import com.lframework.starter.mybatis.mapper.BaseMapper;
 import com.lframework.starter.mybatis.vo.system.user.QuerySysUserVo;
@@ -24,7 +23,7 @@ public interface DefaultSysUserMapper extends BaseMapper<DefaultSysUser> {
    * @param vo
    * @return
    */
-  List<DefaultSysUserDto> query(@Param("vo") QuerySysUserVo vo);
+  List<DefaultSysUser> query(@Param("vo") QuerySysUserVo vo);
 
   /**
    * 根据ID查询
@@ -32,7 +31,7 @@ public interface DefaultSysUserMapper extends BaseMapper<DefaultSysUser> {
    * @param id
    * @return
    */
-  DefaultSysUserDto findById(String id);
+  DefaultSysUser findById(String id);
 
   /**
    * 选择器
@@ -40,5 +39,5 @@ public interface DefaultSysUserMapper extends BaseMapper<DefaultSysUser> {
    * @param vo
    * @return
    */
-  List<DefaultSysUserDto> selector(@Param("vo") SysUserSelectorVo vo);
+  List<DefaultSysUser> selector(@Param("vo") SysUserSelectorVo vo);
 }

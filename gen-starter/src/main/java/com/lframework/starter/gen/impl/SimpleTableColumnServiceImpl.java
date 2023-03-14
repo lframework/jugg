@@ -1,12 +1,12 @@
 package com.lframework.starter.gen.impl;
 
-import com.lframework.common.utils.CollectionUtil;
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.gen.dto.simpledb.OriSimpleTableColumnDto;
 import com.lframework.starter.gen.entity.GenSimpleTableColumn;
 import com.lframework.starter.gen.mappers.GenSimpleTableColumnMapper;
-import com.lframework.starter.gen.service.ISimpleDBService;
-import com.lframework.starter.gen.service.ISimpleTableColumnService;
+import com.lframework.starter.gen.service.SimpleDBService;
+import com.lframework.starter.gen.service.SimpleTableColumnService;
 import com.lframework.starter.gen.vo.simpledb.QuerySimpleTableColumnVo;
 import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.web.utils.IdUtil;
@@ -18,10 +18,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class SimpleTableColumnServiceImpl extends
     BaseMpServiceImpl<GenSimpleTableColumnMapper, GenSimpleTableColumn>
-    implements ISimpleTableColumnService {
+    implements SimpleTableColumnService {
 
   @Autowired
-  private ISimpleDBService simpleDBService;
+  private SimpleDBService simpleDBService;
 
   @Override
   public List<GenSimpleTableColumn> query(QuerySimpleTableColumnVo vo) {

@@ -1,6 +1,6 @@
 package com.lframework.starter.security.bo.system.position;
 
-import com.lframework.starter.mybatis.dto.system.position.DefaultSysPositionDto;
+import com.lframework.starter.mybatis.entity.DefaultSysPosition;
 import com.lframework.starter.web.bo.BaseBo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class SysPositionSelectorBo extends BaseBo<DefaultSysPositionDto> {
+public class SysPositionSelectorBo extends BaseBo<DefaultSysPosition> {
 
   /**
    * ID
@@ -38,13 +38,13 @@ public class SysPositionSelectorBo extends BaseBo<DefaultSysPositionDto> {
 
   }
 
-  public SysPositionSelectorBo(DefaultSysPositionDto dto) {
+  public SysPositionSelectorBo(DefaultSysPosition dto) {
 
     super(dto);
   }
 
   @Override
-  protected void afterInit(DefaultSysPositionDto dto) {
+  protected void afterInit(DefaultSysPosition dto) {
 
   }
 }

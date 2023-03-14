@@ -2,11 +2,11 @@ package com.lframework.starter.mybatis.utils;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.github.pagehelper.PageInfo;
-import com.lframework.common.utils.BeanUtil;
-import com.lframework.common.utils.ObjectUtil;
+import com.lframework.starter.common.utils.BeanUtil;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.ObjectUtil;
 import com.lframework.starter.mybatis.resp.PageResult;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import javax.validation.constraints.NotNull;
@@ -67,13 +67,13 @@ public class PageResultUtil {
   }
 
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public static <T, S> PageResult<T> rebuild(@SuppressWarnings("rawtypes") PageResult pageResult,
+  public static <T> PageResult<T> rebuild(@SuppressWarnings("rawtypes") PageResult pageResult,
       List<T> datas) {
 
     PageResult<T> result = new PageResult<>();
     BeanUtil.copyProperties(pageResult, result, "datas");
 
-    result.setDatas(datas == null ? Collections.EMPTY_LIST : datas);
+    result.setDatas(datas == null ? CollectionUtil.emptyList() : datas);
 
     pageResult.setDatas(datas);
 

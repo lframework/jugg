@@ -1,33 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lframework.starter.mybatis.mappers.system.DefaultSysPositionMapper">
-    <resultMap id="SysPositionDto" type="com.lframework.starter.mybatis.dto.system.position.DefaultSysPositionDto">
-        <id column="id" property="id"/>
-        <result column="code" property="code"/>
-        <result column="name" property="name"/>
-        <result column="available" property="available"/>
-        <result column="description" property="description"/>
-        <result column="create_by" property="createBy"/>
-        <result column="create_time" property="createTime"/>
-        <result column="update_by" property="updateBy"/>
-        <result column="update_time" property="updateTime"/>
-    </resultMap>
 
-    <sql id="SysPositionDto_sql">
+    <sql id="SysPosition_sql">
         SELECT
-            id,
-            code,
-            name,
-            available,
-            description,
-            create_by,
-            create_time,
-            update_by,
-            update_time
+            *
         FROM sys_position
     </sql>
-    <select id="query" resultMap="SysPositionDto">
-        <include refid="SysPositionDto_sql"/>
+    <select id="query" resultType="com.lframework.starter.mybatis.entity.DefaultSysPosition">
+        <include refid="SysPosition_sql"/>
         <where>
             <if test="vo != null">
                 <if test="vo.code != null and vo.code != ''">
@@ -43,12 +24,12 @@
         </where>
         ORDER BY code
     </select>
-    <select id="findById" resultMap="SysPositionDto">
-        <include refid="SysPositionDto_sql"/>
+    <select id="findById" resultType="com.lframework.starter.mybatis.entity.DefaultSysPosition">
+        <include refid="SysPosition_sql"/>
         WHERE id = #{id}
     </select>
-    <select id="selector" resultMap="SysPositionDto">
-        <include refid="SysPositionDto_sql"/>
+    <select id="selector" resultType="com.lframework.starter.mybatis.entity.DefaultSysPosition">
+        <include refid="SysPosition_sql"/>
         <where>
             <if test="vo != null">
                 <if test="vo.code != null and vo.code != ''">

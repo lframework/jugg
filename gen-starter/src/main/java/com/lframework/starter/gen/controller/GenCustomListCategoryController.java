@@ -1,11 +1,11 @@
 package com.lframework.starter.gen.controller;
 
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.CollectionUtil;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.gen.bo.custom.list.category.GetGenCustomListCategoryBo;
 import com.lframework.starter.gen.bo.custom.list.category.QueryGenCustomListCategoryBo;
 import com.lframework.starter.gen.entity.GenCustomListCategory;
-import com.lframework.starter.gen.service.IGenCustomListCategoryService;
+import com.lframework.starter.gen.service.GenCustomListCategoryService;
 import com.lframework.starter.gen.vo.custom.list.category.CreateGenCustomListCategoryVo;
 import com.lframework.starter.gen.vo.custom.list.category.UpdateGenCustomListCategoryVo;
 import com.lframework.starter.web.controller.DefaultBaseController;
@@ -15,7 +15,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
@@ -41,7 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class GenCustomListCategoryController extends DefaultBaseController {
 
   @Autowired
-  private IGenCustomListCategoryService genCustomListCategoryService;
+  private GenCustomListCategoryService genCustomListCategoryService;
 
   /**
    * 查询列表
@@ -50,7 +49,7 @@ public class GenCustomListCategoryController extends DefaultBaseController {
   @GetMapping("/query")
   public InvokeResult<List<QueryGenCustomListCategoryBo>> query() {
     List<GenCustomListCategory> datas = genCustomListCategoryService.queryList();
-    List<QueryGenCustomListCategoryBo> results = Collections.EMPTY_LIST;
+    List<QueryGenCustomListCategoryBo> results = CollectionUtil.emptyList();
     if (!CollectionUtil.isEmpty(datas)) {
       results = datas.stream().map(QueryGenCustomListCategoryBo::new).collect(Collectors.toList());
     }

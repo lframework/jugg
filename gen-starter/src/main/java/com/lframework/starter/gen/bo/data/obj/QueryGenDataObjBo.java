@@ -1,13 +1,13 @@
 package com.lframework.starter.gen.bo.data.obj;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.lframework.common.constants.StringPool;
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.constants.StringPool;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.gen.entity.GenDataObj;
 import com.lframework.starter.gen.entity.GenDataObjCategory;
-import com.lframework.starter.gen.service.IGenDataObjCategoryService;
+import com.lframework.starter.gen.service.GenDataObjCategoryService;
 import com.lframework.starter.web.bo.BaseBo;
-import com.lframework.starter.web.utils.ApplicationUtil;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDateTime;
 import lombok.Data;
@@ -88,8 +88,8 @@ public class QueryGenDataObjBo extends BaseBo<GenDataObj> {
   protected void afterInit(GenDataObj dto) {
 
     if (!StringUtil.isBlank(dto.getCategoryId())) {
-      IGenDataObjCategoryService genDataObjCategoryService = ApplicationUtil.getBean(
-          IGenDataObjCategoryService.class);
+      GenDataObjCategoryService genDataObjCategoryService = ApplicationUtil.getBean(
+          GenDataObjCategoryService.class);
       GenDataObjCategory category = genDataObjCategoryService.findById(dto.getCategoryId());
       this.categoryName = category.getName();
     }

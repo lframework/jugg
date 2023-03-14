@@ -1,10 +1,10 @@
 package com.lframework.starter.mybatis.handlers;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
-import com.lframework.common.utils.ObjectUtil;
+import com.lframework.starter.common.utils.ObjectUtil;
 import com.lframework.starter.mybatis.constants.MyBatisStringPool;
-import com.lframework.web.common.security.AbstractUserDetails;
-import com.lframework.web.common.security.SecurityUtil;
+import com.lframework.starter.web.common.security.AbstractUserDetails;
+import com.lframework.starter.web.common.security.SecurityUtil;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.function.Supplier;

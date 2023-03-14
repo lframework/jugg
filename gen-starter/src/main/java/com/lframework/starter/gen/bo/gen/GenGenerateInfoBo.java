@@ -1,10 +1,10 @@
 package com.lframework.starter.gen.bo.gen;
 
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.gen.dto.gen.GenGenerateInfoDto;
-import com.lframework.starter.mybatis.service.system.ISysMenuService;
+import com.lframework.starter.mybatis.service.system.SysMenuService;
 import com.lframework.starter.web.bo.BaseBo;
-import com.lframework.starter.web.utils.ApplicationUtil;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -116,7 +116,7 @@ public class GenGenerateInfoBo extends BaseBo<GenGenerateInfoDto> {
     this.keyType = dto.getKeyType().getCode();
 
     if (!StringUtil.isBlank(dto.getParentMenuId())) {
-      ISysMenuService sysMenuService = ApplicationUtil.getBean(ISysMenuService.class);
+      SysMenuService sysMenuService = ApplicationUtil.getBean(SysMenuService.class);
       this.parentMenuName = sysMenuService.findById(dto.getParentMenuId()).getName();
     }
   }

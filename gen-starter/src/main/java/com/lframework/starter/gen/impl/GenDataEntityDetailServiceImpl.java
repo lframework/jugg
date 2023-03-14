@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.lframework.starter.gen.entity.GenDataEntityDetail;
 import com.lframework.starter.gen.mappers.GenDataEntityDetailMapper;
-import com.lframework.starter.gen.service.IGenDataEntityDetailService;
+import com.lframework.starter.gen.service.GenDataEntityDetailService;
 import com.lframework.starter.gen.vo.data.entity.GenDataEntityDetailSelectorVo;
 import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import java.util.List;
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class GenDataEntityDetailServiceImpl extends
     BaseMpServiceImpl<GenDataEntityDetailMapper, GenDataEntityDetail> implements
-    IGenDataEntityDetailService {
+    GenDataEntityDetailService {
 
   @Override
   public List<GenDataEntityDetail> getByEntityId(String entityId) {
@@ -25,7 +25,7 @@ public class GenDataEntityDetailServiceImpl extends
     return getBaseMapper().selectList(queryWrapper);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void deleteByEntityId(String entityId) {
     Wrapper<GenDataEntityDetail> queryWrapper = Wrappers.lambdaQuery(GenDataEntityDetail.class)

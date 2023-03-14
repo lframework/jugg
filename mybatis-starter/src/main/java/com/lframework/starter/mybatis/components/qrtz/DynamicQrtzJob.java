@@ -1,7 +1,7 @@
 package com.lframework.starter.mybatis.components.qrtz;
 
-import com.lframework.common.utils.CollectionUtil;
-import com.lframework.common.utils.ReflectUtil;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.ReflectUtil;
 import com.lframework.starter.mybatis.enums.qrtz.QrtzJobType;
 import com.lframework.starter.web.components.qrtz.QrtzJob;
 import com.lframework.starter.web.utils.EnumUtil;

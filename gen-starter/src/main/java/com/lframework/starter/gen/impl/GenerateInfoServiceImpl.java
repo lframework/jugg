@@ -1,12 +1,12 @@
 package com.lframework.starter.gen.impl;
 
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.gen.dto.gen.GenGenerateInfoDto;
 import com.lframework.starter.gen.entity.GenGenerateInfo;
 import com.lframework.starter.gen.enums.GenKeyType;
 import com.lframework.starter.gen.enums.GenTemplateType;
 import com.lframework.starter.gen.mappers.GenGenerateInfoMapper;
-import com.lframework.starter.gen.service.IGenerateInfoService;
+import com.lframework.starter.gen.service.GenerateInfoService;
 import com.lframework.starter.gen.vo.gen.UpdateGenerateInfoVo;
 import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.web.utils.EnumUtil;
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class GenerateInfoServiceImpl extends
     BaseMpServiceImpl<GenGenerateInfoMapper, GenGenerateInfo>
-    implements IGenerateInfoService {
+    implements GenerateInfoService {
 
   @Override
   public GenGenerateInfoDto getByEntityId(String entityId) {
@@ -24,7 +24,7 @@ public class GenerateInfoServiceImpl extends
     return getBaseMapper().getByDataObjId(entityId);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void updateGenerate(String dataObjId, UpdateGenerateInfoVo vo) {
 
@@ -58,7 +58,7 @@ public class GenerateInfoServiceImpl extends
     getBaseMapper().insert(data);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void deleteByEntityId(String entityId) {
 

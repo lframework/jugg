@@ -1,10 +1,11 @@
 package com.lframework.starter.gen.builders;
 
 import cn.hutool.core.convert.Convert;
-import com.lframework.common.constants.StringPool;
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.exceptions.impl.DefaultSysException;
-import com.lframework.common.utils.CollectionUtil;
+import com.lframework.starter.common.constants.StringPool;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.exceptions.impl.DefaultSysException;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.gen.components.custom.list.CustomListConfig;
 import com.lframework.starter.gen.components.custom.list.CustomListConfig.FieldConfig;
 import com.lframework.starter.gen.components.custom.list.CustomListConfig.HandleColumn;
@@ -27,19 +28,19 @@ import com.lframework.starter.gen.enums.GenCustomListDetailType;
 import com.lframework.starter.gen.enums.GenDataType;
 import com.lframework.starter.gen.enums.GenQueryType;
 import com.lframework.starter.gen.enums.GenViewType;
-import com.lframework.starter.gen.service.IGenCustomListDetailService;
-import com.lframework.starter.gen.service.IGenCustomListHandleColumnService;
-import com.lframework.starter.gen.service.IGenCustomListQueryParamsService;
-import com.lframework.starter.gen.service.IGenCustomListService;
-import com.lframework.starter.gen.service.IGenCustomListToolbarService;
-import com.lframework.starter.gen.service.IGenCustomSelectorService;
-import com.lframework.starter.gen.service.IGenDataEntityDetailService;
-import com.lframework.starter.gen.service.IGenDataObjDetailService;
-import com.lframework.starter.gen.service.IGenDataObjQueryDetailService;
-import com.lframework.starter.gen.service.IGenDataObjService;
+import com.lframework.starter.gen.service.GenCustomListDetailService;
+import com.lframework.starter.gen.service.GenCustomListHandleColumnService;
+import com.lframework.starter.gen.service.GenCustomListQueryParamsService;
+import com.lframework.starter.gen.service.GenCustomListService;
+import com.lframework.starter.gen.service.GenCustomListToolbarService;
+import com.lframework.starter.gen.service.GenCustomSelectorService;
+import com.lframework.starter.gen.service.GenDataEntityDetailService;
+import com.lframework.starter.gen.service.GenDataObjDetailService;
+import com.lframework.starter.gen.service.GenDataObjQueryDetailService;
+import com.lframework.starter.gen.service.GenDataObjService;
 import com.lframework.starter.mybatis.entity.SysDataDic;
-import com.lframework.starter.mybatis.service.system.ISysDataDicService;
-import com.lframework.starter.web.utils.ApplicationUtil;
+import com.lframework.starter.mybatis.service.system.SysDataDicService;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 import com.lframework.starter.web.utils.EnumUtil;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,34 +53,34 @@ import org.springframework.stereotype.Component;
 public class CustomListBuilder {
 
   @Autowired
-  private IGenCustomListService genCustomListService;
+  private GenCustomListService genCustomListService;
 
   @Autowired
-  private IGenCustomListDetailService genCustomListDetailService;
+  private GenCustomListDetailService genCustomListDetailService;
 
   @Autowired
-  private IGenCustomListQueryParamsService genCustomListQueryParamsService;
+  private GenCustomListQueryParamsService genCustomListQueryParamsService;
 
   @Autowired
-  private IGenDataEntityDetailService genDataEntityDetailService;
+  private GenDataEntityDetailService genDataEntityDetailService;
 
   @Autowired
-  private IGenDataObjService genDataObjService;
+  private GenDataObjService genDataObjService;
 
   @Autowired
-  private IGenDataObjDetailService genDataObjDetailService;
+  private GenDataObjDetailService genDataObjDetailService;
 
   @Autowired
-  private IGenDataObjQueryDetailService genDataObjQueryDetailService;
+  private GenDataObjQueryDetailService genDataObjQueryDetailService;
 
   @Autowired
   private DataObjectBuilder dataObjectBuilder;
 
   @Autowired
-  private IGenCustomListToolbarService genCustomListToolbarService;
+  private GenCustomListToolbarService genCustomListToolbarService;
 
   @Autowired
-  private IGenCustomListHandleColumnService genCustomListHandleColumnService;
+  private GenCustomListHandleColumnService genCustomListHandleColumnService;
 
   public DataObjectQueryObj buildQueryObj(String id, DataObjectQueryParamObj queryParamObj) {
     GenCustomList customList = genCustomListService.findById(id);
@@ -99,7 +100,7 @@ public class CustomListBuilder {
     return obj;
   }
 
-  @Cacheable(value = CustomListConfig.CACHE_NAME, key = "#id", unless = "#result == null")
+  @Cacheable(value = CustomListConfig.CACHE_NAME, key = "@cacheVariables.tenantId() + #id", unless = "#result == null")
   public CustomListConfig buildConfig(String id) {
 
     // 先查询配置信息
@@ -184,22 +185,24 @@ public class CustomListBuilder {
         queryParam.setDataType(entityDetail.getDataType().getCode());
         queryParam.setFixEnum(entityDetail.getFixEnum());
         queryParam.setFrontType(entityDetail.getEnumFront());
-        queryParam.setDefaultValue(Convert.convert(
-            entityDetail.getViewType() == GenViewType.DATE_RANGE ? String.class
-                : entityDetail.getDataType().getClazz(),
-            genCustomListQueryParams.getDefaultValue()));
+        if (StringUtil.isNotEmpty(genCustomListQueryParams.getDefaultValue())) {
+          queryParam.setDefaultValue(Convert.convert(
+              entityDetail.getViewType() == GenViewType.DATE_RANGE ? String.class
+                  : entityDetail.getDataType().getClazz(),
+              genCustomListQueryParams.getDefaultValue()));
+        }
         queryParam.setHasAvailableTag(
             entityDetail.getViewType() == GenViewType.SELECT
                 && entityDetail.getDataType() == GenDataType.BOOLEAN
                 && "available".equals(entityDetail.getColumnName()));
 
         if (entityDetail.getViewType() == GenViewType.DATA_DIC) {
-          ISysDataDicService sysDataDicService = ApplicationUtil.getBean(ISysDataDicService.class);
+          SysDataDicService sysDataDicService = ApplicationUtil.getBean(SysDataDicService.class);
           SysDataDic dic = sysDataDicService.findById(entityDetail.getDataDicId());
           queryParam.setDataDicCode(dic.getCode());
         } else if (entityDetail.getViewType() == GenViewType.CUSTOM_SELECTOR) {
-          IGenCustomSelectorService genCustomSelectorService = ApplicationUtil
-              .getBean(IGenCustomSelectorService.class);
+          GenCustomSelectorService genCustomSelectorService = ApplicationUtil
+              .getBean(GenCustomSelectorService.class);
           GenCustomSelector selector = genCustomSelectorService
               .findById(entityDetail.getCustomSelectorId());
           queryParam.setCustomSelectorId(selector.getId());

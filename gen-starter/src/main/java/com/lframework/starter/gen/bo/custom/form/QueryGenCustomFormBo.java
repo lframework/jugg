@@ -1,13 +1,13 @@
 package com.lframework.starter.gen.bo.custom.form;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.lframework.common.constants.StringPool;
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.constants.StringPool;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.gen.entity.GenCustomForm;
 import com.lframework.starter.gen.entity.GenCustomFormCategory;
-import com.lframework.starter.gen.service.IGenCustomFormCategoryService;
+import com.lframework.starter.gen.service.GenCustomFormCategoryService;
 import com.lframework.starter.web.bo.BaseBo;
-import com.lframework.starter.web.utils.ApplicationUtil;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDateTime;
 import lombok.Data;
@@ -88,8 +88,8 @@ public class QueryGenCustomFormBo extends BaseBo<GenCustomForm> {
   protected void afterInit(GenCustomForm dto) {
 
     if (!StringUtil.isBlank(dto.getCategoryId())) {
-      IGenCustomFormCategoryService genCustomFormCategoryService = ApplicationUtil.getBean(
-          IGenCustomFormCategoryService.class);
+      GenCustomFormCategoryService genCustomFormCategoryService = ApplicationUtil.getBean(
+          GenCustomFormCategoryService.class);
       GenCustomFormCategory category = genCustomFormCategoryService
           .findById(dto.getCategoryId());
       this.categoryName = category.getName();

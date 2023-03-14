@@ -1,15 +1,14 @@
 package com.lframework.starter.gen.impl;
 
-import com.lframework.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.gen.dto.gen.GenUpdateColumnConfigDto;
 import com.lframework.starter.gen.entity.GenDataEntityDetail;
 import com.lframework.starter.gen.entity.GenUpdateColumnConfig;
 import com.lframework.starter.gen.mappers.GenUpdateColumnConfigMapper;
-import com.lframework.starter.gen.service.IGenDataEntityDetailService;
-import com.lframework.starter.gen.service.IGenUpdateColumnConfigService;
+import com.lframework.starter.gen.service.GenDataEntityDetailService;
+import com.lframework.starter.gen.service.GenUpdateColumnConfigService;
 import com.lframework.starter.gen.vo.gen.UpdateUpdateColumnConfigVo;
 import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,24 +18,24 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class GenUpdateColumnConfigServiceImpl
     extends BaseMpServiceImpl<GenUpdateColumnConfigMapper, GenUpdateColumnConfig>
-    implements IGenUpdateColumnConfigService {
+    implements GenUpdateColumnConfigService {
 
   @Autowired
-  private IGenDataEntityDetailService genDataEntityDetailService;
+  private GenDataEntityDetailService genDataEntityDetailService;
 
   @Override
   public List<GenUpdateColumnConfigDto> getByDataEntityId(String entityId) {
 
     List<GenDataEntityDetail> columns = genDataEntityDetailService.getByEntityId(entityId);
     if (CollectionUtil.isEmpty(columns)) {
-      return Collections.EMPTY_LIST;
+      return CollectionUtil.emptyList();
     }
 
     return getBaseMapper().getByIds(
         columns.stream().map(GenDataEntityDetail::getId).collect(Collectors.toList()));
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void updateGenerate(String entityId, List<UpdateUpdateColumnConfigVo> vo) {
 
@@ -65,7 +64,7 @@ public class GenUpdateColumnConfigServiceImpl
     return getBaseMapper().findById(id);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void deleteById(String id) {
 

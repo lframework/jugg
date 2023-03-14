@@ -1,7 +1,7 @@
 package com.lframework.starter.mybatis.config;
 
 import com.lframework.starter.mybatis.impl.DefaultOpLogsServiceImpl;
-import com.lframework.starter.mybatis.service.IOpLogsService;
+import com.lframework.starter.mybatis.service.OpLogsService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,8 +17,8 @@ public class OpLogConfiguration {
   public static final String OP_LOG_THREAD_POOL_NAME = "opLogThreadPool";
 
   @Bean
-  @ConditionalOnMissingBean(IOpLogsService.class)
-  public IOpLogsService getOpLogsService() {
+  @ConditionalOnMissingBean(OpLogsService.class)
+  public OpLogsService getOpLogsService() {
 
     return new DefaultOpLogsServiceImpl();
   }

@@ -3,13 +3,13 @@ package com.lframework.starter.gen.impl;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageInfo;
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.Assert;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.Assert;
 import com.lframework.starter.gen.entity.GenCustomSelector;
 import com.lframework.starter.gen.entity.GenCustomSelectorCategory;
 import com.lframework.starter.gen.mappers.GenCustomSelectorCategoryMapper;
-import com.lframework.starter.gen.service.IGenCustomSelectorCategoryService;
-import com.lframework.starter.gen.service.IGenCustomSelectorService;
+import com.lframework.starter.gen.service.GenCustomSelectorCategoryService;
+import com.lframework.starter.gen.service.GenCustomSelectorService;
 import com.lframework.starter.gen.vo.custom.selector.category.CreateGenCustomSelectorCategoryVo;
 import com.lframework.starter.gen.vo.custom.selector.category.GenCustomSelectorCategorySelectorVo;
 import com.lframework.starter.gen.vo.custom.selector.category.UpdateGenCustomSelectorCategoryVo;
@@ -29,12 +29,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class GenCustomSelectorCategoryServiceImpl extends
     BaseMpServiceImpl<GenCustomSelectorCategoryMapper, GenCustomSelectorCategory> implements
-    IGenCustomSelectorCategoryService {
+    GenCustomSelectorCategoryService {
 
   @Autowired
-  private IGenCustomSelectorService genCustomSelectorService;
+  private GenCustomSelectorService genCustomSelectorService;
 
-  @Cacheable(value = GenCustomSelectorCategory.CACHE_NAME, key = "'all'")
+  @Cacheable(value = GenCustomSelectorCategory.CACHE_NAME, key = "@cacheVariables.tenantId() + 'all'")
   @Override
   public List<GenCustomSelectorCategory> queryList() {
     return getBaseMapper().query();
@@ -52,13 +52,13 @@ public class GenCustomSelectorCategoryServiceImpl extends
     return PageResultUtil.convert(new PageInfo<>(datas));
   }
 
-  @Cacheable(value = GenCustomSelectorCategory.CACHE_NAME, key = "#id", unless = "#result == null")
+  @Cacheable(value = GenCustomSelectorCategory.CACHE_NAME, key = "@cacheVariables.tenantId() + #id", unless = "#result == null")
   @Override
   public GenCustomSelectorCategory findById(String id) {
     return getBaseMapper().selectById(id);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public String create(CreateGenCustomSelectorCategoryVo vo) {
 
@@ -85,7 +85,7 @@ public class GenCustomSelectorCategoryServiceImpl extends
     return record.getId();
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void update(UpdateGenCustomSelectorCategoryVo vo) {
     Wrapper<GenCustomSelectorCategory> checkWrapper = Wrappers
@@ -114,7 +114,7 @@ public class GenCustomSelectorCategoryServiceImpl extends
     this.updateById(record);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void deleteById(String id) {
 
@@ -127,7 +127,7 @@ public class GenCustomSelectorCategoryServiceImpl extends
     this.removeById(id);
   }
 
-  @CacheEvict(value = GenCustomSelectorCategory.CACHE_NAME, key = "#key")
+  @CacheEvict(value = GenCustomSelectorCategory.CACHE_NAME, key = "@cacheVariables.tenantId() + #key")
   @Override
   public void cleanCacheByKey(Serializable key) {
   }

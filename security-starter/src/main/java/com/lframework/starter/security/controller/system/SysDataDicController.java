@@ -1,10 +1,10 @@
 package com.lframework.starter.security.controller.system;
 
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.CollectionUtil;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.mybatis.entity.SysDataDic;
 import com.lframework.starter.mybatis.resp.PageResult;
-import com.lframework.starter.mybatis.service.system.ISysDataDicService;
+import com.lframework.starter.mybatis.service.system.SysDataDicService;
 import com.lframework.starter.mybatis.utils.PageResultUtil;
 import com.lframework.starter.mybatis.vo.system.dic.CreateSysDataDicVo;
 import com.lframework.starter.mybatis.vo.system.dic.QuerySysDataDicVo;
@@ -17,13 +17,12 @@ import com.lframework.starter.web.resp.InvokeResultBuilder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+import com.lframework.starter.web.annotations.security.HasPermission;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,19 +43,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class SysDataDicController extends DefaultBaseController {
 
   @Autowired
-  private ISysDataDicService sysDataDicService;
+  private SysDataDicService sysDataDicService;
 
   /**
    * 查询列表
    */
   @ApiOperation("查询列表")
-  @PreAuthorize("@permission.valid('system:dic:*')")
+  @HasPermission({"system:dic:*"})
   @GetMapping("/query")
   public InvokeResult<PageResult<QuerySysDataDicBo>> query(@Valid QuerySysDataDicVo vo) {
     PageResult<SysDataDic> pageResult = sysDataDicService.query(getPageIndex(vo), getPageSize(vo),
         vo);
     List<SysDataDic> datas = pageResult.getDatas();
-    List<QuerySysDataDicBo> results = Collections.EMPTY_LIST;
+    List<QuerySysDataDicBo> results = CollectionUtil.emptyList();
     if (!CollectionUtil.isEmpty(datas)) {
       results = datas.stream().map(QuerySysDataDicBo::new).collect(Collectors.toList());
     }
@@ -69,7 +68,7 @@ public class SysDataDicController extends DefaultBaseController {
    */
   @ApiOperation("根据ID查询")
   @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
-  @PreAuthorize("@permission.valid('system:dic:*')")
+  @HasPermission({"system:dic:*"})
   @GetMapping
   public InvokeResult<GetSysDataDicBo> get(@NotBlank(message = "ID不能为空！") String id) {
 
@@ -87,7 +86,7 @@ public class SysDataDicController extends DefaultBaseController {
    * 新增数据字典
    */
   @ApiOperation("新增数据字典")
-  @PreAuthorize("@permission.valid('system:dic:add')")
+  @HasPermission({"system:dic:add"})
   @PostMapping
   public InvokeResult<Void> create(@Valid CreateSysDataDicVo vo) {
 
@@ -100,7 +99,7 @@ public class SysDataDicController extends DefaultBaseController {
    * 修改数据字典
    */
   @ApiOperation("修改数据字典")
-  @PreAuthorize("@permission.valid('system:dic:modify')")
+  @HasPermission({"system:dic:modify"})
   @PutMapping
   public InvokeResult<Void> update(@Valid UpdateSysDataDicVo vo) {
 
@@ -115,7 +114,7 @@ public class SysDataDicController extends DefaultBaseController {
    * 删除数据字典
    */
   @ApiOperation("删除数据字典")
-  @PreAuthorize("@permission.valid('system:dic:delete')")
+  @HasPermission({"system:dic:delete"})
   @DeleteMapping
   public InvokeResult<Void> delete(@NotBlank(message = "ID不能为空！") String id) {
 

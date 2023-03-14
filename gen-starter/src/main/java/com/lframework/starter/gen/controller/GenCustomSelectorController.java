@@ -1,10 +1,10 @@
 package com.lframework.starter.gen.controller;
 
-import com.lframework.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.gen.bo.custom.selector.GetGenCustomSelectorBo;
 import com.lframework.starter.gen.bo.custom.selector.QueryGenCustomSelectorBo;
 import com.lframework.starter.gen.entity.GenCustomSelector;
-import com.lframework.starter.gen.service.IGenCustomSelectorService;
+import com.lframework.starter.gen.service.GenCustomSelectorService;
 import com.lframework.starter.gen.vo.custom.selector.CreateGenCustomSelectorVo;
 import com.lframework.starter.gen.vo.custom.selector.QueryGenCustomSelectorVo;
 import com.lframework.starter.gen.vo.custom.selector.UpdateGenCustomSelectorVo;
@@ -42,7 +42,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class GenCustomSelectorController extends DefaultBaseController {
 
   @Autowired
-  private IGenCustomSelectorService genCustomSelectorService;
+  private GenCustomSelectorService genCustomSelectorService;
 
   @ApiOperation("查询自定义选择器")
   @GetMapping("/query")

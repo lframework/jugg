@@ -10,7 +10,7 @@
         <if test="obj.subTables != null and obj.subTables.size() > 0">
             <foreach collection="obj.subTables" item="item">
                 ${item.joinType} JOIN ${item.subTable} AS ${item.subTableAlias} <if test="item.joinCondition != null and item.joinCondition.size() > 0"><foreach
-                    collection="item.joinCondition" item="subTable" open="ON" separator=" ">${obj.mainTableAlias}.${subTable.key} = ${item.subTableAlias}.${subTable.value}</foreach> </if>
+                    collection="item.joinCondition" item="joinConditionItem" open="ON" separator=" AND ">${obj.mainTableAlias}.${joinConditionItem.key} = ${item.subTableAlias}.${joinConditionItem.value}</foreach> </if>
             </foreach>
         </if>
         <where>

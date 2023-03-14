@@ -1,24 +1,29 @@
 package com.lframework.starter.web.config;
 
 import com.aliyun.dysmsapi20170525.Client;
-import com.lframework.common.utils.AliSmsUtil;
+import com.lframework.starter.common.utils.AliSmsUtil;
 import com.lframework.starter.web.impl.AliSmsServiceImpl;
-import com.lframework.starter.web.service.IAliSmsService;
+import com.lframework.starter.web.service.AliSmsService;
+import com.lframework.starter.web.service.SysParameterService;
+import com.lframework.starter.web.utils.JsonUtil;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 
 @Configuration
-@EnableConfigurationProperties(AliSmsProperties.class)
 public class AliSmsConfiguration {
 
   @Bean
-  @ConditionalOnMissingBean(IAliSmsService.class)
-  public IAliSmsService getAliSmsService(AliSmsProperties properties) throws Exception {
+  @Scope("prototype")
+  @ConditionalOnMissingBean(AliSmsService.class)
+  public AliSmsService getAliSmsService(SysParameterService sysParameterService) throws Exception {
 
-    Client client = AliSmsUtil.createClient(properties.getAccessKeyId(),
-        properties.getAccessKeySecret());
+    String smsConfig = sysParameterService.findRequiredByKey("sms.ali");
+    AliSmsProperties config = JsonUtil.parseObject(smsConfig, AliSmsProperties.class);
+
+    Client client = AliSmsUtil.createClient(config.getAccessKeyId(), config.getAccessKeySecret(),
+        config.getEndpoint());
     return new AliSmsServiceImpl(client);
   }
 }

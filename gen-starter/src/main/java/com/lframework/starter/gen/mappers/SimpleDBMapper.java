@@ -24,4 +24,12 @@ public interface SimpleDBMapper extends BaseMapper {
    * @return
    */
   OriSimpleTableDto getByTableName(@Param("tableName") String tableName);
+
+  /**
+   * 批量查询
+   *
+   * @param tableNames
+   * @return
+   */
+  List<SimpleDBDto> listByIds(@Param("tableNames") List<String> tableNames);
 }

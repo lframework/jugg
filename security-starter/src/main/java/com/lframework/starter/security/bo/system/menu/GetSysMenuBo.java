@@ -1,22 +1,22 @@
 package com.lframework.starter.security.bo.system.menu;
 
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.gen.entity.GenCustomForm;
 import com.lframework.starter.gen.entity.GenCustomList;
-import com.lframework.starter.gen.service.IGenCustomFormService;
-import com.lframework.starter.gen.service.IGenCustomListService;
-import com.lframework.starter.mybatis.dto.system.menu.DefaultSysMenuDto;
+import com.lframework.starter.gen.service.GenCustomFormService;
+import com.lframework.starter.gen.service.GenCustomListService;
+import com.lframework.starter.mybatis.entity.DefaultSysMenu;
 import com.lframework.starter.mybatis.enums.system.SysMenuComponentType;
-import com.lframework.starter.mybatis.service.system.ISysMenuService;
+import com.lframework.starter.mybatis.service.system.SysMenuService;
 import com.lframework.starter.web.bo.BaseBo;
-import com.lframework.starter.web.utils.ApplicationUtil;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class GetSysMenuBo extends BaseBo<DefaultSysMenuDto> {
+public class GetSysMenuBo extends BaseBo<DefaultSysMenu> {
 
   private static final long serialVersionUID = 1L;
 
@@ -156,37 +156,37 @@ public class GetSysMenuBo extends BaseBo<DefaultSysMenuDto> {
 
   }
 
-  public GetSysMenuBo(DefaultSysMenuDto dto) {
+  public GetSysMenuBo(DefaultSysMenu dto) {
 
     super(dto);
   }
 
   @Override
-  public <A> BaseBo<DefaultSysMenuDto> convert(DefaultSysMenuDto dto) {
+  public <A> BaseBo<DefaultSysMenu> convert(DefaultSysMenu dto) {
 
     return super.convert(dto, GetSysMenuBo::getDisplay);
   }
 
   @Override
-  protected void afterInit(DefaultSysMenuDto dto) {
+  protected void afterInit(DefaultSysMenu dto) {
 
     this.display = dto.getDisplay().getCode();
     if (!StringUtil.isBlank(dto.getParentId())) {
-      ISysMenuService sysMenuService = ApplicationUtil.getBean(ISysMenuService.class);
+      SysMenuService sysMenuService = ApplicationUtil.getBean(SysMenuService.class);
       this.parentName = sysMenuService.findById(dto.getParentId()).getTitle();
     }
 
     this.componentType = dto.getComponentType() == null ? null : dto.getComponentType().getCode();
     if (dto.getComponentType() == SysMenuComponentType.CUSTOM_LIST) {
       this.customListId = dto.getComponent();
-      IGenCustomListService genCustomListService = ApplicationUtil
-          .getBean(IGenCustomListService.class);
+      GenCustomListService genCustomListService = ApplicationUtil
+          .getBean(GenCustomListService.class);
       GenCustomList customList = genCustomListService.findById(dto.getComponent());
       this.customListName = customList.getName();
     } else if (dto.getComponentType() == SysMenuComponentType.CUSTOM_FORM) {
       this.customFormId = dto.getComponent();
-      IGenCustomFormService genCustomFormService = ApplicationUtil
-          .getBean(IGenCustomFormService.class);
+      GenCustomFormService genCustomFormService = ApplicationUtil
+          .getBean(GenCustomFormService.class);
       GenCustomForm customForm = genCustomFormService.findById(dto.getComponent());
       this.customFormName = customForm.getName();
       this.requestParam = dto.getRequestParam();

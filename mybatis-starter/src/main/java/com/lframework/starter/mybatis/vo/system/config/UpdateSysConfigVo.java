@@ -1,7 +1,5 @@
 package com.lframework.starter.mybatis.vo.system.config;
 
-import com.lframework.common.exceptions.impl.InputErrorException;
-import com.lframework.common.utils.StringUtil;
 import com.lframework.starter.web.components.validation.TypeMismatch;
 import com.lframework.starter.web.vo.BaseVo;
 import io.swagger.annotations.ApiModelProperty;
@@ -95,42 +93,4 @@ public class UpdateSysConfigVo implements BaseVo, Serializable {
    */
   @ApiModelProperty(value = "templateCode，forgetPswRequireSms == true时必填")
   private String templateCode;
-
-  @Override
-  public void validate() {
-
-    if (this.allowForgetPsw) {
-      if (this.forgetPswRequireMail == null) {
-        throw new InputErrorException("请选择忘记密码是否使用邮箱！");
-      }
-
-      if (this.forgetPswRequireSms == null) {
-        throw new InputErrorException("请选择忘记密码是否使用短信！");
-      }
-
-      if (!this.forgetPswRequireMail && !this.forgetPswRequireSms) {
-        throw new InputErrorException("开启忘记密码时，忘记密码使用邮箱、忘记密码使用短信至少开启一个！");
-      }
-
-      if (this.forgetPswRequireSms) {
-        if (StringUtil.isBlank(this.signName)) {
-          throw new InputErrorException("请输入signName！");
-        }
-
-        if (StringUtil.isBlank(this.templateCode)) {
-          throw new InputErrorException("请输入templateCode！");
-        }
-      }
-    }
-
-    if (this.allowTelephoneLogin) {
-      if (StringUtil.isBlank(this.telephoneLoginSignName)) {
-        throw new InputErrorException("请输入手机号登录signName！");
-      }
-
-      if (StringUtil.isBlank(this.telephoneLoginTemplateCode)) {
-        throw new InputErrorException("请输入手机号登录templateCode！");
-      }
-    }
-  }
 }

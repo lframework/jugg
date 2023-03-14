@@ -1,8 +1,8 @@
 package com.lframework.starter.security.bo.system.position;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.lframework.common.constants.StringPool;
-import com.lframework.starter.mybatis.dto.system.position.DefaultSysPositionDto;
+import com.lframework.starter.common.constants.StringPool;
+import com.lframework.starter.mybatis.entity.DefaultSysPosition;
 import com.lframework.starter.web.bo.BaseBo;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDateTime;
@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class QuerySysPositionBo extends BaseBo<DefaultSysPositionDto> {
+public class QuerySysPositionBo extends BaseBo<DefaultSysPosition> {
 
   /**
    * ID
@@ -73,12 +73,12 @@ public class QuerySysPositionBo extends BaseBo<DefaultSysPositionDto> {
 
   }
 
-  public QuerySysPositionBo(DefaultSysPositionDto dto) {
+  public QuerySysPositionBo(DefaultSysPosition dto) {
 
     super(dto);
   }
 
   @Override
-  protected void afterInit(DefaultSysPositionDto dto) {
+  protected void afterInit(DefaultSysPosition dto) {
   }
 }

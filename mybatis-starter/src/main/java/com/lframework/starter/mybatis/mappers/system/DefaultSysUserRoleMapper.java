@@ -1,6 +1,5 @@
 package com.lframework.starter.mybatis.mappers.system;
 
-import com.lframework.starter.mybatis.dto.system.role.DefaultSysUserRoleDto;
 import com.lframework.starter.mybatis.entity.DefaultSysUserRole;
 import com.lframework.starter.mybatis.mapper.BaseMapper;
 import java.util.List;
@@ -21,5 +20,5 @@ public interface DefaultSysUserRoleMapper extends BaseMapper<DefaultSysUserRole>
    * @param userId
    * @return
    */
-  List<DefaultSysUserRoleDto> getByUserId(String userId);
+  List<DefaultSysUserRole> getByUserId(String userId);
 }

@@ -2,14 +2,13 @@ package com.lframework.starter.mybatis.impl.system;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.lframework.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.mybatis.annotations.OpLog;
-import com.lframework.starter.mybatis.dto.system.position.DefaultSysUserPositionDto;
 import com.lframework.starter.mybatis.entity.DefaultSysUserPosition;
-import com.lframework.starter.mybatis.enums.OpLogType;
+ import com.lframework.starter.mybatis.enums.DefaultOpLogType;
 import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.mybatis.mappers.system.DefaultSysUserPositionMapper;
-import com.lframework.starter.mybatis.service.system.ISysUserPositionService;
+import com.lframework.starter.mybatis.service.system.SysUserPositionService;
 import com.lframework.starter.mybatis.vo.system.position.SysUserPositionSettingVo;
 import com.lframework.starter.web.utils.IdUtil;
 import java.util.List;
@@ -17,11 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 public class DefaultSysUserPositionServiceImpl
     extends BaseMpServiceImpl<DefaultSysUserPositionMapper, DefaultSysUserPosition>
-    implements ISysUserPositionService {
+    implements SysUserPositionService {
 
-  @OpLog(type = OpLogType.OTHER, name = "用户设置岗位，用户ID：{}，岗位ID：{}", params = {"#vo.userId",
+  @OpLog(type = DefaultOpLogType.OTHER, name = "用户设置岗位，用户ID：{}，岗位ID：{}", params = {"#vo.userId",
       "#vo.positionId"})
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void setting(SysUserPositionSettingVo vo) {
 
@@ -29,7 +28,7 @@ public class DefaultSysUserPositionServiceImpl
   }
 
   @Override
-  public List<DefaultSysUserPositionDto> getByUserId(String userId) {
+  public List<DefaultSysUserPosition> getByUserId(String userId) {
 
     return doGetByUserId(userId);
   }
@@ -53,7 +52,7 @@ public class DefaultSysUserPositionServiceImpl
     }
   }
 
-  protected List<DefaultSysUserPositionDto> doGetByUserId(String userId) {
+  protected List<DefaultSysUserPosition> doGetByUserId(String userId) {
 
     return getBaseMapper().getByUserId(userId);
   }

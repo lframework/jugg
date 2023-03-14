@@ -1,22 +1,22 @@
 package com.lframework.starter.mybatis.impl;
 
 import com.github.pagehelper.PageInfo;
-import com.lframework.common.utils.Assert;
-import com.lframework.common.utils.StringUtil;
-import com.lframework.starter.mybatis.dto.DefaultOpLogsDto;
+import com.lframework.starter.common.utils.Assert;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.mybatis.entity.DefaultOpLogs;
-import com.lframework.starter.mybatis.enums.OpLogType;
 import com.lframework.starter.mybatis.mappers.DefaultOpLogsMapper;
 import com.lframework.starter.mybatis.resp.PageResult;
-import com.lframework.starter.mybatis.service.IOpLogsService;
+import com.lframework.starter.mybatis.service.OpLogsService;
 import com.lframework.starter.mybatis.utils.PageHelperUtil;
 import com.lframework.starter.mybatis.utils.PageResultUtil;
 import com.lframework.starter.mybatis.vo.CreateOpLogsVo;
 import com.lframework.starter.mybatis.vo.QueryOpLogsVo;
-import com.lframework.starter.web.utils.EnumUtil;
 import com.lframework.starter.web.utils.IdUtil;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,37 +27,49 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Slf4j
 public class DefaultOpLogsServiceImpl extends BaseMpServiceImpl<DefaultOpLogsMapper, DefaultOpLogs>
-    implements IOpLogsService {
+    implements OpLogsService {
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public String create(CreateOpLogsVo vo) {
 
     DefaultOpLogs record = this.doCreate(vo);
 
+    this.save(record);
+
     return record.getId();
   }
 
+  @Transactional(rollbackFor = Exception.class)
   @Override
-  public PageResult<DefaultOpLogsDto> query(Integer pageIndex, Integer pageSize, QueryOpLogsVo vo) {
+  public void create(Collection<CreateOpLogsVo> list) {
+    if (CollectionUtil.isEmpty(list)) {
+      return;
+    }
+    List<DefaultOpLogs> records = list.stream().map(this::doCreate).collect(Collectors.toList());
+    this.saveBatch(records);
+  }
+
+  @Override
+  public PageResult<DefaultOpLogs> query(Integer pageIndex, Integer pageSize, QueryOpLogsVo vo) {
 
     Assert.greaterThanZero(pageIndex);
     Assert.greaterThanZero(pageSize);
 
     PageHelperUtil.startPage(pageIndex, pageSize);
 
-    List<DefaultOpLogsDto> datas = this.doQuery(vo);
+    List<DefaultOpLogs> datas = this.doQuery(vo);
 
     return PageResultUtil.convert(new PageInfo<>(datas));
   }
 
   @Override
-  public DefaultOpLogsDto findById(String id) {
+  public DefaultOpLogs findById(String id) {
 
     return this.doGetById(id);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void clearLogs(LocalDateTime endTime) {
 
@@ -71,7 +83,7 @@ public class DefaultOpLogsServiceImpl extends BaseMpServiceImpl<DefaultOpLogsMap
     DefaultOpLogs record = new DefaultOpLogs();
     record.setId(IdUtil.getId());
     record.setName(vo.getName());
-    record.setLogType(EnumUtil.getByCode(OpLogType.class, vo.getLogType()));
+    record.setLogType(vo.getLogType());
     if (!StringUtil.isBlank(vo.getCreateBy())) {
       record.setCreateBy(vo.getCreateBy());
     }
@@ -85,17 +97,15 @@ public class DefaultOpLogsServiceImpl extends BaseMpServiceImpl<DefaultOpLogsMap
     }
     record.setIp(vo.getIp());
 
-    getBaseMapper().insert(record);
-
     return record;
   }
 
-  protected List<DefaultOpLogsDto> doQuery(QueryOpLogsVo vo) {
+  protected List<DefaultOpLogs> doQuery(QueryOpLogsVo vo) {
 
     return getBaseMapper().query(vo);
   }
 
-  protected DefaultOpLogsDto doGetById(String id) {
+  protected DefaultOpLogs doGetById(String id) {
 
     return getBaseMapper().findById(id);
   }

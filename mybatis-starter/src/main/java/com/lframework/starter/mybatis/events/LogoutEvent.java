@@ -1,6 +1,6 @@
 package com.lframework.starter.mybatis.events;
 
-import com.lframework.web.common.security.AbstractUserDetails;
+import com.lframework.starter.web.common.security.AbstractUserDetails;
 import org.springframework.context.ApplicationEvent;
 
 /**

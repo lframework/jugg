@@ -1,6 +1,6 @@
 package com.lframework.starter.security.bo.system.menu;
 
-import com.lframework.starter.mybatis.dto.system.menu.DefaultSysMenuDto;
+import com.lframework.starter.mybatis.entity.DefaultSysMenu;
 import com.lframework.starter.web.bo.BaseBo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class SysMenuSelectorBo extends BaseBo<DefaultSysMenuDto> {
+public class SysMenuSelectorBo extends BaseBo<DefaultSysMenu> {
 
   private static final long serialVersionUID = 1L;
 
@@ -34,7 +34,7 @@ public class SysMenuSelectorBo extends BaseBo<DefaultSysMenuDto> {
 
   }
 
-  public SysMenuSelectorBo(DefaultSysMenuDto dto) {
+  public SysMenuSelectorBo(DefaultSysMenu dto) {
 
     super(dto);
   }

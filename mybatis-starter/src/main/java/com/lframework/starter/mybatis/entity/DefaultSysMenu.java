@@ -25,6 +25,8 @@ public class DefaultSysMenu extends BaseEntity implements BaseDto {
 
   private static final long serialVersionUID = 1L;
 
+  public static final String CACHE_NAME = "DefaultSysMenu";
+
   /**
    * ID
    */

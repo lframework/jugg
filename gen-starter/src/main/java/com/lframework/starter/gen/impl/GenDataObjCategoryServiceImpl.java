@@ -3,13 +3,13 @@ package com.lframework.starter.gen.impl;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageInfo;
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.Assert;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.Assert;
 import com.lframework.starter.gen.entity.GenDataObj;
 import com.lframework.starter.gen.entity.GenDataObjCategory;
 import com.lframework.starter.gen.mappers.GenDataObjCategoryMapper;
-import com.lframework.starter.gen.service.IGenDataObjCategoryService;
-import com.lframework.starter.gen.service.IGenDataObjService;
+import com.lframework.starter.gen.service.GenDataObjCategoryService;
+import com.lframework.starter.gen.service.GenDataObjService;
 import com.lframework.starter.gen.vo.data.obj.category.CreateGenDataObjCategoryVo;
 import com.lframework.starter.gen.vo.data.obj.category.GenDataObjCategorySelectorVo;
 import com.lframework.starter.gen.vo.data.obj.category.UpdateGenDataObjCategoryVo;
@@ -29,12 +29,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class GenDataObjCategoryServiceImpl extends
     BaseMpServiceImpl<GenDataObjCategoryMapper, GenDataObjCategory> implements
-    IGenDataObjCategoryService {
+    GenDataObjCategoryService {
 
   @Autowired
-  private IGenDataObjService genDataObjService;
+  private GenDataObjService genDataObjService;
 
-  @Cacheable(value = GenDataObjCategory.CACHE_NAME, key = "'all'")
+  @Cacheable(value = GenDataObjCategory.CACHE_NAME, key = "@cacheVariables.tenantId() + 'all'")
   @Override
   public List<GenDataObjCategory> queryList() {
     return getBaseMapper().query();
@@ -52,13 +52,13 @@ public class GenDataObjCategoryServiceImpl extends
     return PageResultUtil.convert(new PageInfo<>(datas));
   }
 
-  @Cacheable(value = GenDataObjCategory.CACHE_NAME, key = "#id", unless = "#result == null")
+  @Cacheable(value = GenDataObjCategory.CACHE_NAME, key = "@cacheVariables.tenantId() + #id", unless = "#result == null")
   @Override
   public GenDataObjCategory findById(String id) {
     return getBaseMapper().selectById(id);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public String create(CreateGenDataObjCategoryVo vo) {
 
@@ -84,7 +84,7 @@ public class GenDataObjCategoryServiceImpl extends
     return record.getId();
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void update(UpdateGenDataObjCategoryVo vo) {
     Wrapper<GenDataObjCategory> checkWrapper = Wrappers.lambdaQuery(GenDataObjCategory.class)
@@ -112,7 +112,7 @@ public class GenDataObjCategoryServiceImpl extends
     this.updateById(record);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void deleteById(String id) {
 
@@ -125,7 +125,7 @@ public class GenDataObjCategoryServiceImpl extends
     this.removeById(id);
   }
 
-  @CacheEvict(value = GenDataObjCategory.CACHE_NAME, key = "#key")
+  @CacheEvict(value = GenDataObjCategory.CACHE_NAME, key = "@cacheVariables.tenantId() + #key")
   @Override
   public void cleanCacheByKey(Serializable key) {
   }

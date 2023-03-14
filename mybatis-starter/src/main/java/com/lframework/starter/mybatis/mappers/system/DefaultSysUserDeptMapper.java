@@ -1,6 +1,5 @@
 package com.lframework.starter.mybatis.mappers.system;
 
-import com.lframework.starter.mybatis.dto.system.dept.DefaultSysUserDeptDto;
 import com.lframework.starter.mybatis.entity.DefaultSysUserDept;
 import com.lframework.starter.mybatis.mapper.BaseMapper;
 import java.util.List;
@@ -21,7 +20,7 @@ public interface DefaultSysUserDeptMapper extends BaseMapper<DefaultSysUserDept>
    * @param userId
    * @return
    */
-  List<DefaultSysUserDeptDto> getByUserId(String userId);
+  List<DefaultSysUserDept> getByUserId(String userId);
 
   /**
    * 根据部门ID查询是否存在
@@ -29,5 +28,5 @@ public interface DefaultSysUserDeptMapper extends BaseMapper<DefaultSysUserDept>
    * @param deptId
    * @return
    */
-  DefaultSysUserDeptDto hasByDeptId(String deptId);
+  DefaultSysUserDept hasByDeptId(String deptId);
 }

@@ -18,14 +18,16 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
-import com.lframework.common.constants.StringPool;
-import com.lframework.common.utils.IdWorker;
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.constants.StringPool;
+import com.lframework.starter.common.utils.IdWorker;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.web.components.security.CheckPermissionHandler;
 import com.lframework.starter.web.components.security.CheckPermissionHandlerImpl;
 import com.lframework.starter.web.components.security.PermitAllService;
 import com.lframework.starter.web.components.trace.DefaultTraceBuilder;
 import com.lframework.starter.web.components.trace.TraceBuilder;
+import com.lframework.starter.web.sign.CheckSignHandler;
+import com.lframework.starter.web.sign.DefaultCheckSignHandler;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -189,5 +191,11 @@ public class WebConfiguration {
   @ConditionalOnMissingBean(TraceBuilder.class)
   public TraceBuilder getTraceBuilder() {
     return new DefaultTraceBuilder();
+  }
+
+  @Bean
+  @ConditionalOnMissingBean(CheckSignHandler.class)
+  public CheckSignHandler getCheckSignHandler() {
+    return new DefaultCheckSignHandler();
   }
 }

@@ -4,27 +4,26 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageInfo;
-import com.lframework.common.constants.PatternPool;
-import com.lframework.common.constants.StringPool;
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.Assert;
-import com.lframework.common.utils.CollectionUtil;
-import com.lframework.common.utils.ObjectUtil;
-import com.lframework.common.utils.RegUtil;
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.constants.PatternPool;
+import com.lframework.starter.common.constants.StringPool;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.Assert;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.ObjectUtil;
+import com.lframework.starter.common.utils.RegUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.mybatis.annotations.OpLog;
-import com.lframework.starter.mybatis.dto.system.user.DefaultSysUserDto;
 import com.lframework.starter.mybatis.entity.DefaultSysUser;
+import com.lframework.starter.mybatis.enums.DefaultOpLogType;
 import com.lframework.starter.mybatis.enums.Gender;
-import com.lframework.starter.mybatis.enums.OpLogType;
 import com.lframework.starter.mybatis.events.UpdateUserEvent;
 import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.mybatis.mappers.system.DefaultSysUserMapper;
 import com.lframework.starter.mybatis.resp.PageResult;
-import com.lframework.starter.mybatis.service.system.ISysUserDeptService;
-import com.lframework.starter.mybatis.service.system.ISysUserPositionService;
-import com.lframework.starter.mybatis.service.system.ISysUserRoleService;
-import com.lframework.starter.mybatis.service.system.ISysUserService;
+import com.lframework.starter.mybatis.service.system.SysUserDeptService;
+import com.lframework.starter.mybatis.service.system.SysUserPositionService;
+import com.lframework.starter.mybatis.service.system.SysUserRoleService;
+import com.lframework.starter.mybatis.service.system.SysUserService;
 import com.lframework.starter.mybatis.utils.OpLogUtil;
 import com.lframework.starter.mybatis.utils.PageHelperUtil;
 import com.lframework.starter.mybatis.utils.PageResultUtil;
@@ -41,7 +40,7 @@ import com.lframework.starter.web.components.generator.impl.AbstractFlowGenerato
 import com.lframework.starter.web.components.security.PasswordEncoderWrapper;
 import com.lframework.starter.web.dto.UserDto;
 import com.lframework.starter.web.dto.UserInfoDto;
-import com.lframework.starter.web.service.IGenerateCodeService;
+import com.lframework.starter.web.service.GenerateCodeService;
 import com.lframework.starter.web.utils.EnumUtil;
 import com.lframework.starter.web.utils.IdUtil;
 import java.io.Serializable;
@@ -56,25 +55,25 @@ import org.springframework.transaction.annotation.Transactional;
 
 public class DefaultSysUserServiceImpl extends
     BaseMpServiceImpl<DefaultSysUserMapper, DefaultSysUser>
-    implements ISysUserService, ApplicationListener<UpdateUserEvent> {
+    implements SysUserService, ApplicationListener<UpdateUserEvent> {
 
   @Autowired
   private PasswordEncoderWrapper encoderWrapper;
 
   @Autowired
-  private ISysUserPositionService sysUserPositionService;
+  private SysUserPositionService sysUserPositionService;
 
   @Autowired
-  private ISysUserDeptService sysUserDeptService;
+  private SysUserDeptService sysUserDeptService;
 
   @Autowired
-  private ISysUserRoleService sysUserRoleService;
+  private SysUserRoleService sysUserRoleService;
 
   @Autowired
-  private IGenerateCodeService generateCodeService;
+  private GenerateCodeService generateCodeService;
 
   @Override
-  public PageResult<DefaultSysUserDto> query(Integer pageIndex, Integer pageSize,
+  public PageResult<DefaultSysUser> query(Integer pageIndex, Integer pageSize,
       QuerySysUserVo vo) {
 
     Assert.greaterThanZero(pageIndex);
@@ -82,26 +81,26 @@ public class DefaultSysUserServiceImpl extends
 
     PageHelperUtil.startPage(pageIndex, pageSize);
 
-    List<DefaultSysUserDto> datas = this.doQuery(vo);
+    List<DefaultSysUser> datas = this.doQuery(vo);
 
     return PageResultUtil.convert(new PageInfo<>(datas));
   }
 
   @Override
-  public List<DefaultSysUserDto> query(QuerySysUserVo vo) {
+  public List<DefaultSysUser> query(QuerySysUserVo vo) {
 
     return this.doQuery(vo);
   }
 
-  @Cacheable(value = DefaultSysUserDto.CACHE_NAME, key = "#id", unless = "#result == null")
+  @Cacheable(value = DefaultSysUser.CACHE_NAME, key = "@cacheVariables.tenantId() + #id", unless = "#result == null")
   @Override
-  public DefaultSysUserDto findById(String id) {
+  public DefaultSysUser findById(String id) {
 
     return this.doGetById(id);
   }
 
-  @OpLog(type = OpLogType.OTHER, name = "启用用户，ID：{}", params = "#ids", loopFormat = true)
-  @Transactional
+  @OpLog(type = DefaultOpLogType.OTHER, name = "启用用户，ID：{}", params = "#ids", loopFormat = true)
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void batchEnable(List<String> ids) {
 
@@ -112,8 +111,8 @@ public class DefaultSysUserServiceImpl extends
     this.doBatchEnable(ids);
   }
 
-  @OpLog(type = OpLogType.OTHER, name = "停用用户，ID：{}", params = "#ids", loopFormat = true)
-  @Transactional
+  @OpLog(type = DefaultOpLogType.OTHER, name = "停用用户，ID：{}", params = "#ids", loopFormat = true)
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void batchUnable(List<String> ids) {
 
@@ -124,8 +123,8 @@ public class DefaultSysUserServiceImpl extends
     this.doBatchUnable(ids);
   }
 
-  @OpLog(type = OpLogType.OTHER, name = "新增用户，ID：{}, 编号：{}", params = {"#id", "#code"})
-  @Transactional
+  @OpLog(type = DefaultOpLogType.OTHER, name = "新增用户，ID：{}, 编号：{}", params = {"#id", "#code"})
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public String create(CreateSysUserVo vo) {
 
@@ -153,12 +152,12 @@ public class DefaultSysUserServiceImpl extends
     return record.getId();
   }
 
-  @OpLog(type = OpLogType.OTHER, name = "修改用户，ID：{}, 编号：{}", params = {"#id", "#code"})
-  @Transactional
+  @OpLog(type = DefaultOpLogType.OTHER, name = "修改用户，ID：{}, 编号：{}", params = {"#id", "#code"})
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void update(UpdateSysUserVo vo) {
 
-    DefaultSysUserDto data = this.findById(vo.getId());
+    DefaultSysUser data = this.findById(vo.getId());
     if (ObjectUtil.isNull(data)) {
       throw new DefaultClientException("用户不存在！");
     }
@@ -199,7 +198,7 @@ public class DefaultSysUserServiceImpl extends
   }
 
   @Override
-  public PageResult<DefaultSysUserDto> selector(Integer pageIndex, Integer pageSize,
+  public PageResult<DefaultSysUser> selector(Integer pageIndex, Integer pageSize,
       SysUserSelectorVo vo) {
 
     Assert.greaterThanZero(pageIndex);
@@ -207,24 +206,24 @@ public class DefaultSysUserServiceImpl extends
 
     PageHelperUtil.startPage(pageIndex, pageSize);
 
-    List<DefaultSysUserDto> datas = this.doSelector(vo);
+    List<DefaultSysUser> datas = this.doSelector(vo);
 
     return PageResultUtil.convert(new PageInfo<>(datas));
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void regist(RegistUserVo vo) {
 
     this.doRegist(vo);
   }
 
-  protected List<DefaultSysUserDto> doQuery(QuerySysUserVo vo) {
+  protected List<DefaultSysUser> doQuery(QuerySysUserVo vo) {
 
     return getBaseMapper().query(vo);
   }
 
-  protected DefaultSysUserDto doGetById(String id) {
+  protected DefaultSysUser doGetById(String id) {
 
     return getBaseMapper().findById(id);
   }
@@ -320,7 +319,7 @@ public class DefaultSysUserServiceImpl extends
     getBaseMapper().update(updateWrapper);
   }
 
-  protected List<DefaultSysUserDto> doSelector(SysUserSelectorVo vo) {
+  protected List<DefaultSysUser> doSelector(SysUserSelectorVo vo) {
 
     return getBaseMapper().selector(vo);
   }
@@ -354,7 +353,7 @@ public class DefaultSysUserServiceImpl extends
     getBaseMapper().insert(record);
   }
 
-  @CacheEvict(value = {DefaultSysUserDto.CACHE_NAME, UserDto.CACHE_NAME,
+  @CacheEvict(value = {DefaultSysUser.CACHE_NAME, UserDto.CACHE_NAME,
       UserInfoDto.CACHE_NAME}, key = "#key")
   @Override
   public void cleanCacheByKey(Serializable key) {
@@ -364,7 +363,7 @@ public class DefaultSysUserServiceImpl extends
   @Override
   public void onApplicationEvent(UpdateUserEvent event) {
 
-    ISysUserService thisService = getThis(this.getClass());
+    SysUserService thisService = getThis(this.getClass());
     thisService.cleanCacheByKey(event.getId());
   }
 

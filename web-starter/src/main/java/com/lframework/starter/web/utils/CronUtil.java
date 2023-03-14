@@ -1,7 +1,7 @@
 package com.lframework.starter.web.utils;
 
-import com.lframework.common.utils.DateUtil;
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.utils.DateUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

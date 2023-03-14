@@ -1,11 +1,11 @@
 package com.lframework.starter.gen.bo.custom.list;
 
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.gen.entity.GenCustomList;
 import com.lframework.starter.gen.entity.GenCustomListCategory;
-import com.lframework.starter.gen.service.IGenCustomListCategoryService;
+import com.lframework.starter.gen.service.GenCustomListCategoryService;
 import com.lframework.starter.web.bo.BaseBo;
-import com.lframework.starter.web.utils.ApplicationUtil;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -46,8 +46,8 @@ public class GenCustomListSelectorBo extends BaseBo<GenCustomList> {
   @Override
   protected void afterInit(GenCustomList dto) {
     if (!StringUtil.isBlank(dto.getCategoryId())) {
-      IGenCustomListCategoryService genCustomListCategoryService = ApplicationUtil.getBean(
-          IGenCustomListCategoryService.class);
+      GenCustomListCategoryService genCustomListCategoryService = ApplicationUtil.getBean(
+          GenCustomListCategoryService.class);
       GenCustomListCategory category = genCustomListCategoryService.findById(dto.getCategoryId());
       this.categoryName = category.getName();
     }

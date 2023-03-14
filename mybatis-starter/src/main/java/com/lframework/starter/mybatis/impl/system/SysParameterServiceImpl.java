@@ -4,36 +4,36 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageInfo;
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.exceptions.impl.ParameterNotFoundException;
-import com.lframework.common.utils.Assert;
-import com.lframework.common.utils.ObjectUtil;
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.exceptions.impl.ParameterNotFoundException;
+import com.lframework.starter.common.utils.Assert;
+import com.lframework.starter.common.utils.ObjectUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.mybatis.annotations.OpLog;
 import com.lframework.starter.mybatis.entity.SysParameter;
-import com.lframework.starter.mybatis.enums.OpLogType;
+import com.lframework.starter.mybatis.enums.DefaultOpLogType;
 import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.mybatis.mappers.system.SysParameterMapper;
 import com.lframework.starter.mybatis.resp.PageResult;
-import com.lframework.starter.mybatis.service.system.ISysParameterService;
+import com.lframework.starter.mybatis.service.system.SysParameterService;
 import com.lframework.starter.mybatis.utils.OpLogUtil;
 import com.lframework.starter.mybatis.utils.PageHelperUtil;
 import com.lframework.starter.mybatis.utils.PageResultUtil;
 import com.lframework.starter.mybatis.vo.system.parameter.CreateSysParameterVo;
 import com.lframework.starter.mybatis.vo.system.parameter.QuerySysParameterVo;
 import com.lframework.starter.mybatis.vo.system.parameter.UpdateSysParameterVo;
-import com.lframework.starter.web.service.SysParameterService;
-import java.io.Serializable;
-import java.util.List;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.Serializable;
+import java.util.List;
+
 @Service
 public class SysParameterServiceImpl extends
-    BaseMpServiceImpl<SysParameterMapper, SysParameter> implements ISysParameterService,
-    SysParameterService {
+    BaseMpServiceImpl<SysParameterMapper, SysParameter> implements SysParameterService,
+    com.lframework.starter.web.service.SysParameterService {
 
   @Override
   public PageResult<SysParameter> query(Integer pageIndex, Integer pageSize,
@@ -54,14 +54,14 @@ public class SysParameterServiceImpl extends
     return getBaseMapper().query(vo);
   }
 
-  @Cacheable(value = SysParameter.CACHE_NAME, key = "#id", unless = "#result == null")
+  @Cacheable(value = SysParameter.CACHE_NAME, key = "@cacheVariables.tenantId() + #id", unless = "#result == null")
   @Override
   public SysParameter findById(Long id) {
 
     return getBaseMapper().selectById(id);
   }
 
-  @Cacheable(value = SysParameter.CACHE_NAME, key = "#key", unless = "#result == null")
+  @Cacheable(value = SysParameter.CACHE_NAME, key = "@cacheVariables.tenantId() + #key", unless = "#result == null")
   @Override
   public String findByKey(String key) {
 
@@ -74,7 +74,7 @@ public class SysParameterServiceImpl extends
 
   @Override
   public String findRequiredByKey(String key) throws ParameterNotFoundException {
-    SysParameterService thisService = getThis(this.getClass());
+    com.lframework.starter.web.service.SysParameterService thisService = getThis(this.getClass());
     String data = thisService.findByKey(key);
     if (data == null) {
       throw new ParameterNotFoundException();
@@ -85,7 +85,7 @@ public class SysParameterServiceImpl extends
 
   @Override
   public String findByKey(String key, String defaultValue) {
-    SysParameterService thisService = getThis(this.getClass());
+    com.lframework.starter.web.service.SysParameterService thisService = getThis(this.getClass());
     String data = thisService.findByKey(key);
     if (data == null) {
       return defaultValue;
@@ -94,8 +94,8 @@ public class SysParameterServiceImpl extends
     return data;
   }
 
-  @OpLog(type = OpLogType.OTHER, name = "新增系统参数，ID：{}", params = {"#id"})
-  @Transactional
+  @OpLog(type = DefaultOpLogType.OTHER, name = "新增系统参数，ID：{}", params = {"#id"})
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public Long create(CreateSysParameterVo vo) {
 
@@ -121,8 +121,8 @@ public class SysParameterServiceImpl extends
     return data.getId();
   }
 
-  @OpLog(type = OpLogType.OTHER, name = "修改系统参数，ID：{}", params = {"#id"})
-  @Transactional
+  @OpLog(type = DefaultOpLogType.OTHER, name = "修改系统参数，ID：{}", params = {"#id"})
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void update(UpdateSysParameterVo vo) {
 
@@ -143,15 +143,54 @@ public class SysParameterServiceImpl extends
     OpLogUtil.setExtra(vo);
   }
 
-  @OpLog(type = OpLogType.OTHER, name = "删除系统参数，ID：{}", params = {"#id"})
-  @Transactional
+  @OpLog(type = DefaultOpLogType.OTHER, name = "删除系统参数，ID：{}", params = {"#id"})
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void deleteById(Long id) {
 
     getBaseMapper().deleteById(id);
   }
 
-  @CacheEvict(value = SysParameter.CACHE_NAME, key = "#key")
+  @Override
+  public Boolean getBoolean(String key) {
+    com.lframework.starter.web.service.SysParameterService thisService = getThis(getClass());
+    String value = thisService.findByKey(key);
+    return value == null ? null : "true".equalsIgnoreCase(value);
+  }
+
+  @Override
+  public Boolean getBoolean(String key, Boolean defaultValue) {
+    Boolean value = getBoolean(key);
+    if (value == null) {
+      return defaultValue;
+    }
+
+    return value;
+  }
+
+  @Override
+  public Integer getInteger(String key) {
+    com.lframework.starter.web.service.SysParameterService thisService = getThis(getClass());
+    String value = thisService.findByKey(key);
+    try {
+      return value == null ? null : Integer.valueOf(value);
+    }catch (NumberFormatException e) {
+      // 转换失败
+      return null;
+    }
+  }
+
+  @Override
+  public Integer getInteger(String key, Integer defaultValue) {
+    Integer value = getInteger(key);
+    if (value == null) {
+      return defaultValue;
+    }
+
+    return value;
+  }
+
+  @CacheEvict(value = SysParameter.CACHE_NAME, key = "@cacheVariables.tenantId() + #key")
   @Override
   public void cleanCacheByKey(Serializable key) {
 

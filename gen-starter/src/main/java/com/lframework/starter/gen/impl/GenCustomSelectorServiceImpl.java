@@ -3,15 +3,15 @@ package com.lframework.starter.gen.impl;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageInfo;
-import com.lframework.common.constants.StringPool;
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.Assert;
-import com.lframework.common.utils.CollectionUtil;
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.constants.StringPool;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.Assert;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.gen.components.custom.selector.CustomSelectorConfig;
 import com.lframework.starter.gen.entity.GenCustomSelector;
 import com.lframework.starter.gen.mappers.GenCustomSelectorMapper;
-import com.lframework.starter.gen.service.IGenCustomSelectorService;
+import com.lframework.starter.gen.service.GenCustomSelectorService;
 import com.lframework.starter.gen.vo.custom.selector.CreateGenCustomSelectorVo;
 import com.lframework.starter.gen.vo.custom.selector.GenCustomSelectorSelectorVo;
 import com.lframework.starter.gen.vo.custom.selector.QueryGenCustomSelectorVo;
@@ -31,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class GenCustomSelectorServiceImpl extends
     BaseMpServiceImpl<GenCustomSelectorMapper, GenCustomSelector> implements
-    IGenCustomSelectorService {
+    GenCustomSelectorService {
 
   @Override
   public PageResult<GenCustomSelector> query(Integer pageIndex, Integer pageSize,
@@ -64,13 +64,13 @@ public class GenCustomSelectorServiceImpl extends
     return PageResultUtil.convert(new PageInfo<>(datas));
   }
 
-  @Cacheable(value = GenCustomSelector.CACHE_NAME, key = "#id", unless = "#result == null")
+  @Cacheable(value = GenCustomSelector.CACHE_NAME, key = "@cacheVariables.tenantId() + #id", unless = "#result == null")
   @Override
   public GenCustomSelector findById(String id) {
     return getBaseMapper().selectById(id);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public String create(CreateGenCustomSelectorVo data) {
     GenCustomSelector record = new GenCustomSelector();
@@ -99,7 +99,7 @@ public class GenCustomSelectorServiceImpl extends
     return record.getId();
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void update(UpdateGenCustomSelectorVo data) {
     GenCustomSelector record = this.getById(data.getId());
@@ -129,13 +129,13 @@ public class GenCustomSelectorServiceImpl extends
     this.update(updateWrapper);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void delete(String id) {
     this.removeById(id);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void batchDelete(List<String> ids) {
     if (CollectionUtil.isEmpty(ids)) {
@@ -147,7 +147,7 @@ public class GenCustomSelectorServiceImpl extends
     }
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void batchEnable(List<String> ids) {
     if (CollectionUtil.isEmpty(ids)) {
@@ -159,7 +159,7 @@ public class GenCustomSelectorServiceImpl extends
     getBaseMapper().update(wrapper);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void batchUnable(List<String> ids) {
     if (CollectionUtil.isEmpty(ids)) {
@@ -176,7 +176,7 @@ public class GenCustomSelectorServiceImpl extends
     return getBaseMapper().getRelaGenCustomListIds(customListId);
   }
 
-  @CacheEvict(value = {GenCustomSelector.CACHE_NAME, CustomSelectorConfig.CACHE_NAME}, key = "#key")
+  @CacheEvict(value = {GenCustomSelector.CACHE_NAME, CustomSelectorConfig.CACHE_NAME}, key = "@cacheVariables.tenantId() + #key")
   @Override
   public void cleanCacheByKey(Serializable key) {
     super.cleanCacheByKey(key);

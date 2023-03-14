@@ -1,18 +1,18 @@
 package com.lframework.starter.gen.bo.data.obj;
 
-import com.lframework.common.utils.CollectionUtil;
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.gen.entity.GenDataEntity;
 import com.lframework.starter.gen.entity.GenDataObj;
 import com.lframework.starter.gen.entity.GenDataObjCategory;
 import com.lframework.starter.gen.entity.GenDataObjDetail;
 import com.lframework.starter.gen.entity.GenDataObjQueryDetail;
-import com.lframework.starter.gen.service.IGenDataEntityService;
-import com.lframework.starter.gen.service.IGenDataObjCategoryService;
-import com.lframework.starter.gen.service.IGenDataObjDetailService;
-import com.lframework.starter.gen.service.IGenDataObjQueryDetailService;
+import com.lframework.starter.gen.service.GenDataEntityService;
+import com.lframework.starter.gen.service.GenDataObjCategoryService;
+import com.lframework.starter.gen.service.GenDataObjDetailService;
+import com.lframework.starter.gen.service.GenDataObjQueryDetailService;
 import com.lframework.starter.web.bo.BaseBo;
-import com.lframework.starter.web.utils.ApplicationUtil;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -104,26 +104,26 @@ public class GetGenDataObjBo extends BaseBo<GenDataObj> {
   protected void afterInit(GenDataObj dto) {
 
     if (!StringUtil.isBlank(dto.getCategoryId())) {
-      IGenDataObjCategoryService genDataObjCategoryService = ApplicationUtil.getBean(
-          IGenDataObjCategoryService.class);
+      GenDataObjCategoryService genDataObjCategoryService = ApplicationUtil.getBean(
+          GenDataObjCategoryService.class);
       GenDataObjCategory category = genDataObjCategoryService.findById(dto.getCategoryId());
       this.categoryName = category.getName();
     }
 
-    IGenDataEntityService genDataEntityService = ApplicationUtil.getBean(
-        IGenDataEntityService.class);
+    GenDataEntityService genDataEntityService = ApplicationUtil.getBean(
+        GenDataEntityService.class);
     GenDataEntity entity = genDataEntityService.findById(dto.getMainTableId());
     this.mainTableName = entity.getName();
 
-    IGenDataObjDetailService genDataObjDetailService = ApplicationUtil.getBean(
-        IGenDataObjDetailService.class);
+    GenDataObjDetailService genDataObjDetailService = ApplicationUtil.getBean(
+        GenDataObjDetailService.class);
     List<GenDataObjDetail> details = genDataObjDetailService.getByObjId(dto.getId());
     if (!CollectionUtil.isEmpty(details)) {
       this.columns = details.stream().map(GenDataObjDetailBo::new).collect(Collectors.toList());
     }
 
-    IGenDataObjQueryDetailService genDataObjQueryDetailService = ApplicationUtil.getBean(
-        IGenDataObjQueryDetailService.class);
+    GenDataObjQueryDetailService genDataObjQueryDetailService = ApplicationUtil.getBean(
+        GenDataObjQueryDetailService.class);
     List<GenDataObjQueryDetail> queryDetails = genDataObjQueryDetailService.getByObjId(dto.getId());
     if (!CollectionUtil.isEmpty(queryDetails)) {
       this.queryColumns = queryDetails.stream().map(GenDataObjQueryDetailBo::new)

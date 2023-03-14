@@ -3,15 +3,15 @@ package com.lframework.starter.gen.impl;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageInfo;
-import com.lframework.common.constants.StringPool;
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.Assert;
-import com.lframework.common.utils.CollectionUtil;
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.constants.StringPool;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.Assert;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.gen.components.custom.form.CustomFormConfig;
 import com.lframework.starter.gen.entity.GenCustomForm;
 import com.lframework.starter.gen.mappers.GenCustomFormMapper;
-import com.lframework.starter.gen.service.IGenCustomFormService;
+import com.lframework.starter.gen.service.GenCustomFormService;
 import com.lframework.starter.gen.vo.custom.form.CreateGenCustomFormVo;
 import com.lframework.starter.gen.vo.custom.form.GenCustomFormSelectorVo;
 import com.lframework.starter.gen.vo.custom.form.QueryGenCustomFormVo;
@@ -31,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class GenCustomFormServiceImpl extends
     BaseMpServiceImpl<GenCustomFormMapper, GenCustomForm> implements
-    IGenCustomFormService {
+    GenCustomFormService {
 
   @Override
   public PageResult<GenCustomForm> query(Integer pageIndex, Integer pageSize,
@@ -64,13 +64,13 @@ public class GenCustomFormServiceImpl extends
     return PageResultUtil.convert(new PageInfo<>(datas));
   }
 
-  @Cacheable(value = GenCustomForm.CACHE_NAME, key = "#id", unless = "#result == null")
+  @Cacheable(value = GenCustomForm.CACHE_NAME, key = "@cacheVariables.tenantId() + #id", unless = "#result == null")
   @Override
   public GenCustomForm findById(String id) {
     return getBaseMapper().selectById(id);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public String create(CreateGenCustomFormVo data) {
     GenCustomForm record = new GenCustomForm();
@@ -100,7 +100,7 @@ public class GenCustomFormServiceImpl extends
     return record.getId();
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void update(UpdateGenCustomFormVo data) {
     GenCustomForm record = this.getById(data.getId());
@@ -139,13 +139,13 @@ public class GenCustomFormServiceImpl extends
     this.update(updateWrapper);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void delete(String id) {
     this.removeById(id);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void batchDelete(List<String> ids) {
     if (CollectionUtil.isEmpty(ids)) {
@@ -157,7 +157,7 @@ public class GenCustomFormServiceImpl extends
     }
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void batchEnable(List<String> ids) {
     if (CollectionUtil.isEmpty(ids)) {
@@ -169,7 +169,7 @@ public class GenCustomFormServiceImpl extends
     getBaseMapper().update(wrapper);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void batchUnable(List<String> ids) {
     if (CollectionUtil.isEmpty(ids)) {
@@ -181,7 +181,7 @@ public class GenCustomFormServiceImpl extends
     getBaseMapper().update(wrapper);
   }
 
-  @CacheEvict(value = {GenCustomForm.CACHE_NAME, CustomFormConfig.CACHE_NAME}, key = "#key")
+  @CacheEvict(value = {GenCustomForm.CACHE_NAME, CustomFormConfig.CACHE_NAME}, key = "@cacheVariables.tenantId() + #key")
   @Override
   public void cleanCacheByKey(Serializable key) {
     super.cleanCacheByKey(key);

@@ -3,12 +3,12 @@ package com.lframework.starter.gen.impl;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageInfo;
-import com.lframework.common.constants.StringPool;
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.Assert;
-import com.lframework.common.utils.CollectionUtil;
-import com.lframework.common.utils.ObjectUtil;
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.constants.StringPool;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.Assert;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.ObjectUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.gen.converters.GenStringConverter;
 import com.lframework.starter.gen.converters.GenViewTypeConverter;
 import com.lframework.starter.gen.dto.data.entity.DataEntityGenerateDto;
@@ -32,15 +32,15 @@ import com.lframework.starter.gen.enums.GenViewType;
 import com.lframework.starter.gen.events.DataEntityDeleteEvent;
 import com.lframework.starter.gen.events.DataEntityDetailDeleteEvent;
 import com.lframework.starter.gen.mappers.GenDataEntityMapper;
-import com.lframework.starter.gen.service.IGenCreateColumnConfigService;
-import com.lframework.starter.gen.service.IGenDataEntityDetailService;
-import com.lframework.starter.gen.service.IGenDataEntityService;
-import com.lframework.starter.gen.service.IGenDetailColumnConfigService;
-import com.lframework.starter.gen.service.IGenQueryColumnConfigService;
-import com.lframework.starter.gen.service.IGenQueryParamsColumnConfigService;
-import com.lframework.starter.gen.service.IGenUpdateColumnConfigService;
-import com.lframework.starter.gen.service.IGenerateInfoService;
-import com.lframework.starter.gen.service.ISimpleDBService;
+import com.lframework.starter.gen.service.GenCreateColumnConfigService;
+import com.lframework.starter.gen.service.GenDataEntityDetailService;
+import com.lframework.starter.gen.service.GenDataEntityService;
+import com.lframework.starter.gen.service.GenDetailColumnConfigService;
+import com.lframework.starter.gen.service.GenQueryColumnConfigService;
+import com.lframework.starter.gen.service.GenQueryParamsColumnConfigService;
+import com.lframework.starter.gen.service.GenUpdateColumnConfigService;
+import com.lframework.starter.gen.service.GenerateInfoService;
+import com.lframework.starter.gen.service.SimpleDBService;
 import com.lframework.starter.gen.vo.data.entity.CreateDataEntityVo;
 import com.lframework.starter.gen.vo.data.entity.GenDataEntityDetailVo;
 import com.lframework.starter.gen.vo.data.entity.GenDataEntitySelectorVo;
@@ -52,7 +52,7 @@ import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.mybatis.resp.PageResult;
 import com.lframework.starter.mybatis.utils.PageHelperUtil;
 import com.lframework.starter.mybatis.utils.PageResultUtil;
-import com.lframework.starter.web.utils.ApplicationUtil;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 import com.lframework.starter.web.utils.EnumUtil;
 import com.lframework.starter.web.utils.IdUtil;
 import java.util.ArrayList;
@@ -65,31 +65,31 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class GenDataEntityServiceImpl extends
-    BaseMpServiceImpl<GenDataEntityMapper, GenDataEntity> implements IGenDataEntityService {
+    BaseMpServiceImpl<GenDataEntityMapper, GenDataEntity> implements GenDataEntityService {
 
   @Autowired
-  private IGenerateInfoService generateInfoService;
+  private GenerateInfoService generateInfoService;
 
   @Autowired
-  private IGenDataEntityDetailService genDataEntityDetailService;
+  private GenDataEntityDetailService genDataEntityDetailService;
 
   @Autowired
-  private ISimpleDBService simpleDBService;
+  private SimpleDBService simpleDBService;
 
   @Autowired
-  private IGenCreateColumnConfigService genCreateColumnConfigService;
+  private GenCreateColumnConfigService genCreateColumnConfigService;
 
   @Autowired
-  private IGenUpdateColumnConfigService genUpdateColumnConfigService;
+  private GenUpdateColumnConfigService genUpdateColumnConfigService;
 
   @Autowired
-  private IGenQueryColumnConfigService genQueryColumnConfigService;
+  private GenQueryColumnConfigService genQueryColumnConfigService;
 
   @Autowired
-  private IGenQueryParamsColumnConfigService genQueryParamsColumnConfigService;
+  private GenQueryParamsColumnConfigService genQueryParamsColumnConfigService;
 
   @Autowired
-  private IGenDetailColumnConfigService genDetailColumnConfigService;
+  private GenDetailColumnConfigService genDetailColumnConfigService;
 
   @Autowired
   private GenViewTypeConverter genViewTypeConverter;
@@ -130,7 +130,7 @@ public class GenDataEntityServiceImpl extends
     return getBaseMapper().selectById(id);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public String create(CreateDataEntityVo data) {
     GenDataEntity record = new GenDataEntity();
@@ -205,7 +205,7 @@ public class GenDataEntityServiceImpl extends
     return record.getId();
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void update(UpdateDataEntityVo vo) {
     GenDataEntity record = this.getById(vo.getId());
@@ -267,7 +267,7 @@ public class GenDataEntityServiceImpl extends
     }
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void delete(@NonNull String id) {
 
@@ -292,7 +292,7 @@ public class GenDataEntityServiceImpl extends
     ApplicationUtil.publishEvent(event);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void batchDelete(@NonNull List<String> ids) {
 
@@ -305,7 +305,7 @@ public class GenDataEntityServiceImpl extends
     }
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void batchEnable(List<String> ids) {
     if (CollectionUtil.isEmpty(ids)) {
@@ -317,7 +317,7 @@ public class GenDataEntityServiceImpl extends
     getBaseMapper().update(wrapper);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void batchUnable(List<String> ids) {
     if (CollectionUtil.isEmpty(ids)) {
@@ -362,7 +362,7 @@ public class GenDataEntityServiceImpl extends
     return result;
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void updateGenerate(UpdateDataEntityGenerateVo vo) {
 
@@ -383,7 +383,7 @@ public class GenDataEntityServiceImpl extends
     getBaseMapper().update(updateWrapper);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void syncTable(String id) {
     // 查询simpleTable

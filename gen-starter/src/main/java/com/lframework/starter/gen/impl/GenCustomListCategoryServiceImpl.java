@@ -3,13 +3,13 @@ package com.lframework.starter.gen.impl;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageInfo;
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.Assert;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.Assert;
 import com.lframework.starter.gen.entity.GenCustomList;
 import com.lframework.starter.gen.entity.GenCustomListCategory;
 import com.lframework.starter.gen.mappers.GenCustomListCategoryMapper;
-import com.lframework.starter.gen.service.IGenCustomListCategoryService;
-import com.lframework.starter.gen.service.IGenCustomListService;
+import com.lframework.starter.gen.service.GenCustomListCategoryService;
+import com.lframework.starter.gen.service.GenCustomListService;
 import com.lframework.starter.gen.vo.custom.list.category.CreateGenCustomListCategoryVo;
 import com.lframework.starter.gen.vo.custom.list.category.GenCustomListCategorySelectorVo;
 import com.lframework.starter.gen.vo.custom.list.category.UpdateGenCustomListCategoryVo;
@@ -29,12 +29,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class GenCustomListCategoryServiceImpl extends
     BaseMpServiceImpl<GenCustomListCategoryMapper, GenCustomListCategory> implements
-    IGenCustomListCategoryService {
+    GenCustomListCategoryService {
 
   @Autowired
-  private IGenCustomListService genCustomListService;
+  private GenCustomListService genCustomListService;
 
-  @Cacheable(value = GenCustomListCategory.CACHE_NAME, key = "'all'")
+  @Cacheable(value = GenCustomListCategory.CACHE_NAME, key = "@cacheVariables.tenantId() + 'all'")
   @Override
   public List<GenCustomListCategory> queryList() {
     return getBaseMapper().query();
@@ -52,13 +52,13 @@ public class GenCustomListCategoryServiceImpl extends
     return PageResultUtil.convert(new PageInfo<>(datas));
   }
 
-  @Cacheable(value = GenCustomListCategory.CACHE_NAME, key = "#id", unless = "#result == null")
+  @Cacheable(value = GenCustomListCategory.CACHE_NAME, key = "@cacheVariables.tenantId() + #id", unless = "#result == null")
   @Override
   public GenCustomListCategory findById(String id) {
     return getBaseMapper().selectById(id);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public String create(CreateGenCustomListCategoryVo vo) {
 
@@ -84,7 +84,7 @@ public class GenCustomListCategoryServiceImpl extends
     return record.getId();
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void update(UpdateGenCustomListCategoryVo vo) {
     Wrapper<GenCustomListCategory> checkWrapper = Wrappers.lambdaQuery(GenCustomListCategory.class)
@@ -112,7 +112,7 @@ public class GenCustomListCategoryServiceImpl extends
     this.updateById(record);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void deleteById(String id) {
 
@@ -125,7 +125,7 @@ public class GenCustomListCategoryServiceImpl extends
     this.removeById(id);
   }
 
-  @CacheEvict(value = GenCustomListCategory.CACHE_NAME, key = "#key")
+  @CacheEvict(value = GenCustomListCategory.CACHE_NAME, key = "@cacheVariables.tenantId() + #key")
   @Override
   public void cleanCacheByKey(Serializable key) {
   }

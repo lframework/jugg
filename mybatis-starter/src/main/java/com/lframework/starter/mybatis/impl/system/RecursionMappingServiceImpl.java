@@ -2,29 +2,28 @@ package com.lframework.starter.mybatis.impl.system;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.lframework.common.constants.StringPool;
-import com.lframework.common.utils.CollectionUtil;
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.constants.StringPool;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.mybatis.entity.RecursionMapping;
 import com.lframework.starter.mybatis.enums.system.NodeType;
 import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.mybatis.mappers.system.RecursionMappingMapper;
-import com.lframework.starter.mybatis.service.system.IRecursionMappingService;
+import com.lframework.starter.mybatis.service.system.RecursionMappingService;
 import com.lframework.starter.web.utils.IdUtil;
-import java.util.Collections;
 import java.util.List;
 import lombok.NonNull;
 import org.springframework.transaction.annotation.Transactional;
 
 public class RecursionMappingServiceImpl extends
     BaseMpServiceImpl<RecursionMappingMapper, RecursionMapping>
-    implements IRecursionMappingService {
+    implements RecursionMappingService {
 
   @Override
   public List<String> getNodeParentIds(@NonNull String nodeId, @NonNull NodeType nodeType) {
 
     if (StringUtil.isEmpty(nodeId)) {
-      return Collections.EMPTY_LIST;
+      return CollectionUtil.emptyList();
     }
 
     Wrapper<RecursionMapping> queryWrapper = Wrappers.lambdaQuery(RecursionMapping.class)
@@ -33,7 +32,7 @@ public class RecursionMappingServiceImpl extends
 
     RecursionMapping recursionMappings = getBaseMapper().selectOne(queryWrapper);
     if (recursionMappings == null || StringUtil.isEmpty(recursionMappings.getPath())) {
-      return Collections.EMPTY_LIST;
+      return CollectionUtil.emptyList();
     }
 
     return StringUtil.split(recursionMappings.getPath(), StringPool.STR_SPLIT);
@@ -45,14 +44,14 @@ public class RecursionMappingServiceImpl extends
     return getBaseMapper().getNodeChildIds(nodeId, nodeType.getCode());
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void saveNode(String nodeId, NodeType nodeType) {
 
     this.saveNode(nodeId, nodeType, null);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void deleteNode(String nodeId, NodeType nodeType) {
 
@@ -62,7 +61,7 @@ public class RecursionMappingServiceImpl extends
     getBaseMapper().delete(deleteWrapper);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void saveNode(@NonNull String nodeId, @NonNull NodeType nodeType, List<String> parentIds) {
 

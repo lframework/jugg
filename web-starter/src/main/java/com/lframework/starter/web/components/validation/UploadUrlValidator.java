@@ -1,8 +1,8 @@
 package com.lframework.starter.web.components.validation;
 
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.web.enums.BaseEnum;
-import com.lframework.starter.web.utils.ApplicationUtil;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 import java.io.Serializable;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

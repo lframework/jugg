@@ -1,8 +1,8 @@
 package com.lframework.starter.security.components;
 
 import cn.dev33.satoken.exception.NotPermissionException;
-import com.lframework.common.exceptions.BaseException;
-import com.lframework.common.exceptions.impl.AccessDeniedException;
+import com.lframework.starter.common.exceptions.BaseException;
+import com.lframework.starter.common.exceptions.impl.AccessDeniedException;
 import com.lframework.starter.web.components.WebExceptionHandler;
 import com.lframework.starter.web.resp.Response;
 import lombok.extern.slf4j.Slf4j;

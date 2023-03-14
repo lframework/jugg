@@ -1,6 +1,7 @@
 package com.lframework.starter.web.utils;
 
-import com.lframework.common.utils.IdWorker;
+import com.lframework.starter.common.utils.IdWorker;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 
 /**
  * ID工具类

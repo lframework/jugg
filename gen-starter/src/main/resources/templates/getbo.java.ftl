@@ -1,7 +1,7 @@
 package ${packageName}.bo.${moduleName}.${bizName};
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.lframework.common.constants.StringPool;
+import StringPool;
 import com.lframework.starter.web.bo.BaseBo;
 import ${packageName}.entity.${className};
 <#if importPackages??>

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lframework.starter.mybatis.mappers.DefaultUserDetailsMapper">
 
-    <resultMap id="result" type="com.lframework.web.common.security.DefaultUserDetails">
+    <resultMap id="result" type="com.lframework.starter.web.common.security.DefaultUserDetails">
         <id property="id" column="id"/>
         <result property="username" column="username"/>
         <result property="password" column="password"/>
@@ -13,7 +13,7 @@
         <result property="lockStatus" column="lock_status"/>
     </resultMap>
 
-    <select id="findByUsername" resultType="com.lframework.web.common.security.DefaultUserDetails">
+    <select id="findByUsername" resultType="com.lframework.starter.web.common.security.DefaultUserDetails">
         SELECT id, username, password, name, email, telephone, available, lock_status FROM sys_user
         WHERE username = #{username}
     </select>

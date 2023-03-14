@@ -1,20 +1,20 @@
 package com.lframework.starter.gen.builders;
 
-import com.lframework.common.constants.StringPool;
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.CollectionUtil;
+import com.lframework.starter.common.constants.StringPool;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.gen.components.data.obj.DataObjectQueryObj;
+import com.lframework.starter.gen.components.data.obj.DataObjectQueryObj.QuerySubTableCondition;
 import com.lframework.starter.gen.entity.GenDataEntity;
 import com.lframework.starter.gen.entity.GenDataEntityDetail;
 import com.lframework.starter.gen.entity.GenDataObj;
 import com.lframework.starter.gen.entity.GenDataObjDetail;
 import com.lframework.starter.gen.entity.GenDataObjQueryDetail;
-import com.lframework.starter.gen.service.IGenDataEntityDetailService;
-import com.lframework.starter.gen.service.IGenDataEntityService;
-import com.lframework.starter.gen.service.IGenDataObjDetailService;
-import com.lframework.starter.gen.service.IGenDataObjQueryDetailService;
-import com.lframework.starter.gen.service.IGenDataObjService;
-import java.util.AbstractMap;
+import com.lframework.starter.gen.service.GenDataEntityDetailService;
+import com.lframework.starter.gen.service.GenDataEntityService;
+import com.lframework.starter.gen.service.GenDataObjDetailService;
+import com.lframework.starter.gen.service.GenDataObjQueryDetailService;
+import com.lframework.starter.gen.service.GenDataObjService;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,21 +28,21 @@ import org.springframework.stereotype.Component;
 public class DataObjectBuilder {
 
     @Autowired
-    private IGenDataObjService genDataObjService;
+    private GenDataObjService genDataObjService;
 
     @Autowired
-    private IGenDataObjDetailService genDataObjDetailService;
+    private GenDataObjDetailService genDataObjDetailService;
 
     @Autowired
-    private IGenDataObjQueryDetailService genDataObjQueryDetailService;
+    private GenDataObjQueryDetailService genDataObjQueryDetailService;
 
     @Autowired
-    private IGenDataEntityService genDataEntityService;
+    private GenDataEntityService genDataEntityService;
 
     @Autowired
-    private IGenDataEntityDetailService genDataEntityDetailService;
+    private GenDataEntityDetailService genDataEntityDetailService;
 
-    @Cacheable(value = DataObjectQueryObj.CACHE_NAME, key = "#id", unless = "#result == null")
+    @Cacheable(value = DataObjectQueryObj.CACHE_NAME, key = "@cacheVariables.tenantId() + #id", unless = "#result == null")
     public DataObjectQueryObj buildQueryObj(String id) {
         // 先查询配置信息
         GenDataObj data = genDataObjService.findById(id);
@@ -134,7 +134,10 @@ public class DataObjectBuilder {
                 GenDataEntityDetail mainTableDetail = genDataEntityDetailService.getById(mainTableDetailId);
                 GenDataEntityDetail subTableDetail = genDataEntityDetailService.getById(subTableDetailId);
 
-                querySubTable.getJoinCondition().add(new AbstractMap.SimpleEntry<>(mainTableDetail.getDbColumnName(), subTableDetail.getDbColumnName()));
+                QuerySubTableCondition condition = new QuerySubTableCondition();
+                condition.setKey(mainTableDetail.getDbColumnName());
+                condition.setValue(subTableDetail.getDbColumnName());
+                querySubTable.getJoinCondition().add(condition);
             }
 
 

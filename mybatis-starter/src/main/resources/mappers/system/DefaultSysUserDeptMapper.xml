@@ -1,27 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lframework.starter.mybatis.mappers.system.DefaultSysUserDeptMapper">
-    <resultMap id="SysUserDeptDto" type="com.lframework.starter.mybatis.dto.system.dept.DefaultSysUserDeptDto">
-        <id column="id" property="id"/>
-        <result column="user_id" property="userId"/>
-        <result column="dept_id" property="deptId"/>
-    </resultMap>
 
     <sql id="SysUserDeptDto_sql">
         SELECT
-            ud.id,
-            ud.user_id,
-            ud.dept_id
+            ud.*
         FROM sys_user_dept AS ud
         INNER JOIN sys_dept AS d ON d.id = ud.dept_id
     </sql>
-    <select id="getByUserId" resultMap="SysUserDeptDto">
+    <select id="getByUserId" resultType="com.lframework.starter.mybatis.entity.DefaultSysUserDept">
         <include refid="SysUserDeptDto_sql"/>
         WHERE ud.user_id = #{userId}
         ORDER BY d.code
     </select>
 
-    <select id="hasByDeptId" resultMap="SysUserDeptDto">
+    <select id="hasByDeptId" resultType="com.lframework.starter.mybatis.entity.DefaultSysUserDept">
         <include refid="SysUserDeptDto_sql"/>
         WHERE ud.dept_id = #{deptId}
         LIMIT 1

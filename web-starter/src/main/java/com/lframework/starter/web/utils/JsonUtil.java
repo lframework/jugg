@@ -1,16 +1,19 @@
 package com.lframework.starter.web.utils;
 
+import cn.hutool.json.JSONUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
-import com.lframework.common.exceptions.impl.DefaultSysException;
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.exceptions.impl.DefaultSysException;
+import com.lframework.starter.common.utils.StringUtil;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 import java.util.List;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class JsonUtil {
+public class JsonUtil extends JSONUtil {
 
   private static final ObjectMapper OBJECT_MAPPER = ApplicationUtil.getBean(ObjectMapper.class);
 
@@ -35,6 +38,20 @@ public class JsonUtil {
 
     try {
       return OBJECT_MAPPER.readValue(jsonStr, clazz);
+    } catch (JsonProcessingException e) {
+      log.error(e.getMessage(), e);
+      throw new DefaultSysException(e.getMessage());
+    }
+  }
+
+  public static <K, V> Map<K, V> parseMap(String jsonStr, Class<K> keyClazz, Class<V> valueClazz) {
+    if (StringUtil.isEmpty(jsonStr) || keyClazz == null || valueClazz == null) {
+      return null;
+    }
+
+    try {
+      return OBJECT_MAPPER.readValue(jsonStr,
+          OBJECT_MAPPER.getTypeFactory().constructMapType(Map.class, keyClazz, valueClazz));
     } catch (JsonProcessingException e) {
       log.error(e.getMessage(), e);
       throw new DefaultSysException(e.getMessage());

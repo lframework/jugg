@@ -1,10 +1,10 @@
 package com.lframework.starter.security.controller.system;
 
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.CollectionUtil;
-import com.lframework.starter.mybatis.dto.DefaultOpLogsDto;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.mybatis.entity.DefaultOpLogs;
 import com.lframework.starter.mybatis.resp.PageResult;
-import com.lframework.starter.mybatis.service.IOpLogsService;
+import com.lframework.starter.mybatis.service.OpLogsService;
 import com.lframework.starter.mybatis.utils.PageResultUtil;
 import com.lframework.starter.mybatis.vo.QueryOpLogsVo;
 import com.lframework.starter.security.bo.system.oplog.GetOpLogBo;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+import com.lframework.starter.web.annotations.security.HasPermission;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,20 +38,20 @@ import org.springframework.web.bind.annotation.RestController;
 public class OpLogController extends DefaultBaseController {
 
   @Autowired
-  private IOpLogsService opLogsService;
+  private OpLogsService opLogsService;
 
   /**
    * 操作日志列表
    */
   @ApiOperation("操作日志列表")
-  @PreAuthorize("@permission.valid('system:oplog:query')")
+  @HasPermission({"system:oplog:query"})
   @GetMapping("/query")
   public InvokeResult<PageResult<QueryOpLogBo>> query(@Valid QueryOpLogsVo vo) {
 
-    PageResult<DefaultOpLogsDto> pageResult = opLogsService.query(getPageIndex(vo), getPageSize(vo),
+    PageResult<DefaultOpLogs> pageResult = opLogsService.query(getPageIndex(vo), getPageSize(vo),
         vo);
 
-    List<DefaultOpLogsDto> datas = pageResult.getDatas();
+    List<DefaultOpLogs> datas = pageResult.getDatas();
     List<QueryOpLogBo> results = null;
 
     if (!CollectionUtil.isEmpty(datas)) {
@@ -66,11 +66,11 @@ public class OpLogController extends DefaultBaseController {
    */
   @ApiOperation("操作日志详情")
   @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
-  @PreAuthorize("@permission.valid('system:oplog:query')")
+  @HasPermission({"system:oplog:query"})
   @GetMapping
   public InvokeResult<GetOpLogBo> findById(@NotBlank(message = "ID不能为空") String id) {
 
-    DefaultOpLogsDto data = opLogsService.findById(id);
+    DefaultOpLogs data = opLogsService.findById(id);
 
     if (data == null) {
       throw new DefaultClientException("操作日志不存在！");

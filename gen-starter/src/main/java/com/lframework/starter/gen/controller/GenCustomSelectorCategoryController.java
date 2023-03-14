@@ -1,11 +1,11 @@
 package com.lframework.starter.gen.controller;
 
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.CollectionUtil;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.gen.bo.custom.selector.category.GetGenCustomSelectorCategoryBo;
 import com.lframework.starter.gen.bo.custom.selector.category.QueryGenCustomSelectorCategoryBo;
 import com.lframework.starter.gen.entity.GenCustomSelectorCategory;
-import com.lframework.starter.gen.service.IGenCustomSelectorCategoryService;
+import com.lframework.starter.gen.service.GenCustomSelectorCategoryService;
 import com.lframework.starter.gen.vo.custom.selector.category.CreateGenCustomSelectorCategoryVo;
 import com.lframework.starter.gen.vo.custom.selector.category.UpdateGenCustomSelectorCategoryVo;
 import com.lframework.starter.web.controller.DefaultBaseController;
@@ -15,7 +15,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
@@ -41,7 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class GenCustomSelectorCategoryController extends DefaultBaseController {
 
   @Autowired
-  private IGenCustomSelectorCategoryService genCustomSelectorCategoryService;
+  private GenCustomSelectorCategoryService genCustomSelectorCategoryService;
 
   /**
    * 查询列表
@@ -50,7 +49,7 @@ public class GenCustomSelectorCategoryController extends DefaultBaseController {
   @GetMapping("/query")
   public InvokeResult<List<QueryGenCustomSelectorCategoryBo>> query() {
     List<GenCustomSelectorCategory> datas = genCustomSelectorCategoryService.queryList();
-    List<QueryGenCustomSelectorCategoryBo> results = Collections.EMPTY_LIST;
+    List<QueryGenCustomSelectorCategoryBo> results = CollectionUtil.emptyList();
     if (!CollectionUtil.isEmpty(datas)) {
       results = datas.stream().map(QueryGenCustomSelectorCategoryBo::new)
           .collect(Collectors.toList());

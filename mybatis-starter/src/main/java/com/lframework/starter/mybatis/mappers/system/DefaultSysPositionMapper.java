@@ -1,6 +1,5 @@
 package com.lframework.starter.mybatis.mappers.system;
 
-import com.lframework.starter.mybatis.dto.system.position.DefaultSysPositionDto;
 import com.lframework.starter.mybatis.entity.DefaultSysPosition;
 import com.lframework.starter.mybatis.mapper.BaseMapper;
 import com.lframework.starter.mybatis.vo.system.position.QuerySysPositionVo;
@@ -24,7 +23,7 @@ public interface DefaultSysPositionMapper extends BaseMapper<DefaultSysPosition>
    * @param vo
    * @return
    */
-  List<DefaultSysPositionDto> query(@Param("vo") QuerySysPositionVo vo);
+  List<DefaultSysPosition> query(@Param("vo") QuerySysPositionVo vo);
 
   /**
    * 根据ID查询
@@ -32,7 +31,7 @@ public interface DefaultSysPositionMapper extends BaseMapper<DefaultSysPosition>
    * @param id
    * @return
    */
-  DefaultSysPositionDto findById(String id);
+  DefaultSysPosition findById(String id);
 
   /**
    * 选择器
@@ -40,6 +39,6 @@ public interface DefaultSysPositionMapper extends BaseMapper<DefaultSysPosition>
    * @param vo
    * @return
    */
-  List<DefaultSysPositionDto> selector(@Param("vo") SysPositionSelectorVo vo);
+  List<DefaultSysPosition> selector(@Param("vo") SysPositionSelectorVo vo);
 
 }

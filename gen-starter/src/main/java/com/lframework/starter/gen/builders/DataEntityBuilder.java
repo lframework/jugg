@@ -5,14 +5,14 @@ import com.lframework.starter.gen.components.DataEntityColumn;
 import com.lframework.starter.gen.dto.gen.GenGenerateInfoDto;
 import com.lframework.starter.gen.entity.GenDataEntity;
 import com.lframework.starter.gen.entity.GenDataEntityDetail;
-import com.lframework.starter.gen.service.IGenCreateColumnConfigService;
-import com.lframework.starter.gen.service.IGenDataEntityDetailService;
-import com.lframework.starter.gen.service.IGenDataEntityService;
-import com.lframework.starter.gen.service.IGenDetailColumnConfigService;
-import com.lframework.starter.gen.service.IGenQueryColumnConfigService;
-import com.lframework.starter.gen.service.IGenQueryParamsColumnConfigService;
-import com.lframework.starter.gen.service.IGenUpdateColumnConfigService;
-import com.lframework.starter.gen.service.IGenerateInfoService;
+import com.lframework.starter.gen.service.GenCreateColumnConfigService;
+import com.lframework.starter.gen.service.GenDataEntityDetailService;
+import com.lframework.starter.gen.service.GenDataEntityService;
+import com.lframework.starter.gen.service.GenDetailColumnConfigService;
+import com.lframework.starter.gen.service.GenQueryColumnConfigService;
+import com.lframework.starter.gen.service.GenQueryParamsColumnConfigService;
+import com.lframework.starter.gen.service.GenUpdateColumnConfigService;
+import com.lframework.starter.gen.service.GenerateInfoService;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,28 +25,28 @@ import org.springframework.stereotype.Component;
 public class DataEntityBuilder {
 
   @Autowired
-  private IGenDataEntityService genDataEntityService;
+  private GenDataEntityService genDataEntityService;
 
   @Autowired
-  private IGenerateInfoService generateInfoService;
+  private GenerateInfoService generateInfoService;
 
   @Autowired
-  private IGenDataEntityDetailService genDataEntityDetailService;
+  private GenDataEntityDetailService genDataEntityDetailService;
 
   @Autowired
-  private IGenCreateColumnConfigService genCreateColumnConfigService;
+  private GenCreateColumnConfigService genCreateColumnConfigService;
 
   @Autowired
-  private IGenUpdateColumnConfigService genUpdateColumnConfigService;
+  private GenUpdateColumnConfigService genUpdateColumnConfigService;
 
   @Autowired
-  private IGenQueryColumnConfigService genQueryColumnConfigService;
+  private GenQueryColumnConfigService genQueryColumnConfigService;
 
   @Autowired
-  private IGenQueryParamsColumnConfigService genQueryParamsColumnConfigService;
+  private GenQueryParamsColumnConfigService genQueryParamsColumnConfigService;
 
   @Autowired
-  private IGenDetailColumnConfigService genDetailColumnConfigService;
+  private GenDetailColumnConfigService genDetailColumnConfigService;
 
   /**
    * 根据数据对象ID构建

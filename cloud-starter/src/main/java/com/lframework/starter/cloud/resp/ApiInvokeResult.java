@@ -1,6 +1,6 @@
 package com.lframework.starter.cloud.resp;
 
-import com.lframework.common.constants.ResponseConstants;
+import com.lframework.starter.common.constants.ResponseConstants;
 import com.lframework.starter.web.resp.Response;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

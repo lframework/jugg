@@ -27,6 +27,11 @@ public class QrtzDto implements BaseDto, Serializable {
   private String group;
 
   /**
+   * 租户ID
+   */
+  private Integer tenantId;
+
+  /**
    * 备注
    */
   private String description;

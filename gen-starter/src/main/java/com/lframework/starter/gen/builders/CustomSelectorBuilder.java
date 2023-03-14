@@ -1,15 +1,15 @@
 package com.lframework.starter.gen.builders;
 
-import com.lframework.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
 import com.lframework.starter.gen.components.custom.selector.CustomSelectorConfig;
 import com.lframework.starter.gen.entity.GenCustomSelector;
 import com.lframework.starter.gen.entity.GenDataEntityDetail;
 import com.lframework.starter.gen.entity.GenDataObj;
 import com.lframework.starter.gen.entity.GenDataObjDetail;
-import com.lframework.starter.gen.service.IGenCustomSelectorService;
-import com.lframework.starter.gen.service.IGenDataEntityDetailService;
-import com.lframework.starter.gen.service.IGenDataObjDetailService;
-import com.lframework.starter.gen.service.IGenDataObjService;
+import com.lframework.starter.gen.service.GenCustomSelectorService;
+import com.lframework.starter.gen.service.GenDataEntityDetailService;
+import com.lframework.starter.gen.service.GenDataObjDetailService;
+import com.lframework.starter.gen.service.GenDataObjService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
@@ -18,18 +18,18 @@ import org.springframework.stereotype.Component;
 public class CustomSelectorBuilder {
 
   @Autowired
-  private IGenCustomSelectorService genCustomSelectorService;
+  private GenCustomSelectorService genCustomSelectorService;
 
   @Autowired
-  private IGenDataObjService genDataObjService;
+  private GenDataObjService genDataObjService;
 
   @Autowired
-  private IGenDataObjDetailService genDataObjDetailService;
+  private GenDataObjDetailService genDataObjDetailService;
 
   @Autowired
-  private IGenDataEntityDetailService genDataEntityDetailService;
+  private GenDataEntityDetailService genDataEntityDetailService;
 
-  @Cacheable(value = CustomSelectorConfig.CACHE_NAME, key = "#id", unless = "#result == null")
+  @Cacheable(value = CustomSelectorConfig.CACHE_NAME, key = "@cacheVariables.tenantId() + #id", unless = "#result == null")
   public CustomSelectorConfig buildConfig(String id) {
 
     // 先查询配置信息

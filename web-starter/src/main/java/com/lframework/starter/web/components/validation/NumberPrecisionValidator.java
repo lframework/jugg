@@ -1,6 +1,6 @@
 package com.lframework.starter.web.components.validation;
 
-import com.lframework.common.utils.NumberUtil;
+import com.lframework.starter.common.utils.NumberUtil;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 

@@ -1,10 +1,12 @@
 package com.lframework.starter.web.components.generator.impl;
 
-import com.lframework.common.exceptions.impl.DefaultSysException;
-import com.lframework.common.utils.DateUtil;
+import com.lframework.starter.common.exceptions.impl.DefaultSysException;
+import com.lframework.starter.common.utils.DateUtil;
+import com.lframework.starter.web.common.tenant.TenantContextHolder;
 import com.lframework.starter.web.components.code.GenerateCodeType;
 import com.lframework.starter.web.components.generator.Generator;
 import com.lframework.starter.web.components.redis.RedisHandler;
+import com.lframework.starter.web.utils.TenantUtil;
 import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -29,7 +31,7 @@ public abstract class AbstractFlowGenerator extends AbstractGenerator implements
     }
     String lockerName = LOCK_KEY + type.getClass().getName();
     String nowStr = DateUtil.formatDate(LocalDate.now(), "yyyyMMdd");
-    String redisKey = nowStr + lockerName;
+    String redisKey = nowStr + "_" + (TenantUtil.enableTenant() ? TenantContextHolder.getTenantId() : "noTenant") + "_" + lockerName;
     long no = redisHandler.incr(redisKey, 1L);
     redisHandler.expire(redisKey, 86400000L);
 

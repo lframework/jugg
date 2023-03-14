@@ -1,7 +1,7 @@
 package com.lframework.starter.gen.bo.data.entity;
 
-import com.lframework.common.functions.SFunction;
-import com.lframework.common.utils.CollectionUtil;
+import com.lframework.starter.common.functions.SFunction;
+import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.gen.bo.gen.GenCreateColumnConfigBo;
 import com.lframework.starter.gen.bo.gen.GenDetailColumnConfigBo;
 import com.lframework.starter.gen.bo.gen.GenGenerateInfoBo;

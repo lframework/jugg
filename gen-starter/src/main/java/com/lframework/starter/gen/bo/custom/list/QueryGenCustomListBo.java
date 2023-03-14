@@ -1,13 +1,13 @@
 package com.lframework.starter.gen.bo.custom.list;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.lframework.common.constants.StringPool;
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.constants.StringPool;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.gen.entity.GenCustomList;
 import com.lframework.starter.gen.entity.GenCustomListCategory;
-import com.lframework.starter.gen.service.IGenCustomListCategoryService;
+import com.lframework.starter.gen.service.GenCustomListCategoryService;
 import com.lframework.starter.web.bo.BaseBo;
-import com.lframework.starter.web.utils.ApplicationUtil;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDateTime;
 import lombok.Data;
@@ -88,8 +88,8 @@ public class QueryGenCustomListBo extends BaseBo<GenCustomList> {
   protected void afterInit(GenCustomList dto) {
 
     if (!StringUtil.isBlank(dto.getCategoryId())) {
-      IGenCustomListCategoryService genDataObjCategoryService = ApplicationUtil.getBean(
-          IGenCustomListCategoryService.class);
+      GenCustomListCategoryService genDataObjCategoryService = ApplicationUtil.getBean(
+          GenCustomListCategoryService.class);
       GenCustomListCategory category = genDataObjCategoryService.findById(dto.getCategoryId());
       this.categoryName = category.getName();
     }

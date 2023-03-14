@@ -1,16 +1,17 @@
 package com.lframework.starter.security.controller.system;
 
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.CollectionUtil;
-import com.lframework.starter.mybatis.dto.system.position.DefaultSysPositionDto;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.mybatis.entity.DefaultSysPosition;
 import com.lframework.starter.mybatis.resp.PageResult;
-import com.lframework.starter.mybatis.service.system.ISysPositionService;
+import com.lframework.starter.mybatis.service.system.SysPositionService;
 import com.lframework.starter.mybatis.utils.PageResultUtil;
 import com.lframework.starter.mybatis.vo.system.position.CreateSysPositionVo;
 import com.lframework.starter.mybatis.vo.system.position.QuerySysPositionVo;
 import com.lframework.starter.mybatis.vo.system.position.UpdateSysPositionVo;
 import com.lframework.starter.security.bo.system.position.GetSysPositionBo;
 import com.lframework.starter.security.bo.system.position.QuerySysPositionBo;
+import com.lframework.starter.web.annotations.security.HasPermission;
 import com.lframework.starter.web.controller.DefaultBaseController;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
@@ -24,7 +25,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -46,20 +46,20 @@ import org.springframework.web.bind.annotation.RestController;
 public class SysPositionController extends DefaultBaseController {
 
   @Autowired
-  private ISysPositionService sysPositionService;
+  private SysPositionService sysPositionService;
 
   /**
    * 岗位列表
    */
   @ApiOperation("岗位列表")
-  @PreAuthorize("@permission.valid('system:position:query','system:position:add','system:position:modify')")
+  @HasPermission({"system:position:query","system:position:add","system:position:modify"})
   @GetMapping("/query")
   public InvokeResult<PageResult<QuerySysPositionBo>> query(@Valid QuerySysPositionVo vo) {
 
-    PageResult<DefaultSysPositionDto> pageResult = sysPositionService.query(getPageIndex(vo),
+    PageResult<DefaultSysPosition> pageResult = sysPositionService.query(getPageIndex(vo),
         getPageSize(vo), vo);
 
-    List<DefaultSysPositionDto> datas = pageResult.getDatas();
+    List<DefaultSysPosition> datas = pageResult.getDatas();
     List<QuerySysPositionBo> results = null;
 
     if (!CollectionUtil.isEmpty(datas)) {
@@ -74,11 +74,11 @@ public class SysPositionController extends DefaultBaseController {
    */
   @ApiOperation("查询岗位")
   @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
-  @PreAuthorize("@permission.valid('system:position:query','system:position:add','system:position:modify')")
+  @HasPermission({"system:position:query","system:position:add","system:position:modify"})
   @GetMapping
   public InvokeResult<GetSysPositionBo> get(@NotBlank(message = "ID不能为空！") String id) {
 
-    DefaultSysPositionDto data = sysPositionService.findById(id);
+    DefaultSysPosition data = sysPositionService.findById(id);
     if (data == null) {
       throw new DefaultClientException("岗位不存在！");
     }
@@ -92,7 +92,7 @@ public class SysPositionController extends DefaultBaseController {
    * 批量停用岗位
    */
   @ApiOperation("批量停用岗位")
-  @PreAuthorize("@permission.valid('system:position:modify')")
+  @HasPermission({"system:position:modify"})
   @PatchMapping("/unable/batch")
   public InvokeResult<Void> batchUnable(
       @ApiParam(value = "岗位ID", required = true) @NotEmpty(message = "请选择需要停用的岗位！") @RequestBody List<String> ids) {
@@ -110,7 +110,7 @@ public class SysPositionController extends DefaultBaseController {
    * 批量启用岗位
    */
   @ApiOperation("批量启用岗位")
-  @PreAuthorize("@permission.valid('system:position:modify')")
+  @HasPermission({"system:position:modify"})
   @PatchMapping("/enable/batch")
   public InvokeResult<Void> batchEnable(
       @ApiParam(value = "岗位ID", required = true) @NotEmpty(message = "请选择需要启用的岗位！") @RequestBody List<String> ids) {
@@ -128,7 +128,7 @@ public class SysPositionController extends DefaultBaseController {
    * 新增岗位
    */
   @ApiOperation("新增岗位")
-  @PreAuthorize("@permission.valid('system:position:add')")
+  @HasPermission({"system:position:add"})
   @PostMapping
   public InvokeResult<Void> create(@Valid CreateSysPositionVo vo) {
 
@@ -141,7 +141,7 @@ public class SysPositionController extends DefaultBaseController {
    * 修改岗位
    */
   @ApiOperation("修改岗位")
-  @PreAuthorize("@permission.valid('system:position:modify')")
+  @HasPermission({"system:position:modify"})
   @PutMapping
   public InvokeResult<Void> update(@Valid UpdateSysPositionVo vo) {
 

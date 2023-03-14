@@ -1,10 +1,10 @@
 package com.lframework.starter.security.controller;
 
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.CollectionUtil;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.mybatis.dto.qrtz.QrtzDto;
 import com.lframework.starter.mybatis.resp.PageResult;
-import com.lframework.starter.mybatis.service.IQrtzService;
+import com.lframework.starter.mybatis.service.QrtzService;
 import com.lframework.starter.mybatis.utils.PageResultUtil;
 import com.lframework.starter.mybatis.vo.qrtz.CreateQrtzVo;
 import com.lframework.starter.mybatis.vo.qrtz.QueryQrtzVo;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+import com.lframework.starter.web.annotations.security.HasPermission;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class QrtzController extends DefaultBaseController {
 
   @Autowired
-  private IQrtzService qrtzService;
+  private QrtzService qrtzService;
 
   /**
    * 查询列表
@@ -45,7 +45,7 @@ public class QrtzController extends DefaultBaseController {
    * @return
    */
   @ApiOperation("查询列表")
-  @PreAuthorize("@permission.valid('development:qrtz:manage')")
+  @HasPermission({"development:qrtz:manage"})
   @GetMapping("/query")
   public InvokeResult<PageResult<QueryQrtzBo>> query(@Valid QueryQrtzVo vo) {
 
@@ -66,7 +66,7 @@ public class QrtzController extends DefaultBaseController {
    * @return
    */
   @ApiOperation("查询")
-  @PreAuthorize("@permission.valid('development:qrtz:manage')")
+  @HasPermission({"development:qrtz:manage"})
   @GetMapping
   public InvokeResult<GetQrtzBo> get(@NotBlank(message = "名称不能为空！") String name,
       @NotBlank(message = "组不能为空！") String group) {
@@ -85,7 +85,7 @@ public class QrtzController extends DefaultBaseController {
    * @return
    */
   @ApiOperation("创建")
-  @PreAuthorize("@permission.valid('development:qrtz:manage')")
+  @HasPermission({"development:qrtz:manage"})
   @PostMapping
   public InvokeResult<Void> create(@Valid @RequestBody CreateQrtzVo vo) {
     qrtzService.create(vo);
@@ -100,7 +100,7 @@ public class QrtzController extends DefaultBaseController {
    * @return
    */
   @ApiOperation("修改")
-  @PreAuthorize("@permission.valid('development:qrtz:manage')")
+  @HasPermission({"development:qrtz:manage"})
   @PutMapping
   public InvokeResult<Void> update(@Valid @RequestBody UpdateQrtzVo vo) {
     qrtzService.update(vo);
@@ -114,7 +114,7 @@ public class QrtzController extends DefaultBaseController {
    * @return
    */
   @ApiOperation("暂停")
-  @PreAuthorize("@permission.valid('development:qrtz:manage')")
+  @HasPermission({"development:qrtz:manage"})
   @PutMapping("/pause")
   public InvokeResult<Void> pause(@NotBlank(message = "名称不能为空！") String name,
       @NotBlank(message = "组不能为空！") String group) {
@@ -129,7 +129,7 @@ public class QrtzController extends DefaultBaseController {
    * @return
    */
   @ApiOperation("恢复")
-  @PreAuthorize("@permission.valid('development:qrtz:manage')")
+  @HasPermission({"development:qrtz:manage"})
   @PutMapping("/resume")
   public InvokeResult<Void> resume(@NotBlank(message = "名称不能为空！") String name,
       @NotBlank(message = "组不能为空！") String group) {
@@ -144,7 +144,7 @@ public class QrtzController extends DefaultBaseController {
    * @return
    */
   @ApiOperation("触发")
-  @PreAuthorize("@permission.valid('development:qrtz:manage')")
+  @HasPermission({"development:qrtz:manage"})
   @PutMapping("/trigger")
   public InvokeResult<Void> trigger(@NotBlank(message = "名称不能为空！") String name,
       @NotBlank(message = "组不能为空！") String group) {
@@ -159,7 +159,7 @@ public class QrtzController extends DefaultBaseController {
    * @return
    */
   @ApiOperation("删除")
-  @PreAuthorize("@permission.valid('development:qrtz:manage')")
+  @HasPermission({"development:qrtz:manage"})
   @DeleteMapping
   public InvokeResult<Void> delete(@NotBlank(message = "名称不能为空！") String name,
       @NotBlank(message = "组不能为空！") String group) {

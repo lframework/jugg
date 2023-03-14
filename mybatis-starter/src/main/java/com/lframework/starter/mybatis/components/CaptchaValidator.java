@@ -1,10 +1,8 @@
 package com.lframework.starter.mybatis.components;
 
-import com.lframework.common.constants.StringPool;
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.StringUtil;
-import com.lframework.starter.mybatis.entity.SysConfig;
-import com.lframework.starter.mybatis.service.system.ISysConfigService;
+import com.lframework.starter.common.constants.StringPool;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.web.components.redis.RedisHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +18,6 @@ public class CaptchaValidator {
   @Autowired
   private RedisHandler redisHandler;
 
-  @Autowired
-  private ISysConfigService sysConfigService;
-
   /**
    * 校验验证码 如果未通过校验则会抛出异常
    *
@@ -32,12 +27,6 @@ public class CaptchaValidator {
   public void validate(String sn, String captcha) {
 
     log.debug("开始校验验证码，sn={}, captcha={}", sn, captcha);
-
-    SysConfig config = sysConfigService.get();
-    if (!config.getAllowCaptcha()) {
-      log.debug("系统配置无需验证码，直接验证通过");
-      return;
-    }
 
     if (StringUtil.isEmpty(sn) || StringUtil.isEmpty(captcha)) {
       log.debug("sn、captcha为空，校验不通过");

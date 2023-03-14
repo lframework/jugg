@@ -1,13 +1,13 @@
 package com.lframework.starter.security.controller.system;
 
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.CollectionUtil;
-import com.lframework.common.utils.ThreadUtil;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.ThreadUtil;
 import com.lframework.starter.mybatis.dto.system.notice.QuerySysNoticeByUserDto;
 import com.lframework.starter.mybatis.dto.system.notice.SysNoticeDto;
 import com.lframework.starter.mybatis.entity.SysNotice;
 import com.lframework.starter.mybatis.resp.PageResult;
-import com.lframework.starter.mybatis.service.system.ISysNoticeService;
+import com.lframework.starter.mybatis.service.system.SysNoticeService;
 import com.lframework.starter.mybatis.utils.PageResultUtil;
 import com.lframework.starter.mybatis.vo.system.notice.CreateSysNoticeVo;
 import com.lframework.starter.mybatis.vo.system.notice.QuerySysNoticeByUserVo;
@@ -19,8 +19,8 @@ import com.lframework.starter.security.bo.system.notice.QuerySysNoticeBo;
 import com.lframework.starter.web.controller.DefaultBaseController;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
-import com.lframework.web.common.security.SecurityUtil;
-import com.lframework.web.common.threads.DefaultRunnable;
+import com.lframework.starter.web.common.security.SecurityUtil;
+import com.lframework.starter.web.common.threads.DefaultRunnable;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+import com.lframework.starter.web.annotations.security.HasPermission;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,13 +49,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class SysNoticeController extends DefaultBaseController {
 
   @Autowired
-  private ISysNoticeService sysNoticeService;
+  private SysNoticeService sysNoticeService;
 
   /**
    * 查询列表
    */
   @ApiOperation("查询列表")
-  @PreAuthorize("@permission.valid('system:notice:publish')")
+  @HasPermission({"system:notice:publish"})
   @GetMapping("/query")
   public InvokeResult<PageResult<QuerySysNoticeBo>> query(@Valid QuerySysNoticeVo vo) {
 
@@ -109,7 +109,7 @@ public class SysNoticeController extends DefaultBaseController {
     }
 
     String currentUserId = SecurityUtil.getCurrentUser().getId();
-    ThreadUtil.execAsync(new DefaultRunnable(SecurityUtil.getCurrentUser(), () -> {
+    ThreadUtil.execAsync(new DefaultRunnable(() -> {
       sysNoticeService.setReaded(id, currentUserId);
     }));
 
@@ -121,7 +121,7 @@ public class SysNoticeController extends DefaultBaseController {
    */
   @ApiOperation("根据ID查询")
   @ApiImplicitParam(value = "id", name = "id", paramType = "query", required = true)
-  @PreAuthorize("@permission.valid('system:notice:query')")
+  @HasPermission({"system:notice:query"})
   @GetMapping
   public InvokeResult<GetSysNoticeBo> get(@NotBlank(message = "id不能为空！") String id) {
 
@@ -139,7 +139,7 @@ public class SysNoticeController extends DefaultBaseController {
    * 新增
    */
   @ApiOperation("新增")
-  @PreAuthorize("@permission.valid('system:notice:add')")
+  @HasPermission({"system:notice:add"})
   @PostMapping
   public InvokeResult<Void> create(@Valid CreateSysNoticeVo vo) {
 
@@ -152,7 +152,7 @@ public class SysNoticeController extends DefaultBaseController {
    * 修改
    */
   @ApiOperation("修改")
-  @PreAuthorize("@permission.valid('system:notice:modify')")
+  @HasPermission({"system:notice:modify"})
   @PutMapping
   public InvokeResult<Void> update(@Valid UpdateSysNoticeVo vo) {
 

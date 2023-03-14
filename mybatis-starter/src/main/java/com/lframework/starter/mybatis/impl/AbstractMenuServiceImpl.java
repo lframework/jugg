@@ -1,14 +1,14 @@
 package com.lframework.starter.mybatis.impl;
 
-import com.lframework.common.utils.CollectionUtil;
-import com.lframework.common.utils.RegUtil;
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.RegUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.mybatis.entity.DefaultSysMenu;
 import com.lframework.starter.mybatis.mappers.DefaultMenuMapper;
-import com.lframework.starter.mybatis.service.IMenuService;
+import com.lframework.starter.mybatis.service.MenuService;
 import com.lframework.starter.web.components.security.IUserTokenResolver;
 import com.lframework.starter.web.dto.MenuDto;
-import com.lframework.starter.web.utils.ApplicationUtil;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 import com.lframework.starter.web.utils.IdUtil;
 import com.lframework.starter.web.utils.SpelUtil;
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public abstract class AbstractMenuServiceImpl extends
     BaseMpServiceImpl<DefaultMenuMapper, DefaultSysMenu>
-    implements IMenuService {
+    implements MenuService {
 
   @Value("${session.token-key:'X-Auth-Token'}")
   private String tokenKey;
@@ -81,7 +81,7 @@ public abstract class AbstractMenuServiceImpl extends
     return getBaseMapper().getPermissionsByUserId(userId);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void collect(String userId, String menuId) {
 
@@ -94,7 +94,7 @@ public abstract class AbstractMenuServiceImpl extends
     getBaseMapper().collectMenu(IdUtil.getId(), userId, menuId);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void cancelCollect(String userId, String menuId) {
 

@@ -1,6 +1,6 @@
 package com.lframework.starter.security.bo.system.user;
 
-import com.lframework.starter.mybatis.dto.system.user.DefaultSysUserDto;
+import com.lframework.starter.mybatis.entity.DefaultSysUser;
 import com.lframework.starter.web.bo.BaseBo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class SysUserSelectorBo extends BaseBo<DefaultSysUserDto> {
+public class SysUserSelectorBo extends BaseBo<DefaultSysUser> {
 
   /**
    * ID
@@ -38,7 +38,7 @@ public class SysUserSelectorBo extends BaseBo<DefaultSysUserDto> {
 
   }
 
-  public SysUserSelectorBo(DefaultSysUserDto dto) {
+  public SysUserSelectorBo(DefaultSysUser dto) {
 
     super(dto);
   }

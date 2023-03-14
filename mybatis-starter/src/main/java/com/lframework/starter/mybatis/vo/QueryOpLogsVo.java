@@ -1,8 +1,6 @@
 package com.lframework.starter.mybatis.vo;
 
-import com.lframework.starter.mybatis.enums.OpLogType;
-import com.lframework.starter.web.components.validation.IsEnum;
-import com.lframework.starter.web.vo.PageVo;
+ import com.lframework.starter.web.vo.PageVo;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDateTime;
 import lombok.Data;
@@ -29,13 +27,12 @@ public class QueryOpLogsVo extends PageVo {
    * 创建人ID
    */
   @ApiModelProperty("创建人ID")
-  private String createById;
+  private String createBy;
 
   /**
    * 日志类别
    */
   @ApiModelProperty("日志类别")
-  @IsEnum(message = "日志类别不存在！", enumClass = OpLogType.class)
   private Integer logType;
 
   /**

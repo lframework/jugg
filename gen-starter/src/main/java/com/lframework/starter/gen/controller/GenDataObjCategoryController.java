@@ -1,11 +1,11 @@
 package com.lframework.starter.gen.controller;
 
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.CollectionUtil;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.gen.bo.data.obj.category.GetGenDataObjCategoryBo;
 import com.lframework.starter.gen.bo.data.obj.category.QueryGenDataObjCategoryBo;
 import com.lframework.starter.gen.entity.GenDataObjCategory;
-import com.lframework.starter.gen.service.IGenDataObjCategoryService;
+import com.lframework.starter.gen.service.GenDataObjCategoryService;
 import com.lframework.starter.gen.vo.data.obj.category.CreateGenDataObjCategoryVo;
 import com.lframework.starter.gen.vo.data.obj.category.UpdateGenDataObjCategoryVo;
 import com.lframework.starter.web.controller.DefaultBaseController;
@@ -15,7 +15,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
@@ -41,7 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class GenDataObjCategoryController extends DefaultBaseController {
 
   @Autowired
-  private IGenDataObjCategoryService genDataObjCategoryService;
+  private GenDataObjCategoryService genDataObjCategoryService;
 
   /**
    * 查询列表
@@ -50,7 +49,7 @@ public class GenDataObjCategoryController extends DefaultBaseController {
   @GetMapping("/query")
   public InvokeResult<List<QueryGenDataObjCategoryBo>> query() {
     List<GenDataObjCategory> datas = genDataObjCategoryService.queryList();
-    List<QueryGenDataObjCategoryBo> results = Collections.EMPTY_LIST;
+    List<QueryGenDataObjCategoryBo> results = CollectionUtil.emptyList();
     if (!CollectionUtil.isEmpty(datas)) {
       results = datas.stream().map(QueryGenDataObjCategoryBo::new).collect(Collectors.toList());
     }

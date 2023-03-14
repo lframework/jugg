@@ -1,13 +1,14 @@
 package com.lframework.starter.mybatis.utils;
 
-import com.lframework.common.utils.ThreadUtil;
-import com.lframework.starter.mybatis.service.IOpLogsService;
+import com.lframework.starter.common.utils.ThreadUtil;
+import com.lframework.starter.mybatis.service.OpLogsService;
 import com.lframework.starter.mybatis.vo.CreateOpLogsVo;
-import com.lframework.starter.web.utils.ApplicationUtil;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 import com.lframework.starter.web.utils.JsonUtil;
-import com.lframework.web.common.security.SecurityUtil;
-import com.lframework.web.common.threads.DefaultRunnable;
+import com.lframework.starter.web.common.security.SecurityUtil;
+import com.lframework.starter.web.common.threads.DefaultRunnable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,10 +39,18 @@ public class OpLogUtil {
 
   public static void addLog(CreateOpLogsVo vo) {
 
-    IOpLogsService opLogsService = ApplicationUtil.getBean(IOpLogsService.class);
+    OpLogsService opLogsService = ApplicationUtil.getBean(OpLogsService.class);
 
     ThreadUtil.execAsync(
-        new DefaultRunnable(SecurityUtil.getCurrentUser(), () -> opLogsService.create(vo)));
+        new DefaultRunnable(() -> opLogsService.create(vo)));
+  }
+
+  public static void addLogs(Collection<CreateOpLogsVo> list) {
+
+    OpLogsService opLogsService = ApplicationUtil.getBean(OpLogsService.class);
+
+    ThreadUtil.execAsync(
+        new DefaultRunnable(() -> opLogsService.create(list)));
   }
 
   public static void setVariable(String key, Object value) {

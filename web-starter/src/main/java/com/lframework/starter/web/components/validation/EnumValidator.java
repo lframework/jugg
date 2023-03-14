@@ -1,7 +1,7 @@
 package com.lframework.starter.web.components.validation;
 
-import com.lframework.common.utils.ObjectUtil;
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.utils.ObjectUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.web.enums.BaseEnum;
 import com.lframework.starter.web.utils.EnumUtil;
 import java.io.Serializable;

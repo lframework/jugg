@@ -2,25 +2,24 @@ package com.lframework.starter.mybatis.impl.system;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.lframework.common.constants.StringPool;
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.CollectionUtil;
-import com.lframework.common.utils.ObjectUtil;
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.constants.StringPool;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.ObjectUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.mybatis.annotations.OpLog;
-import com.lframework.starter.mybatis.dto.system.dept.DefaultSysDeptDto;
 import com.lframework.starter.mybatis.entity.DefaultSysDept;
-import com.lframework.starter.mybatis.enums.OpLogType;
+import com.lframework.starter.mybatis.enums.DefaultOpLogType;
 import com.lframework.starter.mybatis.enums.system.SysDeptNodeType;
 import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.mybatis.mappers.system.DefaultSysDeptMapper;
-import com.lframework.starter.mybatis.service.system.IRecursionMappingService;
-import com.lframework.starter.mybatis.service.system.ISysDeptService;
-import com.lframework.starter.mybatis.service.system.ISysUserDeptService;
+import com.lframework.starter.mybatis.service.system.RecursionMappingService;
+import com.lframework.starter.mybatis.service.system.SysDeptService;
+import com.lframework.starter.mybatis.service.system.SysUserDeptService;
 import com.lframework.starter.mybatis.utils.OpLogUtil;
 import com.lframework.starter.mybatis.vo.system.dept.CreateSysDeptVo;
 import com.lframework.starter.mybatis.vo.system.dept.UpdateSysDeptVo;
-import com.lframework.starter.web.utils.ApplicationUtil;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 import com.lframework.starter.web.utils.IdUtil;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,29 +32,29 @@ import org.springframework.transaction.annotation.Transactional;
 
 public class DefaultSysDeptServiceImpl extends
     BaseMpServiceImpl<DefaultSysDeptMapper, DefaultSysDept>
-    implements ISysDeptService {
+    implements SysDeptService {
 
   @Autowired
-  private IRecursionMappingService recursionMappingService;
+  private RecursionMappingService recursionMappingService;
 
   @Autowired
-  private ISysUserDeptService sysUserDeptService;
+  private SysUserDeptService sysUserDeptService;
 
   @Override
-  public List<DefaultSysDeptDto> selector() {
+  public List<DefaultSysDept> selector() {
 
     return this.doSelector();
   }
 
-  @Cacheable(value = DefaultSysDeptDto.CACHE_NAME, key = "#id", unless = "#result == null")
+  @Cacheable(value = DefaultSysDept.CACHE_NAME, key = "@cacheVariables.tenantId() + #id", unless = "#result == null")
   @Override
-  public DefaultSysDeptDto findById(String id) {
+  public DefaultSysDept findById(String id) {
 
     return this.doGetById(id);
   }
 
-  @OpLog(type = OpLogType.OTHER, name = "停用部门，ID：{}", params = "#ids", loopFormat = true)
-  @Transactional
+  @OpLog(type = DefaultOpLogType.OTHER, name = "停用部门，ID：{}", params = "#ids", loopFormat = true)
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void batchUnable(Collection<String> ids) {
 
@@ -79,8 +78,8 @@ public class DefaultSysDeptServiceImpl extends
     this.doBatchUnable(ids);
   }
 
-  @OpLog(type = OpLogType.OTHER, name = "启用部门，ID：{}", params = "#ids", loopFormat = true)
-  @Transactional
+  @OpLog(type = DefaultOpLogType.OTHER, name = "启用部门，ID：{}", params = "#ids", loopFormat = true)
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void batchEnable(Collection<String> ids) {
 
@@ -104,8 +103,8 @@ public class DefaultSysDeptServiceImpl extends
     this.doBatchEnable(batchIds);
   }
 
-  @OpLog(type = OpLogType.OTHER, name = "新增部门，ID：{}, 编号：{}", params = {"#id", "#code"})
-  @Transactional
+  @OpLog(type = DefaultOpLogType.OTHER, name = "新增部门，ID：{}, 编号：{}", params = {"#id", "#code"})
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public String create(CreateSysDeptVo vo) {
 
@@ -126,8 +125,8 @@ public class DefaultSysDeptServiceImpl extends
     return data.getId();
   }
 
-  @OpLog(type = OpLogType.OTHER, name = "修改部门，ID：{}, 编号：{}", params = {"#id", "#code"})
-  @Transactional
+  @OpLog(type = DefaultOpLogType.OTHER, name = "修改部门，ID：{}, 编号：{}", params = {"#id", "#code"})
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void update(UpdateSysDeptVo vo) {
 
@@ -146,12 +145,12 @@ public class DefaultSysDeptServiceImpl extends
     OpLogUtil.setExtra(vo);
   }
 
-  protected List<DefaultSysDeptDto> doSelector() {
+  protected List<DefaultSysDept> doSelector() {
 
     return getBaseMapper().selector();
   }
 
-  protected DefaultSysDeptDto doGetById(String id) {
+  protected DefaultSysDept doGetById(String id) {
 
     return getBaseMapper().findById(id);
   }
@@ -213,7 +212,7 @@ public class DefaultSysDeptServiceImpl extends
 
   protected void doUpdate(UpdateSysDeptVo vo) {
 
-    DefaultSysDeptDto data = this.findById(vo.getId());
+    DefaultSysDept data = this.findById(vo.getId());
     if (data == null) {
       throw new DefaultClientException("部门不存在！");
     }
@@ -280,7 +279,7 @@ public class DefaultSysDeptServiceImpl extends
     }
   }
 
-  @CacheEvict(value = DefaultSysDeptDto.CACHE_NAME, key = "#key")
+  @CacheEvict(value = DefaultSysDept.CACHE_NAME, key = "@cacheVariables.tenantId() + #key")
   @Override
   public void cleanCacheByKey(Serializable key) {
 

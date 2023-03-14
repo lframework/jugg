@@ -1,6 +1,6 @@
 package com.lframework.starter.web.service;
 
-import com.lframework.common.exceptions.impl.ParameterNotFoundException;
+import com.lframework.starter.common.exceptions.impl.ParameterNotFoundException;
 
 public interface SysParameterService extends BaseService {
 
@@ -22,9 +22,42 @@ public interface SysParameterService extends BaseService {
 
   /**
    * 根据Key查询 如果value不存在则返回defaultValue
+   *
    * @param key
    * @param defaultValue
    * @return
    */
   String findByKey(String key, String defaultValue);
+
+  /**
+   * 根据Key查询Boolean
+   *
+   * @param key
+   * @return
+   */
+  Boolean getBoolean(String key);
+
+  /**
+   * 根据Key查询Boolean
+   *
+   * @param key
+   * @return
+   */
+  Boolean getBoolean(String key, Boolean defaultValue);
+
+  /**
+   * 根据Key查询Integer
+   *
+   * @param key
+   * @return
+   */
+  Integer getInteger(String key);
+
+  /**
+   * 根据Key查询Integer
+   *
+   * @param key
+   * @return
+   */
+  Integer getInteger(String key, Integer defaultValue);
 }

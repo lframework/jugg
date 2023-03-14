@@ -1,6 +1,6 @@
 package com.lframework.starter.security.bo.system.role;
 
-import com.lframework.starter.mybatis.dto.system.role.DefaultSysRoleDto;
+import com.lframework.starter.mybatis.entity.DefaultSysRole;
 import com.lframework.starter.web.bo.BaseBo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class SysRoleSelectorBo extends BaseBo<DefaultSysRoleDto> {
+public class SysRoleSelectorBo extends BaseBo<DefaultSysRole> {
 
   /**
    * ID
@@ -38,7 +38,7 @@ public class SysRoleSelectorBo extends BaseBo<DefaultSysRoleDto> {
 
   }
 
-  public SysRoleSelectorBo(DefaultSysRoleDto dto) {
+  public SysRoleSelectorBo(DefaultSysRole dto) {
 
     super(dto);
   }

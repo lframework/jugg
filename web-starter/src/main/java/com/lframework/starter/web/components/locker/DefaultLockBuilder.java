@@ -1,7 +1,7 @@
 package com.lframework.starter.web.components.locker;
 
-import com.lframework.common.locker.LockBuilder;
-import com.lframework.common.locker.Locker;
+import com.lframework.starter.common.locker.LockBuilder;
+import com.lframework.starter.common.locker.Locker;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;

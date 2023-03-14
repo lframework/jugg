@@ -1,45 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lframework.starter.mybatis.mappers.system.DefaultSysUserMapper">
-    <resultMap id="SysUserDto" type="com.lframework.starter.mybatis.dto.system.user.DefaultSysUserDto">
-        <id column="id" property="id"/>
-        <result column="code" property="code"/>
-        <result column="name" property="name"/>
-        <result column="username" property="username"/>
-        <result column="password" property="password"/>
-        <result column="email" property="email"/>
-        <result column="telephone" property="telephone"/>
-        <result column="gender" property="gender"/>
-        <result column="available" property="available"/>
-        <result column="lock_status" property="lockStatus"/>
-        <result column="description" property="description"/>
-        <result column="create_by" property="createBy"/>
-        <result column="create_time" property="createTime"/>
-        <result column="update_by" property="updateBy"/>
-        <result column="update_time" property="updateTime"/>
-    </resultMap>
 
     <sql id="SysUserDto_sql">
         SELECT
-            u.id,
-            u.code,
-            u.name,
-            u.username,
-            u.password,
-            u.email,
-            u.telephone,
-            u.gender,
-            u.available,
-            u.lock_status,
-            u.description,
-            u.create_by,
-            u.create_time,
-            u.update_by,
-            u.update_time
+            u.*
         FROM sys_user AS u
     </sql>
 
-    <select id="query" resultMap="SysUserDto">
+    <select id="query" resultType="com.lframework.starter.mybatis.entity.DefaultSysUser">
         <include refid="SysUserDto_sql"/>
         <where>
             <if test="vo != null">
@@ -69,11 +38,11 @@
         ORDER BY u.code
     </select>
 
-    <select id="findById" resultMap="SysUserDto">
+    <select id="findById" resultType="com.lframework.starter.mybatis.entity.DefaultSysUser">
         <include refid="SysUserDto_sql"/>
         WHERE u.id = #{id}
     </select>
-    <select id="selector" resultMap="SysUserDto">
+    <select id="selector" resultType="com.lframework.starter.mybatis.entity.DefaultSysUser">
         <include refid="SysUserDto_sql"/>
         <where>
             <if test="vo != null">

@@ -1,11 +1,11 @@
 package com.lframework.starter.security.bo.system.dic;
 
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.mybatis.entity.SysDataDic;
 import com.lframework.starter.mybatis.entity.SysDataDicCategory;
-import com.lframework.starter.mybatis.service.system.ISysDataDicCategoryService;
+import com.lframework.starter.mybatis.service.system.SysDataDicCategoryService;
 import com.lframework.starter.web.bo.BaseBo;
-import com.lframework.starter.web.utils.ApplicationUtil;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -57,8 +57,8 @@ public class GetSysDataDicBo extends BaseBo<SysDataDic> {
   @Override
   protected void afterInit(SysDataDic dto) {
     if (!StringUtil.isBlank(dto.getCategoryId())) {
-      ISysDataDicCategoryService sysDataDicCategoryService = ApplicationUtil.getBean(
-          ISysDataDicCategoryService.class);
+      SysDataDicCategoryService sysDataDicCategoryService = ApplicationUtil.getBean(
+          SysDataDicCategoryService.class);
       SysDataDicCategory category = sysDataDicCategoryService.findById(dto.getCategoryId());
       this.categoryName = category.getName();
     }

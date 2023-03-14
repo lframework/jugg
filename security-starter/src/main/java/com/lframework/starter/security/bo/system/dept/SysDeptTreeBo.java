@@ -1,6 +1,6 @@
 package com.lframework.starter.security.bo.system.dept;
 
-import com.lframework.starter.mybatis.dto.system.dept.DefaultSysDeptDto;
+import com.lframework.starter.mybatis.entity.DefaultSysDept;
 import com.lframework.starter.web.bo.BaseBo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class SysDeptTreeBo extends BaseBo<DefaultSysDeptDto> {
+public class SysDeptTreeBo extends BaseBo<DefaultSysDept> {
 
   /**
    * ID
@@ -38,7 +38,7 @@ public class SysDeptTreeBo extends BaseBo<DefaultSysDeptDto> {
 
   }
 
-  public SysDeptTreeBo(DefaultSysDeptDto dto) {
+  public SysDeptTreeBo(DefaultSysDept dto) {
 
     super(dto);
   }

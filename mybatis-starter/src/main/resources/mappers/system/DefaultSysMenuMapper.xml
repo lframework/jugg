@@ -2,53 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lframework.starter.mybatis.mappers.system.DefaultSysMenuMapper">
 
-    <resultMap id="SysMenuDto" type="com.lframework.starter.mybatis.dto.system.menu.DefaultSysMenuDto">
-        <id column="id" property="id"/>
-        <result column="code" property="code"/>
-        <result column="name" property="name"/>
-        <result column="title" property="title"/>
-        <result column="icon" property="icon"/>
-        <result column="component" property="component"/>
-        <result column="component_type" property="componentType"/>
-        <result column="request_param" property="requestParam"/>
-        <result column="parent_id" property="parentId"/>
-        <result column="path" property="path"/>
-        <result column="no_cache" property="noCache"/>
-        <result column="display" property="display"/>
-        <result column="hidden" property="hidden"/>
-        <result column="permission" property="permission"/>
-        <result column="is_special" property="isSpecial"/>
-        <result column="available" property="available"/>
-        <result column="description" property="description"/>
-    </resultMap>
-
     <sql id="SysMenuDto_sql">
         SELECT
-            id,
-            code,
-            name,
-            title,
-            icon,
-            component,
-            request_param,
-            component_type,
-            parent_id,
-            path,
-            no_cache,
-            display,
-            hidden,
-            permission,
-            is_special,
-            available,
-            description
+            *
         FROM sys_menu
     </sql>
 
-    <select id="query" resultMap="SysMenuDto">
+    <select id="query" resultType="com.lframework.starter.mybatis.entity.DefaultSysMenu">
         <include refid="SysMenuDto_sql"/>
         ORDER BY code
     </select>
-    <select id="selector" resultMap="SysMenuDto">
+    <select id="selector" resultType="com.lframework.starter.mybatis.entity.DefaultSysMenu">
         <include refid="SysMenuDto_sql"/>
         <where>
             <if test="vo != null">
@@ -60,15 +24,15 @@
         </where>
         ORDER BY code
     </select>
-    <select id="findById" resultMap="SysMenuDto">
+    <select id="findById" resultType="com.lframework.starter.mybatis.entity.DefaultSysMenu">
         <include refid="SysMenuDto_sql"/>
         WHERE id = #{id}
     </select>
-    <select id="getChildrenById" resultMap="SysMenuDto">
+    <select id="getChildrenById" resultType="com.lframework.starter.mybatis.entity.DefaultSysMenu">
         <include refid="SysMenuDto_sql"/>
         WHERE parent_id = #{id}
     </select>
-    <select id="getByRoleId" resultMap="SysMenuDto">
+    <select id="getByRoleId" resultType="com.lframework.starter.mybatis.entity.DefaultSysMenu">
         <include refid="SysMenuDto_sql"/>
         WHERE id IN (
         SELECT

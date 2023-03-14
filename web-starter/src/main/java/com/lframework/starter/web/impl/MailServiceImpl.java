@@ -1,15 +1,15 @@
 package com.lframework.starter.web.impl;
 
 import cn.hutool.extra.mail.MailAccount;
-import com.lframework.common.utils.MailUtil;
-import com.lframework.starter.web.service.IMailService;
+import com.lframework.starter.common.utils.MailUtil;
+import com.lframework.starter.web.service.MailService;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class MailServiceImpl implements IMailService {
+public class MailServiceImpl implements MailService {
 
   private MailAccount account;
 

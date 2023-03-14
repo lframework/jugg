@@ -1,7 +1,7 @@
 package com.lframework.starter.web.components.validation;
 
-import com.lframework.common.utils.RegUtil;
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.utils.RegUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 

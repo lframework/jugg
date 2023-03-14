@@ -5,16 +5,16 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.lframework.starter.mybatis.entity.SysNoticeLog;
 import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.mybatis.mappers.system.SysNoticeLogMapper;
-import com.lframework.starter.mybatis.service.system.ISysNoticeLogService;
+import com.lframework.starter.mybatis.service.system.SysNoticeLogService;
 import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SysNoticeLogServiceImpl extends
-    BaseMpServiceImpl<SysNoticeLogMapper, SysNoticeLog> implements ISysNoticeLogService {
+    BaseMpServiceImpl<SysNoticeLogMapper, SysNoticeLog> implements SysNoticeLogService {
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public boolean setReaded(String noticeId, String userId) {
     Wrapper<SysNoticeLog> updateWrapper = Wrappers.lambdaUpdate(SysNoticeLog.class)

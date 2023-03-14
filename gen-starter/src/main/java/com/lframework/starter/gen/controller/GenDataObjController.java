@@ -1,7 +1,7 @@
 package com.lframework.starter.gen.controller;
 
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.CollectionUtil;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.gen.bo.data.obj.GenDataObjColumnBo;
 import com.lframework.starter.gen.bo.data.obj.GenDataObjColumnBo.ColumnBo;
 import com.lframework.starter.gen.bo.data.obj.GetGenDataObjBo;
@@ -12,11 +12,11 @@ import com.lframework.starter.gen.entity.GenDataObj;
 import com.lframework.starter.gen.entity.GenDataObjDetail;
 import com.lframework.starter.gen.entity.GenDataObjQueryDetail;
 import com.lframework.starter.gen.enums.GenCustomListDetailType;
-import com.lframework.starter.gen.service.IGenDataEntityDetailService;
-import com.lframework.starter.gen.service.IGenDataEntityService;
-import com.lframework.starter.gen.service.IGenDataObjDetailService;
-import com.lframework.starter.gen.service.IGenDataObjQueryDetailService;
-import com.lframework.starter.gen.service.IGenDataObjService;
+import com.lframework.starter.gen.service.GenDataEntityDetailService;
+import com.lframework.starter.gen.service.GenDataEntityService;
+import com.lframework.starter.gen.service.GenDataObjDetailService;
+import com.lframework.starter.gen.service.GenDataObjQueryDetailService;
+import com.lframework.starter.gen.service.GenDataObjService;
 import com.lframework.starter.gen.vo.data.obj.CreateGenDataObjVo;
 import com.lframework.starter.gen.vo.data.obj.QueryGenDataObjVo;
 import com.lframework.starter.gen.vo.data.obj.UpdateGenDataObjVo;
@@ -55,19 +55,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class GenDataObjController extends DefaultBaseController {
 
   @Autowired
-  private IGenDataObjService genDataObjService;
+  private GenDataObjService genDataObjService;
 
   @Autowired
-  private IGenDataObjDetailService genDataObjDetailService;
+  private GenDataObjDetailService genDataObjDetailService;
 
   @Autowired
-  private IGenDataObjQueryDetailService genDataObjQueryDetailService;
+  private GenDataObjQueryDetailService genDataObjQueryDetailService;
 
   @Autowired
-  private IGenDataEntityService genDataEntityService;
+  private GenDataEntityService genDataEntityService;
 
   @Autowired
-  private IGenDataEntityDetailService genDataEntityDetailService;
+  private GenDataEntityDetailService genDataEntityDetailService;
 
   @ApiOperation("查询数据对象列表")
   @GetMapping("/query")

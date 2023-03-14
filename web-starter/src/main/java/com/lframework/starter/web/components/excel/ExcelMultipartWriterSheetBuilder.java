@@ -4,8 +4,8 @@ import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.exception.ExcelGenerateException;
 import com.alibaba.excel.write.builder.AbstractExcelWriterParameterBuilder;
 import com.alibaba.excel.write.metadata.WriteSheet;
-import com.lframework.common.utils.BeanUtil;
-import com.lframework.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.BeanUtil;
+import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.web.utils.ExcelUtil;
 import java.util.List;
 

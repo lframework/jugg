@@ -1,7 +1,5 @@
 package com.lframework.starter.mybatis.vo;
 
-import com.lframework.starter.mybatis.enums.OpLogType;
-import com.lframework.starter.web.components.validation.IsEnum;
 import com.lframework.starter.web.vo.BaseVo;
 import java.io.Serializable;
 import javax.validation.constraints.NotBlank;
@@ -28,7 +26,6 @@ public class CreateOpLogsVo implements BaseVo, Serializable {
    * 类型
    */
   @NotNull(message = "日志类型不能为空！")
-  @IsEnum(message = "日志类型不能为空！", enumClass = OpLogType.class)
   private Integer logType;
 
   /**

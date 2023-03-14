@@ -1,6 +1,8 @@
 package com.lframework.starter.web.components.qrtz;
 
-import com.lframework.common.exceptions.ClientException;
+import com.lframework.starter.common.constants.StringPool;
+import com.lframework.starter.common.exceptions.ClientException;
+import com.lframework.starter.web.common.tenant.TenantContextHolder;
 import java.io.Serializable;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.DisallowConcurrentExecution;
@@ -24,6 +26,11 @@ public abstract class QrtzJob implements Job, Serializable {
     long begTime = System.currentTimeMillis();
 
     try {
+      // 这里获取tenantId 如果为空则不设置租户ID
+      Integer tenantId = (Integer) context.getJobDetail().getJobDataMap().get(StringPool.TENANT_ID_QRTZ);
+      if (tenantId != null) {
+        TenantContextHolder.setTenantId(tenantId);
+      }
       this.onExecute(context);
       long endTime = System.currentTimeMillis();
       log.info("定时任务【{}】执行完毕，共耗时{}ms", this.getClass().getName(), endTime - begTime);
@@ -36,6 +43,8 @@ public abstract class QrtzJob implements Job, Serializable {
         log.error(e.getMessage(), e);
       }
       throw new JobExecutionException(e);
+    } finally {
+      TenantContextHolder.clearTenantId();
     }
   }
 

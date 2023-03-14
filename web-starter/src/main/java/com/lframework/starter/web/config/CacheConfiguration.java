@@ -1,9 +1,10 @@
 package com.lframework.starter.web.config;
 
-import com.lframework.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.CollectionUtil;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.CacheManager;
@@ -16,6 +17,7 @@ import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.core.RedisTemplate;
 
+@Slf4j
 @Configuration
 @EnableCaching
 @EnableConfigurationProperties(CacheProperties.class)

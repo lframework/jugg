@@ -4,9 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.AbstractWrapper;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.lframework.common.exceptions.impl.DefaultSysException;
-import com.lframework.common.utils.ArrayUtil;
-import com.lframework.common.utils.ReflectUtil;
+import com.lframework.starter.common.exceptions.impl.DefaultSysException;
+import com.lframework.starter.common.utils.ArrayUtil;
+import com.lframework.starter.common.utils.ReflectUtil;
 import com.lframework.starter.mybatis.service.BaseMpService;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -15,7 +15,6 @@ public abstract class BaseMpServiceImpl<M extends BaseMapper<T>, T> extends Serv
     implements BaseMpService<T> {
 
   @Override
-
   public boolean update(Wrapper<T> updateWrapper) {
     T entity = null;
     try {
@@ -38,11 +37,5 @@ public abstract class BaseMpServiceImpl<M extends BaseMapper<T>, T> extends Serv
     }
 
     return super.update(entity, updateWrapper);
-  }
-
-  @Override
-  public T getOne(Wrapper<T> queryWrapper) {
-    // 重写，默认不抛异常
-    return super.getOne(queryWrapper, false);
   }
 }

@@ -1,6 +1,6 @@
 package com.lframework.starter.security.bo.system.role;
 
-import com.lframework.starter.mybatis.dto.system.menu.DefaultSysMenuDto;
+import com.lframework.starter.mybatis.entity.DefaultSysMenu;
 import com.lframework.starter.web.bo.BaseBo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class QueryRoleMenuBo extends BaseBo<DefaultSysMenuDto> {
+public class QueryRoleMenuBo extends BaseBo<DefaultSysMenu> {
 
   /**
    * ID
@@ -68,19 +68,19 @@ public class QueryRoleMenuBo extends BaseBo<DefaultSysMenuDto> {
 
   }
 
-  public QueryRoleMenuBo(DefaultSysMenuDto dto) {
+  public QueryRoleMenuBo(DefaultSysMenu dto) {
 
     super(dto);
   }
 
   @Override
-  public <A> BaseBo<DefaultSysMenuDto> convert(DefaultSysMenuDto dto) {
+  public <A> BaseBo<DefaultSysMenu> convert(DefaultSysMenu dto) {
 
     return super.convert(dto, QueryRoleMenuBo::getDisplay);
   }
 
   @Override
-  protected void afterInit(DefaultSysMenuDto dto) {
+  protected void afterInit(DefaultSysMenu dto) {
 
     this.display = dto.getDisplay().getCode();
   }

@@ -1,7 +1,7 @@
 package com.lframework.starter.gen.converters;
 
-import com.lframework.common.exceptions.impl.DefaultSysException;
-import com.lframework.common.utils.CollectionUtil;
+import com.lframework.starter.common.exceptions.impl.DefaultSysException;
+import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.gen.enums.GenDataType;
 import com.lframework.starter.gen.enums.GenViewType;
 import java.util.ArrayList;

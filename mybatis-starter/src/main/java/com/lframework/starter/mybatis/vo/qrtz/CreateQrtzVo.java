@@ -34,6 +34,12 @@ public class CreateQrtzVo implements BaseVo, Serializable {
   private String group;
 
   /**
+   * 租户ID
+   */
+  @ApiModelProperty("租户ID")
+  private Integer tenantId;
+
+  /**
    * 备注
    */
   @ApiModelProperty("备注")

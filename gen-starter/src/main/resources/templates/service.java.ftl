@@ -27,7 +27,7 @@ import java.util.List;
  * @author ${author}
 </#if>
  */
-public interface I${className}Service extends BaseMpService${r"<"}${className}${r">"} {
+public interface ${className}Service extends BaseMpService${r"<"}${className}${r">"} {
 
     <#if queryParams??>
     /**

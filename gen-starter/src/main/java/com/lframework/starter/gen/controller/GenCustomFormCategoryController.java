@@ -1,11 +1,11 @@
 package com.lframework.starter.gen.controller;
 
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.CollectionUtil;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.gen.bo.custom.form.category.GetGenCustomFormCategoryBo;
 import com.lframework.starter.gen.bo.custom.form.category.QueryGenCustomFormCategoryBo;
 import com.lframework.starter.gen.entity.GenCustomFormCategory;
-import com.lframework.starter.gen.service.IGenCustomFormCategoryService;
+import com.lframework.starter.gen.service.GenCustomFormCategoryService;
 import com.lframework.starter.gen.vo.custom.form.category.CreateGenCustomFormCategoryVo;
 import com.lframework.starter.gen.vo.custom.form.category.UpdateGenCustomFormCategoryVo;
 import com.lframework.starter.web.controller.DefaultBaseController;
@@ -15,7 +15,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
@@ -41,7 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class GenCustomFormCategoryController extends DefaultBaseController {
 
   @Autowired
-  private IGenCustomFormCategoryService genCustomFormCategoryService;
+  private GenCustomFormCategoryService genCustomFormCategoryService;
 
   /**
    * 查询列表
@@ -50,7 +49,7 @@ public class GenCustomFormCategoryController extends DefaultBaseController {
   @GetMapping("/query")
   public InvokeResult<List<QueryGenCustomFormCategoryBo>> query() {
     List<GenCustomFormCategory> datas = genCustomFormCategoryService.queryList();
-    List<QueryGenCustomFormCategoryBo> results = Collections.EMPTY_LIST;
+    List<QueryGenCustomFormCategoryBo> results = CollectionUtil.emptyList();
     if (!CollectionUtil.isEmpty(datas)) {
       results = datas.stream().map(QueryGenCustomFormCategoryBo::new)
           .collect(Collectors.toList());

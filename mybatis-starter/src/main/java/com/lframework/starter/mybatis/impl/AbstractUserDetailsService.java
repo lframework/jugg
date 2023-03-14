@@ -1,11 +1,12 @@
 package com.lframework.starter.mybatis.impl;
 
-import com.lframework.common.exceptions.impl.UserLoginException;
-import com.lframework.common.utils.ObjectUtil;
-import com.lframework.starter.mybatis.service.IMenuService;
+import com.lframework.starter.common.exceptions.impl.UserLoginException;
+import com.lframework.starter.common.utils.ObjectUtil;
+import com.lframework.starter.mybatis.service.MenuService;
+import com.lframework.starter.web.common.security.AbstractUserDetails;
+import com.lframework.starter.web.common.tenant.TenantContextHolder;
 import com.lframework.starter.web.components.security.UserDetailsService;
 import com.lframework.starter.web.utils.RequestUtil;
-import com.lframework.web.common.security.AbstractUserDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public abstract class AbstractUserDetailsService implements UserDetailsService {
 
   @Autowired
-  private IMenuService menuService;
+  private MenuService menuService;
 
   @Override
   public AbstractUserDetails loadUserByUsername(String username) throws UserLoginException {
@@ -30,6 +31,8 @@ public abstract class AbstractUserDetailsService implements UserDetailsService {
       log.debug("用户名 {} 不存在", username);
       throw new UserLoginException("用户名或密码错误！");
     }
+
+    userDetails.setTenantId(TenantContextHolder.getTenantId());
 
     //获取登录IP
     userDetails.setIp(RequestUtil.getRequestIp());

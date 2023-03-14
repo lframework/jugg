@@ -3,13 +3,13 @@ package com.lframework.starter.gen.impl;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageInfo;
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.Assert;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.Assert;
 import com.lframework.starter.gen.entity.GenCustomForm;
 import com.lframework.starter.gen.entity.GenCustomFormCategory;
 import com.lframework.starter.gen.mappers.GenCustomFormCategoryMapper;
-import com.lframework.starter.gen.service.IGenCustomFormCategoryService;
-import com.lframework.starter.gen.service.IGenCustomFormService;
+import com.lframework.starter.gen.service.GenCustomFormCategoryService;
+import com.lframework.starter.gen.service.GenCustomFormService;
 import com.lframework.starter.gen.vo.custom.form.category.CreateGenCustomFormCategoryVo;
 import com.lframework.starter.gen.vo.custom.form.category.GenCustomFormCategorySelectorVo;
 import com.lframework.starter.gen.vo.custom.form.category.UpdateGenCustomFormCategoryVo;
@@ -29,12 +29,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class GenCustomFormCategoryServiceImpl extends
     BaseMpServiceImpl<GenCustomFormCategoryMapper, GenCustomFormCategory> implements
-    IGenCustomFormCategoryService {
+    GenCustomFormCategoryService {
 
   @Autowired
-  private IGenCustomFormService genCustomFormService;
+  private GenCustomFormService genCustomFormService;
 
-  @Cacheable(value = GenCustomFormCategory.CACHE_NAME, key = "'all'")
+  @Cacheable(value = GenCustomFormCategory.CACHE_NAME, key = "@cacheVariables.tenantId() + 'all'")
   @Override
   public List<GenCustomFormCategory> queryList() {
     return getBaseMapper().query();
@@ -52,13 +52,13 @@ public class GenCustomFormCategoryServiceImpl extends
     return PageResultUtil.convert(new PageInfo<>(datas));
   }
 
-  @Cacheable(value = GenCustomFormCategory.CACHE_NAME, key = "#id", unless = "#result == null")
+  @Cacheable(value = GenCustomFormCategory.CACHE_NAME, key = "@cacheVariables.tenantId() + #id", unless = "#result == null")
   @Override
   public GenCustomFormCategory findById(String id) {
     return getBaseMapper().selectById(id);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public String create(CreateGenCustomFormCategoryVo vo) {
 
@@ -85,7 +85,7 @@ public class GenCustomFormCategoryServiceImpl extends
     return record.getId();
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void update(UpdateGenCustomFormCategoryVo vo) {
     Wrapper<GenCustomFormCategory> checkWrapper = Wrappers
@@ -114,7 +114,7 @@ public class GenCustomFormCategoryServiceImpl extends
     this.updateById(record);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void deleteById(String id) {
 
@@ -127,7 +127,7 @@ public class GenCustomFormCategoryServiceImpl extends
     this.removeById(id);
   }
 
-  @CacheEvict(value = GenCustomFormCategory.CACHE_NAME, key = "#key")
+  @CacheEvict(value = GenCustomFormCategory.CACHE_NAME, key = "@cacheVariables.tenantId() + #key")
   @Override
   public void cleanCacheByKey(Serializable key) {
   }

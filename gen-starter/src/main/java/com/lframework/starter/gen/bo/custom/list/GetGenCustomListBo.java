@@ -1,8 +1,8 @@
 package com.lframework.starter.gen.bo.custom.list;
 
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.CollectionUtil;
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.gen.entity.GenCustomForm;
 import com.lframework.starter.gen.entity.GenCustomList;
 import com.lframework.starter.gen.entity.GenCustomListCategory;
@@ -14,17 +14,17 @@ import com.lframework.starter.gen.entity.GenDataEntityDetail;
 import com.lframework.starter.gen.entity.GenDataObj;
 import com.lframework.starter.gen.enums.GenCustomListBtnType;
 import com.lframework.starter.gen.enums.GenCustomListDetailType;
-import com.lframework.starter.gen.service.IGenCustomFormService;
-import com.lframework.starter.gen.service.IGenCustomListCategoryService;
-import com.lframework.starter.gen.service.IGenCustomListDetailService;
-import com.lframework.starter.gen.service.IGenCustomListHandleColumnService;
-import com.lframework.starter.gen.service.IGenCustomListQueryParamsService;
-import com.lframework.starter.gen.service.IGenCustomListToolbarService;
-import com.lframework.starter.gen.service.IGenDataEntityDetailService;
-import com.lframework.starter.gen.service.IGenDataObjService;
+import com.lframework.starter.gen.service.GenCustomFormService;
+import com.lframework.starter.gen.service.GenCustomListCategoryService;
+import com.lframework.starter.gen.service.GenCustomListDetailService;
+import com.lframework.starter.gen.service.GenCustomListHandleColumnService;
+import com.lframework.starter.gen.service.GenCustomListQueryParamsService;
+import com.lframework.starter.gen.service.GenCustomListToolbarService;
+import com.lframework.starter.gen.service.GenDataEntityDetailService;
+import com.lframework.starter.gen.service.GenDataObjService;
 import com.lframework.starter.web.bo.BaseBo;
 import com.lframework.starter.web.bo.SuperBo;
-import com.lframework.starter.web.utils.ApplicationUtil;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -187,22 +187,22 @@ public class GetGenCustomListBo extends BaseBo<GenCustomList> {
   @Override
   protected void afterInit(GenCustomList dto) {
     if (!StringUtil.isBlank(dto.getCategoryId())) {
-      IGenCustomListCategoryService genCustomListCategoryService = ApplicationUtil.getBean(
-          IGenCustomListCategoryService.class);
+      GenCustomListCategoryService genCustomListCategoryService = ApplicationUtil.getBean(
+          GenCustomListCategoryService.class);
       GenCustomListCategory category = genCustomListCategoryService.findById(dto.getCategoryId());
       this.categoryName = category.getName();
     }
 
     this.listType = dto.getListType().getCode();
 
-    IGenDataEntityDetailService genDataEntityDetailService = ApplicationUtil
-        .getBean(IGenDataEntityDetailService.class);
-    IGenDataObjService genDataObjService = ApplicationUtil.getBean(IGenDataObjService.class);
+    GenDataEntityDetailService genDataEntityDetailService = ApplicationUtil
+        .getBean(GenDataEntityDetailService.class);
+    GenDataObjService genDataObjService = ApplicationUtil.getBean(GenDataObjService.class);
     GenDataObj dataObj = genDataObjService.findById(dto.getDataObjId());
     this.dataObjName = dataObj.getName();
 
-    IGenCustomListQueryParamsService genCustomListQueryParamsService = ApplicationUtil.getBean(
-        IGenCustomListQueryParamsService.class);
+    GenCustomListQueryParamsService genCustomListQueryParamsService = ApplicationUtil.getBean(
+        GenCustomListQueryParamsService.class);
     List<GenCustomListQueryParams> queryParams = genCustomListQueryParamsService.getByCustomListId(
         dto.getId());
     if (!CollectionUtil.isEmpty(queryParams)) {
@@ -223,8 +223,8 @@ public class GetGenCustomListBo extends BaseBo<GenCustomList> {
       }).collect(Collectors.toList());
     }
 
-    IGenCustomListDetailService genCustomListDetailService = ApplicationUtil.getBean(
-        IGenCustomListDetailService.class);
+    GenCustomListDetailService genCustomListDetailService = ApplicationUtil.getBean(
+        GenCustomListDetailService.class);
     List<GenCustomListDetail> details = genCustomListDetailService.getByCustomListId(dto.getId());
     this.details = details.stream().map(t -> {
       DetailBo bo = new DetailBo();
@@ -242,13 +242,13 @@ public class GetGenCustomListBo extends BaseBo<GenCustomList> {
       return bo;
     }).collect(Collectors.toList());
 
-    IGenCustomListToolbarService genCustomListToolbarService = ApplicationUtil
-        .getBean(IGenCustomListToolbarService.class);
+    GenCustomListToolbarService genCustomListToolbarService = ApplicationUtil
+        .getBean(GenCustomListToolbarService.class);
     List<GenCustomListToolbar> toolbars = genCustomListToolbarService
         .getByCustomListId(dto.getId());
 
-    IGenCustomFormService genCustomFormService = ApplicationUtil
-        .getBean(IGenCustomFormService.class);
+    GenCustomFormService genCustomFormService = ApplicationUtil
+        .getBean(GenCustomFormService.class);
 
     this.toolbars = toolbars.stream().map(t -> {
       ToolbarBo toolbar = new ToolbarBo();
@@ -271,8 +271,8 @@ public class GetGenCustomListBo extends BaseBo<GenCustomList> {
       return toolbar;
     }).collect(Collectors.toList());
 
-    IGenCustomListHandleColumnService genCustomListHandleColumnService = ApplicationUtil
-        .getBean(IGenCustomListHandleColumnService.class);
+    GenCustomListHandleColumnService genCustomListHandleColumnService = ApplicationUtil
+        .getBean(GenCustomListHandleColumnService.class);
     List<GenCustomListHandleColumn> handleColumns = genCustomListHandleColumnService
         .getByCustomListId(dto.getId());
 

@@ -1,6 +1,6 @@
 package com.lframework.starter.gen.directives;
 
-import com.lframework.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.CollectionUtil;
 import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateDirectiveModel;

@@ -1,11 +1,11 @@
 package com.lframework.starter.security.controller.system;
 
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.CollectionUtil;
-import com.lframework.starter.mybatis.dto.system.user.DefaultSysUserDto;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.mybatis.entity.DefaultSysUser;
 import com.lframework.starter.mybatis.resp.PageResult;
-import com.lframework.starter.mybatis.service.IUserService;
-import com.lframework.starter.mybatis.service.system.ISysUserService;
+import com.lframework.starter.mybatis.service.UserService;
+import com.lframework.starter.mybatis.service.system.SysUserService;
 import com.lframework.starter.mybatis.utils.PageResultUtil;
 import com.lframework.starter.mybatis.vo.system.user.CreateSysUserVo;
 import com.lframework.starter.mybatis.vo.system.user.QuerySysUserVo;
@@ -25,7 +25,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+import com.lframework.starter.web.annotations.security.HasPermission;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -47,23 +47,23 @@ import org.springframework.web.bind.annotation.RestController;
 public class SysUserController extends DefaultBaseController {
 
   @Autowired
-  private ISysUserService sysUserService;
+  private SysUserService sysUserService;
 
   @Autowired
-  private IUserService userService;
+  private UserService userService;
 
   /**
    * 用户列表
    */
   @ApiOperation("用户列表")
-  @PreAuthorize("@permission.valid('system:user:query','system:user:add','system:user:modify')")
+  @HasPermission({"system:user:query","system:user:add","system:user:modify"})
   @GetMapping("/query")
   public InvokeResult<PageResult<QuerySysUserBo>> query(@Valid QuerySysUserVo vo) {
 
-    PageResult<DefaultSysUserDto> pageResult = sysUserService.query(getPageIndex(vo),
+    PageResult<DefaultSysUser> pageResult = sysUserService.query(getPageIndex(vo),
         getPageSize(vo), vo);
 
-    List<DefaultSysUserDto> datas = pageResult.getDatas();
+    List<DefaultSysUser> datas = pageResult.getDatas();
     List<QuerySysUserBo> results = null;
 
     if (!CollectionUtil.isEmpty(datas)) {
@@ -78,11 +78,11 @@ public class SysUserController extends DefaultBaseController {
    */
   @ApiOperation("查询用户")
   @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
-  @PreAuthorize("@permission.valid('system:user:query','system:user:add','system:user:modify')")
+  @HasPermission({"system:user:query","system:user:add","system:user:modify"})
   @GetMapping
   public InvokeResult<GetSysUserBo> get(@NotBlank(message = "ID不能为空！") String id) {
 
-    DefaultSysUserDto data = sysUserService.findById(id);
+    DefaultSysUser data = sysUserService.findById(id);
     if (data == null) {
       throw new DefaultClientException("用户不存在！");
     }
@@ -96,7 +96,7 @@ public class SysUserController extends DefaultBaseController {
    * 批量停用用户
    */
   @ApiOperation("批量停用用户")
-  @PreAuthorize("@permission.valid('system:user:modify')")
+  @HasPermission({"system:user:modify"})
   @PatchMapping("/unable/batch")
   public InvokeResult<Void> batchUnable(
       @ApiParam(value = "用户ID", required = true) @NotEmpty(message = "请选择需要停用的用户！") @RequestBody List<String> ids) {
@@ -114,7 +114,7 @@ public class SysUserController extends DefaultBaseController {
    * 批量启用用户
    */
   @ApiOperation("批量启用用户")
-  @PreAuthorize("@permission.valid('system:user:modify')")
+  @HasPermission({"system:user:modify"})
   @PatchMapping("/enable/batch")
   public InvokeResult<Void> batchEnable(
       @ApiParam(value = "用户ID", required = true) @NotEmpty(message = "请选择需要启用的用户！") @RequestBody List<String> ids) {
@@ -132,9 +132,9 @@ public class SysUserController extends DefaultBaseController {
    * 新增用户
    */
   @ApiOperation("新增用户")
-  @PreAuthorize("@permission.valid('system:user:add')")
+  @HasPermission({"system:user:add"})
   @PostMapping
-  public InvokeResult<Void> create(@Valid CreateSysUserVo vo) {
+  public InvokeResult<Void> create(@Valid @RequestBody CreateSysUserVo vo) {
 
     sysUserService.create(vo);
 
@@ -145,9 +145,9 @@ public class SysUserController extends DefaultBaseController {
    * 修改用户
    */
   @ApiOperation("修改用户")
-  @PreAuthorize("@permission.valid('system:user:modify')")
+  @HasPermission({"system:user:modify"})
   @PutMapping
-  public InvokeResult<Void> update(@Valid UpdateSysUserVo vo) {
+  public InvokeResult<Void> update(@Valid @RequestBody UpdateSysUserVo vo) {
 
     sysUserService.update(vo);
 
@@ -161,7 +161,7 @@ public class SysUserController extends DefaultBaseController {
    */
   @ApiOperation("解锁用户")
   @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
-  @PreAuthorize("@permission.valid('system:user:modify')")
+  @HasPermission({"system:user:modify"})
   @PatchMapping("unlock")
   public InvokeResult<Void> unlock(@NotBlank(message = "ID不能为空！") String id) {
 

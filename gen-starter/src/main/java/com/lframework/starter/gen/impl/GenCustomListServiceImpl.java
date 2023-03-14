@@ -3,12 +3,12 @@ package com.lframework.starter.gen.impl;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageInfo;
-import com.lframework.common.constants.StringPool;
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.Assert;
-import com.lframework.common.utils.CollectionUtil;
-import com.lframework.common.utils.StringUtil;
-import com.lframework.common.utils.ThreadUtil;
+import com.lframework.starter.common.constants.StringPool;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.Assert;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.StringUtil;
+import com.lframework.starter.common.utils.ThreadUtil;
 import com.lframework.starter.gen.components.custom.list.CustomListConfig;
 import com.lframework.starter.gen.entity.GenCustomList;
 import com.lframework.starter.gen.entity.GenCustomListDetail;
@@ -23,12 +23,12 @@ import com.lframework.starter.gen.enums.GenQueryType;
 import com.lframework.starter.gen.enums.GenQueryWidthType;
 import com.lframework.starter.gen.events.CustomListDeleteEvent;
 import com.lframework.starter.gen.mappers.GenCustomListMapper;
-import com.lframework.starter.gen.service.IGenCustomListDetailService;
-import com.lframework.starter.gen.service.IGenCustomListHandleColumnService;
-import com.lframework.starter.gen.service.IGenCustomListQueryParamsService;
-import com.lframework.starter.gen.service.IGenCustomListService;
-import com.lframework.starter.gen.service.IGenCustomListToolbarService;
-import com.lframework.starter.gen.service.IGenCustomSelectorService;
+import com.lframework.starter.gen.service.GenCustomListDetailService;
+import com.lframework.starter.gen.service.GenCustomListHandleColumnService;
+import com.lframework.starter.gen.service.GenCustomListQueryParamsService;
+import com.lframework.starter.gen.service.GenCustomListService;
+import com.lframework.starter.gen.service.GenCustomListToolbarService;
+import com.lframework.starter.gen.service.GenCustomSelectorService;
 import com.lframework.starter.gen.vo.custom.list.CreateGenCustomListVo;
 import com.lframework.starter.gen.vo.custom.list.GenCustomListDetailVo;
 import com.lframework.starter.gen.vo.custom.list.GenCustomListHandleColumnVo;
@@ -41,7 +41,7 @@ import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.mybatis.resp.PageResult;
 import com.lframework.starter.mybatis.utils.PageHelperUtil;
 import com.lframework.starter.mybatis.utils.PageResultUtil;
-import com.lframework.starter.web.utils.ApplicationUtil;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 import com.lframework.starter.web.utils.EnumUtil;
 import com.lframework.starter.web.utils.IdUtil;
 import com.lframework.starter.web.utils.JsonUtil;
@@ -55,19 +55,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class GenCustomListServiceImpl extends
-    BaseMpServiceImpl<GenCustomListMapper, GenCustomList> implements IGenCustomListService {
+    BaseMpServiceImpl<GenCustomListMapper, GenCustomList> implements GenCustomListService {
 
   @Autowired
-  private IGenCustomListQueryParamsService genCustomListQueryParamsService;
+  private GenCustomListQueryParamsService genCustomListQueryParamsService;
 
   @Autowired
-  private IGenCustomListDetailService genCustomListDetailService;
+  private GenCustomListDetailService genCustomListDetailService;
 
   @Autowired
-  private IGenCustomListToolbarService genCustomListToolbarService;
+  private GenCustomListToolbarService genCustomListToolbarService;
 
   @Autowired
-  private IGenCustomListHandleColumnService genCustomListHandleColumnService;
+  private GenCustomListHandleColumnService genCustomListHandleColumnService;
 
   @Override
   public PageResult<GenCustomList> query(Integer pageIndex, Integer pageSize,
@@ -100,13 +100,13 @@ public class GenCustomListServiceImpl extends
     return PageResultUtil.convert(new PageInfo<>(datas));
   }
 
-  @Cacheable(value = GenCustomList.CACHE_NAME, key = "#id", unless = "#result == null")
+  @Cacheable(value = GenCustomList.CACHE_NAME, key = "@cacheVariables.tenantId() + #id", unless = "#result == null")
   @Override
   public GenCustomList findById(String id) {
     return getBaseMapper().selectById(id);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public String create(CreateGenCustomListVo data) {
     GenCustomList record = new GenCustomList();
@@ -280,7 +280,7 @@ public class GenCustomListServiceImpl extends
     return record.getId();
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void update(UpdateGenCustomListVo data) {
     GenCustomList record = this.getById(data.getId());
@@ -468,7 +468,7 @@ public class GenCustomListServiceImpl extends
     }
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void delete(String id) {
     GenCustomList data = this.getById(id);
@@ -485,7 +485,7 @@ public class GenCustomListServiceImpl extends
     }
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void batchDelete(List<String> ids) {
     if (CollectionUtil.isEmpty(ids)) {
@@ -497,7 +497,7 @@ public class GenCustomListServiceImpl extends
     }
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void batchEnable(List<String> ids) {
     if (CollectionUtil.isEmpty(ids)) {
@@ -509,7 +509,7 @@ public class GenCustomListServiceImpl extends
     getBaseMapper().update(wrapper);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void batchUnable(List<String> ids) {
     if (CollectionUtil.isEmpty(ids)) {
@@ -531,12 +531,12 @@ public class GenCustomListServiceImpl extends
     return getBaseMapper().getRelaGenDataEntityIds(entityId);
   }
 
-  @CacheEvict(value = {GenCustomList.CACHE_NAME, CustomListConfig.CACHE_NAME}, key = "#key")
+  @CacheEvict(value = {GenCustomList.CACHE_NAME, CustomListConfig.CACHE_NAME}, key = "@cacheVariables.tenantId() + #key")
   @Override
   public void cleanCacheByKey(Serializable key) {
     ThreadUtil.execAsync(() -> {
-      IGenCustomSelectorService genCustomSelectorService = ApplicationUtil
-          .getBean(IGenCustomSelectorService.class);
+      GenCustomSelectorService genCustomSelectorService = ApplicationUtil
+          .getBean(GenCustomSelectorService.class);
       List<String> ids = genCustomSelectorService.getRelaGenCustomListIds(String.valueOf(key));
       if (CollectionUtil.isNotEmpty(ids)) {
         genCustomSelectorService.cleanCacheByKeys(ids);

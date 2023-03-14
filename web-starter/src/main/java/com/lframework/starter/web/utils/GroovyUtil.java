@@ -1,8 +1,10 @@
 package com.lframework.starter.web.utils;
 
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 import groovy.lang.Binding;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyShell;
+import groovy.lang.Script;
 import java.util.Map;
 import org.codehaus.groovy.control.CompilerConfiguration;
 
@@ -32,10 +34,10 @@ public class GroovyUtil {
         beans.forEach(binding::setVariable);
 
         GroovyClassLoader groovyClassLoader = new GroovyClassLoader(
-            GroovyUtil.class.getClassLoader());
+            GroovyScript.class.getClassLoader());
         CompilerConfiguration compilerConfiguration = new CompilerConfiguration();
         compilerConfiguration.setSourceEncoding("utf-8");
-        compilerConfiguration.setScriptBaseClass(GroovyUtil.class.getName());
+        compilerConfiguration.setScriptBaseClass(GroovyScript.class.getName());
 
         SHELL = new GroovyShell(groovyClassLoader, binding, compilerConfiguration);
       }
@@ -51,7 +53,26 @@ public class GroovyUtil {
    * @return
    */
   public static Object excuteScript(String script) {
-    GroovyShell shell = getShell();
-    return shell.evaluate(script);
+
+    GroovyScript groovyScript = new GroovyScript(script);
+    return groovyScript.run();
+  }
+
+  public static class GroovyScript extends Script {
+
+    private String script;
+
+    public GroovyScript() {
+    }
+
+    public GroovyScript(String script) {
+      this.script = script;
+    }
+
+    @Override
+    public Object run() {
+      GroovyShell shell = getShell();
+      return shell.evaluate(script);
+    }
   }
 }

@@ -1,5 +1,6 @@
 package com.lframework.starter.web.bo;
 
+import com.lframework.starter.web.dto.VoidDto;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +9,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ExcelImportBo extends BaseBo {
+public class ExcelImportBo extends BaseBo<VoidDto> {
 
   /**
    * ID
@@ -44,4 +45,10 @@ public class ExcelImportBo extends BaseBo {
    */
   @ApiModelProperty("业务完成")
   private Boolean finished = Boolean.FALSE;
+
+  /**
+   * 数据
+   */
+  @ApiModelProperty("数据")
+  private Object data;
 }

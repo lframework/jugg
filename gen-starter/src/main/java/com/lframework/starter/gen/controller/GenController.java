@@ -2,9 +2,9 @@ package com.lframework.starter.gen.controller;
 
 import cn.hutool.core.convert.Convert;
 import com.github.pagehelper.PageInfo;
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.CollectionUtil;
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.gen.builders.CustomFormBuilder;
 import com.lframework.starter.gen.builders.CustomListBuilder;
 import com.lframework.starter.gen.builders.CustomSelectorBuilder;
@@ -16,14 +16,14 @@ import com.lframework.starter.gen.components.data.obj.DataObjectQueryObj;
 import com.lframework.starter.gen.components.data.obj.DataObjectQueryParamObj;
 import com.lframework.starter.gen.entity.GenCustomForm;
 import com.lframework.starter.gen.mappers.GenMapper;
-import com.lframework.starter.gen.service.IGenCustomFormService;
+import com.lframework.starter.gen.service.GenCustomFormService;
 import com.lframework.starter.mybatis.resp.PageResult;
 import com.lframework.starter.mybatis.utils.PageHelperUtil;
 import com.lframework.starter.mybatis.utils.PageResultUtil;
 import com.lframework.starter.web.controller.DefaultBaseController;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
-import com.lframework.starter.web.utils.ApplicationUtil;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 import com.lframework.starter.web.utils.RequestUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -64,7 +64,7 @@ public class GenController extends DefaultBaseController {
   private GenMapper genMapper;
 
   @Autowired
-  private IGenCustomFormService genCustomFormService;
+  private GenCustomFormService genCustomFormService;
 
   @ApiOperation("自定义列表配置")
   @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
@@ -229,10 +229,6 @@ public class GenController extends DefaultBaseController {
     GenCustomForm form = genCustomFormService.findById(id);
     if (form == null) {
       throw new DefaultClientException("自定义表单不存在！");
-    }
-
-    if (!form.getRequireQuery()) {
-      throw new DefaultClientException("自定义表单无需查询数据！");
     }
 
     if (StringUtil.isBlank(form.getHandleBean())) {

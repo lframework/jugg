@@ -3,7 +3,6 @@ package com.lframework.starter.mybatis.entity;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.lframework.starter.mybatis.enums.OpLogType;
 import com.lframework.starter.web.dto.BaseDto;
 import java.time.LocalDateTime;
 import lombok.Data;
@@ -36,7 +35,7 @@ public class DefaultOpLogs extends BaseEntity implements BaseDto {
   /**
    * 类别
    */
-  private OpLogType logType;
+  private Integer logType;
 
   /**
    * IP地址

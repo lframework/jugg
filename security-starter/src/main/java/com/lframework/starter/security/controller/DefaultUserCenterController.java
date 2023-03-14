@@ -1,17 +1,17 @@
 package com.lframework.starter.security.controller;
 
-import com.lframework.common.constants.PatternPool;
-import com.lframework.common.exceptions.impl.InputErrorException;
-import com.lframework.common.utils.CollectionUtil;
-import com.lframework.common.utils.RegUtil;
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.constants.PatternPool;
+import com.lframework.starter.common.exceptions.impl.InputErrorException;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.RegUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.mybatis.annotations.OpLog;
-import com.lframework.starter.mybatis.dto.DefaultOpLogsDto;
-import com.lframework.starter.mybatis.enums.OpLogType;
+import com.lframework.starter.mybatis.entity.DefaultOpLogs;
+import com.lframework.starter.mybatis.enums.DefaultOpLogType;
 import com.lframework.starter.mybatis.events.UpdateUserEvent;
 import com.lframework.starter.mybatis.resp.PageResult;
-import com.lframework.starter.mybatis.service.IOpLogsService;
-import com.lframework.starter.mybatis.service.IUserService;
+import com.lframework.starter.mybatis.service.OpLogsService;
+import com.lframework.starter.mybatis.service.UserService;
 import com.lframework.starter.mybatis.utils.PageResultUtil;
 import com.lframework.starter.mybatis.vo.QueryOpLogsVo;
 import com.lframework.starter.security.bo.oplog.OpLogInUserCenterBo;
@@ -21,9 +21,9 @@ import com.lframework.starter.web.controller.DefaultBaseController;
 import com.lframework.starter.web.dto.UserInfoDto;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
-import com.lframework.starter.web.utils.ApplicationUtil;
-import com.lframework.web.common.security.AbstractUserDetails;
-import com.lframework.web.common.security.SecurityUtil;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
+import com.lframework.starter.web.common.security.AbstractUserDetails;
+import com.lframework.starter.web.common.security.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -51,10 +51,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class DefaultUserCenterController extends DefaultBaseController {
 
   @Autowired
-  private IUserService userService;
+  private UserService userService;
 
   @Autowired
-  private IOpLogsService opLogsService;
+  private OpLogsService opLogsService;
 
   @Autowired
   private PasswordEncoderWrapper encoderWrapper;
@@ -80,7 +80,7 @@ public class DefaultUserCenterController extends DefaultBaseController {
       @ApiImplicitParam(value = "旧密码", name = "oldPsw", paramType = "query", required = true),
       @ApiImplicitParam(value = "新密码", name = "newPsw", paramType = "query", required = true),
       @ApiImplicitParam(value = "确认密码", name = "confirmPsw", paramType = "query", required = true)})
-  @OpLog(type = OpLogType.AUTH, name = "修改密码，原密码：{}，新密码：{}", params = {"#oldPsw", "#newPsw"})
+  @OpLog(type = DefaultOpLogType.AUTH, name = "修改密码，原密码：{}，新密码：{}", params = {"#oldPsw", "#newPsw"})
   @PatchMapping("/password")
   public InvokeResult<Void> updatePassword(@NotBlank(message = "旧密码不能为空！") String oldPsw,
       @NotBlank(message = "新密码不能为空！") String newPsw,
@@ -114,7 +114,7 @@ public class DefaultUserCenterController extends DefaultBaseController {
   @ApiImplicitParams({
       @ApiImplicitParam(value = "新邮箱地址", name = "newEmail", paramType = "query", required = true),
       @ApiImplicitParam(value = "确认邮箱地址", name = "confirmEmail", paramType = "query", required = true)})
-  @OpLog(type = OpLogType.AUTH, name = "修改邮箱，新邮箱：{}", params = "#newEmail")
+  @OpLog(type = DefaultOpLogType.AUTH, name = "修改邮箱，新邮箱：{}", params = "#newEmail")
   @PatchMapping("/email")
   public InvokeResult<Void> updateEmail(@NotBlank(message = "新邮箱地址不能为空！") String newEmail,
       @NotBlank(message = "确认邮箱地址不能为空！") String confirmEmail) {
@@ -145,7 +145,7 @@ public class DefaultUserCenterController extends DefaultBaseController {
   @ApiImplicitParams({
       @ApiImplicitParam(value = "新联系电话", name = "newTelephone", paramType = "query", required = true),
       @ApiImplicitParam(value = "确认联系电话", name = "confirmTelephone", paramType = "query", required = true)})
-  @OpLog(type = OpLogType.AUTH, name = "修改联系电话，新联系电话：{}", params = "#newTelephone")
+  @OpLog(type = DefaultOpLogType.AUTH, name = "修改联系电话，新联系电话：{}", params = "#newTelephone")
   @PatchMapping("/telephone")
   public InvokeResult<Void> updateTelephone(@NotBlank(message = "新联系电话不能为空！") String newTelephone,
       @NotBlank(message = "确认联系电话不能为空！") String confirmTelephone) {
@@ -176,11 +176,11 @@ public class DefaultUserCenterController extends DefaultBaseController {
   @GetMapping("/oplog")
   public InvokeResult<PageResult<OpLogInUserCenterBo>> oplog(@Valid QueryOpLogsVo vo) {
 
-    vo.setCreateById(SecurityUtil.getCurrentUser().getId());
+    vo.setCreateBy(SecurityUtil.getCurrentUser().getId());
 
-    PageResult<DefaultOpLogsDto> pageResult = opLogsService.query(getPageIndex(vo), getPageSize(vo),
+    PageResult<DefaultOpLogs> pageResult = opLogsService.query(getPageIndex(vo), getPageSize(vo),
         vo);
-    List<DefaultOpLogsDto> datas = pageResult.getDatas();
+    List<DefaultOpLogs> datas = pageResult.getDatas();
     List<OpLogInUserCenterBo> results = null;
 
     if (!CollectionUtil.isEmpty(datas)) {

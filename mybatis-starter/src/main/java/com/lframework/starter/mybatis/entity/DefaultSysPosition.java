@@ -23,6 +23,8 @@ public class DefaultSysPosition extends BaseEntity implements BaseDto {
 
   private static final long serialVersionUID = 1L;
 
+  public static final String CACHE_NAME = "DefaultSysPosition";
+
   /**
    * ID
    */

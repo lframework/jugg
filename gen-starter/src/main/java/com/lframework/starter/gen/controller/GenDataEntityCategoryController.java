@@ -1,11 +1,11 @@
 package com.lframework.starter.gen.controller;
 
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.CollectionUtil;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.gen.bo.data.entity.category.GetGenDataEntityCategoryBo;
 import com.lframework.starter.gen.bo.data.entity.category.QueryGenDataEntityCategoryBo;
 import com.lframework.starter.gen.entity.GenDataEntityCategory;
-import com.lframework.starter.gen.service.IGenDataEntityCategoryService;
+import com.lframework.starter.gen.service.GenDataEntityCategoryService;
 import com.lframework.starter.gen.vo.data.entity.category.CreateGenDataEntityCategoryVo;
 import com.lframework.starter.gen.vo.data.entity.category.UpdateGenDataEntityCategoryVo;
 import com.lframework.starter.web.controller.DefaultBaseController;
@@ -15,7 +15,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
@@ -41,7 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class GenDataEntityCategoryController extends DefaultBaseController {
 
   @Autowired
-  private IGenDataEntityCategoryService genDataEntityCategoryService;
+  private GenDataEntityCategoryService genDataEntityCategoryService;
 
   /**
    * 查询列表
@@ -50,7 +49,7 @@ public class GenDataEntityCategoryController extends DefaultBaseController {
   @GetMapping("/query")
   public InvokeResult<List<QueryGenDataEntityCategoryBo>> query() {
     List<GenDataEntityCategory> datas = genDataEntityCategoryService.queryList();
-    List<QueryGenDataEntityCategoryBo> results = Collections.EMPTY_LIST;
+    List<QueryGenDataEntityCategoryBo> results = CollectionUtil.emptyList();
     if (!CollectionUtil.isEmpty(datas)) {
       results = datas.stream().map(QueryGenDataEntityCategoryBo::new).collect(Collectors.toList());
     }

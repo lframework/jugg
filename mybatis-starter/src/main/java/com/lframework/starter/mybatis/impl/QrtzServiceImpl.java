@@ -1,27 +1,29 @@
 package com.lframework.starter.mybatis.impl;
 
 import cn.hutool.core.exceptions.UtilException;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.github.pagehelper.PageInfo;
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.Assert;
-import com.lframework.common.utils.CollectionUtil;
-import com.lframework.common.utils.ReflectUtil;
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.constants.StringPool;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.Assert;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.ReflectUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.mybatis.annotations.OpLog;
 import com.lframework.starter.mybatis.components.qrtz.DynamicQrtzJob;
+import com.lframework.starter.mybatis.components.qrtz.QrtzHandler;
 import com.lframework.starter.mybatis.dto.qrtz.QrtzDto;
-import com.lframework.starter.mybatis.enums.OpLogType;
+import com.lframework.starter.mybatis.enums.DefaultOpLogType;
 import com.lframework.starter.mybatis.enums.qrtz.QrtzJobType;
 import com.lframework.starter.mybatis.mappers.QrtzMapper;
 import com.lframework.starter.mybatis.resp.PageResult;
-import com.lframework.starter.mybatis.service.IQrtzService;
+import com.lframework.starter.mybatis.service.QrtzService;
 import com.lframework.starter.mybatis.utils.OpLogUtil;
 import com.lframework.starter.mybatis.utils.PageHelperUtil;
 import com.lframework.starter.mybatis.utils.PageResultUtil;
 import com.lframework.starter.mybatis.vo.qrtz.CreateQrtzVo;
 import com.lframework.starter.mybatis.vo.qrtz.QueryQrtzVo;
 import com.lframework.starter.mybatis.vo.qrtz.UpdateQrtzVo;
-import com.lframework.starter.web.components.qrtz.QrtzHandler;
 import com.lframework.starter.web.utils.EnumUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +32,6 @@ import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobDetail;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,11 +40,9 @@ import org.springframework.transaction.annotation.Transactional;
  * @since 2022/8/20
  */
 @Slf4j
+@DS("master")
 @Service
-public class QrtzServiceImpl implements IQrtzService {
-
-  @Autowired
-  private SchedulerFactoryBean schedulerFactoryBean;
+public class QrtzServiceImpl implements QrtzService {
 
   @Autowired
   private QrtzMapper qrtzMapper;
@@ -75,8 +74,9 @@ public class QrtzServiceImpl implements IQrtzService {
     return renderDto(data);
   }
 
-  @OpLog(type = OpLogType.OTHER, name = "新增定时任务，名称：{}, 组：{}", params = {"#vo.name", "#vo.group"})
-  @Transactional
+  @OpLog(type = DefaultOpLogType.OTHER, name = "新增定时任务，名称：{}, 组：{}", params = {"#vo.name",
+      "#vo.group"})
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void create(CreateQrtzVo vo) {
     JobDetail jobDetail = QrtzHandler.getJob(vo.getName(), vo.getGroup());
@@ -125,6 +125,9 @@ public class QrtzServiceImpl implements IQrtzService {
         jobDataMap.put("targetParamTypes", vo.getTargetParamTypes());
         jobDataMap.put("targetParams", vo.getTargetParams());
         jobDataMap.put("jobType", vo.getJobType());
+        if (vo.getTenantId() != null) {
+          jobDataMap.put(StringPool.TENANT_ID_QRTZ, vo.getTenantId());
+        }
 
         QrtzHandler.addJob(vo.getName(), vo.getGroup(), DynamicQrtzJob.class,
             "custom_trigger_" + vo.getName(), vo.getGroup(), vo.getCron(), jobDataMap,
@@ -138,6 +141,9 @@ public class QrtzServiceImpl implements IQrtzService {
       Map<String, Object> jobDataMap = new HashMap<>();
       jobDataMap.put("script", vo.getScript());
       jobDataMap.put("jobType", vo.getJobType());
+      if (vo.getTenantId() != null) {
+        jobDataMap.put(StringPool.TENANT_ID_QRTZ, vo.getTenantId());
+      }
 
       QrtzHandler.addJob(vo.getName(), vo.getGroup(), DynamicQrtzJob.class,
           "custom_trigger_" + vo.getName(), vo.getGroup(), vo.getCron(), jobDataMap,
@@ -147,9 +153,9 @@ public class QrtzServiceImpl implements IQrtzService {
     OpLogUtil.setExtra(vo);
   }
 
-  @OpLog(type = OpLogType.OTHER, name = "修改定时任务，名称：{}, 组：{}", params = {"#vo.oriName",
+  @OpLog(type = DefaultOpLogType.OTHER, name = "修改定时任务，名称：{}, 组：{}", params = {"#vo.oriName",
       "#vo.oriGroup"})
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void update(UpdateQrtzVo vo) {
     JobDetail jobDetail = QrtzHandler.getJob(vo.getOriName(), vo.getOriGroup());
@@ -164,29 +170,29 @@ public class QrtzServiceImpl implements IQrtzService {
     OpLogUtil.setExtra(vo);
   }
 
-  @OpLog(type = OpLogType.OTHER, name = "恢复定时任务，名称：{}, 组：{}", params = {"#name", "#group"})
-  @Transactional
+  @OpLog(type = DefaultOpLogType.OTHER, name = "恢复定时任务，名称：{}, 组：{}", params = {"#name", "#group"})
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void resume(String name, String group) {
     QrtzHandler.resume(name, group);
   }
 
-  @OpLog(type = OpLogType.OTHER, name = "暂停定时任务，名称：{}, 组：{}", params = {"#name", "#group"})
-  @Transactional
+  @OpLog(type = DefaultOpLogType.OTHER, name = "暂停定时任务，名称：{}, 组：{}", params = {"#name", "#group"})
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void pause(String name, String group) {
     QrtzHandler.pause(name, group);
   }
 
-  @OpLog(type = OpLogType.OTHER, name = "触发定时任务，名称：{}, 组：{}", params = {"#name", "#group"})
-  @Transactional
+  @OpLog(type = DefaultOpLogType.OTHER, name = "触发定时任务，名称：{}, 组：{}", params = {"#name", "#group"})
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void trigger(String name, String group) {
     QrtzHandler.trigger(name, group);
   }
 
-  @OpLog(type = OpLogType.OTHER, name = "删除定时任务，名称：{}, 组：{}", params = {"#name", "#group"})
-  @Transactional
+  @OpLog(type = DefaultOpLogType.OTHER, name = "删除定时任务，名称：{}, 组：{}", params = {"#name", "#group"})
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void delete(String name, String group) {
 
@@ -202,6 +208,8 @@ public class QrtzServiceImpl implements IQrtzService {
     data.setTargetParamTypes((List<String>) jobDetail.getJobDataMap().get("targetParamTypes"));
     data.setTargetParams((List<String>) jobDetail.getJobDataMap().get("targetParams"));
     data.setScript(jobDetail.getJobDataMap().getString("script"));
+    Object tenantStr = jobDetail.getJobDataMap().get(StringPool.TENANT_ID_QRTZ);
+    data.setTenantId(tenantStr == null ? null : Integer.valueOf(String.valueOf(tenantStr)));
 
     return data;
   }

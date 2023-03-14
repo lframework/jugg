@@ -8,7 +8,6 @@ public interface IUserTokenResolver {
   /**
    * 获取Token
    *
-   * @param request
    * @return 如果没有token，则返回null
    */
   String getToken();
@@ -16,7 +15,6 @@ public interface IUserTokenResolver {
   /**
    * 获取完整Token 与getToken的区别是：Jwt时会拼接前缀。Session时无区别
    *
-   * @param request
    * @return
    */
   String getFullToken();

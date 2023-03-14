@@ -1,6 +1,7 @@
 package com.lframework.starter.web.utils;
 
-import com.lframework.common.exceptions.impl.DefaultSysException;
+import com.lframework.starter.common.exceptions.impl.DefaultSysException;
+import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.web.bo.BasePrintDataBo;
 import com.lframework.starter.web.dto.BaseDto;
 import freemarker.template.Configuration;
@@ -10,7 +11,6 @@ import freemarker.template.TemplateExceptionHandler;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.Collections;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 
@@ -48,7 +48,7 @@ public class PrintUtil {
       T data) {
 
     Template template = getTemplate(templateName);
-    Map root = data == null ? Collections.EMPTY_MAP : JsonUtil.convert(data, Map.class);
+    Map root = data == null ? CollectionUtil.emptyMap() : JsonUtil.convert(data, Map.class);
     StringWriter stringWriter = new StringWriter();
     BufferedWriter writer = new BufferedWriter(stringWriter);
 

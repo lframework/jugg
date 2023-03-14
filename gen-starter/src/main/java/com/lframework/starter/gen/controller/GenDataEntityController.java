@@ -1,10 +1,10 @@
 package com.lframework.starter.gen.controller;
 
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.CollectionUtil;
-import com.lframework.common.utils.FileUtil;
-import com.lframework.common.utils.ThreadUtil;
-import com.lframework.common.utils.ZipUtil;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.FileUtil;
+import com.lframework.starter.common.utils.ThreadUtil;
+import com.lframework.starter.common.utils.ZipUtil;
 import com.lframework.starter.gen.bo.data.entity.DataEntityGenerateBo;
 import com.lframework.starter.gen.bo.data.entity.GenDataEntityDetailBo;
 import com.lframework.starter.gen.bo.data.entity.GetDataEntityBo;
@@ -19,10 +19,10 @@ import com.lframework.starter.gen.entity.GenSimpleTableColumn;
 import com.lframework.starter.gen.enums.GenConvertType;
 import com.lframework.starter.gen.enums.GenViewType;
 import com.lframework.starter.gen.generate.Generator;
-import com.lframework.starter.gen.service.IGenCustomListService;
-import com.lframework.starter.gen.service.IGenDataEntityService;
-import com.lframework.starter.gen.service.IGenDataObjService;
-import com.lframework.starter.gen.service.ISimpleTableColumnService;
+import com.lframework.starter.gen.service.GenCustomListService;
+import com.lframework.starter.gen.service.GenDataEntityService;
+import com.lframework.starter.gen.service.GenDataObjService;
+import com.lframework.starter.gen.service.SimpleTableColumnService;
 import com.lframework.starter.gen.vo.data.entity.CreateDataEntityVo;
 import com.lframework.starter.gen.vo.data.entity.QueryDataEntityVo;
 import com.lframework.starter.gen.vo.data.entity.UpdateDataEntityGenerateVo;
@@ -33,7 +33,7 @@ import com.lframework.starter.mybatis.utils.PageResultUtil;
 import com.lframework.starter.web.controller.DefaultBaseController;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
-import com.lframework.starter.web.utils.ApplicationUtil;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 import com.lframework.starter.web.utils.IdUtil;
 import com.lframework.starter.web.utils.ResponseUtil;
 import io.swagger.annotations.Api;
@@ -71,10 +71,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class GenDataEntityController extends DefaultBaseController {
 
   @Autowired
-  private IGenDataEntityService genDataEntityService;
+  private GenDataEntityService genDataEntityService;
 
   @Autowired
-  private ISimpleTableColumnService simpleTableColumnService;
+  private SimpleTableColumnService simpleTableColumnService;
 
   @Autowired
   private GenViewTypeConverter genViewTypeConverter;
@@ -291,13 +291,13 @@ public class GenDataEntityController extends DefaultBaseController {
   // 失效关联数据的缓存
   private void evictRelaCache(String entityId) {
     ThreadUtil.execAsync(() -> {
-      IGenDataObjService genDataObjService = ApplicationUtil.getBean(IGenDataObjService.class);
+      GenDataObjService genDataObjService = ApplicationUtil.getBean(GenDataObjService.class);
       List<String> ids = genDataObjService.getRelaGenDataEntityIds(entityId);
       if (CollectionUtil.isNotEmpty(ids)) {
         genDataObjService.cleanCacheByKeys(ids);
       }
 
-      IGenCustomListService genCustomListService = ApplicationUtil.getBean(IGenCustomListService.class);
+      GenCustomListService genCustomListService = ApplicationUtil.getBean(GenCustomListService.class);
       ids = genCustomListService.getRelaGenDataEntityIds(entityId);
       if (CollectionUtil.isNotEmpty(ids)) {
         genCustomListService.cleanCacheByKeys(ids);

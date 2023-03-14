@@ -1,6 +1,6 @@
 package com.lframework.starter.web.components.generator.impl;
 
-import com.lframework.common.utils.IdWorker;
+import com.lframework.starter.common.utils.IdWorker;
 import com.lframework.starter.web.components.generator.Generator;
 import org.springframework.beans.factory.annotation.Autowired;
 

@@ -5,7 +5,6 @@ import com.lframework.starter.mybatis.impl.DefaultMenuServiceImpl;
 import com.lframework.starter.mybatis.impl.DefaultUserDetailsService;
 import com.lframework.starter.mybatis.impl.DefaultUserServiceImpl;
 import com.lframework.starter.mybatis.impl.message.TodoTaskServiceImpl;
-import com.lframework.starter.mybatis.impl.system.DefaultSysConfigServiceImpl;
 import com.lframework.starter.mybatis.impl.system.DefaultSysDeptServiceImpl;
 import com.lframework.starter.mybatis.impl.system.DefaultSysMenuServiceImpl;
 import com.lframework.starter.mybatis.impl.system.DefaultSysPositionServiceImpl;
@@ -17,21 +16,20 @@ import com.lframework.starter.mybatis.impl.system.DefaultSysUserRoleServiceImpl;
 import com.lframework.starter.mybatis.impl.system.DefaultSysUserServiceImpl;
 import com.lframework.starter.mybatis.impl.system.DefaultSysUserTelephoneServiceImpl;
 import com.lframework.starter.mybatis.impl.system.RecursionMappingServiceImpl;
-import com.lframework.starter.mybatis.service.IMenuService;
-import com.lframework.starter.mybatis.service.IUserService;
-import com.lframework.starter.mybatis.service.message.ITodoTaskService;
-import com.lframework.starter.mybatis.service.system.IRecursionMappingService;
-import com.lframework.starter.mybatis.service.system.ISysConfigService;
-import com.lframework.starter.mybatis.service.system.ISysDeptService;
-import com.lframework.starter.mybatis.service.system.ISysMenuService;
-import com.lframework.starter.mybatis.service.system.ISysPositionService;
-import com.lframework.starter.mybatis.service.system.ISysRoleMenuService;
-import com.lframework.starter.mybatis.service.system.ISysRoleService;
-import com.lframework.starter.mybatis.service.system.ISysUserDeptService;
-import com.lframework.starter.mybatis.service.system.ISysUserPositionService;
-import com.lframework.starter.mybatis.service.system.ISysUserRoleService;
-import com.lframework.starter.mybatis.service.system.ISysUserService;
-import com.lframework.starter.mybatis.service.system.ISysUserTelephoneService;
+import com.lframework.starter.mybatis.service.MenuService;
+import com.lframework.starter.mybatis.service.UserService;
+import com.lframework.starter.mybatis.service.message.TodoTaskService;
+import com.lframework.starter.mybatis.service.system.RecursionMappingService;
+import com.lframework.starter.mybatis.service.system.SysDeptService;
+import com.lframework.starter.mybatis.service.system.SysMenuService;
+import com.lframework.starter.mybatis.service.system.SysPositionService;
+import com.lframework.starter.mybatis.service.system.SysRoleMenuService;
+import com.lframework.starter.mybatis.service.system.SysRoleService;
+import com.lframework.starter.mybatis.service.system.SysUserDeptService;
+import com.lframework.starter.mybatis.service.system.SysUserPositionService;
+import com.lframework.starter.mybatis.service.system.SysUserRoleService;
+import com.lframework.starter.mybatis.service.system.SysUserService;
+import com.lframework.starter.mybatis.service.system.SysUserTelephoneService;
 import com.lframework.starter.web.components.security.UserDetailsService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -49,108 +47,101 @@ public class DefaultSystemFunctionConfiguration {
   }
 
   @Bean
-  @ConditionalOnMissingBean(IUserService.class)
-  public IUserService getUserService() {
+  @ConditionalOnMissingBean(UserService.class)
+  public UserService getUserService() {
 
     DefaultUserServiceImpl userService = new DefaultUserServiceImpl();
     return userService;
   }
 
   @Bean
-  @ConditionalOnMissingBean(IRecursionMappingService.class)
-  public IRecursionMappingService getRecursionMappingService() {
+  @ConditionalOnMissingBean(RecursionMappingService.class)
+  public RecursionMappingService getRecursionMappingService() {
 
     return new RecursionMappingServiceImpl();
   }
 
   @Bean
-  @ConditionalOnMissingBean(IMenuService.class)
-  public IMenuService getMenuService() {
+  @ConditionalOnMissingBean(MenuService.class)
+  public MenuService getMenuService() {
 
     AbstractMenuServiceImpl menuService = new DefaultMenuServiceImpl();
     return menuService;
   }
 
   @Bean
-  @ConditionalOnMissingBean(ISysDeptService.class)
-  public ISysDeptService getSysDeptService() {
+  @ConditionalOnMissingBean(SysDeptService.class)
+  public SysDeptService getSysDeptService() {
 
     return new DefaultSysDeptServiceImpl();
   }
 
   @Bean
-  @ConditionalOnMissingBean(ISysMenuService.class)
-  public ISysMenuService getSysMenuService() {
+  @ConditionalOnMissingBean(SysMenuService.class)
+  public SysMenuService getSysMenuService() {
 
     return new DefaultSysMenuServiceImpl();
   }
 
   @Bean
-  @ConditionalOnMissingBean(ISysPositionService.class)
-  public ISysPositionService getSysPositionService() {
+  @ConditionalOnMissingBean(SysPositionService.class)
+  public SysPositionService getSysPositionService() {
 
     return new DefaultSysPositionServiceImpl();
   }
 
   @Bean
-  @ConditionalOnMissingBean(ISysRoleMenuService.class)
-  public ISysRoleMenuService getSysRoleMenuService() {
+  @ConditionalOnMissingBean(SysRoleMenuService.class)
+  public SysRoleMenuService getSysRoleMenuService() {
 
     return new DefaultSysRoleMenuServiceImpl();
   }
 
   @Bean
-  @ConditionalOnMissingBean(ISysUserRoleService.class)
-  public ISysUserRoleService getSysUserRoleService() {
+  @ConditionalOnMissingBean(SysUserRoleService.class)
+  public SysUserRoleService getSysUserRoleService() {
 
     return new DefaultSysUserRoleServiceImpl();
   }
 
   @Bean
-  @ConditionalOnMissingBean(ISysUserService.class)
-  public ISysUserService getSysUserService() {
+  @ConditionalOnMissingBean(SysUserService.class)
+  public SysUserService getSysUserService() {
 
     return new DefaultSysUserServiceImpl();
   }
 
   @Bean
-  @ConditionalOnMissingBean(ISysRoleService.class)
-  public ISysRoleService getSysRoleService() {
+  @ConditionalOnMissingBean(SysRoleService.class)
+  public SysRoleService getSysRoleService() {
 
     return new DefaultSysRoleServiceImpl();
   }
 
   @Bean
-  @ConditionalOnMissingBean(ISysUserPositionService.class)
-  public ISysUserPositionService getSysUserPositionService() {
+  @ConditionalOnMissingBean(SysUserPositionService.class)
+  public SysUserPositionService getSysUserPositionService() {
 
     return new DefaultSysUserPositionServiceImpl();
   }
 
   @Bean
-  @ConditionalOnMissingBean(ISysUserDeptService.class)
-  public ISysUserDeptService getSysUserDeptService() {
+  @ConditionalOnMissingBean(SysUserDeptService.class)
+  public SysUserDeptService getSysUserDeptService() {
 
     return new DefaultSysUserDeptServiceImpl();
   }
 
   @Bean
-  @ConditionalOnMissingBean(ISysConfigService.class)
-  public ISysConfigService getSysConfigService() {
-
-    return new DefaultSysConfigServiceImpl();
-  }
-
-  @Bean
-  @ConditionalOnMissingBean(ITodoTaskService.class)
-  public ITodoTaskService getTodoTaskService() {
+  @ConditionalOnMissingBean(TodoTaskService.class)
+  public TodoTaskService getTodoTaskService() {
 
     return new TodoTaskServiceImpl();
   }
 
   @Bean
-  @ConditionalOnMissingBean(ISysUserTelephoneService.class)
-  public ISysUserTelephoneService getSysUserTelephoneService() {
+  @ConditionalOnMissingBean(SysUserTelephoneService.class)
+  public SysUserTelephoneService getSysUserTelephoneService() {
 
     return new DefaultSysUserTelephoneServiceImpl();
   }

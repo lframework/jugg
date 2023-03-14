@@ -1,9 +1,9 @@
 package com.lframework.starter.web.resp;
 
-import com.lframework.common.constants.ResponseConstants;
-import com.lframework.common.exceptions.BaseException;
+import com.lframework.starter.common.constants.ResponseConstants;
+import com.lframework.starter.common.exceptions.BaseException;
 import com.lframework.starter.web.components.trace.TraceBuilder;
-import com.lframework.starter.web.utils.ApplicationUtil;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**

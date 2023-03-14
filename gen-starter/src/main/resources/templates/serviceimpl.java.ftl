@@ -5,11 +5,11 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.github.pagehelper.PageInfo;
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.Assert;
-import com.lframework.common.utils.ObjectUtil;
+import DefaultClientException;
+import Assert;
+import ObjectUtil;
 import com.lframework.starter.mybatis.annotations.OpLog;
-import com.lframework.starter.mybatis.enums.OpLogType;
+ import com.lframework.starter.mybatis.enums.DefaultOpLogType;
 import com.lframework.starter.mybatis.resp.PageResult;
 import com.lframework.starter.mybatis.utils.OpLogUtil;
 import com.lframework.starter.mybatis.utils.PageHelperUtil;
@@ -22,7 +22,7 @@ import ${p};
     </#list>
 </#if>
 import ${packageName}.mappers.${className}Mapper;
-import ${packageName}.service.${moduleName}.I${className}Service;
+import ${packageName}.service.${moduleName}.${className}Service;
 <#if create??>
 import ${packageName}.vo.${moduleName}.${bizName}.Create${className}Vo;
 </#if>
@@ -42,7 +42,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Service
-public class ${className}ServiceImpl extends BaseMpServiceImpl${r"<"}${className}Mapper, ${className}${r">"} implements I${className}Service {
+public class ${className}ServiceImpl extends BaseMpServiceImpl${r"<"}${className}Mapper, ${className}${r">"} implements ${className}Service {
 <#if queryParams??>
 
     @Override
@@ -67,7 +67,7 @@ public class ${className}ServiceImpl extends BaseMpServiceImpl${r"<"}${className
 </#if>
 
 <#if isCache>
-    @Cacheable(value = ${className}.CACHE_NAME, key = "#${keys[0].name}", unless = "#result == null")
+    @Cacheable(value = ${className}.CACHE_NAME, key = "@cacheVariables.tenantId() + #${keys[0].name}", unless = "#result == null")
 </#if>
     @Override
     public ${className} findById(<#list keys as key>${key.dataType} ${key.name}<#if key_index != keys?size - 1>, </#if></#list>) {
@@ -77,7 +77,7 @@ public class ${className}ServiceImpl extends BaseMpServiceImpl${r"<"}${className
 <#if create??>
 
     @OpLog(type = OpLogType.OTHER, name = "新增${classDescription}，ID：{}", params = ${r'{"#'}${create.keys[0].name}${r'"}'})
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public ${create.keys[0].dataType} create(Create${className}Vo vo) {
 
@@ -120,7 +120,7 @@ public class ${className}ServiceImpl extends BaseMpServiceImpl${r"<"}${className
 <#if update??>
 
     @OpLog(type = OpLogType.OTHER, name = "修改${classDescription}，ID：{}", params = ${r'{"#'}${update.keys[0].name}${r'"}'})
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void update(Update${className}Vo vo) {
 
@@ -160,7 +160,7 @@ public class ${className}ServiceImpl extends BaseMpServiceImpl${r"<"}${className
     <#if hasDelete>
 
     @OpLog(type = OpLogType.OTHER, name = "删除${classDescription}，ID：{}", params = ${r'{"#'}${keys[0].name}${r'"}'})
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void deleteById(<#list keys as key>${key.dataType} ${key.name}<#if key_index != keys?size - 1>, </#if></#list>) {
 
@@ -169,7 +169,7 @@ public class ${className}ServiceImpl extends BaseMpServiceImpl${r"<"}${className
     </#if>
 
     <#if isCache>
-    @CacheEvict(value = ${className}.CACHE_NAME, key = "#key")
+    @CacheEvict(value = ${className}.CACHE_NAME, key = "@cacheVariables.tenantId() + #key")
     </#if>
     @Override
     public void cleanCacheByKey(Serializable key) {

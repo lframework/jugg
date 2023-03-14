@@ -10,9 +10,9 @@ import com.alibaba.excel.write.metadata.style.WriteFont;
 import com.alibaba.excel.write.style.HorizontalCellStyleStrategy;
 import com.alibaba.excel.write.style.column.AbstractColumnWidthStyleStrategy;
 import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
-import com.lframework.common.exceptions.impl.DefaultSysException;
-import com.lframework.common.utils.CollectionUtil;
-import com.lframework.common.utils.FileUtil;
+import com.lframework.starter.common.exceptions.impl.DefaultSysException;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.FileUtil;
 import com.lframework.starter.web.components.excel.ExcelModel;
 import com.lframework.starter.web.components.excel.ExcelMultipartWriterBuilder;
 import com.lframework.starter.web.components.excel.ExcelMultipartWriterSheetBuilder;
@@ -70,7 +70,7 @@ public class ExcelUtil {
    */
   public static <T extends ExcelModel> void exportXls(String sheetName, Class<T> clazz) {
 
-    exportXls(sheetName, sheetName, clazz, Collections.EMPTY_LIST, null);
+    exportXls(sheetName, sheetName, clazz, CollectionUtil.emptyList(), null);
   }
 
   /**
@@ -98,7 +98,7 @@ public class ExcelUtil {
   public static <T extends ExcelModel> void exportXls(String fileName, String sheetName,
       Class<T> clazz) {
 
-    exportXls(fileName, sheetName, clazz, Collections.EMPTY_LIST, null);
+    exportXls(fileName, sheetName, clazz, CollectionUtil.emptyList(), null);
   }
 
   /**
@@ -156,7 +156,7 @@ public class ExcelUtil {
    */
   public static <T extends ExcelModel> void exportXlsx(String sheetName, Class<T> clazz) {
 
-    exportXlsx(sheetName, sheetName, clazz, Collections.EMPTY_LIST, null);
+    exportXlsx(sheetName, sheetName, clazz, CollectionUtil.emptyList(), null);
   }
 
   /**
@@ -184,7 +184,7 @@ public class ExcelUtil {
   public static <T extends ExcelModel> void exportXlsx(String fileName, String sheetName,
       Class<T> clazz) {
 
-    exportXlsx(fileName, sheetName, clazz, Collections.EMPTY_LIST, null);
+    exportXlsx(fileName, sheetName, clazz, CollectionUtil.emptyList(), null);
   }
 
   /**
@@ -242,7 +242,7 @@ public class ExcelUtil {
    */
   public static <T extends ExcelModel> void exportXls(File file, String sheetName, Class<T> clazz) {
 
-    exportXls(file, sheetName, clazz, Collections.EMPTY_LIST, null);
+    exportXls(file, sheetName, clazz, CollectionUtil.emptyList(), null);
   }
 
   /**
@@ -286,7 +286,7 @@ public class ExcelUtil {
   public static <T extends ExcelModel> void exportXlsx(File file, String sheetName,
       Class<T> clazz) {
 
-    exportXlsx(file, sheetName, clazz, Collections.EMPTY_LIST, null);
+    exportXlsx(file, sheetName, clazz, CollectionUtil.emptyList(), null);
   }
 
   /**

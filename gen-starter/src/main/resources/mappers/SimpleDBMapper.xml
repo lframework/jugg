@@ -39,4 +39,12 @@
         WHERE TABLE_SCHEMA = database()
         AND TABLE_NAME = #{tableName}
     </select>
+    <select id="listByIds" resultMap="SimpleDBDto">
+        select TABLE_SCHEMA, TABLE_NAME from information_schema.tables
+        <where>
+            AND TABLE_SCHEMA = database()
+            AND TABLE_NAME IN <foreach collection="tableNames" open="(" separator="," close=")" item="item">#{item}</foreach>
+        </where>
+        ORDER BY TABLE_SCHEMA, TABLE_NAME
+    </select>
 </mapper>

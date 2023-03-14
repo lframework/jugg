@@ -4,20 +4,19 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageInfo;
-import com.lframework.common.constants.StringPool;
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.Assert;
-import com.lframework.common.utils.CollectionUtil;
-import com.lframework.common.utils.ObjectUtil;
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.constants.StringPool;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.Assert;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.ObjectUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.mybatis.annotations.OpLog;
-import com.lframework.starter.mybatis.dto.system.position.DefaultSysPositionDto;
 import com.lframework.starter.mybatis.entity.DefaultSysPosition;
-import com.lframework.starter.mybatis.enums.OpLogType;
+import com.lframework.starter.mybatis.enums.DefaultOpLogType;
 import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.mybatis.mappers.system.DefaultSysPositionMapper;
 import com.lframework.starter.mybatis.resp.PageResult;
-import com.lframework.starter.mybatis.service.system.ISysPositionService;
+import com.lframework.starter.mybatis.service.system.SysPositionService;
 import com.lframework.starter.mybatis.utils.OpLogUtil;
 import com.lframework.starter.mybatis.utils.PageHelperUtil;
 import com.lframework.starter.mybatis.utils.PageResultUtil;
@@ -35,10 +34,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 public class DefaultSysPositionServiceImpl extends
     BaseMpServiceImpl<DefaultSysPositionMapper, DefaultSysPosition>
-    implements ISysPositionService {
+    implements SysPositionService {
 
   @Override
-  public PageResult<DefaultSysPositionDto> query(Integer pageIndex, Integer pageSize,
+  public PageResult<DefaultSysPosition> query(Integer pageIndex, Integer pageSize,
       QuerySysPositionVo vo) {
 
     Assert.greaterThanZero(pageIndex);
@@ -46,20 +45,20 @@ public class DefaultSysPositionServiceImpl extends
 
     PageHelperUtil.startPage(pageIndex, pageSize);
 
-    List<DefaultSysPositionDto> datas = this.doQuery(vo);
+    List<DefaultSysPosition> datas = this.doQuery(vo);
 
     return PageResultUtil.convert(new PageInfo<>(datas));
   }
 
-  @Cacheable(value = DefaultSysPositionDto.CACHE_NAME, key = "#id", unless = "#result == null")
+  @Cacheable(value = DefaultSysPosition.CACHE_NAME, key = "@cacheVariables.tenantId() + #id", unless = "#result == null")
   @Override
-  public DefaultSysPositionDto findById(String id) {
+  public DefaultSysPosition findById(String id) {
 
     return this.doGetById(id);
   }
 
   @Override
-  public PageResult<DefaultSysPositionDto> selector(Integer pageIndex, Integer pageSize,
+  public PageResult<DefaultSysPosition> selector(Integer pageIndex, Integer pageSize,
       SysPositionSelectorVo vo) {
 
     Assert.greaterThanZero(pageIndex);
@@ -67,13 +66,13 @@ public class DefaultSysPositionServiceImpl extends
 
     PageHelperUtil.startPage(pageIndex, pageSize);
 
-    List<DefaultSysPositionDto> datas = this.doSelector(vo);
+    List<DefaultSysPosition> datas = this.doSelector(vo);
 
     return PageResultUtil.convert(new PageInfo<>(datas));
   }
 
-  @OpLog(type = OpLogType.OTHER, name = "停用岗位，ID：{}", params = "#ids", loopFormat = true)
-  @Transactional
+  @OpLog(type = DefaultOpLogType.OTHER, name = "停用岗位，ID：{}", params = "#ids", loopFormat = true)
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void batchUnable(Collection<String> ids) {
 
@@ -84,8 +83,8 @@ public class DefaultSysPositionServiceImpl extends
     this.doBatchUnable(ids);
   }
 
-  @OpLog(type = OpLogType.OTHER, name = "启用岗位，ID：{}", params = "#ids", loopFormat = true)
-  @Transactional
+  @OpLog(type = DefaultOpLogType.OTHER, name = "启用岗位，ID：{}", params = "#ids", loopFormat = true)
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void batchEnable(Collection<String> ids) {
 
@@ -96,8 +95,8 @@ public class DefaultSysPositionServiceImpl extends
     this.doBatchEnable(ids);
   }
 
-  @OpLog(type = OpLogType.OTHER, name = "新增岗位，ID：{}, 编号：{}", params = {"#id", "#code"})
-  @Transactional
+  @OpLog(type = DefaultOpLogType.OTHER, name = "新增岗位，ID：{}, 编号：{}", params = {"#id", "#code"})
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public String create(CreateSysPositionVo vo) {
 
@@ -110,8 +109,8 @@ public class DefaultSysPositionServiceImpl extends
     return data.getId();
   }
 
-  @OpLog(type = OpLogType.OTHER, name = "修改岗位，ID：{}, 编号：{}", params = {"#id", "#code"})
-  @Transactional
+  @OpLog(type = DefaultOpLogType.OTHER, name = "修改岗位，ID：{}, 编号：{}", params = {"#id", "#code"})
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void update(UpdateSysPositionVo vo) {
 
@@ -122,17 +121,17 @@ public class DefaultSysPositionServiceImpl extends
     OpLogUtil.setExtra(vo);
   }
 
-  protected List<DefaultSysPositionDto> doQuery(QuerySysPositionVo vo) {
+  protected List<DefaultSysPosition> doQuery(QuerySysPositionVo vo) {
 
     return getBaseMapper().query(vo);
   }
 
-  protected DefaultSysPositionDto doGetById(String id) {
+  protected DefaultSysPosition doGetById(String id) {
 
     return getBaseMapper().findById(id);
   }
 
-  protected List<DefaultSysPositionDto> doSelector(SysPositionSelectorVo vo) {
+  protected List<DefaultSysPosition> doSelector(SysPositionSelectorVo vo) {
 
     return getBaseMapper().selector(vo);
   }
@@ -181,7 +180,7 @@ public class DefaultSysPositionServiceImpl extends
 
   protected void doUpdate(UpdateSysPositionVo vo) {
 
-    DefaultSysPositionDto data = this.findById(vo.getId());
+    DefaultSysPosition data = this.findById(vo.getId());
     if (ObjectUtil.isNull(data)) {
       throw new DefaultClientException("岗位不存在！");
     }
@@ -211,7 +210,7 @@ public class DefaultSysPositionServiceImpl extends
     getBaseMapper().update(updateWrapper);
   }
 
-  @CacheEvict(value = DefaultSysPositionDto.CACHE_NAME, key = "#key")
+  @CacheEvict(value = DefaultSysPosition.CACHE_NAME, key = "@cacheVariables.tenantId() + #key")
   @Override
   public void cleanCacheByKey(Serializable key) {
 

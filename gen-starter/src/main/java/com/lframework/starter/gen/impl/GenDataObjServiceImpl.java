@@ -3,12 +3,12 @@ package com.lframework.starter.gen.impl;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageInfo;
-import com.lframework.common.constants.StringPool;
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.Assert;
-import com.lframework.common.utils.CollectionUtil;
-import com.lframework.common.utils.StringUtil;
-import com.lframework.common.utils.ThreadUtil;
+import com.lframework.starter.common.constants.StringPool;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.Assert;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.StringUtil;
+import com.lframework.starter.common.utils.ThreadUtil;
 import com.lframework.starter.gen.components.data.obj.DataObjectQueryObj;
 import com.lframework.starter.gen.entity.GenDataObj;
 import com.lframework.starter.gen.entity.GenDataObjDetail;
@@ -19,10 +19,10 @@ import com.lframework.starter.gen.enums.GenRelaType;
 import com.lframework.starter.gen.events.DataObjDeleteEvent;
 import com.lframework.starter.gen.events.DataObjQueryDetailDeleteEvent;
 import com.lframework.starter.gen.mappers.GenDataObjMapper;
-import com.lframework.starter.gen.service.IGenCustomListService;
-import com.lframework.starter.gen.service.IGenDataObjDetailService;
-import com.lframework.starter.gen.service.IGenDataObjQueryDetailService;
-import com.lframework.starter.gen.service.IGenDataObjService;
+import com.lframework.starter.gen.service.GenCustomListService;
+import com.lframework.starter.gen.service.GenDataObjDetailService;
+import com.lframework.starter.gen.service.GenDataObjQueryDetailService;
+import com.lframework.starter.gen.service.GenDataObjService;
 import com.lframework.starter.gen.vo.data.obj.CreateGenDataObjVo;
 import com.lframework.starter.gen.vo.data.obj.GenDataObjDetailVo;
 import com.lframework.starter.gen.vo.data.obj.GenDataObjQueryDetailVo;
@@ -33,7 +33,7 @@ import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.mybatis.resp.PageResult;
 import com.lframework.starter.mybatis.utils.PageHelperUtil;
 import com.lframework.starter.mybatis.utils.PageResultUtil;
-import com.lframework.starter.web.utils.ApplicationUtil;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 import com.lframework.starter.web.utils.EnumUtil;
 import com.lframework.starter.web.utils.IdUtil;
 import java.io.Serializable;
@@ -49,13 +49,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class GenDataObjServiceImpl extends
-    BaseMpServiceImpl<GenDataObjMapper, GenDataObj> implements IGenDataObjService {
+    BaseMpServiceImpl<GenDataObjMapper, GenDataObj> implements GenDataObjService {
 
   @Autowired
-  private IGenDataObjDetailService genDataObjDetailService;
+  private GenDataObjDetailService genDataObjDetailService;
 
   @Autowired
-  private IGenDataObjQueryDetailService genDataObjQueryDetailService;
+  private GenDataObjQueryDetailService genDataObjQueryDetailService;
 
   @Override
   public PageResult<GenDataObj> query(Integer pageIndex, Integer pageSize, QueryGenDataObjVo vo) {
@@ -87,13 +87,13 @@ public class GenDataObjServiceImpl extends
     return PageResultUtil.convert(new PageInfo<>(datas));
   }
 
-  @Cacheable(value = GenDataObj.CACHE_NAME, key = "#id", unless = "#result == null")
+  @Cacheable(value = GenDataObj.CACHE_NAME, key = "@cacheVariables.tenantId() + #id", unless = "#result == null")
   @Override
   public GenDataObj findById(String id) {
     return getBaseMapper().selectById(id);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public String create(CreateGenDataObjVo data) {
 
@@ -154,7 +154,7 @@ public class GenDataObjServiceImpl extends
     return record.getId();
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void update(UpdateGenDataObjVo data) {
 
@@ -243,7 +243,7 @@ public class GenDataObjServiceImpl extends
     }
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void delete(@NonNull String id) {
     GenDataObj record = this.getById(id);
@@ -270,7 +270,7 @@ public class GenDataObjServiceImpl extends
     ApplicationUtil.publishEvent(event);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void batchDelete(@NonNull List<String> ids) {
 
@@ -283,7 +283,7 @@ public class GenDataObjServiceImpl extends
     }
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void batchEnable(List<String> ids) {
     if (CollectionUtil.isEmpty(ids)) {
@@ -295,7 +295,7 @@ public class GenDataObjServiceImpl extends
     getBaseMapper().update(wrapper);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void batchUnable(List<String> ids) {
     if (CollectionUtil.isEmpty(ids)) {
@@ -312,12 +312,12 @@ public class GenDataObjServiceImpl extends
     return getBaseMapper().getRelaGenDataEntityIds(entityId);
   }
 
-  @CacheEvict(value = {GenDataObj.CACHE_NAME, DataObjectQueryObj.CACHE_NAME}, key = "#key")
+  @CacheEvict(value = {GenDataObj.CACHE_NAME, DataObjectQueryObj.CACHE_NAME}, key = "@cacheVariables.tenantId() + #key")
   @Override
   public void cleanCacheByKey(Serializable key) {
 
     ThreadUtil.execAsync(() -> {
-      IGenCustomListService genCustomListService = ApplicationUtil.getBean(IGenCustomListService.class);
+      GenCustomListService genCustomListService = ApplicationUtil.getBean(GenCustomListService.class);
       List<String> ids = genCustomListService.getRelaGenDataObjIds(String.valueOf(key));
       if (CollectionUtil.isNotEmpty(ids)) {
         genCustomListService.cleanCacheByKeys(ids);

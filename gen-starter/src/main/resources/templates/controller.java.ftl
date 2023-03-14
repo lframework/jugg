@@ -1,7 +1,7 @@
 package ${packageName}.controller.${moduleName};
 
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.CollectionUtil;
+import DefaultClientException;
+import CollectionUtil;
 import com.lframework.starter.mybatis.resp.PageResult;
 import com.lframework.starter.mybatis.utils.PageResultUtil;
 import com.lframework.starter.web.resp.InvokeResult;
@@ -15,7 +15,7 @@ import ${packageName}.bo.${moduleName}.${bizName}.Query${className}Bo;
 <#if queryParams??>
 import ${packageName}.vo.${moduleName}.${bizName}.Query${className}Vo;
 </#if>
-import ${packageName}.service.${moduleName}.I${className}Service;
+import ${packageName}.service.${moduleName}.${className}Service;
 <#if create??>
 import ${packageName}.vo.${moduleName}.${bizName}.Create${className}Vo;
 </#if>
@@ -30,7 +30,7 @@ import ${p};
 </#if>
 import com.lframework.starter.web.controller.DefaultBaseController;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+import com.lframework.starter.web.annotations.security.HasPermission;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,14 +54,14 @@ import java.util.stream.Collectors;
 public class ${className}Controller extends DefaultBaseController {
 
     @Autowired
-    private I${className}Service ${classNameProperty}Service;
+    private ${className}Service ${classNameProperty}Service;
     <#if query?? && queryParams??>
 
     /**
      * 查询列表
      */
     @ApiOperation("查询列表")
-    @PreAuthorize("@permission.valid('${moduleName}:${bizName}:query')")
+    @HasPermission({"${moduleName}:${bizName}:query"})
     @GetMapping("/query")
     public ${r"InvokeResult<PageResult<"}Query${className}${r"Bo>>"} query(@Valid Query${className}Vo vo) {
 
@@ -84,7 +84,7 @@ public class ${className}Controller extends DefaultBaseController {
      */
     @ApiOperation("根据ID查询")
     @ApiImplicitParam(value = "${keys[0].name}", name = "${keys[0].name}", paramType = "query", required = true)
-    @PreAuthorize("@permission.valid('${moduleName}:${bizName}:query')")
+    @HasPermission({"${moduleName}:${bizName}:query"})
     @GetMapping
     public ${r"InvokeResult<Get"}${className}${r"Bo>"} get(<#if keys[0].dataType == 'String'>@NotBlank<#else>@NotNull</#if>(message = "${keys[0].name}不能为空！") ${keys[0].dataType} ${keys[0].name}) {
 
@@ -104,7 +104,7 @@ public class ${className}Controller extends DefaultBaseController {
      * 新增
      */
     @ApiOperation("新增")
-    @PreAuthorize("@permission.valid('${moduleName}:${bizName}:add')")
+    @HasPermission({"${moduleName}:${bizName}:add"})
     @PostMapping
     public ${r"InvokeResult<Void>"} create(@Valid Create${className}Vo vo) {
 
@@ -119,7 +119,7 @@ public class ${className}Controller extends DefaultBaseController {
      * 修改
      */
     @ApiOperation("修改")
-    @PreAuthorize("@permission.valid('${moduleName}:${bizName}:modify')")
+    @HasPermission({"${moduleName}:${bizName}:modify"})
     @PutMapping
     public ${r"InvokeResult<Void>"} update(@Valid Update${className}Vo vo) {
 
@@ -139,7 +139,7 @@ public class ${className}Controller extends DefaultBaseController {
      */
     @ApiOperation("根据ID删除")
     @ApiImplicitParam(value = "${keys[0].name}", name = "${keys[0].name}", paramType = "query", required = true)
-    @PreAuthorize("@permission.valid('${moduleName}:${bizName}:delete')")
+    @HasPermission({"${moduleName}:${bizName}:delete"})
     @DeleteMapping
     public ${r"InvokeResult<Void>"} deleteById(<#if keys[0].dataType == 'String'>@NotBlank<#else>@NotNull</#if>(message = "${keys[0].name}不能为空！") ${keys[0].dataType} ${keys[0].name}) {
 

@@ -1,12 +1,13 @@
 package com.lframework.starter.web.utils;
 
-import com.lframework.common.constants.StringPool;
-import com.lframework.common.exceptions.impl.DefaultSysException;
-import com.lframework.common.utils.Assert;
-import com.lframework.common.utils.CollectionUtil;
-import com.lframework.common.utils.DateUtil;
-import com.lframework.common.utils.FileUtil;
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.constants.StringPool;
+import com.lframework.starter.common.exceptions.impl.DefaultSysException;
+import com.lframework.starter.common.utils.Assert;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.DateUtil;
+import com.lframework.starter.common.utils.FileUtil;
+import com.lframework.starter.common.utils.StringUtil;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;

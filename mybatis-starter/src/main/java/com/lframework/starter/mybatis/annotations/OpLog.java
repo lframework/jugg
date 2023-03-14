@@ -1,6 +1,5 @@
 package com.lframework.starter.mybatis.annotations;
 
-import com.lframework.starter.mybatis.enums.OpLogType;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -25,7 +24,7 @@ public @interface OpLog {
    *
    * @return
    */
-  OpLogType type();
+  int type();
 
   /**
    * 日志名称 需要填充参数部分用{}占位，会根据params的值进行填充
@@ -47,4 +46,11 @@ public @interface OpLog {
    * @return
    */
   boolean loopFormat() default false;
+
+  /**
+   * 是否自动保存参数
+   *
+   * @return
+   */
+  boolean autoSaveParams() default false;
 }

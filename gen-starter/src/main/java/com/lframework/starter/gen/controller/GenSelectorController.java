@@ -1,6 +1,7 @@
 package com.lframework.starter.gen.controller;
 
-import com.lframework.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.gen.bo.custom.form.GenCustomFormSelectorBo;
 import com.lframework.starter.gen.bo.custom.form.category.GenCustomFormCategorySelectorBo;
 import com.lframework.starter.gen.bo.custom.list.GenCustomListSelectorBo;
@@ -25,18 +26,18 @@ import com.lframework.starter.gen.entity.GenDataEntityCategory;
 import com.lframework.starter.gen.entity.GenDataEntityDetail;
 import com.lframework.starter.gen.entity.GenDataObj;
 import com.lframework.starter.gen.entity.GenDataObjCategory;
-import com.lframework.starter.gen.service.IGenCustomFormCategoryService;
-import com.lframework.starter.gen.service.IGenCustomFormService;
-import com.lframework.starter.gen.service.IGenCustomListCategoryService;
-import com.lframework.starter.gen.service.IGenCustomListService;
-import com.lframework.starter.gen.service.IGenCustomSelectorCategoryService;
-import com.lframework.starter.gen.service.IGenCustomSelectorService;
-import com.lframework.starter.gen.service.IGenDataEntityCategoryService;
-import com.lframework.starter.gen.service.IGenDataEntityDetailService;
-import com.lframework.starter.gen.service.IGenDataEntityService;
-import com.lframework.starter.gen.service.IGenDataObjCategoryService;
-import com.lframework.starter.gen.service.IGenDataObjService;
-import com.lframework.starter.gen.service.ISimpleDBService;
+import com.lframework.starter.gen.service.GenCustomFormCategoryService;
+import com.lframework.starter.gen.service.GenCustomFormService;
+import com.lframework.starter.gen.service.GenCustomListCategoryService;
+import com.lframework.starter.gen.service.GenCustomListService;
+import com.lframework.starter.gen.service.GenCustomSelectorCategoryService;
+import com.lframework.starter.gen.service.GenCustomSelectorService;
+import com.lframework.starter.gen.service.GenDataEntityCategoryService;
+import com.lframework.starter.gen.service.GenDataEntityDetailService;
+import com.lframework.starter.gen.service.GenDataEntityService;
+import com.lframework.starter.gen.service.GenDataObjCategoryService;
+import com.lframework.starter.gen.service.GenDataObjService;
+import com.lframework.starter.gen.service.SimpleDBService;
 import com.lframework.starter.gen.vo.custom.form.GenCustomFormSelectorVo;
 import com.lframework.starter.gen.vo.custom.form.category.GenCustomFormCategorySelectorVo;
 import com.lframework.starter.gen.vo.custom.list.GenCustomListSelectorVo;
@@ -57,12 +58,15 @@ import com.lframework.starter.web.resp.InvokeResultBuilder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -74,40 +78,40 @@ import org.springframework.web.bind.annotation.RestController;
 public class GenSelectorController extends DefaultBaseController {
 
   @Autowired
-  private IGenDataEntityCategoryService genDataEntityCategoryService;
+  private GenDataEntityCategoryService genDataEntityCategoryService;
 
   @Autowired
-  private IGenDataObjCategoryService genDataObjCategoryService;
+  private GenDataObjCategoryService genDataObjCategoryService;
 
   @Autowired
-  private ISimpleDBService simpleDBService;
+  private SimpleDBService simpleDBService;
 
   @Autowired
-  private IGenDataEntityService genDataEntityService;
+  private GenDataEntityService genDataEntityService;
 
   @Autowired
-  private IGenDataEntityDetailService genDataEntityDetailService;
+  private GenDataEntityDetailService genDataEntityDetailService;
 
   @Autowired
-  private IGenDataObjService genDataObjService;
+  private GenDataObjService genDataObjService;
 
   @Autowired
-  private IGenCustomListCategoryService genCustomListCategoryService;
+  private GenCustomListCategoryService genCustomListCategoryService;
 
   @Autowired
-  private IGenCustomListService genCustomListService;
+  private GenCustomListService genCustomListService;
 
   @Autowired
-  private IGenCustomSelectorCategoryService genCustomSelectorCategoryService;
+  private GenCustomSelectorCategoryService genCustomSelectorCategoryService;
 
   @Autowired
-  private IGenCustomSelectorService genCustomSelectorService;
+  private GenCustomSelectorService genCustomSelectorService;
 
   @Autowired
-  private IGenCustomFormCategoryService genCustomFormCategoryService;
+  private GenCustomFormCategoryService genCustomFormCategoryService;
 
   @Autowired
-  private IGenCustomFormService genCustomFormService;
+  private GenCustomFormService genCustomFormService;
 
   @ApiOperation("数据实体分类")
   @GetMapping("/data/entity/category")
@@ -127,6 +131,27 @@ public class GenSelectorController extends DefaultBaseController {
     return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
   }
 
+  /**
+   * 加载数据实体分类
+   */
+  @ApiOperation("加载数据实体分类")
+  @PostMapping("/data/entity/category/load")
+  public InvokeResult<List<GenDataEntityCategorySelectorBo>> loadDataEntityCategory(
+      @RequestBody(required = false) List<String> ids) {
+
+    if (CollectionUtil.isEmpty(ids)) {
+      return InvokeResultBuilder.success(CollectionUtil.emptyList());
+    }
+
+    List<GenDataEntityCategory> datas = ids.stream().filter(StringUtil::isNotBlank)
+        .map(t -> genDataEntityCategoryService.findById(t))
+        .filter(Objects::nonNull).collect(Collectors.toList());
+    List<GenDataEntityCategorySelectorBo> results = datas.stream()
+        .map(GenDataEntityCategorySelectorBo::new).collect(
+            Collectors.toList());
+    return InvokeResultBuilder.success(results);
+  }
+
   @ApiOperation("数据对象分类")
   @GetMapping("/data/obj/category")
   public InvokeResult<PageResult<GenDataObjCategorySelectorBo>> dataObjCategory(
@@ -144,6 +169,27 @@ public class GenSelectorController extends DefaultBaseController {
     return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
   }
 
+  /**
+   * 加载数据对象分类
+   */
+  @ApiOperation("加载数据对象分类")
+  @PostMapping("/data/obj/category/load")
+  public InvokeResult<List<GenDataObjCategorySelectorBo>> loadDataObjCategory(
+      @RequestBody(required = false) List<String> ids) {
+
+    if (CollectionUtil.isEmpty(ids)) {
+      return InvokeResultBuilder.success(CollectionUtil.emptyList());
+    }
+
+    List<GenDataObjCategory> datas = ids.stream().filter(StringUtil::isNotBlank)
+        .map(t -> genDataObjCategoryService.findById(t))
+        .filter(Objects::nonNull).collect(Collectors.toList());
+    List<GenDataObjCategorySelectorBo> results = datas.stream()
+        .map(GenDataObjCategorySelectorBo::new).collect(
+            Collectors.toList());
+    return InvokeResultBuilder.success(results);
+  }
+
   @ApiOperation("数据表")
   @GetMapping("/table")
   public InvokeResult<PageResult<SimpleDBSelectorBo>> table(@Valid SimpleTableSelectorVo vo) {
@@ -156,6 +202,25 @@ public class GenSelectorController extends DefaultBaseController {
     }
 
     return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
+  }
+
+  /**
+   * 加载数据表
+   */
+  @ApiOperation("加载数据表")
+  @PostMapping("/table/load")
+  public InvokeResult<List<SimpleDBSelectorBo>> loadTable(
+      @RequestBody(required = false) List<String> ids) {
+
+    if (CollectionUtil.isEmpty(ids)) {
+      return InvokeResultBuilder.success(CollectionUtil.emptyList());
+    }
+
+    List<SimpleDBDto> datas = simpleDBService.listByIds(ids);
+    List<SimpleDBSelectorBo> results = datas.stream().map(SimpleDBSelectorBo::new)
+        .collect(
+            Collectors.toList());
+    return InvokeResultBuilder.success(results);
   }
 
   @ApiOperation("数据实体")
@@ -171,6 +236,25 @@ public class GenSelectorController extends DefaultBaseController {
     }
 
     return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
+  }
+
+  /**
+   * 加载数据实体
+   */
+  @ApiOperation("加载数据实体")
+  @PostMapping("/data/entity/load")
+  public InvokeResult<List<GenDataEntitySelectorBo>> loadDataEntity(
+      @RequestBody(required = false) List<String> ids) {
+
+    if (CollectionUtil.isEmpty(ids)) {
+      return InvokeResultBuilder.success(CollectionUtil.emptyList());
+    }
+
+    List<GenDataEntity> datas = genDataEntityService.listByIds(ids);
+    List<GenDataEntitySelectorBo> results = datas.stream().map(GenDataEntitySelectorBo::new)
+        .collect(
+            Collectors.toList());
+    return InvokeResultBuilder.success(results);
   }
 
   @ApiOperation("数据实体明细")
@@ -200,6 +284,26 @@ public class GenSelectorController extends DefaultBaseController {
     return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
   }
 
+  /**
+   * 加载数据对象
+   */
+  @ApiOperation("加载数据对象")
+  @PostMapping("/data/obj/load")
+  public InvokeResult<List<GenDataObjSelectorBo>> loadDataObj(
+      @RequestBody(required = false) List<String> ids) {
+
+    if (CollectionUtil.isEmpty(ids)) {
+      return InvokeResultBuilder.success(CollectionUtil.emptyList());
+    }
+
+    List<GenDataObj> datas = ids.stream().filter(StringUtil::isNotBlank)
+        .map(t -> genDataObjService.findById(t))
+        .filter(Objects::nonNull).collect(Collectors.toList());
+    List<GenDataObjSelectorBo> results = datas.stream().map(GenDataObjSelectorBo::new).collect(
+        Collectors.toList());
+    return InvokeResultBuilder.success(results);
+  }
+
   @ApiOperation("自定义列表分类")
   @GetMapping("/custom/list/category")
   public InvokeResult<PageResult<GenCustomListCategorySelectorBo>> customListCategory(
@@ -217,6 +321,27 @@ public class GenSelectorController extends DefaultBaseController {
     return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
   }
 
+  /**
+   * 加载自定义列表分类
+   */
+  @ApiOperation("加载自定义列表分类")
+  @PostMapping("/custom/list/category/load")
+  public InvokeResult<List<GenCustomListCategorySelectorBo>> loadCustomListCategory(
+      @RequestBody(required = false) List<String> ids) {
+
+    if (CollectionUtil.isEmpty(ids)) {
+      return InvokeResultBuilder.success(CollectionUtil.emptyList());
+    }
+
+    List<GenCustomListCategory> datas = ids.stream().filter(StringUtil::isNotBlank)
+        .map(t -> genCustomListCategoryService.findById(t))
+        .filter(Objects::nonNull).collect(Collectors.toList());
+    List<GenCustomListCategorySelectorBo> results = datas.stream()
+        .map(GenCustomListCategorySelectorBo::new).collect(
+            Collectors.toList());
+    return InvokeResultBuilder.success(results);
+  }
+
   @ApiOperation("自定义列表")
   @GetMapping("/custom/list")
   public InvokeResult<PageResult<GenCustomListSelectorBo>> customList(
@@ -232,9 +357,30 @@ public class GenSelectorController extends DefaultBaseController {
     return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
   }
 
+  /**
+   * 加载自定义列表
+   */
+  @ApiOperation("加载自定义列表")
+  @PostMapping("/custom/list/load")
+  public InvokeResult<List<GenCustomListSelectorBo>> loadCustomList(
+      @RequestBody(required = false) List<String> ids) {
+
+    if (CollectionUtil.isEmpty(ids)) {
+      return InvokeResultBuilder.success(CollectionUtil.emptyList());
+    }
+
+    List<GenCustomList> datas = ids.stream().filter(StringUtil::isNotBlank)
+        .map(t -> genCustomListService.findById(t))
+        .filter(Objects::nonNull).collect(Collectors.toList());
+    List<GenCustomListSelectorBo> results = datas.stream()
+        .map(GenCustomListSelectorBo::new).collect(
+            Collectors.toList());
+    return InvokeResultBuilder.success(results);
+  }
+
   @ApiOperation("自定义选择器分类")
   @GetMapping("/custom/selector/category")
-  public InvokeResult<PageResult<GenCustomSelectorCategorySelectorBo>> customListCategory(
+  public InvokeResult<PageResult<GenCustomSelectorCategorySelectorBo>> customSelectorCategory(
       @Valid GenCustomSelectorCategorySelectorVo vo) {
     PageResult<GenCustomSelectorCategory> pageResult = genCustomSelectorCategoryService.selector(
         getPageIndex(vo),
@@ -247,6 +393,27 @@ public class GenSelectorController extends DefaultBaseController {
     }
 
     return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
+  }
+
+  /**
+   * 加载自定义选择器分类
+   */
+  @ApiOperation("加载自定义选择器分类")
+  @PostMapping("/custom/selector/category/load")
+  public InvokeResult<List<GenCustomSelectorCategorySelectorBo>> loadCustomSelectorCategory(
+      @RequestBody(required = false) List<String> ids) {
+
+    if (CollectionUtil.isEmpty(ids)) {
+      return InvokeResultBuilder.success(CollectionUtil.emptyList());
+    }
+
+    List<GenCustomSelectorCategory> datas = ids.stream().filter(StringUtil::isNotBlank)
+        .map(t -> genCustomSelectorCategoryService.findById(t))
+        .filter(Objects::nonNull).collect(Collectors.toList());
+    List<GenCustomSelectorCategorySelectorBo> results = datas.stream()
+        .map(GenCustomSelectorCategorySelectorBo::new).collect(
+            Collectors.toList());
+    return InvokeResultBuilder.success(results);
   }
 
   @ApiOperation("自定义选择器")
@@ -262,6 +429,27 @@ public class GenSelectorController extends DefaultBaseController {
     }
 
     return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
+  }
+
+  /**
+   * 加载自定义选择器
+   */
+  @ApiOperation("加载自定义选择器")
+  @PostMapping("/custom/selector/load")
+  public InvokeResult<List<GenCustomSelectorSelectorBo>> loadCustomSelector(
+      @RequestBody(required = false) List<String> ids) {
+
+    if (CollectionUtil.isEmpty(ids)) {
+      return InvokeResultBuilder.success(CollectionUtil.emptyList());
+    }
+
+    List<GenCustomSelector> datas = ids.stream().filter(StringUtil::isNotBlank)
+        .map(t -> genCustomSelectorService.findById(t))
+        .filter(Objects::nonNull).collect(Collectors.toList());
+    List<GenCustomSelectorSelectorBo> results = datas.stream()
+        .map(GenCustomSelectorSelectorBo::new).collect(
+            Collectors.toList());
+    return InvokeResultBuilder.success(results);
   }
 
   @ApiOperation("自定义表单分类")
@@ -281,6 +469,27 @@ public class GenSelectorController extends DefaultBaseController {
     return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
   }
 
+  /**
+   * 加载自定义表单分类
+   */
+  @ApiOperation("加载自定义表单分类")
+  @PostMapping("/custom/form/category/load")
+  public InvokeResult<List<GenCustomFormCategorySelectorBo>> loadCustomFormCategory(
+      @RequestBody(required = false) List<String> ids) {
+
+    if (CollectionUtil.isEmpty(ids)) {
+      return InvokeResultBuilder.success(CollectionUtil.emptyList());
+    }
+
+    List<GenCustomFormCategory> datas = ids.stream().filter(StringUtil::isNotBlank)
+        .map(t -> genCustomFormCategoryService.findById(t))
+        .filter(Objects::nonNull).collect(Collectors.toList());
+    List<GenCustomFormCategorySelectorBo> results = datas.stream()
+        .map(GenCustomFormCategorySelectorBo::new).collect(
+            Collectors.toList());
+    return InvokeResultBuilder.success(results);
+  }
+
   @ApiOperation("自定义表单")
   @GetMapping("/custom/form")
   public InvokeResult<PageResult<GenCustomFormSelectorBo>> customForm(
@@ -294,5 +503,26 @@ public class GenSelectorController extends DefaultBaseController {
     }
 
     return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
+  }
+
+  /**
+   * 加载自定义表单
+   */
+  @ApiOperation("加载自定义表单")
+  @PostMapping("/custom/form/load")
+  public InvokeResult<List<GenCustomFormSelectorBo>> loadCustomForm(
+      @RequestBody(required = false) List<String> ids) {
+
+    if (CollectionUtil.isEmpty(ids)) {
+      return InvokeResultBuilder.success(CollectionUtil.emptyList());
+    }
+
+    List<GenCustomForm> datas = ids.stream().filter(StringUtil::isNotBlank)
+        .map(t -> genCustomFormService.findById(t))
+        .filter(Objects::nonNull).collect(Collectors.toList());
+    List<GenCustomFormSelectorBo> results = datas.stream()
+        .map(GenCustomFormSelectorBo::new).collect(
+            Collectors.toList());
+    return InvokeResultBuilder.success(results);
   }
 }

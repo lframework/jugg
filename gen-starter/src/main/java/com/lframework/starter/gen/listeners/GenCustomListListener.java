@@ -2,16 +2,16 @@ package com.lframework.starter.gen.listeners;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.lframework.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
 import com.lframework.starter.gen.entity.GenCustomList;
 import com.lframework.starter.gen.entity.GenCustomListDetail;
 import com.lframework.starter.gen.entity.GenCustomListQueryParams;
 import com.lframework.starter.gen.events.DataEntityDetailDeleteEvent;
 import com.lframework.starter.gen.events.DataObjDeleteEvent;
 import com.lframework.starter.gen.events.DataObjQueryDetailDeleteEvent;
-import com.lframework.starter.gen.service.IGenCustomListDetailService;
-import com.lframework.starter.gen.service.IGenCustomListQueryParamsService;
-import com.lframework.starter.gen.service.IGenCustomListService;
+import com.lframework.starter.gen.service.GenCustomListDetailService;
+import com.lframework.starter.gen.service.GenCustomListQueryParamsService;
+import com.lframework.starter.gen.service.GenCustomListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
@@ -22,7 +22,7 @@ public class GenCustomListListener {
   public static class DataObjDeleteListener implements ApplicationListener<DataObjDeleteEvent> {
 
     @Autowired
-    private IGenCustomListService genCustomListService;
+    private GenCustomListService genCustomListService;
 
     @Override
     public void onApplicationEvent(DataObjDeleteEvent event) {
@@ -40,10 +40,10 @@ public class GenCustomListListener {
       ApplicationListener<DataEntityDetailDeleteEvent> {
 
     @Autowired
-    private IGenCustomListDetailService genCustomListDetailService;
+    private GenCustomListDetailService genCustomListDetailService;
 
     @Autowired
-    private IGenCustomListQueryParamsService genCustomListQueryParamsService;
+    private GenCustomListQueryParamsService genCustomListQueryParamsService;
 
     @Override
     public void onApplicationEvent(DataEntityDetailDeleteEvent event) {
@@ -67,10 +67,10 @@ public class GenCustomListListener {
       ApplicationListener<DataObjQueryDetailDeleteEvent> {
 
     @Autowired
-    private IGenCustomListDetailService genCustomListDetailService;
+    private GenCustomListDetailService genCustomListDetailService;
 
     @Autowired
-    private IGenCustomListQueryParamsService genCustomListQueryParamsService;
+    private GenCustomListQueryParamsService genCustomListQueryParamsService;
 
     @Override
     public void onApplicationEvent(DataObjQueryDetailDeleteEvent event) {

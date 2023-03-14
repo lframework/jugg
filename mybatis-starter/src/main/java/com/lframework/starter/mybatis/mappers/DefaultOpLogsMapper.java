@@ -1,6 +1,5 @@
 package com.lframework.starter.mybatis.mappers;
 
-import com.lframework.starter.mybatis.dto.DefaultOpLogsDto;
 import com.lframework.starter.mybatis.entity.DefaultOpLogs;
 import com.lframework.starter.mybatis.mapper.BaseMapper;
 import com.lframework.starter.mybatis.vo.QueryOpLogsVo;
@@ -23,7 +22,7 @@ public interface DefaultOpLogsMapper extends BaseMapper<DefaultOpLogs> {
    * @param vo
    * @return
    */
-  List<DefaultOpLogsDto> query(@Param("vo") QueryOpLogsVo vo);
+  List<DefaultOpLogs> query(@Param("vo") QueryOpLogsVo vo);
 
   /**
    * 根据ID查询
@@ -31,7 +30,7 @@ public interface DefaultOpLogsMapper extends BaseMapper<DefaultOpLogs> {
    * @param id
    * @return
    */
-  DefaultOpLogsDto findById(String id);
+  DefaultOpLogs findById(String id);
 
   /**
    * 根据截止时间删除日志

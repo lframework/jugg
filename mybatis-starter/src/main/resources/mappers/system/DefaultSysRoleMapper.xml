@@ -1,35 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lframework.starter.mybatis.mappers.system.DefaultSysRoleMapper">
-    <resultMap id="SysRoleDto" type="com.lframework.starter.mybatis.dto.system.role.DefaultSysRoleDto">
-        <id column="id" property="id"/>
-        <result column="code" property="code"/>
-        <result column="name" property="name"/>
-        <result column="permission" property="permission"/>
-        <result column="available" property="available"/>
-        <result column="description" property="description"/>
-        <result column="create_by" property="createBy"/>
-        <result column="create_time" property="createTime"/>
-        <result column="update_by" property="updateBy"/>
-        <result column="update_time" property="updateTime"/>
-    </resultMap>
 
-    <sql id="SysRoleDto_sql">
+    <sql id="SysRole_sql">
         SELECT
-            id,
-            code,
-            name,
-            permission,
-            available,
-            description,
-            create_by,
-            create_time,
-            update_by,
-            update_time
+            *
         FROM sys_role
     </sql>
-    <select id="query" resultMap="SysRoleDto">
-        <include refid="SysRoleDto_sql"/>
+    <select id="query" resultType="com.lframework.starter.mybatis.entity.DefaultSysRole">
+        <include refid="SysRole_sql"/>
         <where>
             <if test="vo != null">
                 <if test="vo.code != null and vo.code != ''">
@@ -45,13 +24,13 @@
         </where>
         ORDER BY code
     </select>
-    <select id="findById" resultMap="SysRoleDto">
-        <include refid="SysRoleDto_sql"/>
+    <select id="findById" resultType="com.lframework.starter.mybatis.entity.DefaultSysRole">
+        <include refid="SysRole_sql"/>
         WHERE id = #{id}
     </select>
 
-    <select id="getByUserId" resultMap="SysRoleDto">
-        <include refid="SysRoleDto_sql"/>
+    <select id="getByUserId" resultType="com.lframework.starter.mybatis.entity.DefaultSysRole">
+        <include refid="SysRole_sql"/>
         WHERE id IN (
         SELECT
         role_id
@@ -60,8 +39,8 @@
         )
         ORDER BY code
     </select>
-    <select id="selector" resultMap="SysRoleDto">
-        <include refid="SysRoleDto_sql"/>
+    <select id="selector" resultType="com.lframework.starter.mybatis.entity.DefaultSysRole">
+        <include refid="SysRole_sql"/>
         <where>
             <if test="vo != null">
                 <if test="vo.code != null and vo.code != ''">

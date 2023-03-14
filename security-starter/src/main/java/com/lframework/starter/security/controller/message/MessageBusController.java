@@ -1,14 +1,14 @@
 package com.lframework.starter.security.controller.message;
 
-import com.lframework.common.utils.ThreadUtil;
+import com.lframework.starter.common.utils.ThreadUtil;
 import com.lframework.starter.mybatis.resp.PageResult;
-import com.lframework.starter.mybatis.service.message.IMessageBusService;
+import com.lframework.starter.mybatis.service.message.MessageBusService;
 import com.lframework.starter.web.controller.DefaultBaseController;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
-import com.lframework.starter.web.utils.ApplicationUtil;
-import com.lframework.web.common.security.SecurityUtil;
-import com.lframework.web.common.threads.DefaultCallable;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
+import com.lframework.starter.web.common.security.SecurityUtil;
+import com.lframework.starter.web.common.threads.DefaultCallable;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.ArrayList;
@@ -43,19 +43,19 @@ public class MessageBusController extends DefaultBaseController {
   public InvokeResult<Map<String, PageResult>> queryTodoTasks() {
 
     // getBeans key是BeanName
-    Map<String, IMessageBusService> oriBeans = ApplicationUtil.getBeansOfType(
-        IMessageBusService.class);
+    Map<String, MessageBusService> oriBeans = ApplicationUtil.getBeansOfType(
+        MessageBusService.class);
     // 重新根据type分组
     // 根据type去重
-    List<IMessageBusService> beans = oriBeans.values().stream()
+    List<MessageBusService> beans = oriBeans.values().stream()
         .collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(
-            Comparator.comparing(IMessageBusService::getType))), ArrayList::new));
+            Comparator.comparing(MessageBusService::getType))), ArrayList::new));
 
     Map<String, Future<PageResult>> futureMap = new HashMap<>(beans.size(), 1);
 
-    for (IMessageBusService bean : beans) {
+    for (MessageBusService bean : beans) {
       Future<PageResult> future = ThreadUtil.execAsync(
-          new DefaultCallable<>(SecurityUtil.getCurrentUser(), () -> bean.queryList()));
+          new DefaultCallable<>(() -> bean.queryList()));
       futureMap.put(bean.getType(), future);
     }
 

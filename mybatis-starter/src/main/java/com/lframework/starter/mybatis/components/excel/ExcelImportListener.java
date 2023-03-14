@@ -2,16 +2,16 @@ package com.lframework.starter.mybatis.components.excel;
 
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.context.AnalysisContext;
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.ArrayUtil;
-import com.lframework.common.utils.NumberUtil;
-import com.lframework.common.utils.ReflectUtil;
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.ArrayUtil;
+import com.lframework.starter.common.utils.NumberUtil;
+import com.lframework.starter.common.utils.ReflectUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.mybatis.utils.TransactionUtil;
 import com.lframework.starter.web.components.excel.ExcelEventListener;
 import com.lframework.starter.web.components.excel.ExcelModel;
 import com.lframework.starter.web.service.SysParameterService;
-import com.lframework.starter.web.utils.ApplicationUtil;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 import com.lframework.starter.web.utils.ExcelImportUtil;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -115,17 +115,17 @@ public abstract class ExcelImportListener<T extends ExcelModel> extends ExcelEve
       return;
     }
 
-    if (!this.hasError) {
-      this.datas.add(data);
-    }
-
     this.currentRows++;
 
     this.setProcess(this.totalRows == 0 ? 100
         : Math.min(NumberUtil.mul(NumberUtil.div(this.currentRows, this.totalRows), 100).intValue(),
             100));
 
-    this.doInvoke(data, context);
+    if (!this.hasError) {
+      this.datas.add(data);
+
+      this.doInvoke(data, context);
+    }
   }
 
   protected abstract void doInvoke(T data, AnalysisContext context);

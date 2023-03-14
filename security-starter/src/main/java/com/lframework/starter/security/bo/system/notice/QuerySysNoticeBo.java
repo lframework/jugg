@@ -1,7 +1,7 @@
 package com.lframework.starter.security.bo.system.notice;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.lframework.common.constants.StringPool;
+import com.lframework.starter.common.constants.StringPool;
 import com.lframework.starter.mybatis.entity.SysNotice;
 import com.lframework.starter.web.bo.BaseBo;
 import io.swagger.annotations.ApiModelProperty;

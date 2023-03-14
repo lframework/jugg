@@ -1,20 +1,19 @@
 package com.lframework.starter.mybatis.aop;
 
-import com.lframework.common.utils.ArrayUtil;
-import com.lframework.common.utils.CollectionUtil;
-import com.lframework.common.utils.StringUtil;
-import com.lframework.common.utils.ThreadUtil;
+import com.lframework.starter.common.utils.ArrayUtil;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.mybatis.annotations.OpLog;
 import com.lframework.starter.mybatis.utils.OpLogUtil;
 import com.lframework.starter.mybatis.vo.CreateOpLogsVo;
+import com.lframework.starter.web.common.security.AbstractUserDetails;
+import com.lframework.starter.web.common.security.SecurityUtil;
 import com.lframework.starter.web.utils.IdUtil;
 import com.lframework.starter.web.utils.SpelUtil;
-import com.lframework.web.common.security.AbstractUserDetails;
-import com.lframework.web.common.security.SecurityUtil;
-import com.lframework.web.common.threads.DefaultRunnable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -144,18 +143,40 @@ public class OpLogAspector {
             paramsList.add(strParams);
           }
 
+          List<CreateOpLogsVo> createOpLogsVoList = new ArrayList<>();
           for (String[] strArr : paramsList) {
             String extra = OpLogUtil.getExtra();
+            if (extra == null) {
+              if (opLog.autoSaveParams()) {
+                // 没有手动指定extra
+                if (CollectionUtil.isNotEmpty(paramNameList)) {
+                  if (paramNameList.size() == 1) {
+                    // 只有一个参数
+                    OpLogUtil.setExtra(ctx.lookupVariable(paramNameList.get(0)));
+                  } else {
+                    // 多个参数
+                    Map<String, Object> paramMap = new LinkedHashMap<>(paramNameList.size(), 1);
+                    for (String paramName : paramNameList) {
+                      paramMap.put(paramName, ctx.lookupVariable(paramName));
+                    }
+                    OpLogUtil.setExtra(paramMap);
+                  }
+                }
+                extra = OpLogUtil.getExtra();
+              }
+            }
 
-            ThreadUtil.execAsync(new DefaultRunnable(SecurityUtil.getCurrentUser(), () -> {
-              CreateOpLogsVo vo = new CreateOpLogsVo();
-              vo.setName(StringUtil.format(opLog.name(), strArr));
-              vo.setLogType(opLog.type().getCode());
-              vo.setExtra(extra);
-              vo.setIp(currentUser.getIp());
+            String finalExtra = extra;
+            CreateOpLogsVo vo = new CreateOpLogsVo();
+            vo.setName(StringUtil.format(opLog.name(), strArr));
+            vo.setLogType(opLog.type());
+            vo.setExtra(finalExtra);
+            vo.setIp(currentUser.getIp());
+            createOpLogsVoList.add(vo);
+          }
 
-              OpLogUtil.addLog(vo);
-            }));
+          if (CollectionUtil.isNotEmpty(createOpLogsVoList)) {
+            OpLogUtil.addLogs(createOpLogsVoList);
           }
         } catch (Exception e) {
           log.error(e.getMessage(), e);

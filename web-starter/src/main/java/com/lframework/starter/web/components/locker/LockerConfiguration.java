@@ -1,6 +1,6 @@
 package com.lframework.starter.web.components.locker;
 
-import com.lframework.common.locker.LockBuilder;
+import com.lframework.starter.common.locker.LockBuilder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

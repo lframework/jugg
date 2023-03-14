@@ -1,10 +1,9 @@
 package com.lframework.starter.web.utils;
 
-import com.lframework.common.utils.ArrayUtil;
-import com.lframework.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.ArrayUtil;
+import com.lframework.starter.common.utils.CollectionUtil;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,7 +45,7 @@ public class RequestUtil {
 
     Enumeration<String> headerNames = request.getHeaderNames();
     if (CollectionUtil.isEmpty(headerNames)) {
-      return Collections.EMPTY_MAP;
+      return CollectionUtil.emptyMap();
     }
 
     Map<String, String> headers = new HashMap<>();

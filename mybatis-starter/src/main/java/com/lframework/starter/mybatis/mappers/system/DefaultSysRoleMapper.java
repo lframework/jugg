@@ -1,6 +1,5 @@
 package com.lframework.starter.mybatis.mappers.system;
 
-import com.lframework.starter.mybatis.dto.system.role.DefaultSysRoleDto;
 import com.lframework.starter.mybatis.entity.DefaultSysRole;
 import com.lframework.starter.mybatis.mapper.BaseMapper;
 import com.lframework.starter.mybatis.vo.system.role.QuerySysRoleVo;
@@ -24,7 +23,7 @@ public interface DefaultSysRoleMapper extends BaseMapper<DefaultSysRole> {
    * @param vo
    * @return
    */
-  List<DefaultSysRoleDto> query(@Param("vo") QuerySysRoleVo vo);
+  List<DefaultSysRole> query(@Param("vo") QuerySysRoleVo vo);
 
   /**
    * 根据ID查询
@@ -32,7 +31,7 @@ public interface DefaultSysRoleMapper extends BaseMapper<DefaultSysRole> {
    * @param id
    * @return
    */
-  DefaultSysRoleDto findById(String id);
+  DefaultSysRole findById(String id);
 
   /**
    * 根据用户ID查询
@@ -40,7 +39,7 @@ public interface DefaultSysRoleMapper extends BaseMapper<DefaultSysRole> {
    * @param userId
    * @return
    */
-  List<DefaultSysRoleDto> getByUserId(String userId);
+  List<DefaultSysRole> getByUserId(String userId);
 
   /**
    * 选择器
@@ -48,5 +47,5 @@ public interface DefaultSysRoleMapper extends BaseMapper<DefaultSysRole> {
    * @param vo
    * @return
    */
-  List<DefaultSysRoleDto> selector(@Param("vo") SysRoleSelectorVo vo);
+  List<DefaultSysRole> selector(@Param("vo") SysRoleSelectorVo vo);
 }

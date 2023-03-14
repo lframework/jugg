@@ -1,6 +1,6 @@
 package com.lframework.starter.web.resp;
 
-import com.lframework.common.exceptions.BaseException;
+import com.lframework.starter.common.exceptions.BaseException;
 import com.lframework.starter.web.controller.BaseController;
 import org.springframework.stereotype.Component;
 

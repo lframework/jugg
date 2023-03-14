@@ -1,17 +1,16 @@
 package com.lframework.starter.gen.impl;
 
-import com.lframework.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.gen.dto.gen.GenQueryColumnConfigDto;
 import com.lframework.starter.gen.entity.GenDataEntityDetail;
 import com.lframework.starter.gen.entity.GenQueryColumnConfig;
 import com.lframework.starter.gen.enums.GenQueryWidthType;
 import com.lframework.starter.gen.mappers.GenQueryColumnConfigMapper;
-import com.lframework.starter.gen.service.IGenDataEntityDetailService;
-import com.lframework.starter.gen.service.IGenQueryColumnConfigService;
+import com.lframework.starter.gen.service.GenDataEntityDetailService;
+import com.lframework.starter.gen.service.GenQueryColumnConfigService;
 import com.lframework.starter.gen.vo.gen.UpdateQueryColumnConfigVo;
 import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.web.utils.EnumUtil;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,24 +20,24 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class GenQueryColumnConfigServiceImpl extends
     BaseMpServiceImpl<GenQueryColumnConfigMapper, GenQueryColumnConfig>
-    implements IGenQueryColumnConfigService {
+    implements GenQueryColumnConfigService {
 
   @Autowired
-  private IGenDataEntityDetailService genDataEntityDetailService;
+  private GenDataEntityDetailService genDataEntityDetailService;
 
   @Override
   public List<GenQueryColumnConfigDto> getByDataEntityId(String entityId) {
 
     List<GenDataEntityDetail> columns = genDataEntityDetailService.getByEntityId(entityId);
     if (CollectionUtil.isEmpty(columns)) {
-      return Collections.EMPTY_LIST;
+      return CollectionUtil.emptyList();
     }
 
     return getBaseMapper().getByIds(
         columns.stream().map(GenDataEntityDetail::getId).collect(Collectors.toList()));
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void updateGenerate(String entityId, List<UpdateQueryColumnConfigVo> vo) {
 
@@ -70,7 +69,7 @@ public class GenQueryColumnConfigServiceImpl extends
     return getBaseMapper().findById(id);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void deleteById(String id) {
 

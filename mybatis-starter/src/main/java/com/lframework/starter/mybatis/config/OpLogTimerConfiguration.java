@@ -1,9 +1,14 @@
 package com.lframework.starter.mybatis.config;
 
-import com.lframework.starter.mybatis.service.IOpLogsService;
-import com.lframework.starter.web.components.qrtz.QrtzHandler;
+import com.lframework.starter.mybatis.entity.Tenant;
+import com.lframework.starter.mybatis.service.OpLogsService;
+import com.lframework.starter.mybatis.service.TenantService;
+import com.lframework.starter.web.common.tenant.TenantContextHolder;
+import com.lframework.starter.mybatis.components.qrtz.QrtzHandler;
 import com.lframework.starter.web.components.qrtz.QrtzJob;
+import com.lframework.starter.web.utils.TenantUtil;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +55,10 @@ public class OpLogTimerConfiguration implements ApplicationListener<ApplicationR
   public static class OpLogClearJob extends QrtzJob {
 
     @Autowired
-    private IOpLogsService opLogsService;
+    private OpLogsService opLogsService;
+
+    @Autowired
+    private TenantService tenantService;
 
     /**
      * 操作日志保留天数
@@ -64,7 +72,15 @@ public class OpLogTimerConfiguration implements ApplicationListener<ApplicationR
       LocalDateTime now = LocalDateTime.now();
       LocalDateTime endTime = now.minusDays(retainDays);
 
-      opLogsService.clearLogs(endTime);
+      if (TenantUtil.enableTenant()) {
+        List<Tenant> tenants = tenantService.list();
+        for (Tenant tenant : tenants) {
+          TenantContextHolder.setTenantId(tenant.getId());
+          opLogsService.clearLogs(endTime);
+        }
+      } else {
+        opLogsService.clearLogs(endTime);
+      }
     }
   }
 }

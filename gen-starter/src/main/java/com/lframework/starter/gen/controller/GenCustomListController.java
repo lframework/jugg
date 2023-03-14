@@ -1,10 +1,10 @@
 package com.lframework.starter.gen.controller;
 
-import com.lframework.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.gen.bo.custom.list.GetGenCustomListBo;
 import com.lframework.starter.gen.bo.custom.list.QueryGenCustomListBo;
 import com.lframework.starter.gen.entity.GenCustomList;
-import com.lframework.starter.gen.service.IGenCustomListService;
+import com.lframework.starter.gen.service.GenCustomListService;
 import com.lframework.starter.gen.vo.custom.list.CreateGenCustomListVo;
 import com.lframework.starter.gen.vo.custom.list.QueryGenCustomListVo;
 import com.lframework.starter.gen.vo.custom.list.UpdateGenCustomListVo;
@@ -42,7 +42,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class GenCustomListController extends DefaultBaseController {
 
   @Autowired
-  private IGenCustomListService genCustomListService;
+  private GenCustomListService genCustomListService;
 
   @ApiOperation("查询自定义列表")
   @GetMapping("/query")

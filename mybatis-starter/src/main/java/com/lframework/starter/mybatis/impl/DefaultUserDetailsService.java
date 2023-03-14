@@ -1,7 +1,7 @@
 package com.lframework.starter.mybatis.impl;
 
 import com.lframework.starter.mybatis.mappers.DefaultUserDetailsMapper;
-import com.lframework.web.common.security.AbstractUserDetails;
+import com.lframework.starter.web.common.security.AbstractUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**

@@ -1,13 +1,13 @@
 package com.lframework.starter.gen.bo.data.entity;
 
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.gen.entity.GenCustomSelector;
 import com.lframework.starter.gen.entity.GenDataEntityDetail;
-import com.lframework.starter.gen.service.IGenCustomSelectorService;
+import com.lframework.starter.gen.service.GenCustomSelectorService;
 import com.lframework.starter.mybatis.entity.SysDataDic;
-import com.lframework.starter.mybatis.service.system.ISysDataDicService;
+import com.lframework.starter.mybatis.service.system.SysDataDicService;
 import com.lframework.starter.web.bo.BaseBo;
-import com.lframework.starter.web.utils.ApplicationUtil;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -156,14 +156,14 @@ public class GenDataEntityDetailBo extends BaseBo<GenDataEntityDetail> {
     this.orderType = dto.getOrderType() == null ? null : dto.getOrderType().getCode();
 
     if (!StringUtil.isBlank(dto.getDataDicId())) {
-      ISysDataDicService sysDataDicService = ApplicationUtil.getBean(ISysDataDicService.class);
+      SysDataDicService sysDataDicService = ApplicationUtil.getBean(SysDataDicService.class);
       SysDataDic dic = sysDataDicService.findById(dto.getDataDicId());
       this.dataDicName = dic.getName();
     }
 
     if (!StringUtil.isBlank(dto.getCustomSelectorId())) {
-      IGenCustomSelectorService genCustomSelectorService = ApplicationUtil
-          .getBean(IGenCustomSelectorService.class);
+      GenCustomSelectorService genCustomSelectorService = ApplicationUtil
+          .getBean(GenCustomSelectorService.class);
       GenCustomSelector selector = genCustomSelectorService.findById(dto.getCustomSelectorId());
       this.customSelectorName = selector.getName();
     }

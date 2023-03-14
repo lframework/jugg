@@ -1,11 +1,11 @@
 package com.lframework.starter.gen.bo.data.obj;
 
-import com.lframework.common.constants.StringPool;
+import com.lframework.starter.common.constants.StringPool;
 import com.lframework.starter.gen.entity.GenDataEntity;
 import com.lframework.starter.gen.entity.GenDataObjDetail;
-import com.lframework.starter.gen.service.IGenDataEntityService;
+import com.lframework.starter.gen.service.GenDataEntityService;
 import com.lframework.starter.web.bo.BaseBo;
-import com.lframework.starter.web.utils.ApplicationUtil;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -86,8 +86,8 @@ public class GenDataObjDetailBo extends BaseBo<GenDataObjDetail> {
     this.mainTableDetailIds = dto.getMainTableDetailIds().split(StringPool.STR_SPLIT);
     this.subTableDetailIds = dto.getSubTableDetailIds().split(StringPool.STR_SPLIT);
 
-    IGenDataEntityService genDataEntityService = ApplicationUtil.getBean(
-        IGenDataEntityService.class);
+    GenDataEntityService genDataEntityService = ApplicationUtil.getBean(
+        GenDataEntityService.class);
     GenDataEntity entity = genDataEntityService.findById(dto.getSubTableId());
     this.subTableName = entity.getName();
   }

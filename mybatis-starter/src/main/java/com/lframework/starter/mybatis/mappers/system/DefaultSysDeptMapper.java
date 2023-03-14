@@ -1,6 +1,5 @@
 package com.lframework.starter.mybatis.mappers.system;
 
-import com.lframework.starter.mybatis.dto.system.dept.DefaultSysDeptDto;
 import com.lframework.starter.mybatis.entity.DefaultSysDept;
 import com.lframework.starter.mybatis.mapper.BaseMapper;
 import java.util.List;
@@ -20,7 +19,7 @@ public interface DefaultSysDeptMapper extends BaseMapper<DefaultSysDept> {
    *
    * @return
    */
-  List<DefaultSysDeptDto> selector();
+  List<DefaultSysDept> selector();
 
   /**
    * 根据ID查询
@@ -28,5 +27,5 @@ public interface DefaultSysDeptMapper extends BaseMapper<DefaultSysDept> {
    * @param id
    * @return
    */
-  DefaultSysDeptDto findById(String id);
+  DefaultSysDept findById(String id);
 }

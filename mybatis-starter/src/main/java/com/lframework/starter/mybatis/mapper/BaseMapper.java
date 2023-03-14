@@ -2,9 +2,9 @@ package com.lframework.starter.mybatis.mapper;
 
 import com.baomidou.mybatisplus.core.conditions.AbstractWrapper;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.lframework.common.exceptions.impl.DefaultSysException;
-import com.lframework.common.utils.ArrayUtil;
-import com.lframework.common.utils.ReflectUtil;
+import com.lframework.starter.common.exceptions.impl.DefaultSysException;
+import com.lframework.starter.common.utils.ArrayUtil;
+import com.lframework.starter.common.utils.ReflectUtil;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import org.slf4j.Logger;

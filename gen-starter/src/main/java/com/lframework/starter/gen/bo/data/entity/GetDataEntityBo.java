@@ -1,13 +1,13 @@
 package com.lframework.starter.gen.bo.data.entity;
 
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.gen.entity.GenDataEntity;
 import com.lframework.starter.gen.entity.GenDataEntityCategory;
 import com.lframework.starter.gen.entity.GenDataEntityDetail;
-import com.lframework.starter.gen.service.IGenDataEntityCategoryService;
-import com.lframework.starter.gen.service.IGenDataEntityDetailService;
+import com.lframework.starter.gen.service.GenDataEntityCategoryService;
+import com.lframework.starter.gen.service.GenDataEntityDetailService;
 import com.lframework.starter.web.bo.BaseBo;
-import com.lframework.starter.web.utils.ApplicationUtil;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -81,16 +81,16 @@ public class GetDataEntityBo extends BaseBo<GenDataEntity> {
   protected void afterInit(GenDataEntity dto) {
 
     if (!StringUtil.isBlank(dto.getCategoryId())) {
-      IGenDataEntityCategoryService genDataEntityCategoryService = ApplicationUtil.getBean(
-          IGenDataEntityCategoryService.class);
+      GenDataEntityCategoryService genDataEntityCategoryService = ApplicationUtil.getBean(
+          GenDataEntityCategoryService.class);
       GenDataEntityCategory category = genDataEntityCategoryService.findById(dto.getCategoryId());
       this.categoryName = category.getName();
     }
 
     this.tableName = dto.getTableName();
 
-    IGenDataEntityDetailService genDataEntityDetailService = ApplicationUtil.getBean(
-        IGenDataEntityDetailService.class);
+    GenDataEntityDetailService genDataEntityDetailService = ApplicationUtil.getBean(
+        GenDataEntityDetailService.class);
     List<GenDataEntityDetail> details = genDataEntityDetailService.getByEntityId(dto.getId());
     this.columns = details.stream().map(GenDataEntityDetailBo::new).collect(Collectors.toList());
   }

@@ -4,24 +4,24 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageInfo;
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.Assert;
-import com.lframework.common.utils.CollectionUtil;
-import com.lframework.common.utils.ObjectUtil;
-import com.lframework.common.utils.ThreadUtil;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.Assert;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.ObjectUtil;
+import com.lframework.starter.common.utils.ThreadUtil;
 import com.lframework.starter.mybatis.annotations.OpLog;
 import com.lframework.starter.mybatis.dto.system.notice.QuerySysNoticeByUserDto;
 import com.lframework.starter.mybatis.dto.system.notice.SysNoticeDto;
-import com.lframework.starter.mybatis.dto.system.user.DefaultSysUserDto;
+import com.lframework.starter.mybatis.entity.DefaultSysUser;
 import com.lframework.starter.mybatis.entity.SysNotice;
 import com.lframework.starter.mybatis.entity.SysNoticeLog;
-import com.lframework.starter.mybatis.enums.OpLogType;
+import com.lframework.starter.mybatis.enums.DefaultOpLogType;
 import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.mybatis.mappers.system.SysNoticeMapper;
 import com.lframework.starter.mybatis.resp.PageResult;
-import com.lframework.starter.mybatis.service.system.ISysNoticeLogService;
-import com.lframework.starter.mybatis.service.system.ISysNoticeService;
-import com.lframework.starter.mybatis.service.system.ISysUserService;
+import com.lframework.starter.mybatis.service.system.SysNoticeLogService;
+import com.lframework.starter.mybatis.service.system.SysNoticeService;
+import com.lframework.starter.mybatis.service.system.SysUserService;
 import com.lframework.starter.mybatis.utils.OpLogUtil;
 import com.lframework.starter.mybatis.utils.PageHelperUtil;
 import com.lframework.starter.mybatis.utils.PageResultUtil;
@@ -31,8 +31,8 @@ import com.lframework.starter.mybatis.vo.system.notice.QuerySysNoticeVo;
 import com.lframework.starter.mybatis.vo.system.notice.UpdateSysNoticeVo;
 import com.lframework.starter.mybatis.vo.system.user.QuerySysUserVo;
 import com.lframework.starter.web.utils.IdUtil;
-import com.lframework.web.common.security.SecurityUtil;
-import com.lframework.web.common.threads.DefaultRunnable;
+import com.lframework.starter.web.common.security.SecurityUtil;
+import com.lframework.starter.web.common.threads.DefaultRunnable;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -45,13 +45,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SysNoticeServiceImpl extends BaseMpServiceImpl<SysNoticeMapper, SysNotice> implements
-    ISysNoticeService {
+    SysNoticeService {
 
   @Autowired
-  private ISysUserService sysUserService;
+  private SysUserService sysUserService;
 
   @Autowired
-  private ISysNoticeLogService sysNoticeLogService;
+  private SysNoticeLogService sysNoticeLogService;
 
   @Override
   public PageResult<SysNotice> query(Integer pageIndex, Integer pageSize, QuerySysNoticeVo vo) {
@@ -83,7 +83,7 @@ public class SysNoticeServiceImpl extends BaseMpServiceImpl<SysNoticeMapper, Sys
     return PageResultUtil.convert(new PageInfo<>(datas));
   }
 
-  @Cacheable(value = SysNotice.CACHE_NAME, key = "#id", unless = "#result == null")
+  @Cacheable(value = SysNotice.CACHE_NAME, key = "@cacheVariables.tenantId() + #id", unless = "#result == null")
   @Override
   public SysNoticeDto getContent(String id) {
     SysNotice record = getBaseMapper().selectById(id);
@@ -100,8 +100,8 @@ public class SysNoticeServiceImpl extends BaseMpServiceImpl<SysNoticeMapper, Sys
     return getBaseMapper().selectById(id);
   }
 
-  @OpLog(type = OpLogType.OTHER, name = "新增系统通知，ID：{}", params = {"#id"})
-  @Transactional
+  @OpLog(type = DefaultOpLogType.OTHER, name = "新增系统通知，ID：{}", params = {"#id"})
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public String create(CreateSysNoticeVo vo) {
 
@@ -114,8 +114,8 @@ public class SysNoticeServiceImpl extends BaseMpServiceImpl<SysNoticeMapper, Sys
     getBaseMapper().insert(data);
 
     if (vo.getPublished()) {
-      ThreadUtil.execAsync(new DefaultRunnable(SecurityUtil.getCurrentUser(), () -> {
-        ISysNoticeService thisService = getThis(getClass());
+      ThreadUtil.execAsync(new DefaultRunnable(() -> {
+        SysNoticeService thisService = getThis(getClass());
         thisService.publish(data.getId());
       }));
     }
@@ -126,8 +126,8 @@ public class SysNoticeServiceImpl extends BaseMpServiceImpl<SysNoticeMapper, Sys
     return data.getId();
   }
 
-  @OpLog(type = OpLogType.OTHER, name = "修改系统通知，ID：{}", params = {"#id"})
-  @Transactional
+  @OpLog(type = DefaultOpLogType.OTHER, name = "修改系统通知，ID：{}", params = {"#id"})
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void update(UpdateSysNoticeVo vo) {
 
@@ -141,13 +141,21 @@ public class SysNoticeServiceImpl extends BaseMpServiceImpl<SysNoticeMapper, Sys
         .set(SysNotice::getContent, vo.getContent())
         .set(SysNotice::getAvailable, vo.getAvailable())
         .set(SysNotice::getPublished, vo.getPublished())
+        .set(SysNotice::getPublishTime, null)
+        .set(SysNotice::getReadedNum, 0)
+        .set(SysNotice::getUnReadNum, 0)
         .eq(SysNotice::getId, vo.getId());
 
     getBaseMapper().update(updateWrapper);
 
+    // 无论发布还是不发布 都要删除
+    Wrapper<SysNoticeLog> deleteLogWrapper = Wrappers.lambdaQuery(SysNoticeLog.class)
+            .eq(SysNoticeLog::getNoticeId, data.getId());
+    sysNoticeLogService.remove(deleteLogWrapper);
+
     if (vo.getPublished()) {
-      ThreadUtil.execAsync(new DefaultRunnable(SecurityUtil.getCurrentUser(), () -> {
-        ISysNoticeService thisService = getThis(getClass());
+      ThreadUtil.execAsync(new DefaultRunnable(() -> {
+        SysNoticeService thisService = getThis(getClass());
         thisService.publish(data.getId());
       }));
     }
@@ -156,15 +164,15 @@ public class SysNoticeServiceImpl extends BaseMpServiceImpl<SysNoticeMapper, Sys
     OpLogUtil.setExtra(vo);
   }
 
-  @OpLog(type = OpLogType.OTHER, name = "发布系统通知，ID：{}", params = {"#id"})
-  @Transactional
+  @OpLog(type = DefaultOpLogType.OTHER, name = "发布系统通知，ID：{}", params = {"#id"})
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void publish(String id) {
 
     // 查询所有用户
     QuerySysUserVo querySysUserVo = new QuerySysUserVo();
     querySysUserVo.setAvailable(true);
-    List<DefaultSysUserDto> users = sysUserService.query(querySysUserVo);
+    List<DefaultSysUser> users = sysUserService.query(querySysUserVo);
 
     Wrapper<SysNotice> updateWrapper = Wrappers.lambdaUpdate(SysNotice.class)
         .eq(SysNotice::getId, id).set(SysNotice::getReadedNum, 0)
@@ -192,7 +200,7 @@ public class SysNoticeServiceImpl extends BaseMpServiceImpl<SysNoticeMapper, Sys
     }
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void setReaded(String id, String userId) {
     if (sysNoticeLogService.setReaded(id, userId)) {
@@ -200,7 +208,7 @@ public class SysNoticeServiceImpl extends BaseMpServiceImpl<SysNoticeMapper, Sys
     }
   }
 
-  @CacheEvict(value = SysNotice.CACHE_NAME, key = "#key")
+  @CacheEvict(value = SysNotice.CACHE_NAME, key = "@cacheVariables.tenantId() + #key")
   @Override
   public void cleanCacheByKey(Serializable key) {
 

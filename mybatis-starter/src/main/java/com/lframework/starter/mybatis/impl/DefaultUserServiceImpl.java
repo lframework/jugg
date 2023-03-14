@@ -1,9 +1,9 @@
 package com.lframework.starter.mybatis.impl;
 
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.mybatis.entity.DefaultSysUser;
 import com.lframework.starter.mybatis.mappers.DefaultUserMapper;
-import com.lframework.starter.mybatis.service.IUserService;
+import com.lframework.starter.mybatis.service.UserService;
 import com.lframework.starter.web.components.security.PasswordEncoderWrapper;
 import com.lframework.starter.web.dto.UserDto;
 import com.lframework.starter.web.dto.UserInfoDto;
@@ -20,40 +20,40 @@ import org.springframework.transaction.annotation.Transactional;
  * @author zmj
  */
 public class DefaultUserServiceImpl extends BaseMpServiceImpl<DefaultUserMapper, DefaultSysUser>
-    implements IUserService {
+    implements UserService {
 
   @Autowired
   private PasswordEncoderWrapper encoderWrapper;
 
-  @Cacheable(value = UserInfoDto.CACHE_NAME, key = "#userId", unless = "#result == null")
+  @Cacheable(value = UserInfoDto.CACHE_NAME, key = "@cacheVariables.tenantId() + #userId", unless = "#result == null")
   @Override
   public UserInfoDto getInfo(@NonNull String userId) {
 
     return this.doGetInfo(userId);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void updatePassword(@NonNull String userId, @NonNull String password) {
 
     this.doUpdatePassword(userId, this.encodePassword(password));
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void updateEmail(@NonNull String userId, @NonNull String email) {
 
     this.doUpdateEmail(userId, email);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void updateTelephone(@NonNull String userId, @NonNull String telephone) {
 
     this.doUpdateTelephone(userId, telephone);
   }
 
-  @Cacheable(value = UserDto.CACHE_NAME, key = "#id", unless = "#result == null")
+  @Cacheable(value = UserDto.CACHE_NAME, key = "@cacheVariables.tenantId() + #id", unless = "#result == null")
   @Override
   public UserDto findById(String id) {
 
@@ -64,21 +64,21 @@ public class DefaultUserServiceImpl extends BaseMpServiceImpl<DefaultUserMapper,
     return this.doGetById(id);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void lockById(String id) {
 
     getBaseMapper().lockById(id);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void unlockById(String id) {
 
     getBaseMapper().unlockById(id);
   }
 
-  @CacheEvict(value = {UserInfoDto.CACHE_NAME, UserDto.CACHE_NAME}, key = "#key")
+  @CacheEvict(value = {UserInfoDto.CACHE_NAME, UserDto.CACHE_NAME}, key = "@cacheVariables.tenantId() + #key")
   @Override
   public void cleanCacheByKey(Serializable key) {
 

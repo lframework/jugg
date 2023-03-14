@@ -1,7 +1,7 @@
 package com.lframework.starter.mybatis.utils;
 
 import com.github.pagehelper.PageHelper;
-import com.lframework.common.utils.ObjectUtil;
+import com.lframework.starter.common.utils.ObjectUtil;
 import com.lframework.starter.web.vo.PageVo;
 
 /**

@@ -1,6 +1,6 @@
 package com.lframework.starter.security.bo.system.dic.item;
 
-import com.lframework.common.constants.StringPool;
+import com.lframework.starter.common.constants.StringPool;
 import com.lframework.starter.mybatis.entity.SysDataDicItem;
 import com.lframework.starter.web.bo.BaseBo;
 import io.swagger.annotations.ApiModelProperty;

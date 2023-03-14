@@ -1,6 +1,6 @@
 package com.lframework.starter.mybatis.vo.system.user;
 
-import com.lframework.common.constants.PatternPool;
+import com.lframework.starter.common.constants.PatternPool;
 import com.lframework.starter.mybatis.enums.Gender;
 import com.lframework.starter.web.components.validation.IsCode;
 import com.lframework.starter.web.components.validation.IsEnum;

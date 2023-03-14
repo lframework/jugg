@@ -1,6 +1,5 @@
 package com.lframework.starter.mybatis.mappers.system;
 
-import com.lframework.starter.mybatis.dto.system.position.DefaultSysUserPositionDto;
 import com.lframework.starter.mybatis.entity.DefaultSysUserPosition;
 import com.lframework.starter.mybatis.mapper.BaseMapper;
 import java.util.List;
@@ -21,5 +20,5 @@ public interface DefaultSysUserPositionMapper extends BaseMapper<DefaultSysUserP
    * @param userId
    * @return
    */
-  List<DefaultSysUserPositionDto> getByUserId(String userId);
+  List<DefaultSysUserPosition> getByUserId(String userId);
 }

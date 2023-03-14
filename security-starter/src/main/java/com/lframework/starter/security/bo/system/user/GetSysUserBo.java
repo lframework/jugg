@@ -1,32 +1,34 @@
 package com.lframework.starter.security.bo.system.user;
 
-import com.lframework.common.constants.StringPool;
-import com.lframework.common.utils.CollectionUtil;
-import com.lframework.common.utils.StringUtil;
-import com.lframework.starter.mybatis.dto.system.dept.DefaultSysDeptDto;
-import com.lframework.starter.mybatis.dto.system.dept.DefaultSysUserDeptDto;
-import com.lframework.starter.mybatis.dto.system.position.DefaultSysPositionDto;
-import com.lframework.starter.mybatis.dto.system.position.DefaultSysUserPositionDto;
-import com.lframework.starter.mybatis.dto.system.role.DefaultSysRoleDto;
-import com.lframework.starter.mybatis.dto.system.role.DefaultSysUserRoleDto;
-import com.lframework.starter.mybatis.dto.system.user.DefaultSysUserDto;
-import com.lframework.starter.mybatis.service.system.ISysDeptService;
-import com.lframework.starter.mybatis.service.system.ISysPositionService;
-import com.lframework.starter.mybatis.service.system.ISysRoleService;
-import com.lframework.starter.mybatis.service.system.ISysUserDeptService;
-import com.lframework.starter.mybatis.service.system.ISysUserPositionService;
-import com.lframework.starter.mybatis.service.system.ISysUserRoleService;
+import com.lframework.starter.common.constants.StringPool;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.StringUtil;
+import com.lframework.starter.mybatis.entity.DefaultSysDept;
+import com.lframework.starter.mybatis.entity.DefaultSysPosition;
+import com.lframework.starter.mybatis.entity.DefaultSysRole;
+import com.lframework.starter.mybatis.entity.DefaultSysUser;
+import com.lframework.starter.mybatis.entity.DefaultSysUserDept;
+import com.lframework.starter.mybatis.entity.DefaultSysUserPosition;
+import com.lframework.starter.mybatis.entity.DefaultSysUserRole;
+import com.lframework.starter.mybatis.service.system.SysDeptService;
+import com.lframework.starter.mybatis.service.system.SysPositionService;
+import com.lframework.starter.mybatis.service.system.SysRoleService;
+import com.lframework.starter.mybatis.service.system.SysUserDeptService;
+import com.lframework.starter.mybatis.service.system.SysUserPositionService;
+import com.lframework.starter.mybatis.service.system.SysUserRoleService;
 import com.lframework.starter.web.bo.BaseBo;
-import com.lframework.starter.web.utils.ApplicationUtil;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
+import com.lframework.starter.web.dto.VoidDto;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class GetSysUserBo extends BaseBo<DefaultSysUserDto> {
+public class GetSysUserBo extends BaseBo<DefaultSysUser> {
 
   /**
    * ID
@@ -55,7 +57,7 @@ public class GetSysUserBo extends BaseBo<DefaultSysUserDto> {
   /**
    * 邮箱
    */
-  @ApiModelProperty("")
+  @ApiModelProperty("邮箱")
   private String email;
 
   /**
@@ -74,7 +76,7 @@ public class GetSysUserBo extends BaseBo<DefaultSysUserDto> {
    * 岗位
    */
   @ApiModelProperty("岗位")
-  private List<PositionBo> positions;
+  private List<String> positions;
 
   /**
    * 岗位名称
@@ -86,7 +88,7 @@ public class GetSysUserBo extends BaseBo<DefaultSysUserDto> {
    * 部门
    */
   @ApiModelProperty("部门")
-  private List<DeptBo> depts;
+  private List<String> depts;
 
   /**
    * 部门名称
@@ -99,7 +101,7 @@ public class GetSysUserBo extends BaseBo<DefaultSysUserDto> {
    * 角色
    */
   @ApiModelProperty("角色")
-  private List<RoleBo> roles;
+  private List<String> roles;
 
   /**
    * 角色名称
@@ -129,70 +131,58 @@ public class GetSysUserBo extends BaseBo<DefaultSysUserDto> {
 
   }
 
-  public GetSysUserBo(DefaultSysUserDto dto) {
+  public GetSysUserBo(DefaultSysUser dto) {
 
     super(dto);
   }
 
   @Override
-  protected void afterInit(DefaultSysUserDto dto) {
+  protected void afterInit(DefaultSysUser dto) {
 
-    ISysUserPositionService sysUserPositionService = ApplicationUtil.getBean(
-        ISysUserPositionService.class);
-    List<DefaultSysUserPositionDto> userPositions = sysUserPositionService.getByUserId(dto.getId());
+    SysUserPositionService sysUserPositionService = ApplicationUtil.getBean(
+        SysUserPositionService.class);
+    List<DefaultSysUserPosition> userPositions = sysUserPositionService.getByUserId(dto.getId());
     if (!CollectionUtil.isEmpty(userPositions)) {
-      ISysPositionService sysPositionService = ApplicationUtil.getBean(ISysPositionService.class);
-      this.positions = userPositions.stream().map(t -> {
-        DefaultSysPositionDto position = sysPositionService.findById(t.getPositionId());
-        PositionBo positionBo = new PositionBo();
-        positionBo.setId(position.getId());
-        positionBo.setName(position.getName());
-
-        return positionBo;
-      }).collect(Collectors.toList());
+      SysPositionService sysPositionService = ApplicationUtil.getBean(SysPositionService.class);
+      this.positions = userPositions.stream().map(DefaultSysUserPosition::getPositionId)
+          .collect(Collectors.toList());
 
       this.positionName = StringUtil.join(StringPool.STR_SPLIT_CN,
-          this.positions.stream().map(PositionBo::getName).collect(Collectors.toList()));
+          userPositions.stream().map(t -> sysPositionService.findById(t.getPositionId()))
+              .filter(Objects::nonNull).map(DefaultSysPosition::getName)
+              .collect(Collectors.toList()));
     }
 
-    ISysUserDeptService sysUserDeptService = ApplicationUtil.getBean(ISysUserDeptService.class);
-    List<DefaultSysUserDeptDto> userDepts = sysUserDeptService.getByUserId(dto.getId());
+    SysUserDeptService sysUserDeptService = ApplicationUtil.getBean(SysUserDeptService.class);
+    List<DefaultSysUserDept> userDepts = sysUserDeptService.getByUserId(dto.getId());
     if (!CollectionUtil.isEmpty(userDepts)) {
-      ISysDeptService sysDeptService = ApplicationUtil.getBean(ISysDeptService.class);
-      this.depts = userDepts.stream().map(t -> {
-        DefaultSysDeptDto dept = sysDeptService.findById(t.getDeptId());
-        DeptBo deptBo = new DeptBo();
-        deptBo.setId(dept.getId());
-        deptBo.setName(dept.getName());
-
-        return deptBo;
-      }).collect(Collectors.toList());
+      SysDeptService sysDeptService = ApplicationUtil.getBean(SysDeptService.class);
+      this.depts = userDepts.stream().map(DefaultSysUserDept::getDeptId)
+          .collect(Collectors.toList());
 
       this.deptName = StringUtil.join(StringPool.STR_SPLIT_CN,
-          this.depts.stream().map(DeptBo::getName).collect(Collectors.toList()));
+          userDepts.stream().map(t -> sysDeptService.findById(t.getDeptId()))
+              .filter(Objects::nonNull).map(DefaultSysDept::getName)
+              .collect(Collectors.toList()));
     }
 
-    ISysUserRoleService sysUserRoleService = ApplicationUtil.getBean(ISysUserRoleService.class);
-    List<DefaultSysUserRoleDto> userRoles = sysUserRoleService.getByUserId(dto.getId());
+    SysUserRoleService sysUserRoleService = ApplicationUtil.getBean(SysUserRoleService.class);
+    List<DefaultSysUserRole> userRoles = sysUserRoleService.getByUserId(dto.getId());
     if (!CollectionUtil.isEmpty(userRoles)) {
-      ISysRoleService sysRoleService = ApplicationUtil.getBean(ISysRoleService.class);
-      this.roles = userRoles.stream().map(t -> {
-        DefaultSysRoleDto role = sysRoleService.findById(t.getRoleId());
-        RoleBo roleBo = new RoleBo();
-        roleBo.setId(role.getId());
-        roleBo.setName(role.getName());
-
-        return roleBo;
-      }).collect(Collectors.toList());
+      SysRoleService sysRoleService = ApplicationUtil.getBean(SysRoleService.class);
+      this.roles = userRoles.stream().map(DefaultSysUserRole::getRoleId)
+          .collect(Collectors.toList());
 
       this.roleName = StringUtil.join(StringPool.STR_SPLIT_CN,
-          this.roles.stream().map(RoleBo::getName).collect(Collectors.toList()));
+          userRoles.stream().map(t -> sysRoleService.findById(t.getRoleId()))
+              .filter(Objects::nonNull).map(DefaultSysRole::getName)
+              .collect(Collectors.toList()));
     }
   }
 
   @Data
   @EqualsAndHashCode(callSuper = true)
-  public static class PositionBo extends BaseBo {
+  public static class PositionBo extends BaseBo<VoidDto> {
 
     /**
      * 岗位ID
@@ -209,7 +199,7 @@ public class GetSysUserBo extends BaseBo<DefaultSysUserDto> {
 
   @Data
   @EqualsAndHashCode(callSuper = true)
-  public static class DeptBo extends BaseBo {
+  public static class DeptBo extends BaseBo<VoidDto> {
 
     /**
      * 部门ID
@@ -226,7 +216,7 @@ public class GetSysUserBo extends BaseBo<DefaultSysUserDto> {
 
   @Data
   @EqualsAndHashCode(callSuper = true)
-  public static class RoleBo extends BaseBo {
+  public static class RoleBo extends BaseBo<VoidDto> {
 
     /**
      * 角色ID

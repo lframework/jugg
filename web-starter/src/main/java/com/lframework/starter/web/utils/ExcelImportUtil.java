@@ -1,7 +1,7 @@
 package com.lframework.starter.web.utils;
 
 import cn.dev33.satoken.stp.StpUtil;
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.web.bo.ExcelImportBo;
 
 public class ExcelImportUtil {
@@ -95,6 +95,19 @@ public class ExcelImportUtil {
     ExcelImportBo task = (ExcelImportBo) StpUtil.getSession()
         .get(StringUtil.format(UPLOAD_TASK_KEY, id));
     task.setFinished(Boolean.TRUE);
+    StpUtil.getSession().set(key, task);
+  }
+
+  /**
+   * 设置数据
+   *
+   * @param id
+   */
+  public static void setData(String id, Object data) {
+    String key = StringUtil.format(UPLOAD_TASK_KEY, id);
+    ExcelImportBo task = (ExcelImportBo) StpUtil.getSession()
+        .get(StringUtil.format(UPLOAD_TASK_KEY, id));
+    task.setData(data);
     StpUtil.getSession().set(key, task);
   }
 }

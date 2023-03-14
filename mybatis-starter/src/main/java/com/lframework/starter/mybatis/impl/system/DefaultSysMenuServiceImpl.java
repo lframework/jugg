@@ -2,27 +2,26 @@ package com.lframework.starter.mybatis.impl.system;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.lframework.common.constants.StringPool;
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.CollectionUtil;
-import com.lframework.common.utils.ObjectUtil;
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.constants.StringPool;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.ObjectUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.mybatis.annotations.OpLog;
-import com.lframework.starter.mybatis.dto.system.menu.DefaultSysMenuDto;
 import com.lframework.starter.mybatis.entity.DefaultSysMenu;
-import com.lframework.starter.mybatis.enums.OpLogType;
+import com.lframework.starter.mybatis.enums.DefaultOpLogType;
 import com.lframework.starter.mybatis.enums.system.SysMenuComponentType;
 import com.lframework.starter.mybatis.enums.system.SysMenuDisplay;
 import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.mybatis.mappers.system.DefaultSysMenuMapper;
-import com.lframework.starter.mybatis.service.system.ISysMenuService;
+import com.lframework.starter.mybatis.service.system.SysMenuService;
 import com.lframework.starter.mybatis.utils.OpLogUtil;
 import com.lframework.starter.mybatis.vo.system.menu.CreateSysMenuVo;
 import com.lframework.starter.mybatis.vo.system.menu.SysMenuSelectorVo;
 import com.lframework.starter.mybatis.vo.system.menu.UpdateSysMenuVo;
 import com.lframework.starter.web.utils.EnumUtil;
 import com.lframework.starter.web.utils.IdUtil;
-import com.lframework.web.common.security.SecurityConstants;
+import com.lframework.starter.web.common.security.SecurityConstants;
 import java.io.Serializable;
 import java.util.List;
 import lombok.NonNull;
@@ -40,29 +39,29 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public class DefaultSysMenuServiceImpl extends
     BaseMpServiceImpl<DefaultSysMenuMapper, DefaultSysMenu>
-    implements ISysMenuService {
+    implements SysMenuService {
 
   @Override
-  public List<DefaultSysMenuDto> queryList() {
+  public List<DefaultSysMenu> queryList() {
 
     return this.doQuery();
   }
 
   @Override
-  public List<DefaultSysMenuDto> getByRoleId(String roleId) {
+  public List<DefaultSysMenu> getByRoleId(String roleId) {
 
     return this.doGetByRoleId(roleId);
   }
 
-  @Cacheable(value = DefaultSysMenuDto.CACHE_NAME, key = "#id", unless = "#result == null")
+  @Cacheable(value = DefaultSysMenu.CACHE_NAME, key = "@cacheVariables.tenantId() + #id", unless = "#result == null")
   @Override
-  public DefaultSysMenuDto findById(@NonNull String id) {
+  public DefaultSysMenu findById(@NonNull String id) {
 
     return this.doGetById(id);
   }
 
-  @OpLog(type = OpLogType.OTHER, name = "新增菜单，ID：{}, 编号：{}", params = {"#id", "#code"})
-  @Transactional
+  @OpLog(type = DefaultOpLogType.OTHER, name = "新增菜单，ID：{}, 编号：{}", params = {"#id", "#code"})
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public String create(@NonNull CreateSysMenuVo vo) {
 
@@ -75,12 +74,12 @@ public class DefaultSysMenuServiceImpl extends
     return data.getId();
   }
 
-  @OpLog(type = OpLogType.OTHER, name = "修改菜单，ID：{}, 编号：{}", params = {"#id", "#code"})
-  @Transactional
+  @OpLog(type = DefaultOpLogType.OTHER, name = "修改菜单，ID：{}, 编号：{}", params = {"#id", "#code"})
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void update(@NonNull UpdateSysMenuVo vo) {
 
-    DefaultSysMenuDto oriMenu = this.findById(vo.getId());
+    DefaultSysMenu oriMenu = this.findById(vo.getId());
 
     if (!ObjectUtil.equals(vo.getDisplay(), oriMenu.getDisplay().getCode())) {
       throw new DefaultClientException("菜单【" + oriMenu.getTitle() + "】" + "不允许更改类型！");
@@ -93,14 +92,14 @@ public class DefaultSysMenuServiceImpl extends
     OpLogUtil.setExtra(vo);
   }
 
-  @OpLog(type = OpLogType.OTHER, name = "删除菜单，ID：{}", params = "#id")
-  @Transactional
+  @OpLog(type = DefaultOpLogType.OTHER, name = "删除菜单，ID：{}", params = "#id")
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void deleteById(@NonNull String id) {
 
-    DefaultSysMenuDto oriMenu = this.findById(id);
+    DefaultSysMenu oriMenu = this.findById(id);
 
-    List<DefaultSysMenuDto> children = this.doGetChildrenById(id);
+    List<DefaultSysMenu> children = this.doGetChildrenById(id);
     if (CollectionUtil.isNotEmpty(children)) {
       //如果子节点不为空
       throw new DefaultClientException("菜单【" + oriMenu.getTitle() + "】存在子菜单，无法删除！");
@@ -110,13 +109,13 @@ public class DefaultSysMenuServiceImpl extends
   }
 
   @Override
-  public List<DefaultSysMenuDto> selector(SysMenuSelectorVo vo) {
+  public List<DefaultSysMenu> selector(SysMenuSelectorVo vo) {
 
     return this.doSelector(vo);
   }
 
-  @OpLog(type = OpLogType.OTHER, name = "启用菜单，ID：{}", params = "#ids", loopFormat = true)
-  @Transactional
+  @OpLog(type = DefaultOpLogType.OTHER, name = "启用菜单，ID：{}", params = "#ids", loopFormat = true)
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void batchEnable(@NonNull List<String> ids, @NonNull String userId) {
 
@@ -127,8 +126,8 @@ public class DefaultSysMenuServiceImpl extends
     this.doBatchEnable(ids, userId);
   }
 
-  @OpLog(type = OpLogType.OTHER, name = "停用菜单，ID：{}", params = "#ids", loopFormat = true)
-  @Transactional
+  @OpLog(type = DefaultOpLogType.OTHER, name = "停用菜单，ID：{}", params = "#ids", loopFormat = true)
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void batchUnable(@NonNull List<String> ids, @NonNull String userId) {
 
@@ -139,17 +138,17 @@ public class DefaultSysMenuServiceImpl extends
     this.doBatchUnable(ids, userId);
   }
 
-  protected List<DefaultSysMenuDto> doQuery() {
+  protected List<DefaultSysMenu> doQuery() {
 
     return getBaseMapper().query();
   }
 
-  protected List<DefaultSysMenuDto> doGetByRoleId(String roleId) {
+  protected List<DefaultSysMenu> doGetByRoleId(String roleId) {
 
     return getBaseMapper().getByRoleId(roleId);
   }
 
-  protected DefaultSysMenuDto doGetById(@NonNull String id) {
+  protected DefaultSysMenu doGetById(@NonNull String id) {
 
     return getBaseMapper().findById(id);
   }
@@ -176,9 +175,9 @@ public class DefaultSysMenuServiceImpl extends
 
     data.setAvailable(vo.getAvailable());
 
-    ISysMenuService thisService = getThis(this.getClass());
+    SysMenuService thisService = getThis(this.getClass());
 
-    DefaultSysMenuDto record = thisService.findById(vo.getId());
+    DefaultSysMenu record = thisService.findById(vo.getId());
 
     data.setIsSpecial(record.getIsSpecial());
 
@@ -194,7 +193,7 @@ public class DefaultSysMenuServiceImpl extends
     getBaseMapper().deleteById(id);
   }
 
-  protected List<DefaultSysMenuDto> doSelector(SysMenuSelectorVo vo) {
+  protected List<DefaultSysMenu> doSelector(SysMenuSelectorVo vo) {
 
     return getBaseMapper().selector(vo);
   }
@@ -217,7 +216,7 @@ public class DefaultSysMenuServiceImpl extends
 
     SysMenuDisplay sysMenuDisplay = EnumUtil.getByCode(SysMenuDisplay.class, vo.getDisplay());
 
-    DefaultSysMenuDto parentMenu = null;
+    DefaultSysMenu parentMenu = null;
     if (!StringUtil.isBlank(vo.getParentId())) {
       parentMenu = this.findById(vo.getParentId());
       if (parentMenu == null) {
@@ -289,12 +288,12 @@ public class DefaultSysMenuServiceImpl extends
     }
   }
 
-  protected List<DefaultSysMenuDto> doGetChildrenById(String id) {
+  protected List<DefaultSysMenu> doGetChildrenById(String id) {
 
     return getBaseMapper().getChildrenById(id);
   }
 
-  @CacheEvict(value = DefaultSysMenuDto.CACHE_NAME, key = "#key")
+  @CacheEvict(value = DefaultSysMenu.CACHE_NAME, key = "@cacheVariables.tenantId() + #key")
   @Override
   public void cleanCacheByKey(Serializable key) {
 

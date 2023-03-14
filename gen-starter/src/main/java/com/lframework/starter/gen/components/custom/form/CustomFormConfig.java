@@ -44,4 +44,9 @@ public class CustomFormConfig implements Serializable {
    * 是否需要查询
    */
   private Boolean requireQuery;
+
+  /**
+   * 操作数据Bean
+   */
+  private String handleBean;
 }

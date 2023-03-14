@@ -4,10 +4,10 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.lframework.common.constants.StringPool;
-import com.lframework.common.exceptions.impl.DefaultSysException;
-import com.lframework.common.utils.CollectionUtil;
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.constants.StringPool;
+import com.lframework.starter.common.exceptions.impl.DefaultSysException;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.gen.builders.DataEntityBuilder;
 import com.lframework.starter.gen.components.DataEntity;
 import com.lframework.starter.gen.components.DataEntityColumn;
@@ -29,13 +29,13 @@ import com.lframework.starter.gen.generate.templates.SqlTemplate;
 import com.lframework.starter.gen.generate.templates.UpdateTemplate;
 import com.lframework.starter.mybatis.constants.MyBatisStringPool;
 import com.lframework.starter.mybatis.entity.SysDataDic;
-import com.lframework.starter.mybatis.service.system.ISysDataDicItemService;
-import com.lframework.starter.mybatis.service.system.ISysDataDicService;
+import com.lframework.starter.mybatis.service.system.SysDataDicItemService;
+import com.lframework.starter.mybatis.service.system.SysDataDicService;
 import com.lframework.starter.web.components.validation.IsEnum;
 import com.lframework.starter.web.components.validation.IsNumberPrecision;
 import com.lframework.starter.web.components.validation.Pattern;
 import com.lframework.starter.web.components.validation.TypeMismatch;
-import com.lframework.starter.web.utils.ApplicationUtil;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 import com.lframework.starter.web.utils.EnumUtil;
 import com.lframework.starter.web.utils.IdUtil;
 import com.lframework.starter.web.utils.JsonUtil;
@@ -798,7 +798,7 @@ public class Generator {
         importPackages.add(Pattern.class.getName());
       }
       if (column.getViewType() == GenViewType.DATA_DIC) {
-        ISysDataDicService sysDataDicService = ApplicationUtil.getBean(ISysDataDicService.class);
+        SysDataDicService sysDataDicService = ApplicationUtil.getBean(SysDataDicService.class);
         SysDataDic dic = sysDataDicService.findById(column.getDataDicId());
         columnObj.setDataDicCode(dic.getCode());
       } else if (column.getViewType() == GenViewType.CUSTOM_SELECTOR) {
@@ -922,7 +922,7 @@ public class Generator {
       columnObj.setIsNumberType(GenDataType.isNumberType(column.getDataType()));
       columnObj.setIsDecimalType(GenDataType.isDecimalType(column.getDataType()));
       if (column.getViewType() == GenViewType.DATA_DIC) {
-        ISysDataDicService sysDataDicService = ApplicationUtil.getBean(ISysDataDicService.class);
+        SysDataDicService sysDataDicService = ApplicationUtil.getBean(SysDataDicService.class);
         SysDataDic dic = sysDataDicService.findById(column.getDataDicId());
         columnObj.setDataDicCode(dic.getCode());
       } else if (column.getViewType() == GenViewType.CUSTOM_SELECTOR) {
@@ -1077,7 +1077,7 @@ public class Generator {
       }
 
       if (column.getViewType() == GenViewType.DATA_DIC) {
-        ISysDataDicService sysDataDicService = ApplicationUtil.getBean(ISysDataDicService.class);
+        SysDataDicService sysDataDicService = ApplicationUtil.getBean(SysDataDicService.class);
         SysDataDic dic = sysDataDicService.findById(column.getDataDicId());
         columnObj.setDataDicCode(dic.getCode());
       } else if (column.getViewType() == GenViewType.CUSTOM_SELECTOR) {
@@ -1178,10 +1178,10 @@ public class Generator {
       columnObj.setSortable(column.getQueryConfig().getSortable());
       columnObj.setDescription(column.getName());
       if (column.getViewType() == GenViewType.DATA_DIC) {
-        ISysDataDicService sysDataDicService = ApplicationUtil.getBean(ISysDataDicService.class);
+        SysDataDicService sysDataDicService = ApplicationUtil.getBean(SysDataDicService.class);
         SysDataDic dic = sysDataDicService.findById(column.getDataDicId());
         columnObj.setDataDicCode(dic.getCode());
-        importPackages.add(ISysDataDicItemService.class.getName());
+        importPackages.add(SysDataDicItemService.class.getName());
         importPackages.add(StringUtil.class.getName());
         importPackages.add(ApplicationUtil.class.getName());
         importPackages.add(StringPool.class.getName());
@@ -1277,10 +1277,10 @@ public class Generator {
       columnObj.setSpan(column.getDetailConfig().getSpan());
 
       if (column.getViewType() == GenViewType.DATA_DIC) {
-        ISysDataDicService sysDataDicService = ApplicationUtil.getBean(ISysDataDicService.class);
+        SysDataDicService sysDataDicService = ApplicationUtil.getBean(SysDataDicService.class);
         SysDataDic dic = sysDataDicService.findById(column.getDataDicId());
         columnObj.setDataDicCode(dic.getCode());
-        importPackages.add(ISysDataDicItemService.class.getName());
+        importPackages.add(SysDataDicItemService.class.getName());
         importPackages.add(StringUtil.class.getName());
         importPackages.add(ApplicationUtil.class.getName());
         importPackages.add(StringPool.class.getName());

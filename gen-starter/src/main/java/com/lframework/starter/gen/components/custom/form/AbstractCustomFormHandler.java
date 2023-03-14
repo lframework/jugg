@@ -1,7 +1,7 @@
 package com.lframework.starter.gen.components.custom.form;
 
-import com.lframework.common.utils.ArrayUtil;
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.utils.ArrayUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.web.utils.JsonUtil;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

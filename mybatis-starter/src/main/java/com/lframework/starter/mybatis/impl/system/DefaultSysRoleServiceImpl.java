@@ -4,20 +4,19 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageInfo;
-import com.lframework.common.constants.StringPool;
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.Assert;
-import com.lframework.common.utils.CollectionUtil;
-import com.lframework.common.utils.ObjectUtil;
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.constants.StringPool;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.Assert;
+import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.ObjectUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.mybatis.annotations.OpLog;
-import com.lframework.starter.mybatis.dto.system.role.DefaultSysRoleDto;
 import com.lframework.starter.mybatis.entity.DefaultSysRole;
-import com.lframework.starter.mybatis.enums.OpLogType;
+import com.lframework.starter.mybatis.enums.DefaultOpLogType;
 import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.mybatis.mappers.system.DefaultSysRoleMapper;
 import com.lframework.starter.mybatis.resp.PageResult;
-import com.lframework.starter.mybatis.service.system.ISysRoleService;
+import com.lframework.starter.mybatis.service.system.SysRoleService;
 import com.lframework.starter.mybatis.utils.OpLogUtil;
 import com.lframework.starter.mybatis.utils.PageHelperUtil;
 import com.lframework.starter.mybatis.utils.PageResultUtil;
@@ -25,8 +24,8 @@ import com.lframework.starter.mybatis.vo.system.role.CreateSysRoleVo;
 import com.lframework.starter.mybatis.vo.system.role.QuerySysRoleVo;
 import com.lframework.starter.mybatis.vo.system.role.SysRoleSelectorVo;
 import com.lframework.starter.mybatis.vo.system.role.UpdateSysRoleVo;
+import com.lframework.starter.web.common.security.SecurityConstants;
 import com.lframework.starter.web.utils.IdUtil;
-import com.lframework.web.common.security.SecurityConstants;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
@@ -36,49 +35,49 @@ import org.springframework.transaction.annotation.Transactional;
 
 public class DefaultSysRoleServiceImpl extends
     BaseMpServiceImpl<DefaultSysRoleMapper, DefaultSysRole>
-    implements ISysRoleService {
+    implements SysRoleService {
 
   @Override
-  public PageResult<DefaultSysRoleDto> query(Integer pageIndex, Integer pageSize,
+  public PageResult<DefaultSysRole> query(Integer pageIndex, Integer pageSize,
       QuerySysRoleVo vo) {
 
     Assert.greaterThanZero(pageIndex);
     Assert.greaterThanZero(pageSize);
 
     PageHelperUtil.startPage(pageIndex, pageSize);
-    List<DefaultSysRoleDto> datas = this.query(vo);
+    List<DefaultSysRole> datas = this.query(vo);
 
     return PageResultUtil.convert(new PageInfo<>(datas));
   }
 
   @Override
-  public List<DefaultSysRoleDto> query(QuerySysRoleVo vo) {
+  public List<DefaultSysRole> query(QuerySysRoleVo vo) {
 
     return this.doQuery(vo);
   }
 
-  @Cacheable(value = DefaultSysRoleDto.CACHE_NAME, key = "#id", unless = "#result == null")
+  @Cacheable(value = DefaultSysRole.CACHE_NAME, key = "@cacheVariables.tenantId() + #id", unless = "#result == null")
   @Override
-  public DefaultSysRoleDto findById(String id) {
+  public DefaultSysRole findById(String id) {
 
     return this.doGetById(id);
   }
 
   @Override
-  public PageResult<DefaultSysRoleDto> selector(Integer pageIndex, Integer pageSize,
+  public PageResult<DefaultSysRole> selector(Integer pageIndex, Integer pageSize,
       SysRoleSelectorVo vo) {
 
     Assert.greaterThanZero(pageIndex);
     Assert.greaterThanZero(pageSize);
 
     PageHelperUtil.startPage(pageIndex, pageSize);
-    List<DefaultSysRoleDto> datas = this.doSelector(vo);
+    List<DefaultSysRole> datas = this.doSelector(vo);
 
     return PageResultUtil.convert(new PageInfo<>(datas));
   }
 
-  @OpLog(type = OpLogType.OTHER, name = "停用角色，ID：{}", params = "#ids", loopFormat = true)
-  @Transactional
+  @OpLog(type = DefaultOpLogType.OTHER, name = "停用角色，ID：{}", params = "#ids", loopFormat = true)
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void batchUnable(Collection<String> ids) {
 
@@ -87,7 +86,7 @@ public class DefaultSysRoleServiceImpl extends
     }
 
     for (String id : ids) {
-      DefaultSysRoleDto role = this.findById(id);
+      DefaultSysRole role = this.findById(id);
       if (SecurityConstants.PERMISSION_ADMIN_NAME.equals(role.getPermission())) {
         throw new DefaultClientException(
             "角色【" + role.getName() + "】的权限为【" + SecurityConstants.PERMISSION_ADMIN_NAME
@@ -98,8 +97,8 @@ public class DefaultSysRoleServiceImpl extends
     this.doBatchUnable(ids);
   }
 
-  @OpLog(type = OpLogType.OTHER, name = "启用角色，ID：{}", params = "#ids", loopFormat = true)
-  @Transactional
+  @OpLog(type = DefaultOpLogType.OTHER, name = "启用角色，ID：{}", params = "#ids", loopFormat = true)
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void batchEnable(Collection<String> ids) {
 
@@ -108,7 +107,7 @@ public class DefaultSysRoleServiceImpl extends
     }
 
     for (String id : ids) {
-      DefaultSysRoleDto role = this.findById(id);
+      DefaultSysRole role = this.findById(id);
       if (SecurityConstants.PERMISSION_ADMIN_NAME.equals(role.getPermission())) {
         throw new DefaultClientException(
             "角色【" + role.getName() + "】的权限为【" + SecurityConstants.PERMISSION_ADMIN_NAME
@@ -119,8 +118,8 @@ public class DefaultSysRoleServiceImpl extends
     this.doBatchEnable(ids);
   }
 
-  @OpLog(type = OpLogType.OTHER, name = "新增角色，ID：{}, 编号：{}", params = {"#id", "#code"})
-  @Transactional
+  @OpLog(type = DefaultOpLogType.OTHER, name = "新增角色，ID：{}, 编号：{}", params = {"#id", "#code"})
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public String create(CreateSysRoleVo vo) {
 
@@ -133,12 +132,12 @@ public class DefaultSysRoleServiceImpl extends
     return data.getId();
   }
 
-  @OpLog(type = OpLogType.OTHER, name = "修改角色，ID：{}, 编号：{}", params = {"#id", "#code"})
-  @Transactional
+  @OpLog(type = DefaultOpLogType.OTHER, name = "修改角色，ID：{}, 编号：{}", params = {"#id", "#code"})
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void update(UpdateSysRoleVo vo) {
 
-    DefaultSysRoleDto data = this.findById(vo.getId());
+    DefaultSysRole data = this.findById(vo.getId());
     if (ObjectUtil.isNull(data)) {
       throw new DefaultClientException("角色不存在！");
     }
@@ -163,22 +162,22 @@ public class DefaultSysRoleServiceImpl extends
   }
 
   @Override
-  public List<DefaultSysRoleDto> getByUserId(String userId) {
+  public List<DefaultSysRole> getByUserId(String userId) {
 
     return this.doGetByUserId(userId);
   }
 
-  protected List<DefaultSysRoleDto> doQuery(QuerySysRoleVo vo) {
+  protected List<DefaultSysRole> doQuery(QuerySysRoleVo vo) {
 
     return getBaseMapper().query(vo);
   }
 
-  protected DefaultSysRoleDto doGetById(String id) {
+  protected DefaultSysRole doGetById(String id) {
 
     return getBaseMapper().findById(id);
   }
 
-  protected List<DefaultSysRoleDto> doSelector(SysRoleSelectorVo vo) {
+  protected List<DefaultSysRole> doSelector(SysRoleSelectorVo vo) {
 
     return getBaseMapper().selector(vo);
   }
@@ -269,12 +268,12 @@ public class DefaultSysRoleServiceImpl extends
     getBaseMapper().update(updateWrapper);
   }
 
-  protected List<DefaultSysRoleDto> doGetByUserId(String userId) {
+  protected List<DefaultSysRole> doGetByUserId(String userId) {
 
     return getBaseMapper().getByUserId(userId);
   }
 
-  @CacheEvict(value = DefaultSysRoleDto.CACHE_NAME, key = "#key")
+  @CacheEvict(value = DefaultSysRole.CACHE_NAME, key = "@cacheVariables.tenantId() + #key")
   @Override
   public void cleanCacheByKey(Serializable key) {
 

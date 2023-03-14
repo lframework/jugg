@@ -1,13 +1,11 @@
 package com.lframework.starter.web.config;
 
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * 邮箱配置
  */
 @Data
-@ConfigurationProperties(prefix = "mail")
 public class MailProperties {
 
   /**

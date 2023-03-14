@@ -2,7 +2,7 @@ package com.lframework.starter.gen.listeners;
 
 import com.lframework.starter.gen.events.DataEntityDeleteEvent;
 import com.lframework.starter.gen.events.DataEntityDetailDeleteEvent;
-import com.lframework.starter.gen.service.IGenDetailColumnConfigService;
+import com.lframework.starter.gen.service.GenDetailColumnConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
@@ -13,7 +13,7 @@ public class DetailColumnConfigListener {
   public static class DeleteEntityListener implements ApplicationListener<DataEntityDeleteEvent> {
 
     @Autowired
-    private IGenDetailColumnConfigService genDetailColumnConfigService;
+    private GenDetailColumnConfigService genDetailColumnConfigService;
 
     @Override
     public void onApplicationEvent(DataEntityDeleteEvent event) {
@@ -29,7 +29,7 @@ public class DetailColumnConfigListener {
       ApplicationListener<DataEntityDetailDeleteEvent> {
 
     @Autowired
-    private IGenDetailColumnConfigService genDetailColumnConfigService;
+    private GenDetailColumnConfigService genDetailColumnConfigService;
 
     @Override
     public void onApplicationEvent(DataEntityDetailDeleteEvent event) {

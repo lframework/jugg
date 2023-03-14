@@ -3,16 +3,16 @@ package com.lframework.starter.mybatis.impl.system;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageInfo;
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.Assert;
-import com.lframework.common.utils.CollectionUtil;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.Assert;
+import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.mybatis.entity.SysDataDic;
 import com.lframework.starter.mybatis.entity.SysDataDicItem;
 import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.mybatis.mappers.system.SysDataDicItemMapper;
 import com.lframework.starter.mybatis.resp.PageResult;
-import com.lframework.starter.mybatis.service.system.ISysDataDicItemService;
-import com.lframework.starter.mybatis.service.system.ISysDataDicService;
+import com.lframework.starter.mybatis.service.system.SysDataDicItemService;
+import com.lframework.starter.mybatis.service.system.SysDataDicService;
 import com.lframework.starter.mybatis.utils.PageHelperUtil;
 import com.lframework.starter.mybatis.utils.PageResultUtil;
 import com.lframework.starter.mybatis.vo.system.dic.item.CreateSysDataDicItemVo;
@@ -29,10 +29,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SysDataDicItemServiceImpl extends
-    BaseMpServiceImpl<SysDataDicItemMapper, SysDataDicItem> implements ISysDataDicItemService {
+    BaseMpServiceImpl<SysDataDicItemMapper, SysDataDicItem> implements SysDataDicItemService {
 
   @Autowired
-  private ISysDataDicService sysDataDicService;
+  private SysDataDicService sysDataDicService;
 
   @Override
   public PageResult<SysDataDicItem> query(Integer pageIndex, Integer pageSize,
@@ -51,7 +51,7 @@ public class SysDataDicItemServiceImpl extends
     return getBaseMapper().query(vo);
   }
 
-  @Cacheable(value = SysDataDicItem.CACHE_NAME, key = "#id", unless = "#result == null")
+  @Cacheable(value = SysDataDicItem.CACHE_NAME, key = "@cacheVariables.tenantId() + #id", unless = "#result == null")
   @Override
   public SysDataDicItem findById(String id) {
     return getBaseMapper().selectById(id);
@@ -59,7 +59,7 @@ public class SysDataDicItemServiceImpl extends
 
   @Override
   public SysDataDicItem findByCode(String dicCode, String code) {
-    ISysDataDicItemService thisService = getThis(getClass());
+    SysDataDicItemService thisService = getThis(getClass());
     List<SysDataDicItem> items = thisService.findByDicCode(dicCode);
     if (CollectionUtil.isEmpty(items)) {
       return null;
@@ -68,7 +68,7 @@ public class SysDataDicItemServiceImpl extends
     return items.stream().filter(t -> t.getCode().equals(code)).findFirst().orElse(null);
   }
 
-  @Cacheable(value = SysDataDicItem.CACHE_NAME, key = "#dicCode")
+  @Cacheable(value = SysDataDicItem.CACHE_NAME, key = "@cacheVariables.tenantId() + #dicCode")
   @Override
   public List<SysDataDicItem> findByDicCode(String dicCode) {
     Wrapper<SysDataDic> queryDicWrapper = Wrappers.lambdaQuery(SysDataDic.class)
@@ -85,7 +85,7 @@ public class SysDataDicItemServiceImpl extends
     return datas;
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public String create(CreateSysDataDicItemVo vo) {
 
@@ -115,7 +115,7 @@ public class SysDataDicItemServiceImpl extends
     return record.getId();
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void update(UpdateSysDataDicItemVo vo) {
 
@@ -143,13 +143,13 @@ public class SysDataDicItemServiceImpl extends
     this.update(updateWrapper);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void deleteById(String id) {
     this.removeById(id);
   }
 
-  @CacheEvict(value = SysDataDicItem.CACHE_NAME, key = "#key")
+  @CacheEvict(value = SysDataDicItem.CACHE_NAME, key = "@cacheVariables.tenantId() + #key")
   @Override
   public void cleanCacheByKey(Serializable key) {
   }

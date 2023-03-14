@@ -1,6 +1,6 @@
 package com.lframework.starter.gen.converters;
 
-import com.lframework.common.utils.StringUtil;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.gen.enums.GenConvertType;
 
 /**

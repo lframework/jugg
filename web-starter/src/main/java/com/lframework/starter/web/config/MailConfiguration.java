@@ -2,22 +2,27 @@ package com.lframework.starter.web.config;
 
 import cn.hutool.extra.mail.MailAccount;
 import com.lframework.starter.web.impl.MailServiceImpl;
-import com.lframework.starter.web.service.IMailService;
+import com.lframework.starter.web.service.MailService;
+import com.lframework.starter.web.service.SysParameterService;
+import com.lframework.starter.web.utils.JsonUtil;
 import com.sun.mail.util.MailSSLSocketFactory;
 import java.security.GeneralSecurityException;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 
 @Configuration
-@EnableConfigurationProperties(MailProperties.class)
 public class MailConfiguration {
 
   @Bean
-  @ConditionalOnMissingBean(IMailService.class)
-  public IMailService getMailService(MailProperties properties) throws GeneralSecurityException {
+  @Scope("prototype")
+  @ConditionalOnMissingBean(MailService.class)
+  public MailService getMailService(SysParameterService sysParameterService)
+      throws GeneralSecurityException {
 
+    String configStr = sysParameterService.findRequiredByKey("mail");
+    MailProperties properties = JsonUtil.parseObject(configStr, MailProperties.class);
     MailAccount account = new MailAccount();
     account.setHost(properties.getHost());
     account.setPort(properties.getPort());

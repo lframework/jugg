@@ -2,10 +2,10 @@ package com.lframework.starter.gen.listeners;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.lframework.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
 import com.lframework.starter.gen.entity.GenCustomSelector;
 import com.lframework.starter.gen.events.CustomListDeleteEvent;
-import com.lframework.starter.gen.service.IGenCustomSelectorService;
+import com.lframework.starter.gen.service.GenCustomSelectorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,7 @@ public class GenCustomSelectorListener {
       ApplicationListener<CustomListDeleteEvent> {
 
     @Autowired
-    private IGenCustomSelectorService genCustomSelectorService;
+    private GenCustomSelectorService genCustomSelectorService;
 
     @Override
     public void onApplicationEvent(CustomListDeleteEvent event) {

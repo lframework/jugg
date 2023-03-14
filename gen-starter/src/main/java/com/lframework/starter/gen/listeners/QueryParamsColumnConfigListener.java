@@ -2,7 +2,7 @@ package com.lframework.starter.gen.listeners;
 
 import com.lframework.starter.gen.events.DataEntityDeleteEvent;
 import com.lframework.starter.gen.events.DataEntityDetailDeleteEvent;
-import com.lframework.starter.gen.service.IGenQueryParamsColumnConfigService;
+import com.lframework.starter.gen.service.GenQueryParamsColumnConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
@@ -13,7 +13,7 @@ public class QueryParamsColumnConfigListener {
   public static class DeleteEntityListener implements ApplicationListener<DataEntityDeleteEvent> {
 
     @Autowired
-    private IGenQueryParamsColumnConfigService genQueryParamsColumnConfigService;
+    private GenQueryParamsColumnConfigService genQueryParamsColumnConfigService;
 
     @Override
     public void onApplicationEvent(DataEntityDeleteEvent event) {
@@ -29,7 +29,7 @@ public class QueryParamsColumnConfigListener {
       ApplicationListener<DataEntityDetailDeleteEvent> {
 
     @Autowired
-    private IGenQueryParamsColumnConfigService genQueryParamsColumnConfigService;
+    private GenQueryParamsColumnConfigService genQueryParamsColumnConfigService;
 
     @Override
     public void onApplicationEvent(DataEntityDetailDeleteEvent event) {

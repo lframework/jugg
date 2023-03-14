@@ -24,15 +24,4 @@ public class KaptchaConfiguration {
 
     return config.getProducerImpl();
   }
-
-  @Bean("numberProducer")
-  public Producer getNumberProducer() {
-    KaptchaProperties properties = new KaptchaProperties();
-    properties.setTextProducerCharString("0123456789");
-    properties.setTextProducerCharLength("6");
-
-    Config config = new Config(properties.props());
-
-    return config.getProducerImpl();
-  }
 }

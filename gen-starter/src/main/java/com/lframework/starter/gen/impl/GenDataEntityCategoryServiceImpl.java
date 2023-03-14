@@ -3,13 +3,13 @@ package com.lframework.starter.gen.impl;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageInfo;
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.Assert;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.Assert;
 import com.lframework.starter.gen.entity.GenDataEntity;
 import com.lframework.starter.gen.entity.GenDataEntityCategory;
 import com.lframework.starter.gen.mappers.GenDataEntityCategoryMapper;
-import com.lframework.starter.gen.service.IGenDataEntityCategoryService;
-import com.lframework.starter.gen.service.IGenDataEntityService;
+import com.lframework.starter.gen.service.GenDataEntityCategoryService;
+import com.lframework.starter.gen.service.GenDataEntityService;
 import com.lframework.starter.gen.vo.data.entity.category.CreateGenDataEntityCategoryVo;
 import com.lframework.starter.gen.vo.data.entity.category.GenDataEntityCategorySelectorVo;
 import com.lframework.starter.gen.vo.data.entity.category.UpdateGenDataEntityCategoryVo;
@@ -29,12 +29,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class GenDataEntityCategoryServiceImpl extends
     BaseMpServiceImpl<GenDataEntityCategoryMapper, GenDataEntityCategory> implements
-    IGenDataEntityCategoryService {
+    GenDataEntityCategoryService {
 
   @Autowired
-  private IGenDataEntityService genDataEntityService;
+  private GenDataEntityService genDataEntityService;
 
-  @Cacheable(value = GenDataEntityCategory.CACHE_NAME, key = "'all'")
+  @Cacheable(value = GenDataEntityCategory.CACHE_NAME, key = "@cacheVariables.tenantId() + 'all'")
   @Override
   public List<GenDataEntityCategory> queryList() {
     return getBaseMapper().query();
@@ -52,13 +52,13 @@ public class GenDataEntityCategoryServiceImpl extends
     return PageResultUtil.convert(new PageInfo<>(datas));
   }
 
-  @Cacheable(value = GenDataEntityCategory.CACHE_NAME, key = "#id", unless = "#result == null")
+  @Cacheable(value = GenDataEntityCategory.CACHE_NAME, key = "@cacheVariables.tenantId() + #id", unless = "#result == null")
   @Override
   public GenDataEntityCategory findById(String id) {
     return getBaseMapper().selectById(id);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public String create(CreateGenDataEntityCategoryVo vo) {
 
@@ -84,7 +84,7 @@ public class GenDataEntityCategoryServiceImpl extends
     return record.getId();
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void update(UpdateGenDataEntityCategoryVo vo) {
     Wrapper<GenDataEntityCategory> checkWrapper = Wrappers.lambdaQuery(GenDataEntityCategory.class)
@@ -112,7 +112,7 @@ public class GenDataEntityCategoryServiceImpl extends
     this.updateById(record);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void deleteById(String id) {
 
@@ -125,7 +125,7 @@ public class GenDataEntityCategoryServiceImpl extends
     this.removeById(id);
   }
 
-  @CacheEvict(value = GenDataEntityCategory.CACHE_NAME, key = "#key")
+  @CacheEvict(value = GenDataEntityCategory.CACHE_NAME, key = "@cacheVariables.tenantId() + #key")
   @Override
   public void cleanCacheByKey(Serializable key) {
   }

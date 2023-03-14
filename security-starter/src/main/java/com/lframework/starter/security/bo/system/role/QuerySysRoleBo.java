@@ -1,8 +1,8 @@
 package com.lframework.starter.security.bo.system.role;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.lframework.common.constants.StringPool;
-import com.lframework.starter.mybatis.dto.system.role.DefaultSysRoleDto;
+import com.lframework.starter.common.constants.StringPool;
+import com.lframework.starter.mybatis.entity.DefaultSysRole;
 import com.lframework.starter.web.bo.BaseBo;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDateTime;
@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class QuerySysRoleBo extends BaseBo<DefaultSysRoleDto> {
+public class QuerySysRoleBo extends BaseBo<DefaultSysRole> {
 
   /**
    * ID
@@ -79,12 +79,12 @@ public class QuerySysRoleBo extends BaseBo<DefaultSysRoleDto> {
 
   }
 
-  public QuerySysRoleBo(DefaultSysRoleDto dto) {
+  public QuerySysRoleBo(DefaultSysRole dto) {
 
     super(dto);
   }
 
   @Override
-  protected void afterInit(DefaultSysRoleDto dto) {
+  protected void afterInit(DefaultSysRole dto) {
   }
 }

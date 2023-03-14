@@ -3,15 +3,15 @@ package com.lframework.starter.mybatis.impl.system;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageInfo;
-import com.lframework.common.exceptions.impl.DefaultClientException;
-import com.lframework.common.utils.Assert;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.Assert;
 import com.lframework.starter.mybatis.entity.SysDataDic;
 import com.lframework.starter.mybatis.entity.SysDataDicCategory;
 import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.mybatis.mappers.system.SysDataDicCategoryMapper;
 import com.lframework.starter.mybatis.resp.PageResult;
-import com.lframework.starter.mybatis.service.system.ISysDataDicCategoryService;
-import com.lframework.starter.mybatis.service.system.ISysDataDicService;
+import com.lframework.starter.mybatis.service.system.SysDataDicCategoryService;
+import com.lframework.starter.mybatis.service.system.SysDataDicService;
 import com.lframework.starter.mybatis.utils.PageHelperUtil;
 import com.lframework.starter.mybatis.utils.PageResultUtil;
 import com.lframework.starter.mybatis.vo.system.dic.category.CreateSysDataDicCategoryVo;
@@ -29,12 +29,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class SysDataDicCategoryServiceImpl extends
     BaseMpServiceImpl<SysDataDicCategoryMapper, SysDataDicCategory> implements
-    ISysDataDicCategoryService {
+    SysDataDicCategoryService {
 
   @Autowired
-  private ISysDataDicService sysDataDicService;
+  private SysDataDicService sysDataDicService;
 
-  @Cacheable(value = SysDataDicCategory.CACHE_NAME, key = "'all'")
+  @Cacheable(value = SysDataDicCategory.CACHE_NAME, key = "@cacheVariables.tenantId() + 'all'")
   @Override
   public List<SysDataDicCategory> queryList() {
     return getBaseMapper().query();
@@ -52,13 +52,13 @@ public class SysDataDicCategoryServiceImpl extends
     return PageResultUtil.convert(new PageInfo<>(datas));
   }
 
-  @Cacheable(value = SysDataDicCategory.CACHE_NAME, key = "#id", unless = "#result == null")
+  @Cacheable(value = SysDataDicCategory.CACHE_NAME, key = "@cacheVariables.tenantId() + #id", unless = "#result == null")
   @Override
   public SysDataDicCategory findById(String id) {
     return getBaseMapper().selectById(id);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public String create(CreateSysDataDicCategoryVo vo) {
 
@@ -84,7 +84,7 @@ public class SysDataDicCategoryServiceImpl extends
     return record.getId();
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void update(UpdateSysDataDicCategoryVo vo) {
     Wrapper<SysDataDicCategory> checkWrapper = Wrappers.lambdaQuery(SysDataDicCategory.class)
@@ -110,7 +110,7 @@ public class SysDataDicCategoryServiceImpl extends
     this.updateById(record);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void deleteById(String id) {
 
@@ -123,7 +123,7 @@ public class SysDataDicCategoryServiceImpl extends
     this.removeById(id);
   }
 
-  @CacheEvict(value = SysDataDicCategory.CACHE_NAME, key = "#key")
+  @CacheEvict(value = SysDataDicCategory.CACHE_NAME, key = "@cacheVariables.tenantId() + #key")
   @Override
   public void cleanCacheByKey(Serializable key) {
   }

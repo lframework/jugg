@@ -1,10 +1,10 @@
 package com.lframework.starter.gen.controller;
 
-import com.lframework.common.utils.CollectionUtil;
+import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.gen.bo.custom.form.GetGenCustomFormBo;
 import com.lframework.starter.gen.bo.custom.form.QueryGenCustomFormBo;
 import com.lframework.starter.gen.entity.GenCustomForm;
-import com.lframework.starter.gen.service.IGenCustomFormService;
+import com.lframework.starter.gen.service.GenCustomFormService;
 import com.lframework.starter.gen.vo.custom.form.CreateGenCustomFormVo;
 import com.lframework.starter.gen.vo.custom.form.QueryGenCustomFormVo;
 import com.lframework.starter.gen.vo.custom.form.UpdateGenCustomFormVo;
@@ -42,7 +42,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class GenCustomFormController extends DefaultBaseController {
 
   @Autowired
-  private IGenCustomFormService genCustomFormService;
+  private GenCustomFormService genCustomFormService;
 
   @ApiOperation("查询自定义表单")
   @GetMapping("/query")

@@ -1,6 +1,5 @@
 package com.lframework.starter.mybatis.mappers.system;
 
-import com.lframework.starter.mybatis.dto.system.menu.DefaultSysMenuDto;
 import com.lframework.starter.mybatis.entity.DefaultSysMenu;
 import com.lframework.starter.mybatis.mapper.BaseMapper;
 import com.lframework.starter.mybatis.vo.system.menu.SysMenuSelectorVo;
@@ -22,7 +21,7 @@ public interface DefaultSysMenuMapper extends BaseMapper<DefaultSysMenu> {
    *
    * @return
    */
-  List<DefaultSysMenuDto> query();
+  List<DefaultSysMenu> query();
 
   /**
    * 根据角色ID查询已授权的菜单
@@ -30,7 +29,7 @@ public interface DefaultSysMenuMapper extends BaseMapper<DefaultSysMenu> {
    * @param roleId
    * @return
    */
-  List<DefaultSysMenuDto> getByRoleId(String roleId);
+  List<DefaultSysMenu> getByRoleId(String roleId);
 
   /**
    * 根据ID查询
@@ -38,14 +37,14 @@ public interface DefaultSysMenuMapper extends BaseMapper<DefaultSysMenu> {
    * @param id
    * @return
    */
-  DefaultSysMenuDto findById(String id);
+  DefaultSysMenu findById(String id);
 
   /**
    * 系统菜单选择器数据
    *
    * @return
    */
-  List<DefaultSysMenuDto> selector(@Param("vo") SysMenuSelectorVo vo);
+  List<DefaultSysMenu> selector(@Param("vo") SysMenuSelectorVo vo);
 
   /**
    * 根据ID查询子节点
@@ -53,5 +52,5 @@ public interface DefaultSysMenuMapper extends BaseMapper<DefaultSysMenu> {
    * @param id
    * @return
    */
-  List<DefaultSysMenuDto> getChildrenById(String id);
+  List<DefaultSysMenu> getChildrenById(String id);
 }

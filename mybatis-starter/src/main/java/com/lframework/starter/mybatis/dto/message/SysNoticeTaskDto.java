@@ -1,6 +1,6 @@
 package com.lframework.starter.mybatis.dto.message;
 
-import com.lframework.common.utils.DateUtil;
+import com.lframework.starter.common.utils.DateUtil;
 import com.lframework.starter.mybatis.dto.system.notice.QuerySysNoticeByUserDto;
 import com.lframework.starter.web.bo.BaseBo;
 import io.swagger.annotations.ApiModelProperty;

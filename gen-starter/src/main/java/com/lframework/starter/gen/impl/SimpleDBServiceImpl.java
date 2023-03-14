@@ -1,15 +1,15 @@
 package com.lframework.starter.gen.impl;
 
 import com.github.pagehelper.PageInfo;
-import com.lframework.common.utils.Assert;
-import com.lframework.common.utils.ObjectUtil;
+import com.lframework.starter.common.utils.Assert;
+import com.lframework.starter.common.utils.ObjectUtil;
 import com.lframework.starter.gen.dto.simpledb.OriSimpleTableDto;
 import com.lframework.starter.gen.dto.simpledb.SimpleDBDto;
 import com.lframework.starter.gen.entity.GenSimpleTableColumn;
 import com.lframework.starter.gen.mappers.DBMapper;
 import com.lframework.starter.gen.mappers.SimpleDBMapper;
-import com.lframework.starter.gen.service.ISimpleDBService;
-import com.lframework.starter.gen.service.ISimpleTableColumnService;
+import com.lframework.starter.gen.service.SimpleDBService;
+import com.lframework.starter.gen.service.SimpleTableColumnService;
 import com.lframework.starter.gen.vo.simpledb.QuerySimpleTableColumnVo;
 import com.lframework.starter.gen.vo.simpledb.SimpleTableSelectorVo;
 import com.lframework.starter.mybatis.resp.PageResult;
@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SimpleDBServiceImpl implements ISimpleDBService {
+public class SimpleDBServiceImpl implements SimpleDBService {
 
   @Autowired
   private SimpleDBMapper simpleDBMapper;
@@ -29,7 +29,7 @@ public class SimpleDBServiceImpl implements ISimpleDBService {
   private DBMapper dbMapper;
 
   @Autowired
-  private ISimpleTableColumnService simpleTableColumnService;
+  private SimpleTableColumnService simpleTableColumnService;
 
   @Override
   public String getCurrentDBName() {
@@ -63,5 +63,10 @@ public class SimpleDBServiceImpl implements ISimpleDBService {
     table.setColumns(columns);
 
     return table;
+  }
+
+  @Override
+  public List<SimpleDBDto> listByIds(List<String> tableNames) {
+    return simpleDBMapper.listByIds(tableNames);
   }
 }

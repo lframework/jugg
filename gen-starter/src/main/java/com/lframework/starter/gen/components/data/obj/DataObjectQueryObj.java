@@ -3,7 +3,6 @@ package com.lframework.starter.gen.components.data.obj;
 import com.lframework.starter.gen.enums.GenDataType;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 import lombok.Data;
 
 @Data
@@ -102,6 +101,22 @@ public class DataObjectQueryObj implements Serializable {
         /**
          * 关联条件 key：主表字段 value：子表字段
          */
-        private List<Map.Entry<String, String>> joinCondition;
+        private List<QuerySubTableCondition> joinCondition;
+    }
+
+    @Data
+    public static class QuerySubTableCondition implements Serializable {
+
+        private static final long serialVersionUID = 1L;
+
+        /**
+         * 左侧字段
+         */
+        private String key;
+
+        /**
+         * 右侧字段
+         */
+        private String value;
     }
 }

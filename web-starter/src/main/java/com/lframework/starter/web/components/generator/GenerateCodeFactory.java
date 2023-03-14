@@ -1,9 +1,9 @@
 package com.lframework.starter.web.components.generator;
 
 
-import com.lframework.common.exceptions.impl.DefaultSysException;
+import com.lframework.starter.common.exceptions.impl.DefaultSysException;
 import com.lframework.starter.web.components.code.GenerateCodeType;
-import com.lframework.starter.web.utils.ApplicationUtil;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 

@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.lframework.starter.gen.entity.GenCustomListQueryParams;
 import com.lframework.starter.gen.mappers.GenCustomListQueryParamsMapper;
-import com.lframework.starter.gen.service.IGenCustomListQueryParamsService;
+import com.lframework.starter.gen.service.GenCustomListQueryParamsService;
 import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class GenCustomListQueryParamsServiceImpl extends
     BaseMpServiceImpl<GenCustomListQueryParamsMapper, GenCustomListQueryParams> implements
-    IGenCustomListQueryParamsService {
+    GenCustomListQueryParamsService {
 
   @Override
   public List<GenCustomListQueryParams> getByCustomListId(String customListId) {
@@ -23,7 +23,7 @@ public class GenCustomListQueryParamsServiceImpl extends
     return this.list(queryWrapper);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   @Override
   public void deleteByCustomListId(String customListId) {
     Wrapper<GenCustomListQueryParams> deleteWrapper = Wrappers.lambdaQuery(

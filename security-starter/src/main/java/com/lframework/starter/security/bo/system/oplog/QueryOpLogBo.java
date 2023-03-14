@@ -1,8 +1,8 @@
 package com.lframework.starter.security.bo.system.oplog;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.lframework.common.constants.StringPool;
-import com.lframework.starter.mybatis.dto.DefaultOpLogsDto;
+import com.lframework.starter.common.constants.StringPool;
+import com.lframework.starter.mybatis.entity.DefaultOpLogs;
 import com.lframework.starter.web.bo.BaseBo;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDateTime;
@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class QueryOpLogBo extends BaseBo<DefaultOpLogsDto> {
+public class QueryOpLogBo extends BaseBo<DefaultOpLogs> {
 
   /**
    * ID
@@ -54,20 +54,8 @@ public class QueryOpLogBo extends BaseBo<DefaultOpLogsDto> {
 
   }
 
-  public QueryOpLogBo(DefaultOpLogsDto dto) {
+  public QueryOpLogBo(DefaultOpLogs dto) {
 
     super(dto);
-  }
-
-  @Override
-  public BaseBo<DefaultOpLogsDto> convert(DefaultOpLogsDto dto) {
-
-    return super.convert(dto, QueryOpLogBo::getLogType);
-  }
-
-  @Override
-  protected void afterInit(DefaultOpLogsDto dto) {
-
-    this.logType = dto.getLogType().getCode();
   }
 }

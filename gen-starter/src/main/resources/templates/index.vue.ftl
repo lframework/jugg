@@ -3,6 +3,7 @@
     <div v-permission="['${moduleName}:${bizName}:query']" class="app-container">
       <!-- 数据列表 -->
       <vxe-grid
+        id="${className}"
         ref="grid"
         resizable
         show-overflow

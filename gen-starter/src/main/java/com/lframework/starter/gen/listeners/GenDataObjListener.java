@@ -2,13 +2,13 @@ package com.lframework.starter.gen.listeners;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.lframework.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
 import com.lframework.starter.gen.entity.GenDataObj;
 import com.lframework.starter.gen.entity.GenDataObjDetail;
 import com.lframework.starter.gen.events.DataEntityDeleteEvent;
 import com.lframework.starter.gen.events.DataEntityDetailDeleteEvent;
-import com.lframework.starter.gen.service.IGenDataObjDetailService;
-import com.lframework.starter.gen.service.IGenDataObjService;
+import com.lframework.starter.gen.service.GenDataObjDetailService;
+import com.lframework.starter.gen.service.GenDataObjService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
@@ -20,10 +20,10 @@ public class GenDataObjListener {
       ApplicationListener<DataEntityDeleteEvent> {
 
     @Autowired
-    private IGenDataObjService genDataObjService;
+    private GenDataObjService genDataObjService;
 
     @Autowired
-    private IGenDataObjDetailService genDataObjDetailService;
+    private GenDataObjDetailService genDataObjDetailService;
 
     @Override
     public void onApplicationEvent(DataEntityDeleteEvent event) {
@@ -47,7 +47,7 @@ public class GenDataObjListener {
       ApplicationListener<DataEntityDetailDeleteEvent> {
 
     @Autowired
-    private IGenDataObjDetailService genDataObjDetailService;
+    private GenDataObjDetailService genDataObjDetailService;
 
     @Override
     public void onApplicationEvent(DataEntityDetailDeleteEvent event) {

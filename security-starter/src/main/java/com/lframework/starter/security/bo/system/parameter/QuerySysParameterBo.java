@@ -3,7 +3,7 @@ package com.lframework.starter.security.bo.system.parameter;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.lframework.common.constants.StringPool;
+import com.lframework.starter.common.constants.StringPool;
 import com.lframework.starter.mybatis.entity.SysParameter;
 import com.lframework.starter.web.bo.BaseBo;
 import io.swagger.annotations.ApiModelProperty;
