@@ -354,7 +354,7 @@ public class DefaultSysUserServiceImpl extends
   }
 
   @CacheEvict(value = {DefaultSysUser.CACHE_NAME, UserDto.CACHE_NAME,
-      UserInfoDto.CACHE_NAME}, key = "#key")
+      UserInfoDto.CACHE_NAME}, key = "@cacheVariables.tenantId() + #key")
   @Override
   public void cleanCacheByKey(Serializable key) {
 

@@ -3,11 +3,15 @@ package com.lframework.starter.security.controller.system;
 import com.lframework.starter.common.exceptions.impl.DefaultClientException;
 import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.mybatis.entity.DefaultSysDept;
+import com.lframework.starter.mybatis.enums.system.SysDeptNodeType;
+import com.lframework.starter.mybatis.service.system.RecursionMappingService;
 import com.lframework.starter.mybatis.service.system.SysDeptService;
 import com.lframework.starter.mybatis.vo.system.dept.CreateSysDeptVo;
 import com.lframework.starter.mybatis.vo.system.dept.UpdateSysDeptVo;
 import com.lframework.starter.security.bo.system.dept.GetSysDeptBo;
 import com.lframework.starter.security.bo.system.dept.SysDeptTreeBo;
+import com.lframework.starter.web.annotations.security.HasPermission;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 import com.lframework.starter.web.controller.DefaultBaseController;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
@@ -15,13 +19,13 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.lframework.starter.web.annotations.security.HasPermission;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -45,11 +49,14 @@ public class SysDeptController extends DefaultBaseController {
   @Autowired
   private SysDeptService sysDeptService;
 
+  @Autowired
+  private RecursionMappingService recursionMappingService;
+
   /**
    * 部门树形菜单数据
    */
   @ApiOperation("部门树形菜单数据")
-  @HasPermission({"system:dept:query","system:dept:add","system:dept:modify"})
+  @HasPermission({"system:dept:query", "system:dept:add", "system:dept:modify"})
   @GetMapping("/trees")
   public InvokeResult<List<SysDeptTreeBo>> trees() {
 
@@ -69,7 +76,7 @@ public class SysDeptController extends DefaultBaseController {
    */
   @ApiOperation("部门详情")
   @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
-  @HasPermission({"system:dept:query","system:dept:add","system:dept:modify"})
+  @HasPermission({"system:dept:query", "system:dept:add", "system:dept:modify"})
   @GetMapping
   public InvokeResult<GetSysDeptBo> get(@NotBlank(message = "ID不能为空！") String id) {
 
@@ -94,9 +101,14 @@ public class SysDeptController extends DefaultBaseController {
 
     sysDeptService.batchUnable(ids);
 
+    List<String> batchIds = new ArrayList<>(ids);
+
     for (String id : ids) {
-      sysDeptService.cleanCacheByKey(id);
+      List<String> tmp = recursionMappingService.getNodeChildIds(id,
+          ApplicationUtil.getBean(SysDeptNodeType.class));
+      batchIds.addAll(tmp);
     }
+    sysDeptService.cleanCacheByKeys(batchIds);
 
     return InvokeResultBuilder.success();
   }
@@ -112,9 +124,14 @@ public class SysDeptController extends DefaultBaseController {
 
     sysDeptService.batchEnable(ids);
 
+    List<String> batchIds = new ArrayList<>(ids);
+
     for (String id : ids) {
-      sysDeptService.cleanCacheByKey(id);
+      List<String> tmp = recursionMappingService.getNodeParentIds(id,
+          ApplicationUtil.getBean(SysDeptNodeType.class));
+      batchIds.addAll(tmp);
     }
+    sysDeptService.cleanCacheByKeys(batchIds);
 
     return InvokeResultBuilder.success();
   }
@@ -142,7 +159,20 @@ public class SysDeptController extends DefaultBaseController {
 
     sysDeptService.update(vo);
 
-    sysDeptService.cleanCacheByKey(vo.getId());
+    List<String> batchIds = new ArrayList<>();
+    batchIds.add(vo.getId());
+
+    if (vo.getAvailable()) {
+      List<String> ids = recursionMappingService.getNodeParentIds(vo.getId(),
+          ApplicationUtil.getBean(SysDeptNodeType.class));
+      batchIds.addAll(ids);
+    } else {
+      List<String> ids = recursionMappingService.getNodeChildIds(vo.getId(),
+          ApplicationUtil.getBean(SysDeptNodeType.class));
+      batchIds.addAll(ids);
+    }
+
+    sysDeptService.cleanCacheByKeys(batchIds);
 
     return InvokeResultBuilder.success();
   }

@@ -2,11 +2,13 @@ package com.lframework.starter.mybatis.mapper;
 
 import com.baomidou.mybatisplus.core.conditions.AbstractWrapper;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.lframework.starter.common.exceptions.impl.DefaultSysException;
 import com.lframework.starter.common.utils.ArrayUtil;
 import com.lframework.starter.common.utils.ReflectUtil;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,4 +51,12 @@ public interface BaseMapper<T> extends com.baomidou.mybatisplus.core.mapper.Base
 
     return update(entity, updateWrapper);
   }
+
+  /**
+   * 根据ID更新所有字段 此方法不会忽略null值字段
+   *
+   * @param entity
+   * @return
+   */
+  int updateAllColumnById(@Param(Constants.ENTITY) T entity);
 }

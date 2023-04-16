@@ -15,7 +15,6 @@ import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.mybatis.mappers.system.DefaultSysDeptMapper;
 import com.lframework.starter.mybatis.service.system.RecursionMappingService;
 import com.lframework.starter.mybatis.service.system.SysDeptService;
-import com.lframework.starter.mybatis.service.system.SysUserDeptService;
 import com.lframework.starter.mybatis.utils.OpLogUtil;
 import com.lframework.starter.mybatis.vo.system.dept.CreateSysDeptVo;
 import com.lframework.starter.mybatis.vo.system.dept.UpdateSysDeptVo;
@@ -24,6 +23,7 @@ import com.lframework.starter.web.utils.IdUtil;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -36,9 +36,6 @@ public class DefaultSysDeptServiceImpl extends
 
   @Autowired
   private RecursionMappingService recursionMappingService;
-
-  @Autowired
-  private SysUserDeptService sysUserDeptService;
 
   @Override
   public List<DefaultSysDept> selector() {
@@ -75,7 +72,7 @@ public class DefaultSysDeptServiceImpl extends
 
     batchIds.addAll(ids);
 
-    this.doBatchUnable(ids);
+    this.doBatchUnable(batchIds);
   }
 
   @OpLog(type = DefaultOpLogType.OTHER, name = "启用部门，ID：{}", params = "#ids", loopFormat = true)
@@ -89,7 +86,7 @@ public class DefaultSysDeptServiceImpl extends
 
     List<String> batchIds = new ArrayList<>();
     for (String id : ids) {
-      List<String> nodeChildIds = recursionMappingService.getNodeChildIds(id,
+      List<String> nodeChildIds = recursionMappingService.getNodeParentIds(id,
           ApplicationUtil.getBean(SysDeptNodeType.class));
       if (CollectionUtil.isEmpty(nodeChildIds)) {
         continue;
@@ -108,12 +105,6 @@ public class DefaultSysDeptServiceImpl extends
   @Override
   public String create(CreateSysDeptVo vo) {
 
-    if (!StringUtil.isBlank(vo.getParentId())) {
-      if (sysUserDeptService.hasByDeptId(vo.getParentId())) {
-        throw new DefaultClientException("上级部门不能是已有用户归属的部门！");
-      }
-    }
-
     DefaultSysDept data = this.doCreate(vo);
 
     this.saveRecursion(data.getId(), data.getParentId());
@@ -129,12 +120,6 @@ public class DefaultSysDeptServiceImpl extends
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void update(UpdateSysDeptVo vo) {
-
-    if (!StringUtil.isBlank(vo.getParentId())) {
-      if (sysUserDeptService.hasByDeptId(vo.getParentId())) {
-        throw new DefaultClientException("上级部门不能是已有用户归属的部门！");
-      }
-    }
 
     this.doUpdate(vo);
 
@@ -185,11 +170,11 @@ public class DefaultSysDeptServiceImpl extends
       throw new DefaultClientException("名称重复，请重新输入！");
     }
 
+    DefaultSysDept parentDept = null;
     //如果parentId不为空，查询上级部门是否存在
     if (!StringUtil.isBlank(vo.getParentId())) {
-      Wrapper<DefaultSysDept> checkParentWrapper = Wrappers.lambdaQuery(DefaultSysDept.class)
-          .eq(DefaultSysDept::getId, vo.getParentId());
-      if (getBaseMapper().selectCount(checkParentWrapper) == 0) {
+      parentDept = this.getById(vo.getParentId());
+      if (parentDept == null) {
         throw new DefaultClientException("上级部门不存在，请检查！");
       }
     }
@@ -202,7 +187,7 @@ public class DefaultSysDeptServiceImpl extends
     if (!StringUtil.isBlank(vo.getParentId())) {
       data.setParentId(vo.getParentId());
     }
-    data.setAvailable(Boolean.TRUE);
+    data.setAvailable(parentDept == null ? Boolean.TRUE : parentDept.getAvailable());
     data.setDescription(vo.getDescription());
 
     getBaseMapper().insert(data);
@@ -254,6 +239,12 @@ public class DefaultSysDeptServiceImpl extends
         .set(DefaultSysDept::getAvailable, vo.getAvailable()).eq(DefaultSysDept::getId, vo.getId());
 
     getBaseMapper().update(updateWrapper);
+
+    if (vo.getAvailable()) {
+      this.batchEnable(Collections.singletonList(vo.getId()));
+    } else {
+      this.batchUnable(Collections.singletonList(vo.getId()));
+    }
   }
 
   /**

@@ -21,4 +21,14 @@ public interface SecurityConstants {
    * 用户信息在redis中的key
    */
   String USER_INFO_KEY = "user_info_key";
+
+  /**
+   * 数据权限SQL在redis中的key
+   */
+  String DATA_PERMISSION_SQL_MAP = "__data_permission_sql_map";
+
+  /**
+   * 数据权限SQL变量在redis中的key
+   */
+  String DATA_PERMISSION_SQL_VAR = "__data_permission_sql_var";
 }

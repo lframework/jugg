@@ -55,7 +55,10 @@ public class EnumUtil {
 
     List<C> enumList = getEnumList(clazz);
     for (C c : enumList) {
-      if (c.getCode().equals(code)) {
+      if (c.getCode() == null) {
+        continue;
+      }
+      if (String.valueOf(c.getCode()).equals(String.valueOf(code))) {
         return c;
       }
     }

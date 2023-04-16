@@ -5,7 +5,7 @@
   <parent>
     <artifactId>parent</artifactId>
     <groupId>com.lframework</groupId>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
   </parent>
 
   <artifactId>mq-starter</artifactId>
@@ -16,10 +16,6 @@
     <dependency>
       <artifactId>web-starter</artifactId>
       <groupId>com.lframework</groupId>
-    </dependency>
-    <dependency>
-      <artifactId>spring-boot-starter-activemq</artifactId>
-      <groupId>org.springframework.boot</groupId>
     </dependency>
 
     <dependency>

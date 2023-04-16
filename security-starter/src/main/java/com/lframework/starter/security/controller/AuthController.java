@@ -6,15 +6,26 @@ import com.google.code.kaptcha.Producer;
 import com.lframework.starter.common.constants.StringPool;
 import com.lframework.starter.common.exceptions.impl.DefaultClientException;
 import com.lframework.starter.common.exceptions.impl.UserLoginException;
+import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.common.utils.DateUtil;
 import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.mybatis.components.CaptchaValidator;
+import com.lframework.starter.mybatis.entity.DefaultSysUserDept;
+import com.lframework.starter.mybatis.entity.DefaultSysUserRole;
+import com.lframework.starter.mybatis.entity.SysDataPermissionData;
 import com.lframework.starter.mybatis.entity.Tenant;
+import com.lframework.starter.mybatis.enums.system.SysDataPermissionDataBizType;
+import com.lframework.starter.mybatis.enums.system.SysDataPermissionDataPermissionType;
 import com.lframework.starter.mybatis.events.LoginEvent;
 import com.lframework.starter.mybatis.events.LogoutEvent;
 import com.lframework.starter.mybatis.service.MenuService;
 import com.lframework.starter.mybatis.service.TenantService;
 import com.lframework.starter.mybatis.service.UserService;
+import com.lframework.starter.mybatis.service.system.SysDataPermissionDataService;
+import com.lframework.starter.mybatis.service.system.SysDataPermissionModelDetailService;
+import com.lframework.starter.mybatis.service.system.SysUserDeptService;
+import com.lframework.starter.mybatis.service.system.SysUserRoleService;
+import com.lframework.starter.mybatis.vo.system.permission.SysDataPermissionModelDetailVo;
 import com.lframework.starter.mybatis.vo.system.user.LoginVo;
 import com.lframework.starter.security.bo.auth.LoginBo;
 import com.lframework.starter.web.annotations.OpenApi;
@@ -35,6 +46,7 @@ import com.lframework.starter.web.dto.MenuDto;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
 import com.lframework.starter.web.utils.IdUtil;
+import com.lframework.starter.web.utils.JsonUtil;
 import com.lframework.starter.web.utils.TenantUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -42,7 +54,11 @@ import io.swagger.annotations.ApiOperation;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -93,6 +109,18 @@ public class AuthController extends DefaultBaseController {
 
   @Autowired
   private TenantService tenantService;
+
+  @Autowired
+  private SysDataPermissionDataService sysDataPermissionDataService;
+
+  @Autowired
+  private SysDataPermissionModelDetailService sysDataPermissionModelDetailService;
+
+  @Autowired
+  private SysUserRoleService sysUserRoleService;
+
+  @Autowired
+  private SysUserDeptService sysUserDeptService;
 
   /**
    * 获取登录验证码
@@ -168,6 +196,8 @@ public class AuthController extends DefaultBaseController {
     AbstractUserDetails user = userDetailsService.loadUserByUsername(username);
 
     LoginDto dto = this.doLogin(user);
+
+    this.addAttributesToSession(user);
 
     return InvokeResultBuilder.success(new LoginBo(dto));
   }
@@ -258,7 +288,8 @@ public class AuthController extends DefaultBaseController {
     }
 
     // 登录
-    StpUtil.login(user.getTenantId() == null ? "" : user.getTenantId() + "@" + user.getUsername());
+    StpUtil.login(
+        (user.getTenantId() == null ? "" : user.getTenantId() + "@") + user.getUsername());
 
     StpUtil.getSession().set(SecurityConstants.USER_INFO_KEY, user);
 
@@ -295,5 +326,76 @@ public class AuthController extends DefaultBaseController {
     } else {
       redisHandler.expire(lockKey, 1L);
     }
+  }
+
+  protected void addAttributesToSession(AbstractUserDetails user) {
+    Map<String, String> dataPermissionMap = new HashMap<>();
+    SysDataPermissionDataPermissionType[] permissionTypes = SysDataPermissionDataPermissionType.values();
+    for (SysDataPermissionDataPermissionType permissionType : permissionTypes) {
+      List<String> sqlTemplates = new ArrayList<>();
+
+      List<DefaultSysUserRole> userRoles = sysUserRoleService.getByUserId(user.getId());
+      if (CollectionUtil.isNotEmpty(userRoles)) {
+        for (DefaultSysUserRole userRole : userRoles) {
+          SysDataPermissionData permissionData = sysDataPermissionDataService.getByBizId(
+              userRole.getRoleId(),
+              SysDataPermissionDataBizType.ROLE.getCode(), permissionType.getCode());
+          if (permissionData != null) {
+            String sqlTemplate = sysDataPermissionModelDetailService.toSql(
+                JsonUtil.parseList(permissionData.getPermission(),
+                    SysDataPermissionModelDetailVo.class));
+            if (StringUtil.isNotBlank(sqlTemplate)) {
+              sqlTemplates.add(sqlTemplate);
+            }
+          }
+        }
+      }
+
+      List<DefaultSysUserDept> userDepts = sysUserDeptService.getByUserId(user.getId());
+      if (CollectionUtil.isNotEmpty(userDepts)) {
+        for (DefaultSysUserDept userDept : userDepts) {
+          SysDataPermissionData permissionData = sysDataPermissionDataService.getByBizId(
+              userDept.getDeptId(),
+              SysDataPermissionDataBizType.DEPT.getCode(), permissionType.getCode());
+          if (permissionData != null) {
+            String sqlTemplate = sysDataPermissionModelDetailService.toSql(
+                JsonUtil.parseList(permissionData.getPermission(),
+                    SysDataPermissionModelDetailVo.class));
+            if (StringUtil.isNotBlank(sqlTemplate)) {
+              sqlTemplates.add(sqlTemplate);
+            }
+          }
+        }
+      }
+
+      SysDataPermissionData permissionData = sysDataPermissionDataService.getByBizId(
+          user.getId(),
+          SysDataPermissionDataBizType.USER.getCode(), permissionType.getCode());
+      if (permissionData != null) {
+        String sqlTemplate = sysDataPermissionModelDetailService.toSql(
+            JsonUtil.parseList(permissionData.getPermission(),
+                SysDataPermissionModelDetailVo.class));
+        if (StringUtil.isNotBlank(sqlTemplate)) {
+          sqlTemplates.add(sqlTemplate);
+        }
+      }
+
+      if (CollectionUtil.isNotEmpty(sqlTemplates)) {
+        dataPermissionMap.put(permissionType.getCode().toString(),
+            "(" + CollectionUtil.join(sqlTemplates, " AND ") + ")");
+      }
+    }
+
+    StpUtil.getSession().set(SecurityConstants.DATA_PERMISSION_SQL_MAP, dataPermissionMap);
+
+    Map<String, String> dataPermissionVar = new HashMap<>();
+    List<DefaultSysUserDept> userDepts = sysUserDeptService.getByUserId(user.getId());
+    List<String> curDeptIds = userDepts.stream().map(DefaultSysUserDept::getDeptId)
+        .map(t -> "'" + t + "'").collect(
+            Collectors.toList());
+    dataPermissionVar.put("curDeptIds",
+        CollectionUtil.isEmpty(curDeptIds) ? IdUtil.getId() : CollectionUtil.join(curDeptIds, ","));
+
+    StpUtil.getSession().set(SecurityConstants.DATA_PERMISSION_SQL_VAR, dataPermissionVar);
   }
 }

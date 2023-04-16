@@ -1,5 +1,6 @@
-package com.lframework.starter.mq.producer;
+package com.lframework.starter.mq.activemq.producer;
 
+import com.lframework.starter.mq.producer.MqProducer;
 import com.lframework.starter.web.common.utils.ApplicationUtil;
 import java.io.Serializable;
 import javax.jms.Message;

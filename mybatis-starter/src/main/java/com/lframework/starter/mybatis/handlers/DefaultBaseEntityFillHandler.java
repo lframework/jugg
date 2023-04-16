@@ -82,6 +82,7 @@ public class DefaultBaseEntityFillHandler implements MetaObjectHandler {
     if (MyBatisStringPool.COLUMN_UPDATE_BY.equals(fieldName)
         || MyBatisStringPool.COLUMN_UPDATE_BY_ID.equals(fieldName)
         || MyBatisStringPool.COLUMN_UPDATE_TIME.equals(fieldName)) {
+      // update时，无论当前是否有值什么情况 这三个值都会覆盖
       Object obj = fieldVal.get();
       if (Objects.nonNull(obj)) {
         metaObject.setValue(fieldName, obj);

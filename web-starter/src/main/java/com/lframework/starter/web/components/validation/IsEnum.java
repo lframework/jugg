@@ -15,7 +15,7 @@ import javax.validation.Payload;
  *
  * @author zmj
  */
-@Target({ElementType.FIELD})
+@Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Constraint(validatedBy = EnumValidator.class)
