@@ -3,6 +3,7 @@ package com.lframework.starter.web.components.redis.locker;
 import com.lframework.starter.common.locker.LockBuilder;
 import com.lframework.starter.common.locker.Locker;
 import com.lframework.starter.web.utils.IdUtil;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Resource;
@@ -32,6 +33,10 @@ public class RedisLockBuilder implements LockBuilder {
 
   @Override
   public Locker buildLocker(String lockName, long expireTime, long waitTime) {
+
+    if (LOCKERS.get() == null) {
+      LOCKERS.set(new HashMap<>());
+    }
 
     Locker locker = LOCKERS.get().get(lockName);
     if (locker != null) {
@@ -98,7 +103,8 @@ public class RedisLockBuilder implements LockBuilder {
       }
 
       if (log.isDebugEnabled()) {
-        log.debug("获取lock完成，result={}, key={}, requestId={}", this.lock, this.key, this.requestId);
+        log.debug("获取lock完成，result={}, key={}, requestId={}", this.lock, this.key,
+            this.requestId);
       }
 
       if (this.lock) {

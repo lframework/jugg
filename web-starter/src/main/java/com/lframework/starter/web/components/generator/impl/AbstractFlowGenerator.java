@@ -1,6 +1,9 @@
 package com.lframework.starter.web.components.generator.impl;
 
+import com.lframework.starter.common.exceptions.impl.DefaultClientException;
 import com.lframework.starter.common.exceptions.impl.DefaultSysException;
+import com.lframework.starter.common.locker.LockBuilder;
+import com.lframework.starter.common.locker.Locker;
 import com.lframework.starter.common.utils.DateUtil;
 import com.lframework.starter.web.common.tenant.TenantContextHolder;
 import com.lframework.starter.web.components.code.GenerateCodeType;
@@ -22,6 +25,9 @@ public abstract class AbstractFlowGenerator extends AbstractGenerator implements
   @Autowired
   private RedisHandler redisHandler;
 
+  @Autowired
+  private LockBuilder lockBuilder;
+
   @Override
   public String generate() {
 
@@ -31,8 +37,21 @@ public abstract class AbstractFlowGenerator extends AbstractGenerator implements
     }
     String lockerName = LOCK_KEY + type.getClass().getName();
     String nowStr = DateUtil.formatDate(LocalDate.now(), "yyyyMMdd");
-    String redisKey = nowStr + "_" + (TenantUtil.enableTenant() ? TenantContextHolder.getTenantId() : "noTenant") + "_" + lockerName;
-    long no = redisHandler.incr(redisKey, 1L);
+    String redisKey =
+        nowStr + "_" + (TenantUtil.enableTenant() ? TenantContextHolder.getTenantId() : "noTenant")
+            + "_" + lockerName;
+    Locker locker = lockBuilder.buildLocker(redisKey + "_Locker", 60000L, 5000L);
+    long no;
+
+    if (locker.lock()) {
+      try {
+        no = redisHandler.incr(redisKey, 1L);
+      } finally {
+        locker.unLock();
+      }
+    } else {
+      throw new DefaultClientException("生成单号失败，请稍后重试！");
+    }
     redisHandler.expire(redisKey, 86400000L);
 
     String noStr = String.valueOf(no);
