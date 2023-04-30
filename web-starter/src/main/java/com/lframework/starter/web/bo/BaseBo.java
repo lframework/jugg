@@ -21,6 +21,10 @@ public abstract class BaseBo<T extends BaseDto> implements Serializable, SuperBo
 
   public BaseBo(T dto) {
 
+    this.init(dto);
+  }
+
+  protected void init(T dto) {
     if (dto != null) {
       this.convert(dto);
 
