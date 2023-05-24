@@ -18,8 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 public class CheckPermissionHandlerImpl implements CheckPermissionHandler {
 
   @Override
-  public boolean valid(String... permissions) {
-
+  public boolean valid(PermissionCalcType calcType, String... permissions) {
     if (ArrayUtil.isEmpty(permissions)) {
       return true;
     }
@@ -38,11 +37,16 @@ public class CheckPermissionHandlerImpl implements CheckPermissionHandler {
     Set<String> permissionSet = user.getPermissions();
 
     boolean valid = CollectionUtil.isNotEmpty(permissionSet)
-        && Arrays.stream(permissions).anyMatch(
-        pattern -> permissionSet.stream().anyMatch(item -> StringUtil.strMatch(pattern, item)));
+        && (calcType == PermissionCalcType.OR ?
+        Arrays.stream(permissions).anyMatch(
+            pattern -> permissionSet.stream().anyMatch(item -> StringUtil.strMatch(pattern, item)))
+        : Arrays.stream(permissions).allMatch(
+            pattern -> permissionSet.stream()
+                .anyMatch(item -> StringUtil.strMatch(pattern, item))));
 
     if (log.isDebugEnabled()) {
-      log.debug("当前用户权限={}, 需要权限={}, 是否通过权限校验={}", permissionSet, permissions, valid);
+      log.debug("当前用户权限={}, 需要权限={}, 是否通过权限校验={}", permissionSet, permissions,
+          valid);
     }
 
     return valid;

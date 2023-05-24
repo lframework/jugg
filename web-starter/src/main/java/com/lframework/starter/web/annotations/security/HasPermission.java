@@ -1,5 +1,6 @@
 package com.lframework.starter.web.annotations.security;
 
+import com.lframework.starter.web.components.security.PermissionCalcType;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -17,4 +18,11 @@ public @interface HasPermission {
    * @return
    */
   String[] value();
+
+  /**
+   * 计算方式
+   *
+   * @return
+   */
+  PermissionCalcType calcType() default PermissionCalcType.OR;
 }

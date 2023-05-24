@@ -19,7 +19,7 @@ public class DefaultSysUserPositionServiceImpl
     implements SysUserPositionService {
 
   @OpLog(type = DefaultOpLogType.OTHER, name = "用户设置岗位，用户ID：{}，岗位ID：{}", params = {"#vo.userId",
-      "#vo.positionId"})
+      "#vo.positionIds"}, loopFormat = true)
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void setting(SysUserPositionSettingVo vo) {

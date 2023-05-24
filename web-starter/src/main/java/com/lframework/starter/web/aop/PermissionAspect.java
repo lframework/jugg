@@ -35,7 +35,7 @@ public class PermissionAspect {
 
     HasPermission hasPermission = signature.getMethod().getAnnotation(HasPermission.class);
 
-    if (!checkPermissionHandler.valid(hasPermission.value())) {
+    if (!checkPermissionHandler.valid(hasPermission.calcType(), hasPermission.value())) {
       throw new AccessDeniedException("暂无权限，请联系系统管理员！");
     }
 

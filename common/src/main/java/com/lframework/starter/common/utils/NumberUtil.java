@@ -227,6 +227,16 @@ public class NumberUtil {
   }
 
   /**
+   * 计算税率
+   * @param tax 含税价或含税金额
+   * @param unTax 无税价或无税金额
+   * @return
+   */
+  public static BigDecimal calcTaxRate(Number tax, Number unTax) {
+    return mul(sub(div(tax, unTax), BigDecimal.ONE), 100);
+  }
+
+  /**
    * 保留{precision}位小数
    *
    * @param number

@@ -13,5 +13,5 @@ public interface CheckPermissionHandler {
    * @param permissions
    * @return
    */
-  boolean valid(String... permissions);
+  boolean valid(PermissionCalcType calcType, String... permissions);
 }
