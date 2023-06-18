@@ -8,7 +8,6 @@ import com.lframework.starter.gen.enums.GenViewType;
 import com.lframework.starter.mybatis.entity.BaseEntity;
 import com.lframework.starter.web.dto.BaseDto;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * <p>
@@ -19,7 +18,6 @@ import lombok.EqualsAndHashCode;
  * @since 2022-09-17
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("gen_data_entity_detail")
 public class GenDataEntityDetail extends BaseEntity implements BaseDto, TableColumn {
 

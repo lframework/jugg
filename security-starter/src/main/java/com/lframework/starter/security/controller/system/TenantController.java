@@ -26,7 +26,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -48,7 +47,8 @@ public class TenantController extends DefaultBaseController {
    * 查询列表
    */
   @ApiOperation("查询列表")
-  @HasPermission({"system:tenant:query", "system:tenant:add", "system:tenant:modify"})
+  @HasPermission(value = {"system:tenant:query", "system:tenant:add",
+      "system:tenant:modify"})
   @GetMapping("/query")
   public InvokeResult<PageResult<QueryTenantBo>> query(@Valid QueryTenantVo vo) {
 
@@ -67,7 +67,8 @@ public class TenantController extends DefaultBaseController {
    */
   @ApiOperation("查询详情")
   @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
-  @HasPermission({"system:tenant:query", "system:tenant:add", "system:tenant:modify"})
+  @HasPermission(value = {"system:tenant:query", "system:tenant:add",
+      "system:tenant:modify"})
   @GetMapping
   public InvokeResult<GetTenantBo> get(@NotNull(message = "ID不能为空！") Integer id) {
 
@@ -85,7 +86,7 @@ public class TenantController extends DefaultBaseController {
    * 新增租户
    */
   @ApiOperation("新增租户")
-  @HasPermission({"system:tenant:add"})
+  @HasPermission(value = {"system:tenant:add"})
   @PostMapping
   public InvokeResult<Void> create(@Valid CreateTenantVo vo) {
 
@@ -98,7 +99,7 @@ public class TenantController extends DefaultBaseController {
    * 修改租户
    */
   @ApiOperation("修改租户")
-  @HasPermission({"system:tenant:modify"})
+  @HasPermission(value = {"system:tenant:modify"})
   @PutMapping
   public InvokeResult<Void> update(@Valid UpdateTenantVo vo) {
 

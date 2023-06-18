@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.lframework.starter.web.dto.BaseDto;
 import java.time.LocalDateTime;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * <p>
@@ -17,7 +16,6 @@ import lombok.EqualsAndHashCode;
  * @since 2021-07-02
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("sys_role")
 public class DefaultSysRole extends BaseEntity implements BaseDto {
 

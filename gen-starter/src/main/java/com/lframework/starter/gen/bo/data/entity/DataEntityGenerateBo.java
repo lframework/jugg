@@ -14,10 +14,8 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
 public class DataEntityGenerateBo extends BaseBo<DataEntityGenerateDto> {
 
   /**

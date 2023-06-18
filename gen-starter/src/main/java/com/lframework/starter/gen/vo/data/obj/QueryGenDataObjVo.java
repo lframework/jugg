@@ -3,13 +3,11 @@ package com.lframework.starter.gen.vo.data.obj;
 import com.lframework.starter.web.vo.PageVo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * 查询数据对象列表Vo
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 public class QueryGenDataObjVo extends PageVo {
 
   private static final long serialVersionUID = 1L;

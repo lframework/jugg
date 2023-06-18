@@ -7,7 +7,6 @@ import com.lframework.starter.mybatis.entity.BaseEntity;
 import com.lframework.starter.web.dto.BaseDto;
 import java.time.LocalDateTime;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * <p>
@@ -17,7 +16,6 @@ import lombok.EqualsAndHashCode;
  * @author zmj
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("gen_custom_selector_category")
 public class GenCustomSelectorCategory extends BaseEntity implements BaseDto {
 

@@ -8,7 +8,6 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.lframework.starter.web.dto.BaseDto;
 import java.time.LocalDateTime;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * <p>
@@ -18,7 +17,6 @@ import lombok.EqualsAndHashCode;
  * @author zmj
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("sys_parameter")
 public class SysParameter extends BaseEntity implements BaseDto {
 

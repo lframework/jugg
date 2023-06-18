@@ -6,7 +6,6 @@ import com.lframework.starter.gen.enums.GenDataType;
 import com.lframework.starter.mybatis.entity.BaseEntity;
 import com.lframework.starter.web.dto.BaseDto;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * <p>
@@ -17,7 +16,6 @@ import lombok.EqualsAndHashCode;
  * @since 2021-05-28
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("gen_simple_table_column")
 public class GenSimpleTableColumn extends BaseEntity implements BaseDto, TableColumn {
 

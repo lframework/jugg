@@ -2,10 +2,8 @@ package com.lframework.starter.mybatis.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lframework.starter.mybatis.enums.system.SysDataPermissionDataBizType;
-import com.lframework.starter.mybatis.enums.system.SysDataPermissionDataPermissionType;
 import com.lframework.starter.web.dto.BaseDto;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * <p>
@@ -15,7 +13,6 @@ import lombok.EqualsAndHashCode;
  * @author zmj
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("sys_data_permission_data")
 public class SysDataPermissionData extends BaseEntity implements BaseDto {
 
@@ -37,7 +34,7 @@ public class SysDataPermissionData extends BaseEntity implements BaseDto {
   /**
    * 权限类型
    */
-  private SysDataPermissionDataPermissionType permissionType;
+  private Integer permissionType;
 
   /**
    * 权限

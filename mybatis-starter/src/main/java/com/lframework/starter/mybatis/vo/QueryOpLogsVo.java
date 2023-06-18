@@ -1,10 +1,9 @@
 package com.lframework.starter.mybatis.vo;
 
- import com.lframework.starter.web.vo.PageVo;
+import com.lframework.starter.web.vo.PageVo;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDateTime;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * 查询操作日志Vo
@@ -12,7 +11,6 @@ import lombok.EqualsAndHashCode;
  * @author zmj
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 public class QueryOpLogsVo extends PageVo {
 
   private static final long serialVersionUID = 1L;

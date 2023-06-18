@@ -22,7 +22,7 @@ public interface SysMenuService extends BaseMpService<DefaultSysMenu> {
    *
    * @return
    */
-  List<DefaultSysMenu> queryList();
+  List<DefaultSysMenu> queryList(List<Integer> moduleIds);
 
   /**
    * 根据角色ID查询已授权的菜单
@@ -30,7 +30,7 @@ public interface SysMenuService extends BaseMpService<DefaultSysMenu> {
    * @param roleId
    * @return
    */
-  List<DefaultSysMenu> getByRoleId(String roleId);
+  List<DefaultSysMenu> getByRoleId(String roleId, List<Integer> moduleIds);
 
   /**
    * 根据ID查询
@@ -66,7 +66,7 @@ public interface SysMenuService extends BaseMpService<DefaultSysMenu> {
    *
    * @return
    */
-  List<DefaultSysMenu> selector(SysMenuSelectorVo vo);
+  List<DefaultSysMenu> selector(SysMenuSelectorVo vo, List<Integer> moduleIds);
 
   /**
    * 批量启用
@@ -83,4 +83,12 @@ public interface SysMenuService extends BaseMpService<DefaultSysMenu> {
    * @param userId
    */
   void batchUnable(List<String> ids, String userId);
+
+  /**
+   * 是否存在权限
+   *
+   * @param permission
+   * @return
+   */
+  Boolean existPermission(String permission);
 }

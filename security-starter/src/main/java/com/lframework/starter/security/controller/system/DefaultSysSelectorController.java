@@ -12,6 +12,7 @@ import com.lframework.starter.mybatis.entity.SysDataDicCategory;
 import com.lframework.starter.mybatis.entity.SysOpenDomain;
 import com.lframework.starter.mybatis.entity.Tenant;
 import com.lframework.starter.mybatis.resp.PageResult;
+import com.lframework.starter.mybatis.service.SysModuleTenantService;
 import com.lframework.starter.mybatis.service.TenantService;
 import com.lframework.starter.mybatis.service.system.SysDataDicCategoryService;
 import com.lframework.starter.mybatis.service.system.SysDataDicService;
@@ -39,9 +40,11 @@ import com.lframework.starter.security.bo.system.position.SysPositionSelectorBo;
 import com.lframework.starter.security.bo.system.role.SysRoleSelectorBo;
 import com.lframework.starter.security.bo.system.tenant.TenantSelectorBo;
 import com.lframework.starter.security.bo.system.user.SysUserSelectorBo;
+import com.lframework.starter.web.common.tenant.TenantContextHolder;
 import com.lframework.starter.web.controller.DefaultBaseController;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
+import com.lframework.starter.web.utils.TenantUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
@@ -94,6 +97,9 @@ public class DefaultSysSelectorController extends DefaultBaseController {
   @Autowired
   private TenantService tenantService;
 
+  @Autowired
+  private SysModuleTenantService sysModuleTenantService;
+
   /**
    * 系统菜单
    */
@@ -101,8 +107,14 @@ public class DefaultSysSelectorController extends DefaultBaseController {
   @GetMapping("/menu")
   public InvokeResult<List<SysMenuSelectorBo>> menu(@Valid SysMenuSelectorVo vo) {
 
+    // 先查询当前租户使用的module
+    List<Integer> moduleIds = null;
+    if (TenantUtil.enableTenant()) {
+      moduleIds = sysModuleTenantService.getAvailableModuleIdsByTenantId(TenantContextHolder.getTenantId());
+    }
+
     List<SysMenuSelectorBo> results = CollectionUtil.emptyList();
-    List<DefaultSysMenu> datas = sysMenuService.selector(vo);
+    List<DefaultSysMenu> datas = sysMenuService.selector(vo, moduleIds);
     if (CollectionUtil.isNotEmpty(datas)) {
       results = datas.stream().map(SysMenuSelectorBo::new).collect(Collectors.toList());
     }

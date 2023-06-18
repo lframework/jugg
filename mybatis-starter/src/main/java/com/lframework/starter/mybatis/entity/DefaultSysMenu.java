@@ -8,7 +8,6 @@ import com.lframework.starter.mybatis.enums.system.SysMenuDisplay;
 import com.lframework.starter.web.dto.BaseDto;
 import java.time.LocalDateTime;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * <p>
@@ -19,7 +18,6 @@ import lombok.EqualsAndHashCode;
  * @since 2021-05-10
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("sys_menu")
 public class DefaultSysMenu extends BaseEntity implements BaseDto {
 

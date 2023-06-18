@@ -103,7 +103,7 @@ public class RedisLockBuilder implements LockBuilder {
       }
 
       if (log.isDebugEnabled()) {
-        log.debug("获取lock完成，result={}, key={}, requestId={}", this.lock, this.key,
+        log.debug("获取lock完成，result={}, key={}, requestId={}", this.lock, new String(this.key),
             this.requestId);
       }
 
@@ -136,8 +136,8 @@ public class RedisLockBuilder implements LockBuilder {
         if (this.lockCount <= 1) {
           boolean release = this.redisTemplate.execute(new ReleaseRedisCallBack());
           if (log.isDebugEnabled()) {
-            log.debug("释放lock完成，result={}, key={}, requestId={}", this.lock, this.key,
-                this.requestId);
+            log.debug("释放lock完成，result={}, key={}, requestId={}", this.lock, new String(this.key),
+                new String(this.requestId));
           }
 
           this.lock = !release;
@@ -169,7 +169,7 @@ public class RedisLockBuilder implements LockBuilder {
       public Boolean doInRedis(RedisConnection connection) throws DataAccessException {
 
         if (log.isDebugEnabled()) {
-          log.debug("key={}, requestId={}", key, requestId);
+          log.debug("key={}, requestId={}", new String(key), new String(requestId));
         }
 
         return connection.set(key, requestId, Expiration.from(expireTime, TimeUnit.MILLISECONDS),

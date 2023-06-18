@@ -3,7 +3,6 @@ package ${packageName}.vo.${moduleName}.${bizName};
 import com.lframework.starter.web.vo.BaseVo;
 import com.lframework.starter.web.vo.PageVo;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 <#if importPackages??>
     <#list importPackages as p>
 import ${p};
@@ -12,7 +11,6 @@ import ${p};
 import java.io.Serializable;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
 public class Query${className}Vo extends PageVo implements BaseVo, Serializable {
 
     private static final long serialVersionUID = 1L;

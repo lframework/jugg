@@ -10,6 +10,16 @@
 
     <select id="query" resultType="com.lframework.starter.mybatis.entity.DefaultSysMenu">
         <include refid="SysMenuDto_sql"/>
+        <where>
+            <if test="moduleIds != null">
+                <if test="moduleIds.isEmpty()">
+                    AND sys_module_id IS NULL
+                </if>
+                <if test="!moduleIds.isEmpty()">
+                    AND (sys_module_id IN <foreach collection="moduleIds" open="(" separator="," close=")" item="item">#{item}</foreach> OR sys_module_id IS NULL)
+                </if>
+            </if>
+        </where>
         ORDER BY code
     </select>
     <select id="selector" resultType="com.lframework.starter.mybatis.entity.DefaultSysMenu">
@@ -18,6 +28,14 @@
             <if test="vo != null">
                 <if test="vo.display != null">
                     AND display = #{vo.display}
+                </if>
+            </if>
+            <if test="moduleIds != null">
+                <if test="moduleIds.isEmpty()">
+                    AND sys_module_id IS NULL
+                </if>
+                <if test="!moduleIds.isEmpty()">
+                    AND (sys_module_id IN <foreach collection="moduleIds" open="(" separator="," close=")" item="item">#{item}</foreach> OR sys_module_id IS NULL)
                 </if>
             </if>
             AND display IN (0, 1)
@@ -40,6 +58,14 @@
         FROM sys_role_menu
         WHERE role_id = #{roleId}
         )
+        <if test="moduleIds != null">
+            <if test="moduleIds.isEmpty()">
+                AND sys_module_id IS NULL
+            </if>
+            <if test="!moduleIds.isEmpty()">
+                AND (sys_module_id IN <foreach collection="moduleIds" open="(" separator="," close=")" item="item">#{item}</foreach> OR sys_module_id IS NULL)
+            </if>
+        </if>
         ORDER BY code
     </select>
 </mapper>

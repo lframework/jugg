@@ -59,4 +59,13 @@ public interface BaseMapper<T> extends com.baomidou.mybatisplus.core.mapper.Base
    * @return
    */
   int updateAllColumnById(@Param(Constants.ENTITY) T entity);
+
+  /**
+   * 根据 whereEntity 条件，更新记录 此方法不会忽略null值字段
+   *
+   * @param entity
+   * @return
+   */
+  int updateAllColumn(@Param(Constants.ENTITY) T entity,
+      @Param(Constants.WRAPPER) Wrapper<T> updateWrapper);
 }

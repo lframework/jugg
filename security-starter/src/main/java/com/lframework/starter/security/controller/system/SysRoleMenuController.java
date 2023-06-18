@@ -3,13 +3,16 @@ package com.lframework.starter.security.controller.system;
 import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.mybatis.entity.DefaultSysMenu;
+import com.lframework.starter.mybatis.service.SysModuleTenantService;
 import com.lframework.starter.mybatis.service.system.SysMenuService;
 import com.lframework.starter.mybatis.service.system.SysRoleMenuService;
 import com.lframework.starter.mybatis.vo.system.role.SysRoleMenuSettingVo;
 import com.lframework.starter.security.bo.system.role.QueryRoleMenuBo;
+import com.lframework.starter.web.common.tenant.TenantContextHolder;
 import com.lframework.starter.web.controller.DefaultBaseController;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
+import com.lframework.starter.web.utils.TenantUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -42,6 +45,9 @@ public class SysRoleMenuController extends DefaultBaseController {
   @Autowired
   private SysRoleMenuService sysRoleMenuService;
 
+  @Autowired
+  private SysModuleTenantService sysModuleTenantService;
+
   /**
    * 查询角色菜单列表
    */
@@ -51,14 +57,20 @@ public class SysRoleMenuController extends DefaultBaseController {
   @GetMapping("/menus")
   public InvokeResult<List<QueryRoleMenuBo>> menus(String roleId) {
 
+    // 先查询当前租户使用的module
+    List<Integer> moduleIds = null;
+    if (TenantUtil.enableTenant()) {
+      moduleIds = sysModuleTenantService.getAvailableModuleIdsByTenantId(TenantContextHolder.getTenantId());
+    }
+
     List<QueryRoleMenuBo> results = CollectionUtil.emptyList();
     //查询所有菜单
-    List<DefaultSysMenu> allMenu = sysMenuService.queryList();
+    List<DefaultSysMenu> allMenu = sysMenuService.queryList(moduleIds);
     if (!CollectionUtil.isEmpty(allMenu)) {
       results = allMenu.stream().map(QueryRoleMenuBo::new).collect(Collectors.toList());
 
       if (!StringUtil.isBlank(roleId)) {
-        List<DefaultSysMenu> menus = sysMenuService.getByRoleId(roleId);
+        List<DefaultSysMenu> menus = sysMenuService.getByRoleId(roleId, moduleIds);
         if (!CollectionUtil.isEmpty(menus)) {
           //当角色的菜单存在时，设置已选择属性
           for (QueryRoleMenuBo result : results) {

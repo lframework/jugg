@@ -69,6 +69,11 @@ public abstract class AbstractUserDetails implements UserDetails, Serializable {
    */
   private Integer tenantId;
 
+  /**
+   * 是否为管理员
+   */
+  private Boolean isAdmin;
+
   @Override
   public boolean isAccountNonExpired() {
 
@@ -105,7 +110,11 @@ public abstract class AbstractUserDetails implements UserDetails, Serializable {
 
   public boolean isAdmin() {
 
-    return !isNoPermission() && this.permissions.contains(SecurityConstants.PERMISSION_ADMIN_NAME);
+    return this.isAdmin;
   }
 
+  @Override
+  public boolean hasAdminPermission() {
+    return !isNoPermission() && this.permissions.contains(SecurityConstants.PERMISSION_ADMIN_NAME);
+  }
 }

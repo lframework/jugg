@@ -19,7 +19,7 @@ public interface MenuService extends BaseMpService<DefaultSysMenu> {
    * @param isAdmin 是否为管理员
    * @return
    */
-  List<MenuDto> getMenuByUserId(String userId, boolean isAdmin);
+  List<MenuDto> getMenuByUserId(String userId, boolean isAdmin, List<Integer> moduleIds);
 
   /**
    * 根据用户ID查询权限
@@ -27,7 +27,14 @@ public interface MenuService extends BaseMpService<DefaultSysMenu> {
    * @param userId
    * @return
    */
-  Set<String> getPermissionsByUserId(String userId);
+  Set<String> getPermissionsByUserId(String userId, boolean isAdmin, List<Integer> moduleIds);
+
+  /**
+   * 根据用户ID查询角色权限
+   * @param userId
+   * @return
+   */
+  Set<String> getRolePermissionByUserId(String userId);
 
   /**
    * 收藏菜单

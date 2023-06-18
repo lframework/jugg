@@ -1,12 +1,9 @@
 package com.lframework.starter.mybatis.utils;
 
-import com.lframework.starter.common.utils.ThreadUtil;
 import com.lframework.starter.mybatis.service.OpLogsService;
 import com.lframework.starter.mybatis.vo.CreateOpLogsVo;
 import com.lframework.starter.web.common.utils.ApplicationUtil;
 import com.lframework.starter.web.utils.JsonUtil;
-import com.lframework.starter.web.common.security.SecurityUtil;
-import com.lframework.starter.web.common.threads.DefaultRunnable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -39,18 +36,28 @@ public class OpLogUtil {
 
   public static void addLog(CreateOpLogsVo vo) {
 
-    OpLogsService opLogsService = ApplicationUtil.getBean(OpLogsService.class);
+    try {
+      OpLogsService opLogsService = ApplicationUtil.getBean(OpLogsService.class);
 
-    ThreadUtil.execAsync(
-        new DefaultRunnable(() -> opLogsService.create(vo)));
+      // 这里不异步，需要在同事务内执行
+      opLogsService.create(vo);
+    } catch (Exception e) {
+      // 这里异常不抛出
+      log.error(e.getMessage(), e);
+    }
   }
 
   public static void addLogs(Collection<CreateOpLogsVo> list) {
 
-    OpLogsService opLogsService = ApplicationUtil.getBean(OpLogsService.class);
+    try {
+      OpLogsService opLogsService = ApplicationUtil.getBean(OpLogsService.class);
 
-    ThreadUtil.execAsync(
-        new DefaultRunnable(() -> opLogsService.create(list)));
+      // 这里不异步，需要在同事务内执行
+      opLogsService.create(list);
+    } catch (Exception e) {
+      // 这里异常不抛出
+      log.error(e.getMessage(), e);
+    }
   }
 
   public static void setVariable(String key, Object value) {

@@ -5,7 +5,6 @@ import com.lframework.starter.gen.enums.GenCustomListDetailType;
 import com.lframework.starter.gen.enums.GenQueryWidthType;
 import com.lframework.starter.mybatis.entity.BaseEntity;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * <p>
@@ -16,7 +15,6 @@ import lombok.EqualsAndHashCode;
  * @since 2021-12-10
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("gen_custom_list_detail")
 public class GenCustomListDetail extends BaseEntity {
 

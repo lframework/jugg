@@ -121,4 +121,10 @@ public abstract class BaseMpServiceImpl<M extends BaseMapper<T>, T> extends Serv
   protected String getSqlStatement(String sqlMethod) {
     return mapperClass.getName() + StringPool.DOT + sqlMethod;
   }
+
+  @Transactional(rollbackFor = Exception.class)
+  @Override
+  public boolean updateAllColumn(T entity, Wrapper<T> updateWrapper) {
+    return SqlHelper.retBool(getBaseMapper().updateAllColumn(entity, updateWrapper));
+  }
 }

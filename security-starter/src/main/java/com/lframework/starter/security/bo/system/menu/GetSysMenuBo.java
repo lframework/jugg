@@ -12,10 +12,8 @@ import com.lframework.starter.web.bo.BaseBo;
 import com.lframework.starter.web.common.utils.ApplicationUtil;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
 public class GetSysMenuBo extends BaseBo<DefaultSysMenu> {
 
   private static final long serialVersionUID = 1L;

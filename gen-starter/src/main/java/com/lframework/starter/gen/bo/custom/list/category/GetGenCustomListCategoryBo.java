@@ -4,10 +4,8 @@ import com.lframework.starter.gen.entity.GenCustomListCategory;
 import com.lframework.starter.web.bo.BaseBo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
 public class GetGenCustomListCategoryBo extends BaseBo<GenCustomListCategory> {
 
   /**

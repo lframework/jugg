@@ -7,7 +7,6 @@ import com.lframework.starter.common.exceptions.impl.DefaultSysException;
 import com.lframework.starter.common.utils.Assert;
 import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.common.utils.StringUtil;
-import com.lframework.starter.mybatis.enums.system.SysDataPermissionDataPermissionType;
 import com.lframework.starter.mybatis.service.system.SysDataPermissionModelDetailService;
 import com.lframework.starter.web.common.security.SecurityConstants;
 import com.lframework.starter.web.common.utils.ApplicationUtil;

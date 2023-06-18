@@ -21,7 +21,7 @@ public interface DefaultSysMenuMapper extends BaseMapper<DefaultSysMenu> {
    *
    * @return
    */
-  List<DefaultSysMenu> query();
+  List<DefaultSysMenu> query(@Param("moduleIds") List<Integer> moduleIds);
 
   /**
    * 根据角色ID查询已授权的菜单
@@ -29,7 +29,8 @@ public interface DefaultSysMenuMapper extends BaseMapper<DefaultSysMenu> {
    * @param roleId
    * @return
    */
-  List<DefaultSysMenu> getByRoleId(String roleId);
+  List<DefaultSysMenu> getByRoleId(@Param("roleId") String roleId,
+      @Param("moduleIds") List<Integer> moduleIds);
 
   /**
    * 根据ID查询
@@ -44,7 +45,7 @@ public interface DefaultSysMenuMapper extends BaseMapper<DefaultSysMenu> {
    *
    * @return
    */
-  List<DefaultSysMenu> selector(@Param("vo") SysMenuSelectorVo vo);
+  List<DefaultSysMenu> selector(@Param("vo") SysMenuSelectorVo vo, @Param("moduleIds") List<Integer> moduleIds);
 
   /**
    * 根据ID查询子节点

@@ -11,7 +11,6 @@ import ${p};
 </#if>
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * <p>
@@ -23,7 +22,6 @@ import lombok.EqualsAndHashCode;
 </#if>
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 public class Get${className}Bo extends BaseBo${r"<"}${className}${r">"} {
 
     /**

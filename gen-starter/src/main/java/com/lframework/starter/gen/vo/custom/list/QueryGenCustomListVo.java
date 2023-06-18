@@ -3,13 +3,11 @@ package com.lframework.starter.gen.vo.custom.list;
 import com.lframework.starter.web.vo.PageVo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * 查询自定义列表Vo
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 public class QueryGenCustomListVo extends PageVo {
 
   private static final long serialVersionUID = 1L;

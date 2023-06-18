@@ -332,7 +332,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
     <spring.version>2.2.2.RELEASE</spring.version>
-    <jugg.version>3.0.3</jugg.version>
+    <jugg.version>3.0.4</jugg.version>
     <lombok.version>1.18.10</lombok.version>
     <slf4j.version>1.7.21</slf4j.version>
     <logback.version>1.1.7</logback.version>
@@ -360,7 +360,7 @@
     <spring-cloud.version>Hoxton.RELEASE</spring-cloud.version>
   </properties>
 
-  <version>3.0.3</version>
+  <version>3.0.4</version>
 
   <licenses>
     <license>

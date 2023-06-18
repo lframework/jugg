@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.lframework.starter.mybatis.enums.system.SysDataPermissionModelDetailInputType;
 import com.lframework.starter.web.dto.BaseDto;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * <p>
@@ -16,7 +15,6 @@ import lombok.EqualsAndHashCode;
  * @author zmj
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("sys_data_permission_model_detail")
 public class SysDataPermissionModelDetail extends BaseEntity implements BaseDto {
 

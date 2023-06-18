@@ -6,7 +6,6 @@ import com.lframework.starter.gen.enums.GenRelaType;
 import com.lframework.starter.mybatis.entity.BaseEntity;
 import com.lframework.starter.web.dto.BaseDto;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * <p>
@@ -17,7 +16,6 @@ import lombok.EqualsAndHashCode;
  * @since 2022-09-24
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("gen_data_obj_detail")
 public class GenDataObjDetail extends BaseEntity implements BaseDto {
 

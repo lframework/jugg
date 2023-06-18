@@ -21,7 +21,8 @@ public interface DefaultMenuMapper extends BaseMapper<DefaultSysMenu> {
    * @param isAdmin 是否为管理员
    * @return
    */
-  List<MenuDto> getMenuByUserId(@Param("userId") String userId, @Param("isAdmin") boolean isAdmin);
+  List<MenuDto> getMenuByUserId(@Param("userId") String userId, @Param("isAdmin") boolean isAdmin,
+      @Param("moduleIds") List<Integer> moduleIds);
 
   /**
    * 根据用户ID查询收藏的菜单
@@ -37,7 +38,17 @@ public interface DefaultMenuMapper extends BaseMapper<DefaultSysMenu> {
    * @param userId
    * @return
    */
-  Set<String> getPermissionsByUserId(String userId);
+  Set<String> getPermissionsByUserId(@Param("userId") String userId,
+      @Param("isAdmin") boolean isAdmin,
+      @Param("moduleIds") List<Integer> moduleIds);
+
+  /**
+   * 根据用户ID查询角色权限
+   *
+   * @param userId
+   * @return
+   */
+  Set<String> getRolePermissionByUserId(@Param("userId") String userId);
 
   /**
    * 收藏菜单

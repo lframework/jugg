@@ -24,10 +24,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
 public class GetSysUserBo extends BaseBo<DefaultSysUser> {
 
   /**
@@ -181,7 +179,6 @@ public class GetSysUserBo extends BaseBo<DefaultSysUser> {
   }
 
   @Data
-  @EqualsAndHashCode(callSuper = true)
   public static class PositionBo extends BaseBo<VoidDto> {
 
     /**
@@ -198,7 +195,6 @@ public class GetSysUserBo extends BaseBo<DefaultSysUser> {
   }
 
   @Data
-  @EqualsAndHashCode(callSuper = true)
   public static class DeptBo extends BaseBo<VoidDto> {
 
     /**
@@ -215,7 +211,6 @@ public class GetSysUserBo extends BaseBo<DefaultSysUser> {
   }
 
   @Data
-  @EqualsAndHashCode(callSuper = true)
   public static class RoleBo extends BaseBo<VoidDto> {
 
     /**

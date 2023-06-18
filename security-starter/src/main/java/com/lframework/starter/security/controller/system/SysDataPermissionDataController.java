@@ -1,12 +1,11 @@
 package com.lframework.starter.security.controller.system;
 
 import com.lframework.starter.common.exceptions.impl.DefaultClientException;
-import com.lframework.starter.common.exceptions.impl.DefaultSysException;
 import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.mybatis.entity.DefaultSysRole;
 import com.lframework.starter.mybatis.entity.SysDataPermissionData;
 import com.lframework.starter.mybatis.enums.system.SysDataPermissionDataBizType;
-import com.lframework.starter.mybatis.enums.system.SysDataPermissionDataPermissionType;
+import com.lframework.starter.mybatis.components.permission.SysDataPermissionDataPermissionType;
 import com.lframework.starter.mybatis.service.system.SysDataPermissionDataService;
 import com.lframework.starter.mybatis.service.system.SysRoleService;
 import com.lframework.starter.mybatis.vo.system.permission.CreateSysDataPermissionDataVo;
@@ -82,9 +81,7 @@ public class SysDataPermissionDataController extends DefaultBaseController {
                 record.setBizId(bizId);
                 record.setBizType(
                     EnumUtil.getByCode(SysDataPermissionDataBizType.class, t.getBizType()));
-                record.setPermissionType(
-                    EnumUtil.getByCode(SysDataPermissionDataPermissionType.class,
-                        t.getPermissionType()));
+                record.setPermissionType(t.getPermissionType());
               }
               record.setPermission(t.getPermission());
               return record;

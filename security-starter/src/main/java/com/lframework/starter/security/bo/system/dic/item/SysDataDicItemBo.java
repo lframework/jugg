@@ -1,14 +1,15 @@
 package com.lframework.starter.security.bo.system.dic.item;
 
 import com.lframework.starter.common.constants.StringPool;
+import com.lframework.starter.mybatis.entity.SysDataDic;
 import com.lframework.starter.mybatis.entity.SysDataDicItem;
+import com.lframework.starter.mybatis.service.system.SysDataDicService;
 import com.lframework.starter.web.bo.BaseBo;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
 public class SysDataDicItemBo extends BaseBo<SysDataDicItem> {
 
   /**
@@ -40,6 +41,8 @@ public class SysDataDicItemBo extends BaseBo<SysDataDicItem> {
 
   @Override
   protected void afterInit(SysDataDicItem dto) {
-    this.id = this.code + StringPool.DATA_DIC_SPLIT + this.code;
+    SysDataDicService sysDataDicService = ApplicationUtil.getBean(SysDataDicService.class);
+    SysDataDic dataDic = sysDataDicService.findById(dto.getDicId());
+    this.id = dataDic.getCode() + StringPool.DATA_DIC_SPLIT + this.code;
   }
 }

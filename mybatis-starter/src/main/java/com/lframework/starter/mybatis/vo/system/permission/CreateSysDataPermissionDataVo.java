@@ -1,7 +1,6 @@
 package com.lframework.starter.mybatis.vo.system.permission;
 
 import com.lframework.starter.mybatis.enums.system.SysDataPermissionDataBizType;
-import com.lframework.starter.mybatis.enums.system.SysDataPermissionDataPermissionType;
 import com.lframework.starter.web.components.validation.IsEnum;
 import com.lframework.starter.web.vo.BaseVo;
 import io.swagger.annotations.ApiModelProperty;
@@ -36,7 +35,6 @@ public class CreateSysDataPermissionDataVo implements BaseVo, Serializable {
    */
   @ApiModelProperty(value = "权限类型", required = true)
   @NotNull(message = "权限类型不能为空！")
-  @IsEnum(message = "权限类型格式错误！", enumClass = SysDataPermissionDataPermissionType.class)
   private Integer permissionType;
 
   /**

@@ -15,10 +15,11 @@ import com.lframework.starter.mybatis.entity.DefaultSysUserRole;
 import com.lframework.starter.mybatis.entity.SysDataPermissionData;
 import com.lframework.starter.mybatis.entity.Tenant;
 import com.lframework.starter.mybatis.enums.system.SysDataPermissionDataBizType;
-import com.lframework.starter.mybatis.enums.system.SysDataPermissionDataPermissionType;
+import com.lframework.starter.mybatis.components.permission.SysDataPermissionDataPermissionType;
 import com.lframework.starter.mybatis.events.LoginEvent;
 import com.lframework.starter.mybatis.events.LogoutEvent;
 import com.lframework.starter.mybatis.service.MenuService;
+import com.lframework.starter.mybatis.service.SysModuleTenantService;
 import com.lframework.starter.mybatis.service.TenantService;
 import com.lframework.starter.mybatis.service.UserService;
 import com.lframework.starter.mybatis.service.system.SysDataPermissionDataService;
@@ -121,6 +122,9 @@ public class AuthController extends DefaultBaseController {
 
   @Autowired
   private SysUserDeptService sysUserDeptService;
+
+  @Autowired
+  private SysModuleTenantService sysModuleTenantService;
 
   /**
    * 获取登录验证码
@@ -238,7 +242,12 @@ public class AuthController extends DefaultBaseController {
   public InvokeResult<List<MenuDto>> menus() {
 
     AbstractUserDetails user = getCurrentUser();
-    List<MenuDto> menus = menuService.getMenuByUserId(user.getId(), user.isAdmin());
+    // 先查询当前租户使用的module
+    List<Integer> moduleIds = null;
+    if (TenantUtil.enableTenant()) {
+      moduleIds = sysModuleTenantService.getAvailableModuleIdsByTenantId(TenantContextHolder.getTenantId());
+    }
+    List<MenuDto> menus = menuService.getMenuByUserId(user.getId(), user.isAdmin(), moduleIds);
 
     return InvokeResultBuilder.success(menus);
   }

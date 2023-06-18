@@ -6,9 +6,9 @@ import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.mybatis.entity.DefaultSysMenu;
 import com.lframework.starter.mybatis.mappers.DefaultMenuMapper;
 import com.lframework.starter.mybatis.service.MenuService;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 import com.lframework.starter.web.components.security.IUserTokenResolver;
 import com.lframework.starter.web.dto.MenuDto;
-import com.lframework.starter.web.common.utils.ApplicationUtil;
 import com.lframework.starter.web.utils.IdUtil;
 import com.lframework.starter.web.utils.SpelUtil;
 import java.util.ArrayList;
@@ -37,9 +37,9 @@ public abstract class AbstractMenuServiceImpl extends
   private IUserTokenResolver userTokenResolver;
 
   @Override
-  public List<MenuDto> getMenuByUserId(String userId, boolean isAdmin) {
+  public List<MenuDto> getMenuByUserId(String userId, boolean isAdmin, List<Integer> moduleIds) {
 
-    List<MenuDto> menus = this.doGetMenus(userId, isAdmin);
+    List<MenuDto> menus = this.doGetMenus(userId, isAdmin, moduleIds);
 
     List<String> collectionMenuIds = this.doGetCollectMenuIds(userId);
 
@@ -76,9 +76,14 @@ public abstract class AbstractMenuServiceImpl extends
   }
 
   @Override
-  public Set<String> getPermissionsByUserId(String userId) {
+  public Set<String> getPermissionsByUserId(String userId, boolean isAdmin, List<Integer> moduleIds) {
 
-    return getBaseMapper().getPermissionsByUserId(userId);
+    return getBaseMapper().getPermissionsByUserId(userId, isAdmin, moduleIds);
+  }
+
+  @Override
+  public Set<String> getRolePermissionByUserId(String userId) {
+    return getBaseMapper().getRolePermissionByUserId(userId);
   }
 
   @Transactional(rollbackFor = Exception.class)
@@ -139,9 +144,9 @@ public abstract class AbstractMenuServiceImpl extends
     return vars;
   }
 
-  protected List<MenuDto> doGetMenus(String userId, boolean isAdmin) {
+  protected List<MenuDto> doGetMenus(String userId, boolean isAdmin, List<Integer> moduleIds) {
 
-    return getBaseMapper().getMenuByUserId(userId, isAdmin);
+    return getBaseMapper().getMenuByUserId(userId, isAdmin, moduleIds);
   }
 
   protected List<String> doGetCollectMenuIds(String userId) {

@@ -6,10 +6,8 @@ import com.lframework.starter.mybatis.service.system.SysMenuService;
 import com.lframework.starter.web.bo.BaseBo;
 import com.lframework.starter.web.common.utils.ApplicationUtil;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
 public class GenGenerateInfoBo extends BaseBo<GenGenerateInfoDto> {
 
   private static final long serialVersionUID = 1L;

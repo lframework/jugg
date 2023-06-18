@@ -42,15 +42,15 @@ public class DefaultSysMenuServiceImpl extends
     implements SysMenuService {
 
   @Override
-  public List<DefaultSysMenu> queryList() {
+  public List<DefaultSysMenu> queryList(List<Integer> moduleIds) {
 
-    return this.doQuery();
+    return this.doQuery(moduleIds);
   }
 
   @Override
-  public List<DefaultSysMenu> getByRoleId(String roleId) {
+  public List<DefaultSysMenu> getByRoleId(String roleId, List<Integer> moduleIds) {
 
-    return this.doGetByRoleId(roleId);
+    return this.doGetByRoleId(roleId, moduleIds);
   }
 
   @Cacheable(value = DefaultSysMenu.CACHE_NAME, key = "@cacheVariables.tenantId() + #id", unless = "#result == null")
@@ -109,9 +109,9 @@ public class DefaultSysMenuServiceImpl extends
   }
 
   @Override
-  public List<DefaultSysMenu> selector(SysMenuSelectorVo vo) {
+  public List<DefaultSysMenu> selector(SysMenuSelectorVo vo, List<Integer> moduleIds) {
 
-    return this.doSelector(vo);
+    return this.doSelector(vo, moduleIds);
   }
 
   @OpLog(type = DefaultOpLogType.OTHER, name = "启用菜单，ID：{}", params = "#ids", loopFormat = true)
@@ -138,14 +138,21 @@ public class DefaultSysMenuServiceImpl extends
     this.doBatchUnable(ids, userId);
   }
 
-  protected List<DefaultSysMenu> doQuery() {
-
-    return getBaseMapper().query();
+  @Override
+  public Boolean existPermission(String permission) {
+    Wrapper<DefaultSysMenu> queryWrapper = Wrappers.lambdaQuery(DefaultSysMenu.class)
+        .eq(DefaultSysMenu::getPermission, permission);
+    return this.count(queryWrapper) > 0;
   }
 
-  protected List<DefaultSysMenu> doGetByRoleId(String roleId) {
+  protected List<DefaultSysMenu> doQuery(List<Integer> moduleIds) {
 
-    return getBaseMapper().getByRoleId(roleId);
+    return getBaseMapper().query(moduleIds);
+  }
+
+  protected List<DefaultSysMenu> doGetByRoleId(String roleId, List<Integer> moduleIds) {
+
+    return getBaseMapper().getByRoleId(roleId, moduleIds);
   }
 
   protected DefaultSysMenu doGetById(@NonNull String id) {
@@ -193,9 +200,9 @@ public class DefaultSysMenuServiceImpl extends
     getBaseMapper().deleteById(id);
   }
 
-  protected List<DefaultSysMenu> doSelector(SysMenuSelectorVo vo) {
+  protected List<DefaultSysMenu> doSelector(SysMenuSelectorVo vo, List<Integer> moduleIds) {
 
-    return getBaseMapper().selector(vo);
+    return getBaseMapper().selector(vo, moduleIds);
   }
 
   protected void doBatchEnable(@NonNull List<String> ids, @NonNull String userId) {
@@ -237,7 +244,8 @@ public class DefaultSysMenuServiceImpl extends
       if (parentMenu != null) {
         //父级菜单必须是目录
         if (parentMenu.getDisplay() != SysMenuDisplay.CATALOG) {
-          throw new DefaultClientException("父级菜单类型必须是【" + SysMenuDisplay.CATALOG.getDesc() + "】！");
+          throw new DefaultClientException(
+              "父级菜单类型必须是【" + SysMenuDisplay.CATALOG.getDesc() + "】！");
         }
       }
 
@@ -272,7 +280,8 @@ public class DefaultSysMenuServiceImpl extends
       if (parentMenu != null) {
         //父级菜单必须是目录
         if (parentMenu.getDisplay() != SysMenuDisplay.FUNCTION) {
-          throw new DefaultClientException("父级菜单类型必须是【" + SysMenuDisplay.FUNCTION.getDesc() + "】！");
+          throw new DefaultClientException(
+              "父级菜单类型必须是【" + SysMenuDisplay.FUNCTION.getDesc() + "】！");
         }
       } else {
         throw new DefaultClientException(

@@ -7,7 +7,6 @@ import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.mybatis.entity.SysDataPermissionData;
 import com.lframework.starter.mybatis.entity.SysDataPermissionModelDetail;
 import com.lframework.starter.mybatis.enums.system.SysDataPermissionDataBizType;
-import com.lframework.starter.mybatis.enums.system.SysDataPermissionDataPermissionType;
 import com.lframework.starter.mybatis.enums.system.SysDataPermissionModelDetailCalcType;
 import com.lframework.starter.mybatis.enums.system.SysDataPermissionModelDetailConditionType;
 import com.lframework.starter.mybatis.enums.system.SysDataPermissionModelDetailNodeType;
@@ -90,7 +89,7 @@ public class SysDataPermissionModelDetailController extends DefaultBaseControlle
   public InvokeResult<List<QuerySysDataPermissionModelDetailBo>> queryByBizId(
       @NotBlank(message = "业务ID不能为空！") String bizId,
       @NotNull(message = "业务类型不能为空！") @IsEnum(message = "业务类型格式错误！", enumClass = SysDataPermissionDataBizType.class) Integer bizType,
-      @NotNull(message = " 权限类型不能为空！") @IsEnum(message = "权限类型格式错误！", enumClass = SysDataPermissionDataPermissionType.class) Integer permissionType) {
+      @NotNull(message = " 权限类型不能为空！") Integer permissionType) {
 
     SysDataPermissionData data = sysDataPermissionDataService.getByBizId(bizId, bizType,
         permissionType);

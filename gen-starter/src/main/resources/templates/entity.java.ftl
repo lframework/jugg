@@ -9,7 +9,6 @@ import ${p};
     </#list>
 </#if>
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * <p>
@@ -21,7 +20,6 @@ import lombok.EqualsAndHashCode;
 </#if>
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("${tableName}")
 public class ${className} extends BaseEntity implements BaseDto {
 

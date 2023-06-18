@@ -4,7 +4,6 @@ import com.lframework.starter.web.bo.BaseBo;
 import com.lframework.starter.web.dto.LoginDto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * 手机号登录Bo
@@ -13,7 +12,6 @@ import lombok.EqualsAndHashCode;
  * @since 2022/4/25
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 public class TelephoneLoginBo extends BaseBo<LoginDto> {
 
     /**

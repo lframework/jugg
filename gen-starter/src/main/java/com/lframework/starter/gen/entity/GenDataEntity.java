@@ -10,7 +10,6 @@ import com.lframework.starter.mybatis.entity.BaseEntity;
 import com.lframework.starter.web.dto.BaseDto;
 import java.time.LocalDateTime;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * <p>
@@ -21,7 +20,6 @@ import lombok.EqualsAndHashCode;
  * @since 2022-09-17
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("gen_data_entity")
 public class GenDataEntity extends BaseEntity implements BaseDto, Table {
 

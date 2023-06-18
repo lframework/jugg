@@ -12,10 +12,8 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
 public class GetDataEntityBo extends BaseBo<GenDataEntity> {
 
   private static final long serialVersionUID = 1L;

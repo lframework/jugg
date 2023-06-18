@@ -1,6 +1,7 @@
 package com.lframework.starter.mybatis.service;
 
 import cn.hutool.core.bean.copier.CopyOptions;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.lframework.starter.common.utils.BeanUtil;
@@ -127,4 +128,12 @@ public interface BaseMpService<T> extends IService<T> {
    * @return BaseMapper
    */
   BaseMapper<T> getBaseMpMapper();
+
+  /**
+   * 根据 whereEntity 条件，更新记录
+   *
+   * @param entity        实体对象
+   * @param updateWrapper 实体对象封装操作类 {@link com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper}
+   */
+  boolean updateAllColumn(T entity, Wrapper<T> updateWrapper);
 }

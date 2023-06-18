@@ -5,7 +5,6 @@ import com.lframework.starter.gen.enums.GenQueryWidthType;
 import com.lframework.starter.mybatis.entity.BaseEntity;
 import com.lframework.starter.web.dto.BaseDto;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * <p>
@@ -16,7 +15,6 @@ import lombok.EqualsAndHashCode;
  * @since 2021-12-10
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("gen_query_column_config")
 public class GenQueryColumnConfig extends BaseEntity implements BaseDto {
 

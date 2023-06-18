@@ -16,6 +16,7 @@ import com.lframework.starter.mybatis.enums.DefaultOpLogType;
 import com.lframework.starter.mybatis.impl.BaseMpServiceImpl;
 import com.lframework.starter.mybatis.mappers.system.DefaultSysRoleMapper;
 import com.lframework.starter.mybatis.resp.PageResult;
+import com.lframework.starter.mybatis.service.system.SysMenuService;
 import com.lframework.starter.mybatis.service.system.SysRoleService;
 import com.lframework.starter.mybatis.utils.OpLogUtil;
 import com.lframework.starter.mybatis.utils.PageHelperUtil;
@@ -29,6 +30,7 @@ import com.lframework.starter.web.utils.IdUtil;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +38,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class DefaultSysRoleServiceImpl extends
     BaseMpServiceImpl<DefaultSysRoleMapper, DefaultSysRole>
     implements SysRoleService {
+
+  @Autowired
+  private SysMenuService sysMenuService;
 
   @Override
   public PageResult<DefaultSysRole> query(Integer pageIndex, Integer pageSize,
@@ -123,6 +128,20 @@ public class DefaultSysRoleServiceImpl extends
   @Override
   public String create(CreateSysRoleVo vo) {
 
+    if (!StringUtil.isBlank(vo.getPermission())) {
+
+      if (SecurityConstants.PERMISSION_ADMIN_NAME.equals(vo.getPermission())) {
+        throw new DefaultClientException(
+            "权限【" + SecurityConstants.PERMISSION_ADMIN_NAME + "】为内置权限，请修改！");
+      }
+
+      // 这里的权限不能与菜单权限重复
+      if (sysMenuService.existPermission(vo.getPermission())) {
+        throw new DefaultClientException(
+            "权限【" + vo.getPermission() + "】为菜单权限，请修改！");
+      }
+    }
+
     DefaultSysRole data = this.doCreate(vo);
 
     OpLogUtil.setVariable("id", data.getId());
@@ -151,6 +170,12 @@ public class DefaultSysRoleServiceImpl extends
       if (SecurityConstants.PERMISSION_ADMIN_NAME.equals(vo.getPermission())) {
         throw new DefaultClientException(
             "权限【" + SecurityConstants.PERMISSION_ADMIN_NAME + "】为内置权限，请修改！");
+      }
+
+      // 这里的权限不能与菜单权限重复
+      if (sysMenuService.existPermission(vo.getPermission())) {
+        throw new DefaultClientException(
+            "权限【" + vo.getPermission() + "】为菜单权限，请修改！");
       }
     }
 
@@ -208,14 +233,6 @@ public class DefaultSysRoleServiceImpl extends
         .eq(DefaultSysRole::getName, vo.getName());
     if (getBaseMapper().selectCount(checkWrapper) > 0) {
       throw new DefaultClientException("名称重复，请重新输入！");
-    }
-
-    if (!StringUtil.isBlank(vo.getPermission())) {
-
-      if (SecurityConstants.PERMISSION_ADMIN_NAME.equals(vo.getPermission())) {
-        throw new DefaultClientException(
-            "权限【" + SecurityConstants.PERMISSION_ADMIN_NAME + "】为内置权限，请修改！");
-      }
     }
 
     DefaultSysRole data = new DefaultSysRole();

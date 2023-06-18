@@ -6,10 +6,8 @@ import com.lframework.starter.web.dto.LoginDto.UserInfoDto;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.Set;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
 public class LoginBo extends BaseBo<LoginDto> {
 
   /**

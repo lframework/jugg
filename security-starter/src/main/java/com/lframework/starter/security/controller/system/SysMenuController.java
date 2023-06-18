@@ -7,16 +7,19 @@ import com.lframework.starter.common.utils.ObjectUtil;
 import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.mybatis.entity.DefaultSysMenu;
 import com.lframework.starter.mybatis.enums.system.SysMenuDisplay;
+import com.lframework.starter.mybatis.service.SysModuleTenantService;
 import com.lframework.starter.mybatis.service.system.SysMenuService;
 import com.lframework.starter.mybatis.vo.system.menu.CreateSysMenuVo;
 import com.lframework.starter.mybatis.vo.system.menu.UpdateSysMenuVo;
 import com.lframework.starter.security.bo.system.menu.GetSysMenuBo;
 import com.lframework.starter.security.bo.system.menu.QuerySysMenuBo;
+import com.lframework.starter.web.common.tenant.TenantContextHolder;
 import com.lframework.starter.web.controller.DefaultBaseController;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
 import com.lframework.starter.web.utils.EnumUtil;
 import com.lframework.starter.web.common.security.SecurityUtil;
+import com.lframework.starter.web.utils.TenantUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -52,6 +55,9 @@ public class SysMenuController extends DefaultBaseController {
   @Autowired
   private SysMenuService sysMenuService;
 
+  @Autowired
+  private SysModuleTenantService sysModuleTenantService;
+
   /**
    * 系统菜单列表
    */
@@ -60,8 +66,14 @@ public class SysMenuController extends DefaultBaseController {
   @GetMapping("/query")
   public InvokeResult<List<QuerySysMenuBo>> query() {
 
+    // 先查询当前租户使用的module
+    List<Integer> moduleIds = null;
+    if (TenantUtil.enableTenant()) {
+      moduleIds = sysModuleTenantService.getAvailableModuleIdsByTenantId(TenantContextHolder.getTenantId());
+    }
+
     List<QuerySysMenuBo> results = CollectionUtil.emptyList();
-    List<DefaultSysMenu> datas = sysMenuService.queryList();
+    List<DefaultSysMenu> datas = sysMenuService.queryList(moduleIds);
     if (CollectionUtil.isNotEmpty(datas)) {
       results = datas.stream().map(QuerySysMenuBo::new).collect(Collectors.toList());
     }

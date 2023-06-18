@@ -47,9 +47,16 @@ public interface UserDetails extends Serializable {
   boolean isEnabled();
 
   /**
-   * 是否管理员
+   * 是否管理员 这里指的是管理员身份，可以获取全部菜单
    *
    * @return
    */
   boolean isAdmin();
+
+  /**
+   * 是否有管理员权限 这里值得是管理员具体权限，因为管理员权限会通过权限校验
+   *
+   * @return
+   */
+  boolean hasAdminPermission();
 }

@@ -7,7 +7,6 @@ import com.lframework.starter.mybatis.enums.Gender;
 import com.lframework.starter.web.dto.BaseDto;
 import java.time.LocalDateTime;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * <p>
@@ -18,7 +17,6 @@ import lombok.EqualsAndHashCode;
  * @since 2021-07-04
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("sys_user")
 public class DefaultSysUser extends BaseEntity implements BaseDto {
 

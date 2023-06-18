@@ -3,10 +3,8 @@ package com.lframework.starter.gen.vo.data.obj;
 import com.lframework.starter.web.vo.PageVo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
 public class GenDataObjSelectorVo extends PageVo {
 
   private static final long serialVersionUID = 1L;

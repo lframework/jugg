@@ -20,7 +20,7 @@ public class CheckPermissionHandlerImpl implements CheckPermissionHandler {
   @Override
   public boolean valid(PermissionCalcType calcType, String... permissions) {
     if (ArrayUtil.isEmpty(permissions)) {
-      return true;
+      return false;
     }
 
     AbstractUserDetails user = SecurityUtil.getCurrentUser();
@@ -28,7 +28,7 @@ public class CheckPermissionHandlerImpl implements CheckPermissionHandler {
       return false;
     }
 
-    if (user.isAdmin()) {
+    if (user.hasAdminPermission()) {
       if (log.isDebugEnabled()) {
         log.debug("当前用户是管理员，通过权限校验");
       }
