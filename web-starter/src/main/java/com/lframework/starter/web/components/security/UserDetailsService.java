@@ -13,12 +13,4 @@ public interface UserDetailsService {
    * @throws UserLoginException
    */
   AbstractUserDetails loadUserByUsername(String username) throws UserLoginException;
-
-  /**
-   * 根据用户名查询
-   *
-   * @param username
-   * @return
-   */
-  AbstractUserDetails findByUsername(String username);
 }

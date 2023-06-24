@@ -6,6 +6,8 @@ import com.lframework.starter.gen.bo.custom.form.GenCustomFormSelectorBo;
 import com.lframework.starter.gen.bo.custom.form.category.GenCustomFormCategorySelectorBo;
 import com.lframework.starter.gen.bo.custom.list.GenCustomListSelectorBo;
 import com.lframework.starter.gen.bo.custom.list.category.GenCustomListCategorySelectorBo;
+import com.lframework.starter.gen.bo.custom.page.GenCustomPageSelectorBo;
+import com.lframework.starter.gen.bo.custom.page.category.GenCustomPageCategorySelectorBo;
 import com.lframework.starter.gen.bo.custom.selector.GenCustomSelectorSelectorBo;
 import com.lframework.starter.gen.bo.custom.selector.category.GenCustomSelectorCategorySelectorBo;
 import com.lframework.starter.gen.bo.data.entity.GenDataEntityDetailSelectorBo;
@@ -19,6 +21,8 @@ import com.lframework.starter.gen.entity.GenCustomForm;
 import com.lframework.starter.gen.entity.GenCustomFormCategory;
 import com.lframework.starter.gen.entity.GenCustomList;
 import com.lframework.starter.gen.entity.GenCustomListCategory;
+import com.lframework.starter.gen.entity.GenCustomPage;
+import com.lframework.starter.gen.entity.GenCustomPageCategory;
 import com.lframework.starter.gen.entity.GenCustomSelector;
 import com.lframework.starter.gen.entity.GenCustomSelectorCategory;
 import com.lframework.starter.gen.entity.GenDataEntity;
@@ -30,6 +34,8 @@ import com.lframework.starter.gen.service.GenCustomFormCategoryService;
 import com.lframework.starter.gen.service.GenCustomFormService;
 import com.lframework.starter.gen.service.GenCustomListCategoryService;
 import com.lframework.starter.gen.service.GenCustomListService;
+import com.lframework.starter.gen.service.GenCustomPageCategoryService;
+import com.lframework.starter.gen.service.GenCustomPageService;
 import com.lframework.starter.gen.service.GenCustomSelectorCategoryService;
 import com.lframework.starter.gen.service.GenCustomSelectorService;
 import com.lframework.starter.gen.service.GenDataEntityCategoryService;
@@ -42,6 +48,7 @@ import com.lframework.starter.gen.vo.custom.form.GenCustomFormSelectorVo;
 import com.lframework.starter.gen.vo.custom.form.category.GenCustomFormCategorySelectorVo;
 import com.lframework.starter.gen.vo.custom.list.GenCustomListSelectorVo;
 import com.lframework.starter.gen.vo.custom.list.category.GenCustomListCategorySelectorVo;
+import com.lframework.starter.gen.vo.custom.page.GenCustomPageSelectorVo;
 import com.lframework.starter.gen.vo.custom.selector.GenCustomSelectorSelectorVo;
 import com.lframework.starter.gen.vo.custom.selector.category.GenCustomSelectorCategorySelectorVo;
 import com.lframework.starter.gen.vo.data.entity.GenDataEntityDetailSelectorVo;
@@ -112,6 +119,12 @@ public class GenSelectorController extends DefaultBaseController {
 
   @Autowired
   private GenCustomFormService genCustomFormService;
+
+  @Autowired
+  private GenCustomPageCategoryService genCustomPageCategoryService;
+
+  @Autowired
+  private GenCustomPageService genCustomPageService;
 
   @ApiOperation("数据实体分类")
   @GetMapping("/data/entity/category")
@@ -522,6 +535,76 @@ public class GenSelectorController extends DefaultBaseController {
         .filter(Objects::nonNull).collect(Collectors.toList());
     List<GenCustomFormSelectorBo> results = datas.stream()
         .map(GenCustomFormSelectorBo::new).collect(
+            Collectors.toList());
+    return InvokeResultBuilder.success(results);
+  }
+
+  @ApiOperation("自定义页面分类")
+  @GetMapping("/custom/page/category")
+  public InvokeResult<List<GenCustomPageCategorySelectorBo>> customPageCategory() {
+    List<GenCustomPageCategory> datas = genCustomPageCategoryService.queryList();
+    List<GenCustomPageCategorySelectorBo> results = null;
+    if (!CollectionUtil.isEmpty(datas)) {
+      results = datas.stream().map(GenCustomPageCategorySelectorBo::new)
+          .collect(Collectors.toList());
+    }
+
+    return InvokeResultBuilder.success(results);
+  }
+
+  /**
+   * 加载自定义表单分类
+   */
+  @ApiOperation("加载自定义页面分类")
+  @PostMapping("/custom/page/category/load")
+  public InvokeResult<List<GenCustomPageCategorySelectorBo>> loadCustomPageCategory(
+      @RequestBody(required = false) List<String> ids) {
+
+    if (CollectionUtil.isEmpty(ids)) {
+      return InvokeResultBuilder.success(CollectionUtil.emptyList());
+    }
+
+    List<GenCustomPageCategory> datas = ids.stream().filter(StringUtil::isNotBlank)
+        .map(t -> genCustomPageCategoryService.findById(t))
+        .filter(Objects::nonNull).collect(Collectors.toList());
+    List<GenCustomPageCategorySelectorBo> results = datas.stream()
+        .map(GenCustomPageCategorySelectorBo::new).collect(
+            Collectors.toList());
+    return InvokeResultBuilder.success(results);
+  }
+
+  @ApiOperation("自定义页面")
+  @GetMapping("/custom/page")
+  public InvokeResult<PageResult<GenCustomPageSelectorBo>> customPage(
+      @Valid GenCustomPageSelectorVo vo) {
+    PageResult<GenCustomPage> pageResult = genCustomPageService.selector(getPageIndex(vo),
+        getPageSize(vo), vo);
+    List<GenCustomPage> datas = pageResult.getDatas();
+    List<GenCustomPageSelectorBo> results = null;
+    if (!CollectionUtil.isEmpty(datas)) {
+      results = datas.stream().map(GenCustomPageSelectorBo::new).collect(Collectors.toList());
+    }
+
+    return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
+  }
+
+  /**
+   * 加载自定义表单
+   */
+  @ApiOperation("加载自定义页面")
+  @PostMapping("/custom/page/load")
+  public InvokeResult<List<GenCustomPageSelectorBo>> loadCustomPage(
+      @RequestBody(required = false) List<Integer> ids) {
+
+    if (CollectionUtil.isEmpty(ids)) {
+      return InvokeResultBuilder.success(CollectionUtil.emptyList());
+    }
+
+    List<GenCustomPage> datas = ids.stream().filter(Objects::nonNull)
+        .map(t -> genCustomPageService.findById(t))
+        .filter(Objects::nonNull).collect(Collectors.toList());
+    List<GenCustomPageSelectorBo> results = datas.stream()
+        .map(GenCustomPageSelectorBo::new).collect(
             Collectors.toList());
     return InvokeResultBuilder.success(results);
   }

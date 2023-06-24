@@ -7,10 +7,12 @@ import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.gen.builders.CustomFormBuilder;
 import com.lframework.starter.gen.builders.CustomListBuilder;
+import com.lframework.starter.gen.builders.CustomPageBuilder;
 import com.lframework.starter.gen.builders.CustomSelectorBuilder;
 import com.lframework.starter.gen.components.custom.form.CustomFormConfig;
 import com.lframework.starter.gen.components.custom.form.CustomFormHandler;
 import com.lframework.starter.gen.components.custom.list.CustomListConfig;
+import com.lframework.starter.gen.components.custom.page.CustomPageConfig;
 import com.lframework.starter.gen.components.custom.selector.CustomSelectorConfig;
 import com.lframework.starter.gen.components.data.obj.DataObjectQueryObj;
 import com.lframework.starter.gen.components.data.obj.DataObjectQueryParamObj;
@@ -20,10 +22,10 @@ import com.lframework.starter.gen.service.GenCustomFormService;
 import com.lframework.starter.mybatis.resp.PageResult;
 import com.lframework.starter.mybatis.utils.PageHelperUtil;
 import com.lframework.starter.mybatis.utils.PageResultUtil;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 import com.lframework.starter.web.controller.DefaultBaseController;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
-import com.lframework.starter.web.common.utils.ApplicationUtil;
 import com.lframework.starter.web.utils.RequestUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -32,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -65,6 +68,9 @@ public class GenController extends DefaultBaseController {
 
   @Autowired
   private GenCustomFormService genCustomFormService;
+
+  @Autowired
+  private CustomPageBuilder customPageBuilder;
 
   @ApiOperation("自定义列表配置")
   @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
@@ -255,5 +261,15 @@ public class GenController extends DefaultBaseController {
     handler.handle(param);
 
     return InvokeResultBuilder.success();
+  }
+
+  @ApiOperation("获取自定义页面配置")
+  @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
+  @GetMapping("/custom/page/config")
+  public InvokeResult<CustomPageConfig> get(@NotNull(message = "ID不能为空！") Integer id) {
+
+    CustomPageConfig config = customPageBuilder.buildConfig(id);
+
+    return InvokeResultBuilder.success(config);
   }
 }

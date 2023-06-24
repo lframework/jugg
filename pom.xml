@@ -2,481 +2,495 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.lframework</groupId>
-  <artifactId>parent</artifactId>
-  <name>【${project.artifactId}】Jugg基础框架</name>
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-dependencies</artifactId>
-        <version>${spring.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
+    <groupId>com.lframework</groupId>
+    <artifactId>parent</artifactId>
+    <name>【${project.artifactId}】Jugg基础框架</name>
+    <version>3.0.5</version>
+    <packaging>pom</packaging>
 
-      <dependency>
-        <artifactId>spring-cloud-dependencies</artifactId>
-        <groupId>org.springframework.cloud</groupId>
-        <scope>import</scope>
-        <type>pom</type>
-        <version>${spring-cloud.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>com.lframework</groupId>
-        <artifactId>common</artifactId>
-        <version>${jugg.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>com.lframework</groupId>
-        <artifactId>web-common</artifactId>
-        <version>${jugg.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>com.lframework</groupId>
-        <artifactId>web-starter</artifactId>
-        <version>${jugg.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>com.lframework</groupId>
-        <artifactId>security-starter</artifactId>
-        <version>${jugg.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>com.lframework</groupId>
-        <artifactId>mybatis-starter</artifactId>
-        <version>${jugg.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>com.lframework</groupId>
-        <artifactId>gen-starter</artifactId>
-        <version>${jugg.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>com.lframework</groupId>
-        <artifactId>bpm-starter</artifactId>
-        <version>${jugg.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>com.lframework</groupId>
-        <artifactId>cloud-starter</artifactId>
-        <version>${jugg.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>com.lframework</groupId>
-        <artifactId>mq-starter</artifactId>
-        <version>${jugg.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>com.lframework</groupId>
-        <artifactId>activemq-starter</artifactId>
-        <version>${jugg.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>com.lframework</groupId>
-        <artifactId>tenant-starter</artifactId>
-        <version>${jugg.version}</version>
-      </dependency>
-
-      <!-- lombok -->
-      <dependency>
-        <groupId>org.projectlombok</groupId>
-        <artifactId>lombok</artifactId>
-        <version>${lombok.version}</version>
-      </dependency>
-
-      <!-- log -->
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-        <version>${slf4j.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>ch.qos.logback</groupId>
-        <artifactId>logback-classic</artifactId>
-        <version>${logback.version}</version>
-      </dependency>
-
-      <!-- hutool工具类库 -->
-      <dependency>
-        <groupId>cn.hutool</groupId>
-        <artifactId>hutool-bom</artifactId>
-        <version>${hutool.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-
-      <!-- druid数据库连接池 -->
-      <dependency>
-        <groupId>com.alibaba</groupId>
-        <artifactId>druid-spring-boot-starter</artifactId>
-        <version>${druid-spring-boot-starter.version}</version>
-      </dependency>
-
-      <!-- 分页插件 -->
-      <dependency>
-        <groupId>com.github.pagehelper</groupId>
-        <artifactId>pagehelper-spring-boot-starter</artifactId>
-        <version>${pagehelper-spring-boot-starter.version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis-spring</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-
-      <!-- mybaits plus -->
-      <dependency>
-        <groupId>com.baomidou</groupId>
-        <artifactId>mybatis-plus-boot-starter</artifactId>
-        <version>${mybatis-plus-boot-starter.version}</version>
-      </dependency>
-
-      <!-- 多数据源 -->
-      <dependency>
-        <groupId>com.baomidou</groupId>
-        <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
-        <version>${dynamic-datasource-spring-boot-starter.version}</version>
-      </dependency>
-
-      <!-- 验证码 -->
-      <dependency>
-        <groupId>com.github.penggle</groupId>
-        <artifactId>kaptcha</artifactId>
-        <version>${kaptcha.version}</version>
-      </dependency>
-
-      <!-- jwt -->
-      <dependency>
-        <groupId>io.jsonwebtoken</groupId>
-        <artifactId>jjwt</artifactId>
-        <version>${jjwt.version}</version>
-      </dependency>
-
-      <!-- easyexcel -->
-      <dependency>
-        <groupId>com.alibaba</groupId>
-        <artifactId>easyexcel</artifactId>
-        <version>${easyexcel.version}</version>
-      </dependency>
-
-      <!-- HttpClient -->
-      <dependency>
-        <groupId>org.apache.httpcomponents</groupId>
-        <artifactId>httpclient</artifactId>
-        <version>${httpclient.version}</version>
-      </dependency>
-
-      <!-- Xml解析类库 -->
-      <dependency>
-        <groupId>dom4j</groupId>
-        <artifactId>dom4j</artifactId>
-        <version>${dom4j.version}</version>
-      </dependency>
-
-      <!-- Commons-codec 加密类库 -->
-      <dependency>
-        <groupId>commons-codec</groupId>
-        <artifactId>commons-codec</artifactId>
-        <version>${commons-codec.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.codehaus.groovy</groupId>
-        <artifactId>groovy-all</artifactId>
-        <version>${groovy.version}</version>
-        <type>pom</type>
-      </dependency>
-
-      <dependency>
-        <groupId>com.sun.mail</groupId>
-        <artifactId>javax.mail</artifactId>
-        <version>${javax.mail.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>com.aliyun</groupId>
-        <artifactId>dysmsapi20170525</artifactId>
-        <version>${aliyun-sms.version}</version>
-      </dependency>
-
-      <!-- knife4j -->
-      <dependency>
-        <groupId>com.github.xiaoymin</groupId>
-        <artifactId>knife4j-spring-boot-starter</artifactId>
-        <version>${knife4j-spring-boot-starter.version}</version>
-      </dependency>
-
-      <!-- sa-token -->
-      <dependency>
-        <groupId>cn.dev33</groupId>
-        <artifactId>sa-token-spring-boot-starter</artifactId>
-        <version>${sa-token.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>cn.dev33</groupId>
-        <artifactId>sa-token-dao-redis-jackson</artifactId>
-        <version>${sa-token.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>cn.dev33</groupId>
-        <artifactId>sa-token-alone-redis</artifactId>
-        <version>${sa-token.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>net.oschina.j2cache</groupId>
-        <artifactId>j2cache-core</artifactId>
-        <version>${j2cache.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>net.oschina.j2cache</groupId>
-        <artifactId>j2cache-springcache</artifactId>
-        <version>${j2cache-spring.version}</version>
-      </dependency>
-
-      <dependency>
-        <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-        <exclusions>
-          <exclusion>
-            <artifactId>nacos-client</artifactId>
-            <groupId>com.alibaba.nacos</groupId>
-          </exclusion>
-        </exclusions>
-        <version>${spring-cloud-alibaba.version}</version>
-        <groupId>com.alibaba.cloud</groupId>
-      </dependency>
-
-      <dependency>
-        <groupId>com.alibaba.cloud</groupId>
-        <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
-        <version>${spring-cloud-alibaba.version}</version>
-        <exclusions>
-          <exclusion>
-            <artifactId>nacos-client</artifactId>
-            <groupId>com.alibaba.nacos</groupId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-
-      <dependency>
-        <artifactId>nacos-client</artifactId>
-        <groupId>com.alibaba.nacos</groupId>
-        <version>${spring-cloud-alibaba-nacos.version}</version>
-      </dependency>
-
-      <dependency>
-        <artifactId>spring-cloud-alibaba-seata</artifactId>
-        <exclusions>
-          <exclusion>
-            <artifactId>seata-spring-boot-starter</artifactId>
-            <groupId>io.seata</groupId>
-          </exclusion>
-        </exclusions>
-        <groupId>com.alibaba.cloud</groupId>
-        <version>${spring-cloud-alibaba.version}</version>
-      </dependency>
-
-      <dependency>
-        <artifactId>seata-spring-boot-starter</artifactId>
-        <groupId>io.seata</groupId>
-        <version>${spring-cloud-alibaba-seata.version}</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
-  <modules>
-    <module>common</module>
-    <module>gen-starter</module>
-    <module>web-starter</module>
-    <module>mybatis-starter</module>
-    <module>security-starter</module>
-    <module>bpm-starter</module>
-    <module>web-common</module>
-    <module>cloud-starter</module>
-    <module>mq-starter</module>
-    <module>tenant-starter</module>
-    <module>activemq-starter</module>
-  </modules>
-  <packaging>pom</packaging>
-
-  <url>https://gitee.com/lframework/jugg</url>
-  <description>
-    Jugg是基于SpringBoot、SpringSecurity、SpringSession、Vue、ElementUI的前后端分离的后台管理系统模板，将常用的开发框架整合并配置，以此来简化后台管理系统的搭建工作。
-  </description>
-
-  <properties>
-    <maven.compiler.source>8</maven.compiler.source>
-    <maven.compiler.target>8</maven.compiler.target>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
-    <spring.version>2.2.2.RELEASE</spring.version>
-    <jugg.version>3.0.4</jugg.version>
-    <lombok.version>1.18.10</lombok.version>
-    <slf4j.version>1.7.21</slf4j.version>
-    <logback.version>1.1.7</logback.version>
-    <hutool.version>5.7.17</hutool.version>
-    <druid-spring-boot-starter.version>1.2.16</druid-spring-boot-starter.version>
-    <pagehelper-spring-boot-starter.version>1.3.1</pagehelper-spring-boot-starter.version>
-    <mybatis-plus-boot-starter.version>3.4.2</mybatis-plus-boot-starter.version>
-    <dynamic-datasource-spring-boot-starter.version>3.6.1</dynamic-datasource-spring-boot-starter.version>
-    <kaptcha.version>2.3.2</kaptcha.version>
-    <jjwt.version>0.9.1</jjwt.version>
-    <easyexcel.version>2.2.10</easyexcel.version>
-    <httpclient.version>4.5.10</httpclient.version>
-    <dom4j.version>1.6.1</dom4j.version>
-    <commons-codec.version>1.13</commons-codec.version>
-    <groovy.version>3.0.9</groovy.version>
-    <javax.mail.version>1.6.2</javax.mail.version>
-    <aliyun-sms.version>2.0.9</aliyun-sms.version>
-    <knife4j-spring-boot-starter.version>2.0.9</knife4j-spring-boot-starter.version>
-    <sa-token.version>1.29.0</sa-token.version>
-    <j2cache.version>2.8.4-release</j2cache.version>
-    <j2cache-spring.version>2.8.0-release</j2cache-spring.version>
-    <spring-cloud-alibaba.version>2.2.0.RELEASE</spring-cloud-alibaba.version>
-    <spring-cloud-alibaba-nacos.version>1.4.4</spring-cloud-alibaba-nacos.version>
-    <spring-cloud-alibaba-seata.version>1.5.2</spring-cloud-alibaba-seata.version>
-    <spring-cloud.version>Hoxton.RELEASE</spring-cloud.version>
-  </properties>
-
-  <version>3.0.4</version>
-
-  <licenses>
-    <license>
-      <name>Apache License 2.0</name>
-      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
-    </license>
-  </licenses>
-  <developers>
-    <developer>
-      <name>lframework</name>
-      <email>lframework@163.com</email>
-    </developer>
-  </developers>
-  <scm>
-    <connection>
-      scm:git:https://gitee.com/lframework/jugg.git
-    </connection>
-    <developerConnection>
-      scm:git:https://gitee.com/lframework/jugg.git
-    </developerConnection>
     <url>https://gitee.com/lframework/jugg</url>
-  </scm>
+    <description>
+        Jugg是基于SpringBoot、SpringSecurity、SpringSession、Vue、ElementUI的前后端分离的后台管理系统模板，将常用的开发框架整合并配置，以此来简化后台管理系统的搭建工作。
+    </description>
 
-  <distributionManagement>
-    <snapshotRepository>
-      <id>sonatype_snapshots</id>
-      <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
-      <layout>default</layout>
-    </snapshotRepository>
-    <repository>
-      <id>sonatype_releases</id>
-      <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-      <layout>default</layout>
-    </repository>
-  </distributionManagement>
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
+        <spring.version>2.2.2.RELEASE</spring.version>
+        <jugg.version>3.0.5</jugg.version>
+        <lombok.version>1.18.10</lombok.version>
+        <slf4j.version>1.7.21</slf4j.version>
+        <logback.version>1.1.7</logback.version>
+        <hutool.version>5.7.17</hutool.version>
+        <druid-spring-boot-starter.version>1.2.16</druid-spring-boot-starter.version>
+        <pagehelper-spring-boot-starter.version>1.3.1</pagehelper-spring-boot-starter.version>
+        <mybatis-plus-boot-starter.version>3.4.2</mybatis-plus-boot-starter.version>
+        <dynamic-datasource-spring-boot-starter.version>3.6.1</dynamic-datasource-spring-boot-starter.version>
+        <kaptcha.version>2.3.2</kaptcha.version>
+        <jjwt.version>0.9.1</jjwt.version>
+        <easyexcel.version>2.2.10</easyexcel.version>
+        <httpclient.version>4.5.10</httpclient.version>
+        <dom4j.version>1.6.1</dom4j.version>
+        <commons-codec.version>1.13</commons-codec.version>
+        <groovy.version>3.0.9</groovy.version>
+        <javax.mail.version>1.6.2</javax.mail.version>
+        <aliyun-sms.version>2.0.9</aliyun-sms.version>
+        <knife4j-spring-boot-starter.version>2.0.9</knife4j-spring-boot-starter.version>
+        <sa-token.version>1.29.0</sa-token.version>
+        <j2cache.version>2.8.4-release</j2cache.version>
+        <j2cache-spring.version>2.8.0-release</j2cache-spring.version>
+        <spring-cloud-alibaba.version>2.2.0.RELEASE</spring-cloud-alibaba.version>
+        <spring-cloud-alibaba-nacos.version>1.4.4</spring-cloud-alibaba-nacos.version>
+        <spring-cloud-alibaba-seata.version>1.5.2</spring-cloud-alibaba-seata.version>
+        <spring-cloud.version>Hoxton.RELEASE</spring-cloud.version>
+        <magic-api-spring-boot-starter.version>2.1.1</magic-api-spring-boot-starter.version>
+        <magic-api-plugin-cluster.version>2.1.1</magic-api-plugin-cluster.version>
+    </properties>
 
-  <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>${maven-compiler-plugin.version}</version>
-          <configuration>
-            <source>${maven.compiler.source}</source>
-            <target>${maven.compiler.target}</target>
-            <encoding>UTF-8</encoding>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-      </plugin>
-    </plugins>
-  </build>
+    <modules>
+      <module>common</module>
+      <module>gen-starter</module>
+      <module>web-starter</module>
+      <module>mybatis-starter</module>
+      <module>security-starter</module>
+      <module>bpm-starter</module>
+      <module>web-common</module>
+      <module>cloud-starter</module>
+      <module>mq-starter</module>
+      <module>tenant-starter</module>
+      <module>activemq-starter</module>
+    </modules>
 
-  <profiles>
-    <profile>
-      <id>gpg</id>
-      <build>
+    <licenses>
+        <license>
+            <name>Apache License 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>lframework</name>
+            <email>lframework@163.com</email>
+        </developer>
+    </developers>
+    <scm>
+        <connection>
+            scm:git:https://gitee.com/lframework/jugg.git
+        </connection>
+        <developerConnection>
+            scm:git:https://gitee.com/lframework/jugg.git
+        </developerConnection>
+        <url>https://gitee.com/lframework/jugg</url>
+    </scm>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>sonatype_snapshots</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+            <layout>default</layout>
+        </snapshotRepository>
+        <repository>
+            <id>sonatype_releases</id>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <layout>default</layout>
+        </repository>
+    </distributionManagement>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <groupId>org.springframework.cloud</groupId>
+                <scope>import</scope>
+                <type>pom</type>
+                <version>${spring-cloud.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.lframework</groupId>
+                <artifactId>common</artifactId>
+                <version>${jugg.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.lframework</groupId>
+                <artifactId>web-common</artifactId>
+                <version>${jugg.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.lframework</groupId>
+                <artifactId>web-starter</artifactId>
+                <version>${jugg.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.lframework</groupId>
+                <artifactId>security-starter</artifactId>
+                <version>${jugg.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.lframework</groupId>
+                <artifactId>mybatis-starter</artifactId>
+                <version>${jugg.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.lframework</groupId>
+                <artifactId>gen-starter</artifactId>
+                <version>${jugg.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.lframework</groupId>
+                <artifactId>bpm-starter</artifactId>
+                <version>${jugg.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.lframework</groupId>
+                <artifactId>cloud-starter</artifactId>
+                <version>${jugg.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.lframework</groupId>
+                <artifactId>mq-starter</artifactId>
+                <version>${jugg.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.lframework</groupId>
+                <artifactId>activemq-starter</artifactId>
+                <version>${jugg.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.lframework</groupId>
+                <artifactId>tenant-starter</artifactId>
+                <version>${jugg.version}</version>
+            </dependency>
+
+            <!-- lombok -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
+
+            <!-- log -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+
+            <!-- hutool工具类库 -->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-bom</artifactId>
+                <version>${hutool.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- druid数据库连接池 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid-spring-boot-starter.version}</version>
+            </dependency>
+
+            <!-- 分页插件 -->
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>${pagehelper-spring-boot-starter.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.mybatis</groupId>
+                        <artifactId>mybatis</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.mybatis</groupId>
+                        <artifactId>mybatis-spring</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <!-- mybaits plus -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus-boot-starter.version}</version>
+            </dependency>
+
+            <!-- 多数据源 -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+                <version>${dynamic-datasource-spring-boot-starter.version}</version>
+            </dependency>
+
+            <!-- 验证码 -->
+            <dependency>
+                <groupId>com.github.penggle</groupId>
+                <artifactId>kaptcha</artifactId>
+                <version>${kaptcha.version}</version>
+            </dependency>
+
+            <!-- jwt -->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+
+            <!-- easyexcel -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>easyexcel</artifactId>
+                <version>${easyexcel.version}</version>
+            </dependency>
+
+            <!-- HttpClient -->
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${httpclient.version}</version>
+            </dependency>
+
+            <!-- Xml解析类库 -->
+            <dependency>
+                <groupId>dom4j</groupId>
+                <artifactId>dom4j</artifactId>
+                <version>${dom4j.version}</version>
+            </dependency>
+
+            <!-- Commons-codec 加密类库 -->
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commons-codec.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-all</artifactId>
+                <version>${groovy.version}</version>
+                <type>pom</type>
+            </dependency>
+
+            <dependency>
+                <groupId>com.sun.mail</groupId>
+                <artifactId>javax.mail</artifactId>
+                <version>${javax.mail.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.aliyun</groupId>
+                <artifactId>dysmsapi20170525</artifactId>
+                <version>${aliyun-sms.version}</version>
+            </dependency>
+
+            <!-- knife4j -->
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-spring-boot-starter</artifactId>
+                <version>${knife4j-spring-boot-starter.version}</version>
+            </dependency>
+
+            <!-- sa-token -->
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-spring-boot-starter</artifactId>
+                <version>${sa-token.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-dao-redis-jackson</artifactId>
+                <version>${sa-token.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-alone-redis</artifactId>
+                <version>${sa-token.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>net.oschina.j2cache</groupId>
+                <artifactId>j2cache-core</artifactId>
+                <version>${j2cache.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>net.oschina.j2cache</groupId>
+                <artifactId>j2cache-springcache</artifactId>
+                <version>${j2cache-spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>nacos-client</artifactId>
+                        <groupId>com.alibaba.nacos</groupId>
+                    </exclusion>
+                </exclusions>
+                <version>${spring-cloud-alibaba.version}</version>
+                <groupId>com.alibaba.cloud</groupId>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>nacos-client</artifactId>
+                        <groupId>com.alibaba.nacos</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <artifactId>nacos-client</artifactId>
+                <groupId>com.alibaba.nacos</groupId>
+                <version>${spring-cloud-alibaba-nacos.version}</version>
+            </dependency>
+
+            <dependency>
+                <artifactId>spring-cloud-alibaba-seata</artifactId>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>seata-spring-boot-starter</artifactId>
+                        <groupId>io.seata</groupId>
+                    </exclusion>
+                </exclusions>
+                <groupId>com.alibaba.cloud</groupId>
+                <version>${spring-cloud-alibaba.version}</version>
+            </dependency>
+
+            <dependency>
+                <artifactId>seata-spring-boot-starter</artifactId>
+                <groupId>io.seata</groupId>
+                <version>${spring-cloud-alibaba-seata.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.ssssssss</groupId>
+                <artifactId>magic-api-spring-boot-starter</artifactId>
+                <version>${magic-api-spring-boot-starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ssssssss</groupId>
+                <artifactId>magic-api-plugin-cluster</artifactId>
+                <version>${magic-api-plugin-cluster.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler-plugin.version}</version>
+                    <configuration>
+                        <source>${maven.compiler.source}</source>
+                        <target>${maven.compiler.target}</target>
+                        <encoding>UTF-8</encoding>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-source-plugin</artifactId>
-            <configuration>
-              <attach>true</attach>
-            </configuration>
-            <executions>
-              <execution>
-                <phase>compile</phase>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <version>3.0.1</version>
-            <configuration>
-              <charset>UTF-8</charset>
-              <encoding>UTF-8</encoding>
-              <docencoding>UTF-8</docencoding>
-            </configuration>
-            <executions>
-              <execution>
-                <id>attach-javadocs</id>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-                <configuration>
-                  <doclint>none</doclint>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-gpg-plugin</artifactId>
-            <version>1.1</version>
-            <executions>
-              <execution>
-                <id>sign-artifacts</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>sign</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
         </plugins>
-      </build>
-    </profile>
-  </profiles>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>gpg</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <configuration>
+                            <attach>true</attach>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>3.0.1</version>
+                        <configuration>
+                            <charset>UTF-8</charset>
+                            <encoding>UTF-8</encoding>
+                            <docencoding>UTF-8</docencoding>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <doclint>none</doclint>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.1</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

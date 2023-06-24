@@ -7,27 +7,34 @@ import com.alibaba.excel.support.ExcelTypeEnum;
 import com.alibaba.excel.write.handler.WriteHandler;
 import com.alibaba.excel.write.metadata.style.WriteCellStyle;
 import com.alibaba.excel.write.metadata.style.WriteFont;
-import com.alibaba.excel.write.style.HorizontalCellStyleStrategy;
 import com.alibaba.excel.write.style.column.AbstractColumnWidthStyleStrategy;
 import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
 import com.lframework.starter.common.exceptions.impl.DefaultSysException;
+import com.lframework.starter.common.utils.ArrayUtil;
 import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.common.utils.FileUtil;
+import com.lframework.starter.common.utils.ReflectUtil;
+import com.lframework.starter.web.annotations.excel.ExcelRequired;
+import com.lframework.starter.web.components.excel.ExcelHorizontalCellStyleStrategy;
 import com.lframework.starter.web.components.excel.ExcelModel;
 import com.lframework.starter.web.components.excel.ExcelMultipartWriterBuilder;
 import com.lframework.starter.web.components.excel.ExcelMultipartWriterSheetBuilder;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.springframework.web.multipart.MultipartFile;
@@ -555,7 +562,7 @@ public class ExcelUtil {
     ExcelMultipartWriterSheetBuilder builder = new ExcelMultipartWriterBuilder().file(os)
         .excelType(excelType)
         .useDefaultStyle(false).head(clazz).sheet(sheetName);
-    writeHandlers = getWriteHandlers(writeHandlers);
+    writeHandlers = getWriteHandlers(writeHandlers, clazz);
 
     writeHandlers.forEach(builder::registerWriteHandler);
 
@@ -579,7 +586,7 @@ public class ExcelUtil {
     ExcelMultipartWriterSheetBuilder builder = new ExcelMultipartWriterBuilder().file(os)
         .excelType(excelType)
         .useDefaultStyle(false).head(clazz).sheet(sheetName);
-    List<WriteHandler> writeHandlers = getWriteHandlers();
+    List<WriteHandler> writeHandlers = getWriteHandlers(null, clazz);
     writeHandlers.forEach(builder::registerWriteHandler);
 
     return builder;
@@ -592,7 +599,7 @@ public class ExcelUtil {
    */
   public static List<WriteHandler> getWriteHandlers() {
 
-    return getWriteHandlers(null);
+    return getWriteHandlers(null, null);
   }
 
   /**
@@ -601,11 +608,12 @@ public class ExcelUtil {
    * @param writeHandlers
    * @return
    */
-  public static List<WriteHandler> getWriteHandlers(List<WriteHandler> writeHandlers) {
+  public static List<WriteHandler> getWriteHandlers(List<WriteHandler> writeHandlers,
+      Class headClass) {
 
     List<WriteHandler> retList = new ArrayList<>();
     // 默认表头样式
-    retList.addAll(getDefaultStyle());
+    retList.addAll(getDefaultStyle(getRequiredFieldNames(headClass)));
 
     if (CollectionUtil.isEmpty(writeHandlers)) {
       retList.add(DEFAULT_COLUMN_WIDTH_STYLE_STRATEGY);
@@ -625,26 +633,9 @@ public class ExcelUtil {
     return retList;
   }
 
-  private static List<WriteHandler> getDefaultStyle() {
+  private static List<WriteHandler> getDefaultStyle(Set<String> requiredFiledNames) {
 
     List<WriteHandler> handlerList = new ArrayList<>();
-    WriteCellStyle headWriteCellStyle = new WriteCellStyle();
-    headWriteCellStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
-    headWriteCellStyle.setHorizontalAlignment(HorizontalAlignment.LEFT);
-    headWriteCellStyle.setBorderTop(BorderStyle.THIN);
-    headWriteCellStyle.setBorderBottom(BorderStyle.THIN);
-    headWriteCellStyle.setBorderLeft(BorderStyle.THIN);
-    headWriteCellStyle.setBorderRight(BorderStyle.THIN);
-    headWriteCellStyle.setTopBorderColor(IndexedColors.GREY_25_PERCENT.getIndex());
-    headWriteCellStyle.setBottomBorderColor(IndexedColors.GREY_25_PERCENT.getIndex());
-    headWriteCellStyle.setLeftBorderColor(IndexedColors.GREY_25_PERCENT.getIndex());
-    headWriteCellStyle.setRightBorderColor(IndexedColors.GREY_25_PERCENT.getIndex());
-
-    WriteFont headWriteFont = new WriteFont();
-    headWriteFont.setFontName("宋体");
-    headWriteFont.setFontHeightInPoints((short) 11);
-    headWriteFont.setBold(true);
-    headWriteCellStyle.setWriteFont(headWriteFont);
 
     // 内容的策略
     WriteCellStyle contentWriteCellStyle = new WriteCellStyle();
@@ -664,8 +655,57 @@ public class ExcelUtil {
     contentWriteFont.setFontHeightInPoints((short) 11);
     contentWriteCellStyle.setWriteFont(contentWriteFont);
 
-    handlerList.add(new HorizontalCellStyleStrategy(headWriteCellStyle, contentWriteCellStyle));
+    handlerList.add(new ExcelHorizontalCellStyleStrategy(getHeadStyle(false), getHeadStyle(true),
+        contentWriteCellStyle, requiredFiledNames));
 
     return handlerList;
+  }
+
+  private static WriteCellStyle getHeadStyle(boolean isRequiredField) {
+    WriteCellStyle headWriteCellStyle = new WriteCellStyle();
+    headWriteCellStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
+    headWriteCellStyle.setHorizontalAlignment(HorizontalAlignment.LEFT);
+    headWriteCellStyle.setBorderTop(BorderStyle.THIN);
+    headWriteCellStyle.setBorderBottom(BorderStyle.THIN);
+    headWriteCellStyle.setBorderLeft(BorderStyle.THIN);
+    headWriteCellStyle.setBorderRight(BorderStyle.THIN);
+    headWriteCellStyle.setTopBorderColor(IndexedColors.GREY_25_PERCENT.getIndex());
+    headWriteCellStyle.setBottomBorderColor(IndexedColors.GREY_25_PERCENT.getIndex());
+    headWriteCellStyle.setLeftBorderColor(IndexedColors.GREY_25_PERCENT.getIndex());
+    headWriteCellStyle.setRightBorderColor(IndexedColors.GREY_25_PERCENT.getIndex());
+
+    WriteFont headWriteFont = new WriteFont();
+    headWriteFont.setFontName("宋体");
+    headWriteFont.setFontHeightInPoints((short) 11);
+    headWriteFont.setBold(true);
+    if (isRequiredField) {
+      headWriteFont.setColor(Font.COLOR_RED);
+    }
+    headWriteCellStyle.setWriteFont(headWriteFont);
+
+    return headWriteCellStyle;
+  }
+
+  private static Set<String> getRequiredFieldNames(Class headClass) {
+    if (headClass == null) {
+      return null;
+    }
+
+    Field[] fields = ReflectUtil.getFields(headClass, t ->
+        t.getAnnotation(ExcelRequired.class) != null);
+    if (ArrayUtil.isEmpty(fields)) {
+      return null;
+    }
+
+    Set<String> result = new HashSet<>();
+    for (Field field : fields) {
+      WriteCellStyle headWriteCellStyle = new WriteCellStyle();
+
+      WriteFont headWriteFont = new WriteFont();
+      headWriteCellStyle.setWriteFont(headWriteFont);
+      result.add(field.getName());
+    }
+
+    return result;
   }
 }

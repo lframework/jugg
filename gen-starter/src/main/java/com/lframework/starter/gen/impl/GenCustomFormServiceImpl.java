@@ -181,7 +181,8 @@ public class GenCustomFormServiceImpl extends
     getBaseMapper().update(wrapper);
   }
 
-  @CacheEvict(value = {GenCustomForm.CACHE_NAME, CustomFormConfig.CACHE_NAME}, key = "@cacheVariables.tenantId() + #key")
+  @CacheEvict(value = {GenCustomForm.CACHE_NAME,
+      CustomFormConfig.CACHE_NAME}, key = "@cacheVariables.tenantId() + #key")
   @Override
   public void cleanCacheByKey(Serializable key) {
     super.cleanCacheByKey(key);

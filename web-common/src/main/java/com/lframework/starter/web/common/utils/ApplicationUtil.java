@@ -10,6 +10,7 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEvent;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 /**
@@ -81,6 +82,10 @@ public class ApplicationUtil implements ApplicationContextAware {
     if (errors != null && errors.size() > 0) {
       throw new ConstraintViolationException("参数校验失败！", errors);
     }
+  }
+
+  public static Environment getEnv() {
+    return APPLICATION_CONTEXT.getEnvironment();
   }
 
   @Override

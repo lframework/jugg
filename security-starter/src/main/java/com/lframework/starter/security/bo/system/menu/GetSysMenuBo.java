@@ -91,6 +91,12 @@ public class GetSysMenuBo extends BaseBo<DefaultSysMenu> {
   private String requestParam;
 
   /**
+   * 自定义页面ID
+   */
+  @ApiModelProperty("自定义页面ID")
+  private String customPageId;
+
+  /**
    * 父级ID
    */
   @ApiModelProperty("父级ID")
@@ -188,6 +194,8 @@ public class GetSysMenuBo extends BaseBo<DefaultSysMenu> {
       GenCustomForm customForm = genCustomFormService.findById(dto.getComponent());
       this.customFormName = customForm.getName();
       this.requestParam = dto.getRequestParam();
+    } else if (dto.getComponentType() == SysMenuComponentType.CUSTOM_PAGE) {
+      this.customPageId = dto.getComponent();
     }
   }
 }

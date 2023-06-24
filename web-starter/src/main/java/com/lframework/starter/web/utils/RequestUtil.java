@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -32,6 +33,19 @@ public class RequestUtil {
         .currentRequestAttributes())).getRequest();
 
     return request;
+  }
+
+  /**
+   * 获取response
+   *
+   * @return
+   */
+  public static HttpServletResponse getResponse() {
+
+    HttpServletResponse response = ((ServletRequestAttributes) (RequestContextHolder
+        .currentRequestAttributes())).getResponse();
+
+    return response;
   }
 
   /**

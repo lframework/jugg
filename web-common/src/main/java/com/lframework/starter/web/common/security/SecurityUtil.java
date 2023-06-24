@@ -83,4 +83,24 @@ public class SecurityUtil {
     AbstractUserDetails currentUser = getCurrentUser();
     return currentUser == null ? null : currentUser.getTenantId();
   }
+
+  public static AbstractUserDetails getUserByToken(String token) {
+    if (token == null) {
+      return null;
+    }
+
+    try {
+      Object loginId = StpUtil.getLoginIdByToken(token);
+      if (loginId == null) {
+        return null;
+      }
+      SaSession session = StpUtil.getSessionByLoginId(loginId);
+      if (session == null) {
+        return null;
+      }
+      return (AbstractUserDetails) session.get(SecurityConstants.USER_INFO_KEY);
+    } catch (SaTokenException e) {
+      return null;
+    }
+  }
 }
