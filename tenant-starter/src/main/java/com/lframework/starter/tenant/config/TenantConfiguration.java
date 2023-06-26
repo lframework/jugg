@@ -59,8 +59,8 @@ public class TenantConfiguration {
       protected Map<String, DataSourceProperty> executeStmt(Statement statement)
           throws SQLException {
         Map<String, DataSourceProperty> dataSourcePropertyMap = new HashMap<>();
-        // 这里不区分状态
-        ResultSet rs = statement.executeQuery("select * from tenant");
+        // 这里只加载启用的租户
+        ResultSet rs = statement.executeQuery("select * from tenant where available = true");
         while (rs.next()) {
           String name = rs.getString("id");
           String username = rs.getString("jdbc_username");

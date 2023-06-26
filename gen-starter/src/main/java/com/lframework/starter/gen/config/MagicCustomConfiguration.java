@@ -4,6 +4,8 @@ import com.baomidou.dynamic.datasource.DynamicRoutingDataSource;
 import com.baomidou.dynamic.datasource.creator.BasicDataSourceCreator;
 import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DataSourceProperty;
 import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceProperties;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.lframework.starter.mybatis.entity.Tenant;
 import com.lframework.starter.mybatis.service.TenantService;
 import com.lframework.starter.mybatis.utils.DataSourceUtil;
@@ -40,8 +42,10 @@ public class MagicCustomConfiguration {
 
     DataSourceProperty dataSourceProperty = dynamicDataSourceProperties.getDatasource()
         .get("master");
-
-    List<Tenant> tenants = tenantService.list();
+    // 这里只加载启用的租户
+    Wrapper<Tenant> queryWrapper = Wrappers.lambdaQuery(Tenant.class)
+        .eq(Tenant::getAvailable, Boolean.TRUE);
+    List<Tenant> tenants = tenantService.list(queryWrapper);
 
     for (Tenant tenant : tenants) {
       dynamicDataSource.add(String.valueOf(tenant.getId()),
