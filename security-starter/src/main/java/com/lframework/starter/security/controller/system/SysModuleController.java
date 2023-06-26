@@ -9,7 +9,6 @@ import com.lframework.starter.mybatis.service.SysModuleTenantService;
 import com.lframework.starter.mybatis.vo.system.module.SysModuleTenantVo;
 import com.lframework.starter.security.bo.system.module.QuerySysModuleBo;
 import com.lframework.starter.web.annotations.security.HasPermission;
-import com.lframework.starter.web.common.tenant.TenantContextHolder;
 import com.lframework.starter.web.controller.DefaultBaseController;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
@@ -20,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,7 +51,7 @@ public class SysModuleController extends DefaultBaseController {
   @ApiOperation("查询列表")
   @HasPermission(value = {"system:tenant:module"})
   @GetMapping("/query")
-  public InvokeResult<List<QuerySysModuleBo>> query() {
+  public InvokeResult<List<QuerySysModuleBo>> query(@NotNull(message = "租户ID不能为空！") Integer tenantId) {
 
     if (!TenantUtil.enableTenant()) {
       return InvokeResultBuilder.success(Collections.emptyList());
@@ -65,8 +65,7 @@ public class SysModuleController extends DefaultBaseController {
       return InvokeResultBuilder.success(results);
     }
 
-    List<SysModuleTenant> sysModuleTenants = sysModuleTenantService.getByTenantId(
-        TenantContextHolder.getTenantId());
+    List<SysModuleTenant> sysModuleTenants = sysModuleTenantService.getByTenantId(tenantId);
 
     for (QuerySysModuleBo result : results) {
       SysModuleTenant sysModuleTenant = sysModuleTenants.stream()

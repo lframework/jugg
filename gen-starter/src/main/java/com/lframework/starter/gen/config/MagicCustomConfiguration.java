@@ -1,9 +1,16 @@
 package com.lframework.starter.gen.config;
 
 import com.baomidou.dynamic.datasource.DynamicRoutingDataSource;
+import com.baomidou.dynamic.datasource.creator.BasicDataSourceCreator;
+import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DataSourceProperty;
+import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceProperties;
+import com.lframework.starter.mybatis.entity.Tenant;
+import com.lframework.starter.mybatis.service.TenantService;
+import com.lframework.starter.mybatis.utils.DataSourceUtil;
+import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import javax.sql.DataSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.TaskScheduler;
@@ -12,6 +19,9 @@ import org.ssssssss.magicapi.datasource.model.MagicDynamicDataSource;
 
 @Configuration
 public class MagicCustomConfiguration {
+
+  @Autowired
+  private DynamicDataSourceProperties dynamicDataSourceProperties;
 
   @Bean
   public TaskScheduler taskScheduler() {
@@ -22,15 +32,22 @@ public class MagicCustomConfiguration {
   }
 
   @Bean
-  public MagicDynamicDataSource magicDynamicDataSource(DynamicRoutingDataSource dataSource) {
+  public MagicDynamicDataSource magicDynamicDataSource(DynamicRoutingDataSource dataSource,
+      TenantService tenantService, BasicDataSourceCreator basicDataSourceCreator) {
     Map<String, DataSource> dataSourceMap = dataSource.getDataSources();
     MagicDynamicDataSource dynamicDataSource = new MagicDynamicDataSource();
     dynamicDataSource.setDefault(dataSourceMap.get("master"));
-    for (Entry<String, DataSource> entry : dataSourceMap.entrySet()) {
-      if ("master".equals(entry.getKey())) {
-        continue;
-      }
-      dynamicDataSource.add(entry.getKey(), entry.getValue());
+
+    DataSourceProperty dataSourceProperty = dynamicDataSourceProperties.getDatasource()
+        .get("master");
+
+    List<Tenant> tenants = tenantService.list();
+
+    for (Tenant tenant : tenants) {
+      dynamicDataSource.add(String.valueOf(tenant.getId()),
+          basicDataSourceCreator.createDataSource(
+              DataSourceUtil.createDataSourceProperty(dataSourceProperty, tenant.getJdbcUrl(),
+                  tenant.getJdbcUsername(), tenant.getJdbcPassword())));
     }
 
     return dynamicDataSource;

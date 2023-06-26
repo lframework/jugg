@@ -1,6 +1,7 @@
 package com.lframework.starter.security.controller.system;
 
 import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.mybatis.entity.Tenant;
 import com.lframework.starter.mybatis.resp.PageResult;
 import com.lframework.starter.mybatis.service.TenantService;
@@ -11,6 +12,8 @@ import com.lframework.starter.mybatis.vo.system.tenant.UpdateTenantVo;
 import com.lframework.starter.security.bo.system.tenant.GetTenantBo;
 import com.lframework.starter.security.bo.system.tenant.QueryTenantBo;
 import com.lframework.starter.web.annotations.security.HasPermission;
+import com.lframework.starter.web.common.event.ReloadTenantEvent;
+import com.lframework.starter.web.common.utils.ApplicationUtil;
 import com.lframework.starter.web.controller.DefaultBaseController;
 import com.lframework.starter.web.resp.InvokeResult;
 import com.lframework.starter.web.resp.InvokeResultBuilder;
@@ -21,6 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author zmj
  */
+@Slf4j
 @Api(tags = "租户管理")
 @Validated
 @RestController
@@ -90,7 +95,17 @@ public class TenantController extends DefaultBaseController {
   @PostMapping
   public InvokeResult<Void> create(@Valid CreateTenantVo vo) {
 
-    tenantService.create(vo);
+    Integer tenantId = tenantService.create(vo);
+
+    try {
+      ReloadTenantEvent event = new ReloadTenantEvent(this, tenantId, vo.getJdbcUrl(),
+          vo.getJdbcUsername(), vo.getJdbcPassword());
+      ApplicationUtil.publishEvent(event);
+    } catch (Exception e) {
+      log.error(e.getMessage(), e);
+      throw new DefaultClientException(
+          "动态加载租户数据源失败，请检查配置项！注意：虽然加载数据源失败，但是租户已经新增，请勿重复新增！");
+    }
 
     return InvokeResultBuilder.success();
   }
@@ -106,6 +121,21 @@ public class TenantController extends DefaultBaseController {
     tenantService.update(vo);
 
     tenantService.cleanCacheByKey(vo.getId());
+
+    if (StringUtil.isNotBlank(vo.getJdbcUrl()) || StringUtil.isNotBlank(vo.getJdbcUsername())
+        || StringUtil.isNotBlank(vo.getJdbcPassword())) {
+      // 这里不走缓存
+      Tenant tenant = tenantService.getById(vo.getId());
+      try {
+        ReloadTenantEvent event = new ReloadTenantEvent(this, tenant.getId(), tenant.getJdbcUrl(),
+            tenant.getJdbcUsername(), tenant.getJdbcPassword());
+        ApplicationUtil.publishEvent(event);
+      } catch (Exception e) {
+        log.error(e.getMessage(), e);
+        throw new DefaultClientException(
+            "动态加载租户数据源失败，请检查配置项！");
+      }
+    }
 
     return InvokeResultBuilder.success();
   }
