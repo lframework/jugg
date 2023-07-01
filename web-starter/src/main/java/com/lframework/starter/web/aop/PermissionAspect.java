@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
  * @author zmj
  */
 @Aspect
-@Component
 public class PermissionAspect {
 
   @Autowired

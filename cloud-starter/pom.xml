@@ -5,28 +5,24 @@
   <parent>
     <artifactId>parent</artifactId>
     <groupId>com.lframework</groupId>
-    <version>3.0.6</version>
+    <version>3.1.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>cloud-starter</artifactId>
-  <name>【${project.artifactId}】SpringCloud Starter</name>
+  <name>【${project.artifactId}】集成SpringCloud能力</name>
 
   <dependencies>
 
     <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
         <groupId>com.lframework</groupId>
         <artifactId>web-starter</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.alibaba.cloud</groupId>
-      <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.alibaba.cloud</groupId>
-      <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
     </dependency>
 
     <dependency>
@@ -49,19 +45,24 @@
       <artifactId>spring-boot-actuator-autoconfigure</artifactId>
     </dependency>
 
-    <dependency>
+    <!--<dependency>
       <artifactId>spring-cloud-alibaba-seata</artifactId>
       <groupId>com.alibaba.cloud</groupId>
-    </dependency>
-
-    <dependency>
-      <artifactId>seata-spring-boot-starter</artifactId>
-      <groupId>io.seata</groupId>
-    </dependency>
+    </dependency>-->
 
     <dependency>
       <artifactId>spring-cloud-starter-zipkin</artifactId>
       <groupId>org.springframework.cloud</groupId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.alibaba.cloud</groupId>
+      <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.alibaba.cloud</groupId>
+      <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
     </dependency>
   </dependencies>
 </project>

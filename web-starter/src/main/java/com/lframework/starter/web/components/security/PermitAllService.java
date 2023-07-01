@@ -1,6 +1,8 @@
 package com.lframework.starter.web.components.security;
 
 import com.lframework.starter.common.utils.StringUtil;
+import com.lframework.starter.web.config.properties.UploadProperties;
+import com.lframework.starter.web.config.properties.WebProperties;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,20 +11,17 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 public class PermitAllService {
 
-  /**
-   * 不需要认证的Url 默认为空
-   */
-  @Value("${filter-url:}")
-  private String filterUrl;
+  @Autowired
+  private WebProperties webProperties;
 
-  @Value("${upload.url}")
-  private String uploadUrl;
+  @Autowired
+  private UploadProperties uploadProperties;
 
   private List<Entry<HttpMethod, String>> permitAllUrls;
 
@@ -32,7 +31,8 @@ public class PermitAllService {
   public void init() {
 
     List<Entry<HttpMethod, String>> results = new ArrayList<>();
-    if (StringUtil.isNotEmpty(this.filterUrl)) {
+    String filterUrl = webProperties.getFilterUrl();
+    if (StringUtil.isNotEmpty(filterUrl)) {
       String[] filterUrls = filterUrl.split(",");
       for (String url : filterUrls) {
         // 配置文件配置的url所有method都放行
@@ -40,6 +40,7 @@ public class PermitAllService {
       }
     }
 
+    String uploadUrl = uploadProperties.getUrl();
     // 访问上传文件url
     results.add(new SimpleEntry<>(HttpMethod.GET,
         uploadUrl.endsWith("/") ? uploadUrl + "**" : uploadUrl + "/**"));

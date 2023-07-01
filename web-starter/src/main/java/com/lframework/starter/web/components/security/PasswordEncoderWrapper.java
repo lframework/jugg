@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
  *
  * @author zmj
  */
-@Component
 public class PasswordEncoderWrapper {
 
   @Autowired

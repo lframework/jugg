@@ -6,7 +6,6 @@ import com.lframework.starter.common.utils.Assert;
 import com.lframework.starter.web.common.utils.ApplicationUtil;
 import org.springframework.stereotype.Component;
 
-@Component
 public class LockFactory {
 
   /**

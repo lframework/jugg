@@ -26,7 +26,6 @@ import org.springframework.stereotype.Component;
  * @author zmj
  */
 @Aspect
-@Component
 public class OpenApiAspect {
 
   @Pointcut("(@within(org.springframework.web.bind.annotation.RestController) || @within(org.springframework.stereotype.Controller)) && @annotation(com.lframework.starter.web.annotations.OpenApi) && execution(public * *(..))")

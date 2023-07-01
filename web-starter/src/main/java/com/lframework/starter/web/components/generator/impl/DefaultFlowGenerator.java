@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 /**
  * 默认流水号生成器 流水号位数是10位，即：yyyyMMdd0000000001格式
  */
-@Component
 public class DefaultFlowGenerator extends AbstractFlowGenerator implements Generator {
 
   @Override

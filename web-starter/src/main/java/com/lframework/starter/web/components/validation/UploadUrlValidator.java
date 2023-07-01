@@ -1,9 +1,8 @@
 package com.lframework.starter.web.components.validation;
 
+import com.lframework.starter.common.constants.PatternPool;
+import com.lframework.starter.common.utils.RegUtil;
 import com.lframework.starter.common.utils.StringUtil;
-import com.lframework.starter.web.enums.BaseEnum;
-import com.lframework.starter.web.common.utils.ApplicationUtil;
-import java.io.Serializable;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
@@ -14,28 +13,9 @@ import javax.validation.ConstraintValidatorContext;
  */
 public class UploadUrlValidator implements ConstraintValidator<UploadUrl, String> {
 
-  private Class<? extends BaseEnum<? extends Serializable>> enumsClass;
-
-  private String url;
-
-  @Override
-  public void initialize(UploadUrl constraintAnnotation) {
-
-    String domain = ApplicationUtil.getProperty("upload.domain");
-    if (domain.endsWith("/")) {
-      domain = domain.substring(0, domain.length() - 1);
-    }
-    String baseUrl = ApplicationUtil.getProperty("upload.url");
-    if (!baseUrl.startsWith("/")) {
-      baseUrl = "/" + baseUrl;
-    }
-
-    this.url = domain + baseUrl;
-  }
-
   @Override
   public boolean isValid(String value, ConstraintValidatorContext context) {
 
-    return StringUtil.isEmpty(value) || value.startsWith(value);
+    return StringUtil.isEmpty(value) || RegUtil.isMatch(PatternPool.PATTERN_HTTP_URL, value);
   }
 }

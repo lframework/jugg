@@ -5,7 +5,6 @@ import com.lframework.starter.web.components.generator.GenerateCodeFactory;
 import com.lframework.starter.web.service.GenerateCodeService;
 import org.springframework.stereotype.Service;
 
-@Service
 public class GenerateCodeServiceImpl implements GenerateCodeService {
 
   @Override

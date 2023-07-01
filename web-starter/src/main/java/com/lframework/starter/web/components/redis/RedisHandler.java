@@ -15,7 +15,6 @@ import org.springframework.util.CollectionUtils;
  *
  * @author zmj
  */
-@Component
 public class RedisHandler {
 
   @Autowired

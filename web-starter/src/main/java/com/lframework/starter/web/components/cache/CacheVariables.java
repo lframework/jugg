@@ -3,12 +3,10 @@ package com.lframework.starter.web.components.cache;
 import com.lframework.starter.common.constants.StringPool;
 import com.lframework.starter.web.common.tenant.TenantContextHolder;
 import com.lframework.starter.web.utils.TenantUtil;
-import org.springframework.stereotype.Component;
 
 /**
  * 缓存变量
  */
-@Component("cacheVariables")
 public class CacheVariables {
 
   /**

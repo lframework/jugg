@@ -1,13 +1,11 @@
 package com.lframework.starter.cloud.resp;
 
+import com.lframework.starter.cloud.BaseFeignClient;
 import com.lframework.starter.common.exceptions.BaseException;
 import com.lframework.starter.common.exceptions.impl.DefaultSysException;
-import com.lframework.starter.cloud.BaseFeignClient;
 import com.lframework.starter.web.resp.Response;
 import com.lframework.starter.web.resp.ResponseBuilder;
-import org.springframework.stereotype.Component;
 
-@Component
 public class ApiInvokeResultBuilderWrapper implements ResponseBuilder {
 
   @Override

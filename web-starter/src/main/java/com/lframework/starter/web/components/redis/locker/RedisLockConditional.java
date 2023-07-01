@@ -9,7 +9,7 @@ public class RedisLockConditional implements Condition {
   @Override
   public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
 
-    String lockerType = context.getEnvironment().getProperty("locker-type");
+    String lockerType = context.getEnvironment().getProperty("jugg.locker.type");
     return "redis".equalsIgnoreCase(lockerType);
   }
 }

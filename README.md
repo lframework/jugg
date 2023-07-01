@@ -3,11 +3,8 @@ Jugg名称来源于Dota游戏中的剑圣。
 Jugg是用来开发业务系统的脚手架，将常用的开发框架整合并配置，以此来简化业务系统的搭建工作。
 ### 项目构成
 * common
-* mybatis-starter
-* security-starter
 * web-starter
 * web-common
-* bpm-starter
 * gen
 * cloud-starter
 * mq-starter
@@ -16,7 +13,7 @@ Jugg是用来开发业务系统的脚手架，将常用的开发框架整合并�
 
 所有的module的名称即为主要封装的能力。例如：web-starter表示依赖此starter即可让项目拥有Web后台的能力。
 
-可以根据不同的需求来决定具体使用哪些starter。例如：无需用户登录、授权，那么就不需要使用security-starter。
+可以根据不同的需求来决定具体使用哪些starter。
 
 ### 内置功能
 * 菜单管理：维护系统菜单、权限。
@@ -50,8 +47,6 @@ Jugg是用来开发业务系统的脚手架，将常用的开发框架整合并�
 * 角色授权相关：ISysRoleMenuService（实现类：DefaultSysRoleMenuServiceImpl）、IMenuService（实现类：DefaultMenuServiceImpl）
 
 需要自定义哪些功能就重写哪个类并注册成Bean即可。
-
-这些内置功能使用前提是：使用security-starter，因为这些功能需要依赖用户的登录、授权等，这些全部是由security-starter决定的。
 
 ### 主要技术框架
 * springboot 2.2.2.RELEASE

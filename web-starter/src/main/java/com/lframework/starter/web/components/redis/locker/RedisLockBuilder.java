@@ -18,8 +18,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.types.Expiration;
 import org.springframework.stereotype.Component;
 
-@Component
-@Conditional(RedisLockConditional.class)
 public class RedisLockBuilder implements LockBuilder {
 
   private static final ThreadLocal<Map<String, Locker>> LOCKERS;

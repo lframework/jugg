@@ -7,14 +7,9 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 
-@Order(Ordered.HIGHEST_PRECEDENCE)
-@WebFilter
 public class LogFilter implements Filter {
 
   @Autowired

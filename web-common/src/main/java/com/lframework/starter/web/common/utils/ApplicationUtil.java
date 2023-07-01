@@ -11,14 +11,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 
 /**
  * Spring Application 工具类
  *
  * @author zmj
  */
-@Component
 public class ApplicationUtil implements ApplicationContextAware {
 
   private static ApplicationContext APPLICATION_CONTEXT;

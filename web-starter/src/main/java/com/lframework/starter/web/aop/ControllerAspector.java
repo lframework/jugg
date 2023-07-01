@@ -22,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
  * @author zmj
  */
 @Aspect
-@Component
 public class ControllerAspector {
 
   @Pointcut("(@within(org.springframework.web.bind.annotation.RestController) || @within(org.springframework.stereotype.Controller)) && execution(public * *(..))")
