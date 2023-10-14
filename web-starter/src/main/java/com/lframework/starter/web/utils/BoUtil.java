@@ -7,10 +7,10 @@ import com.lframework.starter.common.functions.SFunction;
 import com.lframework.starter.common.utils.ArrayUtil;
 import com.lframework.starter.common.utils.BeanUtil;
 import com.lframework.starter.common.utils.ReflectUtil;
+import com.lframework.starter.web.annotations.constants.EncryType;
 import com.lframework.starter.web.annotations.convert.EncryptConvert;
 import com.lframework.starter.web.annotations.convert.EnumConvert;
 import com.lframework.starter.web.annotations.convert.IgnoreConvert;
-import com.lframework.starter.web.annotations.constants.EncryType;
 import com.lframework.starter.web.bo.BaseBo;
 import com.lframework.starter.web.dto.BaseDto;
 import com.lframework.starter.web.enums.BaseEnum;
@@ -65,6 +65,7 @@ public class BoUtil {
       }
 
       Map<String, Object[]> enumFieldNames = new HashMap<>();
+      Map<String, List<String>> enumNameMap = new HashMap<>();
       Map<String, EncryType> encryptFieldNames = new HashMap<>();
       Class<? extends Serializable> clazz = target.getClass();
       Field[] fields = ReflectUtil.getFields(clazz);
@@ -88,6 +89,9 @@ public class BoUtil {
                 List<Object> codes = EnumUtil
                     .getFieldValues((Class<? extends Enum<?>>) srcField.getType(), "code");
 
+                List<String> enumNames = EnumUtil.getNames((Class<? extends Enum<?>>) srcField.getType());
+                enumNameMap.put(field.getName(), enumNames);
+
                 enumFieldNames.put(field.getName(), ArrayUtil.toArray(codes, Object.class));
               }
             }
@@ -107,7 +111,13 @@ public class BoUtil {
 
             if (enumFieldNames.containsKey(s)) {
               if (v != null) {
-                return enumFieldNames.get(s)[(Integer) v];
+                if (v instanceof CharSequence) {
+                  // 枚举值是字符串时
+                  return enumFieldNames.get(s)[enumNameMap.get(s).indexOf(v)];
+                } else {
+                  // 这里只能当做是数字，enumConvert只支持两种形式
+                  return enumFieldNames.get(s)[Integer.parseInt(String.valueOf(v))];
+                }
               }
             }
 

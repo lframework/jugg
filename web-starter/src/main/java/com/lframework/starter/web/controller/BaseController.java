@@ -1,6 +1,7 @@
 package com.lframework.starter.web.controller;
 
 import com.lframework.starter.common.utils.ObjectUtil;
+import com.lframework.starter.web.constants.MybatisConstants;
 import com.lframework.starter.web.vo.PageVo;
 import com.lframework.starter.web.common.security.AbstractUserDetails;
 import com.lframework.starter.web.common.security.SecurityUtil;
@@ -13,21 +14,6 @@ import com.lframework.starter.web.common.security.SecurityUtil;
 public abstract class BaseController {
 
   /**
-   * 默认当前页码
-   */
-  private static final int DEFAULT_PAGE_INDEX = 1;
-
-  /**
-   * 默认每页条数
-   */
-  private static final int DEFAULT_PAGE_SIZE = 20;
-
-  /**
-   * 默认导出条数
-   */
-  private static final int DEFAULT_EXPORT_SIZE = 2000;
-
-  /**
    * 获取当前页码
    *
    * @param vo
@@ -36,7 +22,7 @@ public abstract class BaseController {
   public int getPageIndex(PageVo vo) {
 
     if (ObjectUtil.isNull(vo) || ObjectUtil.isNull(vo.getPageIndex()) || vo.getPageIndex() <= 0) {
-      return DEFAULT_PAGE_INDEX;
+      return MybatisConstants.DEFAULT_PAGE_INDEX;
     }
 
     return vo.getPageIndex();
@@ -51,7 +37,7 @@ public abstract class BaseController {
   public int getPageSize(PageVo vo) {
 
     if (ObjectUtil.isNull(vo) || ObjectUtil.isNull(vo.getPageSize()) || vo.getPageSize() <= 0) {
-      return DEFAULT_PAGE_SIZE;
+      return MybatisConstants.DEFAULT_PAGE_SIZE;
     }
 
     return vo.getPageSize();
@@ -79,7 +65,7 @@ public abstract class BaseController {
 
   public int getExportSize() {
 
-    return DEFAULT_EXPORT_SIZE;
+    return MybatisConstants.DEFAULT_EXPORT_SIZE;
   }
 
   /**

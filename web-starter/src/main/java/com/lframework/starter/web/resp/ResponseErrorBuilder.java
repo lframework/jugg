@@ -2,7 +2,7 @@ package com.lframework.starter.web.resp;
 
 import com.lframework.starter.common.exceptions.BaseException;
 
-public interface ResponseBuilder {
+public interface ResponseErrorBuilder {
 
   /**
    * 是否为默认builder
@@ -18,21 +18,6 @@ public interface ResponseBuilder {
    * @return
    */
   boolean isMatch(Object controller);
-
-  /**
-   * 响应成功-无数据
-   *
-   * @return
-   */
-  Response<Void> success();
-
-  /**
-   * 响应成功-有数据
-   *
-   * @param data
-   * @return
-   */
-  <T> Response<T> success(T data);
 
   /**
    * 响应失败-无信息

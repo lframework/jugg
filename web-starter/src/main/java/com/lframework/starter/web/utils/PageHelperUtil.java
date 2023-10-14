@@ -2,6 +2,7 @@ package com.lframework.starter.web.utils;
 
 import com.github.pagehelper.PageHelper;
 import com.lframework.starter.common.utils.ObjectUtil;
+import com.lframework.starter.web.constants.MybatisConstants;
 import com.lframework.starter.web.vo.PageVo;
 
 /**
@@ -10,16 +11,6 @@ import com.lframework.starter.web.vo.PageVo;
  * @author zmj
  */
 public class PageHelperUtil {
-
-  /**
-   * 默认当前页码
-   */
-  private static final int DEFAULT_PAGE_INDEX = 1;
-
-  /**
-   * 默认每页条数
-   */
-  private static final int DEFAULT_PAGE_SIZE = 20;
 
   /**
    * 开启分页
@@ -43,16 +34,16 @@ public class PageHelperUtil {
   public static void startPage(PageVo pageVo) {
 
     if (ObjectUtil.isNull(pageVo)) {
-      startPage(DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE);
+      startPage(MybatisConstants.DEFAULT_PAGE_INDEX, MybatisConstants.DEFAULT_PAGE_SIZE);
       return;
     }
 
     if (ObjectUtil.isNull(pageVo.getPageIndex())) {
-      pageVo.setPageIndex(DEFAULT_PAGE_INDEX);
+      pageVo.setPageIndex(MybatisConstants.DEFAULT_PAGE_INDEX);
     }
 
     if (ObjectUtil.isNull(pageVo.getPageSize())) {
-      pageVo.setPageSize(DEFAULT_PAGE_SIZE);
+      pageVo.setPageSize(MybatisConstants.DEFAULT_PAGE_SIZE);
     }
 
     startPage(pageVo.getPageIndex(), pageVo.getPageSize());

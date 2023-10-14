@@ -7,7 +7,7 @@
     <groupId>com.lframework</groupId>
     <artifactId>parent</artifactId>
     <name>【${project.artifactId}】Jugg基础框架</name>
-    <version>3.1.0</version>
+    <version>3.1.1</version>
     <packaging>pom</packaging>
 
     <url>https://gitee.com/lframework/jugg</url>
@@ -21,7 +21,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
         <spring.version>2.2.2.RELEASE</spring.version>
-        <jugg.version>3.1.0</jugg.version>
+        <jugg.version>3.1.1</jugg.version>
         <lombok.version>1.18.10</lombok.version>
         <slf4j.version>1.7.21</slf4j.version>
         <logback.version>1.1.7</logback.version>

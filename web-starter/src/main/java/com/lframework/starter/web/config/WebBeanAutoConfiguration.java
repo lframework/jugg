@@ -8,14 +8,15 @@ import com.lframework.starter.web.components.generator.Generator;
 import com.lframework.starter.web.components.generator.impl.DefaultFlowGenerator;
 import com.lframework.starter.web.components.generator.impl.DefaultGenerator;
 import com.lframework.starter.web.components.generator.impl.DefaultSnowFlakeGenerator;
+import com.lframework.starter.web.components.security.UserTokenResolver;
 import com.lframework.starter.web.components.upload.handler.UploadHandler;
 import com.lframework.starter.web.components.upload.handler.impl.CosUploadHandler;
 import com.lframework.starter.web.components.upload.handler.impl.LocalUploadHandler;
 import com.lframework.starter.web.components.upload.handler.impl.ObsUploadHandler;
 import com.lframework.starter.web.components.upload.handler.impl.OssUploadHandler;
 import com.lframework.starter.web.impl.GenerateCodeServiceImpl;
-import com.lframework.starter.web.resp.InvokeResultBuilderWrapper;
-import com.lframework.starter.web.resp.ResponseBuilder;
+import com.lframework.starter.web.resp.InvokeResultErrorBuilderWrapper;
+import com.lframework.starter.web.resp.ResponseErrorBuilder;
 import com.lframework.starter.web.service.GenerateCodeService;
 import com.lframework.starter.web.sign.CheckSignFactory;
 import com.lframework.starter.web.sign.DefaultCheckSignFactory;
@@ -82,8 +83,8 @@ public class WebBeanAutoConfiguration {
   }
 
   @Bean
-  public ResponseBuilder invokeResultBuilderWrapper() {
-    return new InvokeResultBuilderWrapper();
+  public ResponseErrorBuilder invokeResultBuilderWrapper() {
+    return new InvokeResultErrorBuilderWrapper();
   }
 
   @Bean
@@ -94,5 +95,10 @@ public class WebBeanAutoConfiguration {
   @Bean("cacheVariables")
   public CacheVariables cacheVariables() {
     return new CacheVariables();
+  }
+
+  @Bean
+  public UserTokenResolver userTokenResolver() {
+    return new UserTokenResolver();
   }
 }

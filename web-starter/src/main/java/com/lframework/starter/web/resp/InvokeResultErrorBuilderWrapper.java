@@ -3,7 +3,7 @@ package com.lframework.starter.web.resp;
 import com.lframework.starter.common.exceptions.BaseException;
 import com.lframework.starter.web.controller.BaseController;
 
-public class InvokeResultBuilderWrapper implements ResponseBuilder {
+public class InvokeResultErrorBuilderWrapper implements ResponseErrorBuilder {
 
   @Override
   public boolean isDefault() {
@@ -13,16 +13,6 @@ public class InvokeResultBuilderWrapper implements ResponseBuilder {
   @Override
   public boolean isMatch(Object controller) {
     return controller instanceof BaseController;
-  }
-
-  @Override
-  public Response<Void> success() {
-    return InvokeResultBuilder.success();
-  }
-
-  @Override
-  public <T> Response<T> success(T data) {
-    return InvokeResultBuilder.success(data);
   }
 
   @Override

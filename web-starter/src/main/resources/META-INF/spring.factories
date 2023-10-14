@@ -6,7 +6,6 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.lframework.starter.web.config.CacheAutoConfiguration,\
   com.lframework.starter.web.config.KaptchaAutoConfiguration,\
   com.lframework.starter.web.config.LettuceAutoConfiguration,\
-  com.lframework.starter.web.config.LockerAutoConfiguration,\
   com.lframework.starter.web.config.MailAutoConfiguration,\
   com.lframework.starter.web.config.PasswordEncoderAutoConfiguration,\
   com.lframework.starter.web.config.RedisAutoConfiguration,\

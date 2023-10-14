@@ -4,9 +4,9 @@ import com.lframework.starter.cloud.BaseFeignClient;
 import com.lframework.starter.common.exceptions.BaseException;
 import com.lframework.starter.common.exceptions.impl.DefaultSysException;
 import com.lframework.starter.web.resp.Response;
-import com.lframework.starter.web.resp.ResponseBuilder;
+import com.lframework.starter.web.resp.ResponseErrorBuilder;
 
-public class ApiInvokeResultBuilderWrapper implements ResponseBuilder {
+public class ApiInvokeResultErrorBuilderWrapper implements ResponseErrorBuilder {
 
   @Override
   public boolean isDefault() {
@@ -16,16 +16,6 @@ public class ApiInvokeResultBuilderWrapper implements ResponseBuilder {
   @Override
   public boolean isMatch(Object controller) {
     return controller instanceof BaseFeignClient;
-  }
-
-  @Override
-  public Response<Void> success() {
-    return ApiInvokeResultBuilder.success();
-  }
-
-  @Override
-  public <T> Response<T> success(T data) {
-    return ApiInvokeResultBuilder.success(data);
   }
 
   @Override

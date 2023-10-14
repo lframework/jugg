@@ -37,7 +37,7 @@ public class LocalUploadHandler implements UploadHandler {
     }
     String baseLocation = uploadProperties.getLocation();
 
-    return upload(is, baseLocation, locations, IdUtil.getUUID(), domain + baseUrl);
+    return upload(is, baseLocation, locations, fileName, domain + baseUrl);
   }
 
   /**

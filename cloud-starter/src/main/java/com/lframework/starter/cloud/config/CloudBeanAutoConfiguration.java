@@ -1,7 +1,6 @@
 package com.lframework.starter.cloud.config;
 
-import com.lframework.starter.cloud.components.trace.CloudTraceBuilder;
-import com.lframework.starter.cloud.resp.ApiInvokeResultBuilderWrapper;
+import com.lframework.starter.cloud.resp.ApiInvokeResultErrorBuilderWrapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -9,12 +8,7 @@ import org.springframework.context.annotation.Configuration;
 public class CloudBeanAutoConfiguration {
 
   @Bean
-  public CloudTraceBuilder cloudTraceBuilder() {
-    return new CloudTraceBuilder();
-  }
-
-  @Bean
-  public ApiInvokeResultBuilderWrapper apiInvokeResultBuilderWrapper() {
-    return new ApiInvokeResultBuilderWrapper();
+  public ApiInvokeResultErrorBuilderWrapper apiInvokeResultBuilderWrapper() {
+    return new ApiInvokeResultErrorBuilderWrapper();
   }
 }
