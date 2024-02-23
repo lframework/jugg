@@ -13,6 +13,11 @@ public interface StringPool {
   String SPACE = " ";
 
   /**
+   * 单元格占位符
+   */
+  String CELL_PLACEHOLDER = "-";
+
+  /**
    * 空字符串
    */
   String EMPTY_STR = "";

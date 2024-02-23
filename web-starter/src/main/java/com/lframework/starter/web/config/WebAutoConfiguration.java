@@ -27,6 +27,7 @@ import com.lframework.starter.web.components.security.PermitAllService;
 import com.lframework.starter.web.components.trace.DefaultTraceBuilder;
 import com.lframework.starter.web.components.trace.TraceBuilder;
 import com.lframework.starter.web.config.properties.DefaultSettingProperties;
+import com.lframework.starter.web.config.properties.SecretProperties;
 import com.lframework.starter.web.config.properties.WebProperties;
 import com.lframework.starter.web.sign.CheckSignHandler;
 import com.lframework.starter.web.sign.DefaultCheckSignHandler;
@@ -50,7 +51,7 @@ import org.springframework.web.filter.CorsFilter;
  * @author zmj
  */
 @Configuration
-@EnableConfigurationProperties({WebProperties.class, DefaultSettingProperties.class})
+@EnableConfigurationProperties({WebProperties.class, DefaultSettingProperties.class, SecretProperties.class})
 public class WebAutoConfiguration {
 
   @Bean

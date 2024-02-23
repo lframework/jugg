@@ -11,6 +11,14 @@ public class FieldEncryptUtil {
       case AUTO: {
         return autoEncrypt(str);
       }
+      case PASSWORD: {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < 6; i++) {
+          builder.append(StringPool.ENCRYPT_STR);
+        }
+
+        return builder.toString();
+      }
     }
 
     return StringPool.ENCRYPT_STR;

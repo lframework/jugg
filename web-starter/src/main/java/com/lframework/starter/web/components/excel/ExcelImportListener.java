@@ -1,5 +1,6 @@
 package com.lframework.starter.web.components.excel;
 
+import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.context.AnalysisContext;
 import com.lframework.starter.common.exceptions.impl.DefaultClientException;
@@ -7,10 +8,11 @@ import com.lframework.starter.common.utils.ArrayUtil;
 import com.lframework.starter.common.utils.NumberUtil;
 import com.lframework.starter.common.utils.ReflectUtil;
 import com.lframework.starter.common.utils.StringUtil;
-import com.lframework.starter.web.utils.TransactionUtil;
+import com.lframework.starter.web.annotations.excel.ExcelRequired;
 import com.lframework.starter.web.common.utils.ApplicationUtil;
 import com.lframework.starter.web.service.SysParameterService;
 import com.lframework.starter.web.utils.ExcelImportUtil;
+import com.lframework.starter.web.utils.TransactionUtil;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -122,7 +124,51 @@ public abstract class ExcelImportListener<T extends ExcelModel> extends ExcelEve
     if (!this.hasError) {
       this.datas.add(data);
 
+      // 校验必填项
+      this.checkFields(data);
+
       this.doInvoke(data, context);
+    }
+  }
+
+  private void checkFields(T data) {
+    if (data == null) {
+      return;
+    }
+
+    Field[] fields = ReflectUtil.getFields(data.getClass());
+    int index = 0;
+    for (Field field : fields) {
+      index++;
+      ExcelRequired excelRequired = field.getAnnotation(ExcelRequired.class);
+      if (excelRequired == null) {
+        continue;
+      }
+
+      ExcelIgnore excelIgnore = field.getAnnotation(ExcelIgnore.class);
+      if (excelIgnore != null) {
+        continue;
+      }
+
+      Object val = null;
+      try {
+        val = field.get(data);
+      } catch (IllegalAccessException e) {
+        // 这里不处理异常
+      }
+
+      if (val == null || ((val instanceof CharSequence) && StringUtil.isEmpty(
+          (CharSequence) val))) {
+        String fieldName = null;
+        fieldName = field.getName();
+        ExcelProperty excelProperty = field.getAnnotation(ExcelProperty.class);
+        if (excelProperty != null) {
+          String[] fieldNames = excelProperty.value();
+          fieldName = ArrayUtil.join(fieldNames, "-");
+        }
+
+        throw new DefaultClientException("第" + (index) + "行“" + fieldName + "”不能为空");
+      }
     }
   }
 

@@ -1,6 +1,7 @@
 package com.lframework.starter.web.utils;
 
 import com.lframework.starter.web.common.utils.ApplicationUtil;
+import com.lframework.starter.web.service.GroovySupportService;
 import groovy.lang.Binding;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyShell;
@@ -30,7 +31,7 @@ public class GroovyUtil {
 
         Binding binding = new Binding();
 
-        Map<String, Object> beans = ApplicationUtil.getBeansOfType(Object.class);
+        Map<String, GroovySupportService> beans = ApplicationUtil.getBeansOfType(GroovySupportService.class);
         beans.forEach(binding::setVariable);
 
         GroovyClassLoader groovyClassLoader = new GroovyClassLoader(

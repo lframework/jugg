@@ -16,14 +16,15 @@ public class ExcelImportBo extends BaseBo<VoidDto> {
   private String id;
 
   /**
-   * 当前进度（百分数）
+   * 当前进度（条数）
    */
-  @ApiModelProperty("当前进度（百分数）")
+  @ApiModelProperty("当前进度（条数）")
   private Integer process = 0;
 
   /**
-   * 成功进度（百分数）
+   * 成功进度（条数）
    */
+  @ApiModelProperty("成功进度（条数）")
   private Integer successProcess = 0;
 
   /**

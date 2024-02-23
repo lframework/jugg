@@ -22,6 +22,7 @@ public class MybatisAutoConfiguration {
   }
 
   @Bean
+  @ConditionalOnMissingBean(MybatisPlusInterceptor.class)
   public MybatisPlusInterceptor mybatisPlusInterceptor() {
     MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
     interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
