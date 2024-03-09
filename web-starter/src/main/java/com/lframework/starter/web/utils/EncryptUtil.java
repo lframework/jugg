@@ -78,16 +78,4 @@ public class EncryptUtil {
 
         System.out.println(aes.encryptHex(s));
     }*/
-
-    public static void main(String[] args) {
-
-        String k = generateKey();
-        String s = "xhksw110...";
-        byte[] key = Base64.decode(k);
-        AES aes = SecureUtil.aes(key);
-
-        System.out.println(k);
-
-        System.out.println(aes.encryptHex(s));
-    }
 }
