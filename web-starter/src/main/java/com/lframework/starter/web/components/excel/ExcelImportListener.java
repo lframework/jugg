@@ -150,12 +150,7 @@ public abstract class ExcelImportListener<T extends ExcelModel> extends ExcelEve
         continue;
       }
 
-      Object val = null;
-      try {
-        val = field.get(data);
-      } catch (IllegalAccessException e) {
-        // 这里不处理异常
-      }
+      Object val = ReflectUtil.getFieldValue(data, field);
 
       if (val == null || ((val instanceof CharSequence) && StringUtil.isEmpty(
           (CharSequence) val))) {
