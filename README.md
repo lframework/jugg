@@ -18,7 +18,6 @@ Jugg是用来开发业务系统的脚手架，将常用的开发框架整合并�
 ### 内置功能
 * 菜单管理：维护系统菜单、权限。
 * 部门管理：维护系统组织机构。
-* 岗位管理：维护系统人员所属岗位信息。
 * 角色管理：维护角色人员所属角色信息。
 * 用户管理：维护系统人员信息。
 * 操作日志：查询系统人员的操作日志。
@@ -37,13 +36,11 @@ Jugg是用来开发业务系统的脚手架，将常用的开发框架整合并�
 以下是内置的Bean的介绍：
 * 菜单管理：SysMenuController、ISysMenuService（实现类：DefaultSysMenuServiceImpl）
 * 部门管理：SysDeptController、ISysDeptService（实现类：DefaultSysDeptServiceImpl）
-* 岗位管理：SysPositionController、ISysPositionService（实现类：DefaultSysPositionServiceImpl）
 * 角色管理：SysRoleController、ISysRoleService（实现类：DefaultSysRoleServiceImpl）
 * 用户管理：SysUserController、ISysUserService（实现类：DefaultSysUserServiceImpl）
 * 操作日志：OpLogController、IOpLogsService（实现类：DefaultOpLogsServiceImpl）
 * 用户所属部门：ISysUserDeptService（实现类：DefaultSysUserDeptServiceImpl）
 * 用户所属角色：ISysUserRoleService（实现类：DefaultSysUserRoleServiceImpl）
-* 用户所属岗位：ISysUserPositionService（实现类：DefaultSysUserPositionServiceImpl）
 * 角色授权相关：ISysRoleMenuService（实现类：DefaultSysRoleMenuServiceImpl）、IMenuService（实现类：DefaultMenuServiceImpl）
 
 需要自定义哪些功能就重写哪个类并注册成Bean即可。

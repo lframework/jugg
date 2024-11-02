@@ -4,20 +4,20 @@ import com.lframework.starter.web.aop.ControllerAspector;
 import com.lframework.starter.web.aop.OpenApiAspect;
 import com.lframework.starter.web.aop.PermissionAspect;
 import com.lframework.starter.web.components.cache.CacheVariables;
-import com.lframework.starter.web.components.generator.Generator;
-import com.lframework.starter.web.components.generator.impl.DefaultFlowGenerator;
-import com.lframework.starter.web.components.generator.impl.DefaultGenerator;
-import com.lframework.starter.web.components.generator.impl.DefaultSnowFlakeGenerator;
+import com.lframework.starter.web.components.generator.handler.impl.CurrentDateTimeRuleGenerateCodeHandler;
+import com.lframework.starter.web.components.generator.handler.impl.CustomRandomStrGenerateCodeRuleHandler;
+import com.lframework.starter.web.components.generator.handler.impl.FlowGenerateCodeRuleHandler;
+import com.lframework.starter.web.components.generator.handler.impl.SnowFlakeGenerateCodeRuleHandler;
+import com.lframework.starter.web.components.generator.handler.impl.StaticStrGenerateCodeRuleHandler;
+import com.lframework.starter.web.components.generator.handler.impl.UUIDGenerateCodeRuleHandler;
 import com.lframework.starter.web.components.security.UserTokenResolver;
 import com.lframework.starter.web.components.upload.handler.UploadHandler;
 import com.lframework.starter.web.components.upload.handler.impl.CosUploadHandler;
 import com.lframework.starter.web.components.upload.handler.impl.LocalUploadHandler;
 import com.lframework.starter.web.components.upload.handler.impl.ObsUploadHandler;
 import com.lframework.starter.web.components.upload.handler.impl.OssUploadHandler;
-import com.lframework.starter.web.impl.GenerateCodeServiceImpl;
 import com.lframework.starter.web.resp.InvokeResultErrorBuilderWrapper;
 import com.lframework.starter.web.resp.ResponseErrorBuilder;
-import com.lframework.starter.web.service.GenerateCodeService;
 import com.lframework.starter.web.sign.CheckSignFactory;
 import com.lframework.starter.web.sign.DefaultCheckSignFactory;
 import org.springframework.context.annotation.Bean;
@@ -43,21 +43,6 @@ public class WebBeanAutoConfiguration {
   }
 
   @Bean
-  public Generator defaultFlowGenerator() {
-    return new DefaultFlowGenerator();
-  }
-
-  @Bean
-  public Generator defaultSnowFlakeGenerator() {
-    return new DefaultSnowFlakeGenerator();
-  }
-
-  @Bean
-  public Generator defaultGenerator() {
-    return new DefaultGenerator();
-  }
-
-  @Bean
   public UploadHandler cosUploadHandler() {
     return new CosUploadHandler();
   }
@@ -78,11 +63,6 @@ public class WebBeanAutoConfiguration {
   }
 
   @Bean
-  public GenerateCodeService generateCodeService() {
-    return new GenerateCodeServiceImpl();
-  }
-
-  @Bean
   public ResponseErrorBuilder invokeResultBuilderWrapper() {
     return new InvokeResultErrorBuilderWrapper();
   }
@@ -100,5 +80,35 @@ public class WebBeanAutoConfiguration {
   @Bean
   public UserTokenResolver userTokenResolver() {
     return new UserTokenResolver();
+  }
+
+  @Bean
+  public CurrentDateTimeRuleGenerateCodeHandler currentDateTimeRuleGenerateHandler() {
+    return new CurrentDateTimeRuleGenerateCodeHandler();
+  }
+
+  @Bean
+  public CustomRandomStrGenerateCodeRuleHandler customRandomStrGenerateRuleHandler() {
+    return new CustomRandomStrGenerateCodeRuleHandler();
+  }
+
+  @Bean
+  public FlowGenerateCodeRuleHandler flowGenerateRuleHandler() {
+    return new FlowGenerateCodeRuleHandler();
+  }
+
+  @Bean
+  public SnowFlakeGenerateCodeRuleHandler snowFlakeGenerateRuleHandler() {
+    return new SnowFlakeGenerateCodeRuleHandler();
+  }
+
+  @Bean
+  public StaticStrGenerateCodeRuleHandler staticStrGenerateRuleHandler() {
+    return new StaticStrGenerateCodeRuleHandler();
+  }
+
+  @Bean
+  public UUIDGenerateCodeRuleHandler uuidGenerateRuleHandler() {
+    return new UUIDGenerateCodeRuleHandler();
   }
 }

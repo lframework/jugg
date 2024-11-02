@@ -1,11 +1,16 @@
 package com.lframework.starter.web.components.generator;
 
 
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
 import com.lframework.starter.common.exceptions.impl.DefaultSysException;
-import com.lframework.starter.web.components.code.GenerateCodeType;
 import com.lframework.starter.web.common.utils.ApplicationUtil;
+import com.lframework.starter.web.components.generator.handler.GenerateCodeRuleHandler;
+import com.lframework.starter.web.utils.JsonUtil;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 单号生成器Factory
@@ -14,55 +19,35 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class GenerateCodeFactory {
 
-  public static final Map<Class<? extends GenerateCodeType>, Generator> GENERATOR_POOL = new ConcurrentHashMap<>();
+  public static List<GenerateCodeRuleHandler> getInstance(String configStr) {
 
-  public static Generator getInstance(GenerateCodeType type) {
+    Map<String, GenerateCodeRuleHandler> handlerMap = ApplicationUtil.getBeansOfType(
+        GenerateCodeRuleHandler.class);
 
-    Generator generator = GENERATOR_POOL.get(type.getClass());
-    if (generator == null) {
-      synchronized (GenerateCodeFactory.class) {
-        generator = GENERATOR_POOL.get(type.getClass());
-        if (generator == null) {
+    JSONArray configArr = JsonUtil.parseArray(configStr);
 
-          generator = getGenrator(type);
-          if (generator == null) {
-            //如果未找到generator就使用默认generator
-            generator = getGenrator(GenerateCodeType.DEFAULT);
-          }
+    List<GenerateCodeRuleHandler> results = new ArrayList<>();
 
-          if (generator == null) {
-            throw new DefaultSysException("未找到" + type + "单号生成器！");
-          }
+    for (int i = 0; i < configArr.size(); i++) {
+      JSONObject config = configArr.getJSONObject(i);
 
-          GENERATOR_POOL.put(type.getClass(), generator);
+      Integer type = config.getInt("type");
+      if (type == null) {
+        throw new DefaultSysException("configStr {} 配置信息错误！");
+      }
+
+      Collection<GenerateCodeRuleHandler> handlerList = handlerMap.values();
+      for (GenerateCodeRuleHandler handler : handlerList) {
+        if (handler.match(type)) {
+          results.add(handler);
         }
       }
     }
 
-    return generator;
-  }
-
-  private static Generator getGenrator(GenerateCodeType type) {
-
-    Map<String, Generator> generators = ApplicationUtil.getBeansOfType(Generator.class);
-    for (Generator value : generators.values()) {
-      if (!value.isSpecial()) {
-        // 优先匹配自定义生成器
-        if (value.getType().getClass() == type.getClass()) {
-          return value;
-        }
-      }
+    if (results.isEmpty()) {
+      throw new DefaultSysException("configStr {} 配置信息错误！");
     }
 
-    for (Generator value : generators.values()) {
-      if (value.isSpecial()) {
-        // 匹配内置生成器
-        if (value.getType().getClass() == type.getClass()) {
-          return value;
-        }
-      }
-    }
-
-    return null;
+    return results;
   }
 }
