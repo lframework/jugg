@@ -70,7 +70,7 @@ public class FlowGenerateCodeRuleHandler implements GenerateCodeRuleHandler<Flow
   }
 
   @Override
-  public String generateSimple(FlowGenerateCodeRule rule) {
+  public String generateExample(FlowGenerateCodeRule rule) {
     Integer codeLen = rule.getLen() == null ? 1 : rule.getLen();
     String noStr = "1";
     StringBuilder builder = new StringBuilder();

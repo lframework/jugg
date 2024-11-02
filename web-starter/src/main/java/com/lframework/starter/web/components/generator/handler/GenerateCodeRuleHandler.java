@@ -33,7 +33,7 @@ public interface GenerateCodeRuleHandler<T extends GenerateCodeRule> {
    * @param rule
    * @return
    */
-  String generateSimple(T rule);
+  String generateExample(T rule);
 
   /**
    * 解析规则

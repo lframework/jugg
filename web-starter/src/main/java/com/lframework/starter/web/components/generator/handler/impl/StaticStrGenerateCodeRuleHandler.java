@@ -26,7 +26,7 @@ public class StaticStrGenerateCodeRuleHandler implements
   }
 
   @Override
-  public String generateSimple(StaticStrGenerateCodeRule rule) {
+  public String generateExample(StaticStrGenerateCodeRule rule) {
     return generate(rule);
   }
 

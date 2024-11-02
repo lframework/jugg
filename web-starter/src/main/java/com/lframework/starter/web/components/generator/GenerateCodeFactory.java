@@ -6,6 +6,7 @@ import cn.hutool.json.JSONObject;
 import com.lframework.starter.common.exceptions.impl.DefaultSysException;
 import com.lframework.starter.web.common.utils.ApplicationUtil;
 import com.lframework.starter.web.components.generator.handler.GenerateCodeRuleHandler;
+import com.lframework.starter.web.components.generator.rule.GenerateCodeRule;
 import com.lframework.starter.web.utils.JsonUtil;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,7 +20,49 @@ import java.util.Map;
  */
 public class GenerateCodeFactory {
 
-  public static List<GenerateCodeRuleHandler> getInstance(String configStr) {
+  public static String generate(String configStr) {
+    return generate(getRules(configStr));
+  }
+
+  public static String generate(List<GenerateCodeRule> ruleList) {
+    Map<String, GenerateCodeRuleHandler> handlerMap = ApplicationUtil.getBeansOfType(
+        GenerateCodeRuleHandler.class);
+    Collection<GenerateCodeRuleHandler> handlerList = handlerMap.values();
+
+    StringBuilder builder = new StringBuilder();
+    for (GenerateCodeRule rule : ruleList) {
+      for (GenerateCodeRuleHandler handler : handlerList) {
+        if (handler.match(rule)) {
+          builder.append(handler.generate(rule));
+        }
+      }
+    }
+
+    return builder.toString();
+  }
+
+  public static String generateExample(String configStr) {
+    return generateExample(getRules(configStr));
+  }
+
+  public static String generateExample(List<GenerateCodeRule> ruleList) {
+    Map<String, GenerateCodeRuleHandler> handlerMap = ApplicationUtil.getBeansOfType(
+        GenerateCodeRuleHandler.class);
+    Collection<GenerateCodeRuleHandler> handlerList = handlerMap.values();
+
+    StringBuilder builder = new StringBuilder();
+    for (GenerateCodeRule rule : ruleList) {
+      for (GenerateCodeRuleHandler handler : handlerList) {
+        if (handler.match(rule)) {
+          builder.append(handler.generateExample(rule));
+        }
+      }
+    }
+
+    return builder.toString();
+  }
+
+  public static List<GenerateCodeRuleHandler> getHandlers(String configStr) {
 
     Map<String, GenerateCodeRuleHandler> handlerMap = ApplicationUtil.getBeansOfType(
         GenerateCodeRuleHandler.class);
@@ -46,6 +89,21 @@ public class GenerateCodeFactory {
 
     if (results.isEmpty()) {
       throw new DefaultSysException("configStr {} 配置信息错误！");
+    }
+
+    return results;
+  }
+
+  public static List<GenerateCodeRule> getRules(String configStr) {
+    List<GenerateCodeRuleHandler> ruleHandlerList = GenerateCodeFactory.getHandlers(
+        configStr);
+    JSONArray configArr = JsonUtil.parseArray(configStr);
+
+    List<GenerateCodeRule> results = new ArrayList<>();
+
+    for (int i = 0; i < ruleHandlerList.size(); i++) {
+      GenerateCodeRuleHandler ruleHandler = ruleHandlerList.get(i);
+      results.add(ruleHandler.parseRule(configArr.getStr(i)));
     }
 
     return results;

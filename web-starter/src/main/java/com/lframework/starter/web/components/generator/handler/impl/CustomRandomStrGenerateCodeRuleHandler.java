@@ -38,7 +38,7 @@ public class CustomRandomStrGenerateCodeRuleHandler implements
   }
 
   @Override
-  public String generateSimple(CustomRandomStrGenerateCodeRule rule) {
+  public String generateExample(CustomRandomStrGenerateCodeRule rule) {
     return generate(rule);
   }
 

@@ -23,7 +23,7 @@ public class UUIDGenerateCodeRuleHandler implements GenerateCodeRuleHandler<UUID
   }
 
   @Override
-  public String generateSimple(UUIDGenerateCodeRule rule) {
+  public String generateExample(UUIDGenerateCodeRule rule) {
     return generate(rule);
   }
 

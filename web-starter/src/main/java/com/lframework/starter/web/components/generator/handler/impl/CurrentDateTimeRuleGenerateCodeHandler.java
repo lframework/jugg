@@ -27,7 +27,7 @@ public class CurrentDateTimeRuleGenerateCodeHandler implements
   }
 
   @Override
-  public String generateSimple(CurrentDateTimeGenerateCodeRule rule) {
+  public String generateExample(CurrentDateTimeGenerateCodeRule rule) {
     return generate(rule);
   }
 

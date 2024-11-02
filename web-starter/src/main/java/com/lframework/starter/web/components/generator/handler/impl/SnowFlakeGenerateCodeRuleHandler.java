@@ -28,7 +28,7 @@ public class SnowFlakeGenerateCodeRuleHandler implements
   }
 
   @Override
-  public String generateSimple(SnowFlakeGenerateCodeRule rule) {
+  public String generateExample(SnowFlakeGenerateCodeRule rule) {
     return generate(rule);
   }
 
