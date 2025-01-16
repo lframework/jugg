@@ -1,8 +1,8 @@
 package com.lframework.starter.web.interceptors;
 
 import com.lframework.starter.web.components.tenant.TenantInterceptor;
-import com.lframework.starter.web.common.tenant.TenantContextHolder;
-import com.lframework.starter.web.common.security.SecurityUtil;
+import com.lframework.starter.web.components.tenant.TenantContextHolder;
+import com.lframework.starter.web.components.security.SecurityUtil;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -19,5 +19,11 @@ public class TenantInterceptorImpl implements TenantInterceptor {
     }
 
     return true;
+  }
+
+  @Override
+  public void afterCompletion(HttpServletRequest request, HttpServletResponse response,
+      Object handler, Exception ex) throws Exception {
+    TenantContextHolder.clearTenantId();
   }
 }

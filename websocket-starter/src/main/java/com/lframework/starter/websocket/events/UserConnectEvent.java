@@ -1,6 +1,6 @@
 package com.lframework.starter.websocket.events;
 
-import com.lframework.starter.web.common.security.AbstractUserDetails;
+import com.lframework.starter.web.components.security.AbstractUserDetails;
 import org.springframework.context.ApplicationEvent;
 
 /**

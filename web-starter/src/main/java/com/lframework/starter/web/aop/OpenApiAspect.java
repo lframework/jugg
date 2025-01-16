@@ -6,7 +6,7 @@ import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.web.annotations.OpenApi;
 import com.lframework.starter.web.sign.CheckSignFactory;
 import com.lframework.starter.web.sign.CheckSignHandler;
-import com.lframework.starter.web.common.utils.ApplicationUtil;
+import com.lframework.starter.web.utils.ApplicationUtil;
 import com.lframework.starter.web.vo.OpenApiReqVo;
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +18,6 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 /**
  * OpenApi切面

@@ -1,1 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.lframework.starter.mq.activemq.config.ActiveMQAutoConfiguration

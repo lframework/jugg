@@ -2,7 +2,7 @@ package com.lframework.starter.web.components.upload;
 
 import com.lframework.starter.common.exceptions.impl.DefaultSysException;
 import com.lframework.starter.common.utils.Assert;
-import com.lframework.starter.web.common.utils.ApplicationUtil;
+import com.lframework.starter.web.utils.ApplicationUtil;
 import com.lframework.starter.web.components.upload.handler.UploadHandler;
 import java.util.Map;
 

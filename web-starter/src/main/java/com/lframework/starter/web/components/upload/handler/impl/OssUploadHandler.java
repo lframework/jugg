@@ -6,18 +6,17 @@ import com.lframework.starter.common.constants.StringPool;
 import com.lframework.starter.common.utils.Assert;
 import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.web.components.upload.handler.UploadHandler;
-import com.lframework.starter.web.service.SysParameterService;
+import com.lframework.starter.web.service.SysConfService;
 import com.lframework.starter.web.utils.JsonUtil;
 import java.io.InputStream;
 import java.util.List;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 public class OssUploadHandler implements UploadHandler {
 
   @Autowired
-  private SysParameterService sysParameterService;
+  private SysConfService sysConfService;
 
   @Override
   public String getType() {
@@ -26,7 +25,7 @@ public class OssUploadHandler implements UploadHandler {
 
   @Override
   public String upload(InputStream is, List<String> locations, String fileName) {
-    String configStr = sysParameterService.findRequiredByKey("upload.oss.config");
+    String configStr = sysConfService.findRequiredByKey("upload.oss.config");
     OssConfig config = JsonUtil.parseObject(configStr, OssConfig.class);
 
     Assert.notBlank(config.getEndpoint());

@@ -1,7 +1,6 @@
 package com.lframework.starter.websocket.entity;
 
-import com.lframework.starter.web.common.security.AbstractUserDetails;
-import com.lframework.starter.web.common.security.SecurityUtil;
+import com.lframework.starter.web.components.security.AbstractUserDetails;
 import com.lframework.starter.websocket.components.WsSessionManager;
 import com.lframework.starter.websocket.constants.WsPool;
 import lombok.Data;

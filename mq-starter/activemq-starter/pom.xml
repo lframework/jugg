@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>mq-starter</artifactId>
+    <groupId>com.lframework</groupId>
+    <version>3.1.5</version>
+  </parent>
+
+  <artifactId>activemq-starter</artifactId>
+  <name>【${project.artifactId}】集成ActiveMQ能力</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <artifactId>mq-core</artifactId>
+      <groupId>com.lframework</groupId>
+    </dependency>
+
+    <dependency>
+      <artifactId>spring-boot-starter-activemq</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>pooled-jms</artifactId>
+      <groupId>org.messaginghub</groupId>
+    </dependency>
+  </dependencies>
+
+</project>

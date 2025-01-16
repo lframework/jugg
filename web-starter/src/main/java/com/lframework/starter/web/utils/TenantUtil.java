@@ -1,6 +1,5 @@
 package com.lframework.starter.web.utils;
 
-import com.lframework.starter.web.common.utils.ApplicationUtil;
 import com.lframework.starter.web.config.properties.TenantProperties;
 
 public class TenantUtil {

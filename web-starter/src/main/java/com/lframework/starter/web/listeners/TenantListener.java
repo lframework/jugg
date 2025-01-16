@@ -5,9 +5,9 @@ import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DataSourcePrope
 import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceProperties;
 import com.baomidou.dynamic.datasource.toolkit.DynamicDataSourceContextHolder;
 import com.lframework.starter.web.utils.DataSourceUtil;
-import com.lframework.starter.web.common.event.ClearTenantEvent;
-import com.lframework.starter.web.common.event.ReloadTenantEvent;
-import com.lframework.starter.web.common.event.SetTenantEvent;
+import com.lframework.starter.web.event.ClearTenantEvent;
+import com.lframework.starter.web.event.ReloadTenantEvent;
+import com.lframework.starter.web.event.SetTenantEvent;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;

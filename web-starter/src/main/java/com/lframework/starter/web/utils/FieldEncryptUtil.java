@@ -1,5 +1,6 @@
 package com.lframework.starter.web.utils;
 
+import cn.hutool.core.util.DesensitizedUtil;
 import com.lframework.starter.common.constants.StringPool;
 import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.web.annotations.constants.EncryType;
@@ -7,6 +8,7 @@ import com.lframework.starter.web.annotations.constants.EncryType;
 public class FieldEncryptUtil {
 
   public static String encrypt(CharSequence str, EncryType type) {
+    String s = str == null ? null : str.toString();
     switch (type) {
       case AUTO: {
         return autoEncrypt(str);
@@ -18,6 +20,27 @@ public class FieldEncryptUtil {
         }
 
         return builder.toString();
+      }
+      case EMAIL: {
+        return DesensitizedUtil.email(s);
+      }
+      case CHINESE_NAME: {
+        return DesensitizedUtil.chineseName(s);
+      }
+      case ID_CARD: {
+        return DesensitizedUtil.idCardNum(s, 4, 4);
+      }
+      case FIXED_PHONE: {
+        return DesensitizedUtil.fixedPhone(s);
+      }
+      case MOBILE_PHONE: {
+        return DesensitizedUtil.mobilePhone(s);
+      }
+      case CAR_LICENSE: {
+        return DesensitizedUtil.carLicense(s);
+      }
+      case BANK_CARD: {
+        return DesensitizedUtil.bankCard(s);
       }
     }
 

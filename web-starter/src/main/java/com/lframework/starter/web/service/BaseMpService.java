@@ -8,7 +8,7 @@ import com.lframework.starter.common.utils.BeanUtil;
 import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.web.constants.MyBatisStringPool;
 import com.lframework.starter.web.mapper.BaseMapper;
-import com.lframework.starter.web.common.utils.ApplicationUtil;
+import com.lframework.starter.web.utils.ApplicationUtil;
 import java.io.Serializable;
 import java.util.Collection;
 import org.springframework.transaction.annotation.Transactional;

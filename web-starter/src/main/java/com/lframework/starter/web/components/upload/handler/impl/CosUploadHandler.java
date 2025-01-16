@@ -5,7 +5,7 @@ import com.lframework.starter.common.exceptions.impl.DefaultSysException;
 import com.lframework.starter.common.utils.Assert;
 import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.web.components.upload.handler.UploadHandler;
-import com.lframework.starter.web.service.SysParameterService;
+import com.lframework.starter.web.service.SysConfService;
 import com.lframework.starter.web.utils.JsonUtil;
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;
@@ -22,13 +22,12 @@ import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @Slf4j
 public class CosUploadHandler implements UploadHandler {
 
   @Autowired
-  private SysParameterService sysParameterService;
+  private SysConfService sysConfService;
 
   @Override
   public String getType() {
@@ -37,7 +36,7 @@ public class CosUploadHandler implements UploadHandler {
 
   @Override
   public String upload(InputStream is, List<String> locations, String fileName) {
-    String configStr = sysParameterService.findRequiredByKey("upload.cos.config");
+    String configStr = sysConfService.findRequiredByKey("upload.cos.config");
     CosConfig config = JsonUtil.parseObject(configStr, CosConfig.class);
 
     Assert.notBlank(config.getCustomUrl());

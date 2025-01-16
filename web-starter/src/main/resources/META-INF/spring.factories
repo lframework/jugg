@@ -15,4 +15,6 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.lframework.starter.web.config.WebAutoConfiguration,\
   com.lframework.starter.web.config.WebBeanAutoConfiguration,\
   com.lframework.starter.web.config.WebMvcAutoConfiguration,\
-  com.lframework.starter.web.config.TenantSwitchConfiguration
+  com.lframework.starter.web.config.TenantSwitchConfiguration,\
+  com.lframework.starter.web.config.WebCommonAutoConfiguration,\
+  com.lframework.starter.web.config.SaTokenAutoConfiguration

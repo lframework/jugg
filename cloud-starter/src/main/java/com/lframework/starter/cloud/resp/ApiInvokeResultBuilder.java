@@ -2,7 +2,7 @@ package com.lframework.starter.cloud.resp;
 
 import com.lframework.starter.common.exceptions.BaseException;
 import com.lframework.starter.cloud.constants.ResponseConstants;
-import com.lframework.starter.web.common.utils.ApplicationUtil;
+import com.lframework.starter.web.utils.ApplicationUtil;
 
 public class ApiInvokeResultBuilder {
 

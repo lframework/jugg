@@ -4,7 +4,7 @@ package com.lframework.starter.web.components.generator;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import com.lframework.starter.common.exceptions.impl.DefaultSysException;
-import com.lframework.starter.web.common.utils.ApplicationUtil;
+import com.lframework.starter.web.utils.ApplicationUtil;
 import com.lframework.starter.web.components.generator.handler.GenerateCodeRuleHandler;
 import com.lframework.starter.web.components.generator.rule.GenerateCodeRule;
 import com.lframework.starter.web.utils.JsonUtil;

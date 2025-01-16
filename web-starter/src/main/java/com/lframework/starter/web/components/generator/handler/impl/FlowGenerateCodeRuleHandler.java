@@ -5,7 +5,7 @@ import com.lframework.starter.common.exceptions.impl.DefaultSysException;
 import com.lframework.starter.common.locker.LockBuilder;
 import com.lframework.starter.common.locker.Locker;
 import com.lframework.starter.common.utils.StringUtil;
-import com.lframework.starter.web.common.tenant.TenantContextHolder;
+import com.lframework.starter.web.components.tenant.TenantContextHolder;
 import com.lframework.starter.web.components.generator.handler.GenerateCodeRuleHandler;
 import com.lframework.starter.web.components.generator.rule.GenerateCodeRule;
 import com.lframework.starter.web.components.generator.rule.impl.FlowGenerateCodeRule;

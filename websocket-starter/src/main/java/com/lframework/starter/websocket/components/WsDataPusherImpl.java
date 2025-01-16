@@ -1,6 +1,6 @@
 package com.lframework.starter.websocket.components;
 
-import com.lframework.starter.web.common.tenant.TenantContextHolder;
+import com.lframework.starter.web.components.tenant.TenantContextHolder;
 import com.lframework.starter.web.dto.WsPushData;
 import com.lframework.starter.web.utils.JsonUtil;
 import com.lframework.starter.web.utils.TenantUtil;

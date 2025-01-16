@@ -6,10 +6,9 @@ import com.lframework.starter.common.utils.Assert;
 import com.lframework.starter.common.utils.DateUtil;
 import com.lframework.starter.common.utils.FileUtil;
 import com.lframework.starter.common.utils.StringUtil;
-import com.lframework.starter.web.common.utils.ApplicationUtil;
 import com.lframework.starter.web.components.upload.UploadHandlerFactory;
 import com.lframework.starter.web.components.upload.handler.UploadHandler;
-import com.lframework.starter.web.service.SysParameterService;
+import com.lframework.starter.web.service.SysConfService;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -30,8 +29,8 @@ public class UploadUtil {
   public static String upload(MultipartFile file) {
 
     Assert.notNull(file);
-    SysParameterService sysParameterService = ApplicationUtil.getBean(SysParameterService.class);
-    String uploadTypeStr = sysParameterService.findByKey("upload.type", "LOCAL");
+    SysConfService sysConfService = ApplicationUtil.getBean(SysConfService.class);
+    String uploadTypeStr = sysConfService.findByKey("upload.type", "LOCAL");
 
     UploadHandler uploadHandler = UploadHandlerFactory.getInstance(uploadTypeStr);
 

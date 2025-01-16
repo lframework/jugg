@@ -9,8 +9,8 @@ import com.lframework.starter.common.utils.NumberUtil;
 import com.lframework.starter.common.utils.ReflectUtil;
 import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.web.annotations.excel.ExcelRequired;
-import com.lframework.starter.web.common.utils.ApplicationUtil;
-import com.lframework.starter.web.service.SysParameterService;
+import com.lframework.starter.web.utils.ApplicationUtil;
+import com.lframework.starter.web.service.SysConfService;
 import com.lframework.starter.web.utils.ExcelImportUtil;
 import com.lframework.starter.web.utils.TransactionUtil;
 import java.lang.reflect.Field;
@@ -27,8 +27,8 @@ import org.springframework.transaction.TransactionStatus;
 @Slf4j
 public abstract class ExcelImportListener<T extends ExcelModel> extends ExcelEventListener<T> {
 
-  private final SysParameterService sysParameterService = ApplicationUtil.getBean(
-      SysParameterService.class);
+  private final SysConfService sysConfService = ApplicationUtil.getBean(
+      SysConfService.class);
   /**
    * 数据
    */
@@ -64,7 +64,7 @@ public abstract class ExcelImportListener<T extends ExcelModel> extends ExcelEve
     this.totalRows = Math.max(0, context.readSheetHolder().getApproximateTotalRowNumber() - 1);
     if (limitRows == null) {
       this.limitRows = Integer.valueOf(
-          sysParameterService.findRequiredByKey("excel-import.max-size"));
+          sysConfService.findRequiredByKey("excel-import.max-size"));
     }
 
     if (this.totalRows == 0) {

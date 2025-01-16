@@ -4,7 +4,7 @@ import cn.hutool.extra.mail.MailAccount;
 import com.lframework.starter.web.config.properties.MailProperties;
 import com.lframework.starter.web.impl.MailServiceImpl;
 import com.lframework.starter.web.service.MailService;
-import com.lframework.starter.web.service.SysParameterService;
+import com.lframework.starter.web.service.SysConfService;
 import com.lframework.starter.web.utils.JsonUtil;
 import com.sun.mail.util.MailSSLSocketFactory;
 import java.security.GeneralSecurityException;
@@ -19,10 +19,10 @@ public class MailAutoConfiguration {
   @Bean
   @Scope("prototype")
   @ConditionalOnMissingBean(MailService.class)
-  public MailService getMailService(SysParameterService sysParameterService)
+  public MailService getMailService(SysConfService sysConfService)
       throws GeneralSecurityException {
 
-    String configStr = sysParameterService.findRequiredByKey("mail");
+    String configStr = sysConfService.findRequiredByKey("mail");
     MailProperties properties = JsonUtil.parseObject(configStr, MailProperties.class);
     MailAccount account = new MailAccount();
     account.setHost(properties.getHost());

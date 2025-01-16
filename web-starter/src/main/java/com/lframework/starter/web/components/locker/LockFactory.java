@@ -3,8 +3,7 @@ package com.lframework.starter.web.components.locker;
 import com.lframework.starter.common.locker.LockBuilder;
 import com.lframework.starter.common.locker.Locker;
 import com.lframework.starter.common.utils.Assert;
-import com.lframework.starter.web.common.utils.ApplicationUtil;
-import org.springframework.stereotype.Component;
+import com.lframework.starter.web.utils.ApplicationUtil;
 
 public class LockFactory {
 

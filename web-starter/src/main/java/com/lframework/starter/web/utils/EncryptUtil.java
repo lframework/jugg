@@ -4,7 +4,6 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.symmetric.AES;
 import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
-import com.lframework.starter.web.common.utils.ApplicationUtil;
 import com.lframework.starter.web.config.properties.SecretProperties;
 
 public class EncryptUtil {

@@ -4,7 +4,6 @@ Jugg是用来开发业务系统的脚手架，将常用的开发框架整合并�
 ### 项目构成
 * common
 * web-starter
-* web-common
 * gen
 * cloud-starter
 * mq-starter

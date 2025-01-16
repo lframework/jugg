@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Conditional;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisStringCommands;
@@ -16,14 +15,13 @@ import org.springframework.data.redis.connection.ReturnType;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.types.Expiration;
-import org.springframework.stereotype.Component;
 
 public class RedisLockBuilder implements LockBuilder {
 
   private static final ThreadLocal<Map<String, Locker>> LOCKERS;
 
   static {
-    LOCKERS = new ThreadLocal<>();
+    LOCKERS = new InheritableThreadLocal<>();
   }
 
   @Resource(name = "redisTemplate")

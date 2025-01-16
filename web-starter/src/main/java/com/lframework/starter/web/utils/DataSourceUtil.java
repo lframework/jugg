@@ -4,7 +4,6 @@ import com.baomidou.dynamic.datasource.creator.BasicDataSourceCreator;
 import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DataSourceProperty;
 import com.lframework.starter.common.utils.BeanUtil;
 import com.lframework.starter.common.utils.StringUtil;
-import com.lframework.starter.web.common.utils.ApplicationUtil;
 import javax.sql.DataSource;
 
 public class DataSourceUtil {

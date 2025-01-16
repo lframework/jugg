@@ -1,6 +1,5 @@
 package com.lframework.starter.web.utils;
 
-import com.lframework.starter.web.common.utils.ApplicationUtil;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;

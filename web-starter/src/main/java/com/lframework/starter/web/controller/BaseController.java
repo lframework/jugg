@@ -3,8 +3,8 @@ package com.lframework.starter.web.controller;
 import com.lframework.starter.common.utils.ObjectUtil;
 import com.lframework.starter.web.constants.MybatisConstants;
 import com.lframework.starter.web.vo.PageVo;
-import com.lframework.starter.web.common.security.AbstractUserDetails;
-import com.lframework.starter.web.common.security.SecurityUtil;
+import com.lframework.starter.web.components.security.AbstractUserDetails;
+import com.lframework.starter.web.components.security.SecurityUtil;
 
 /**
  * BaseController

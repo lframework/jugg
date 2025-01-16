@@ -5,7 +5,7 @@
     <parent>
         <artifactId>parent</artifactId>
         <groupId>com.lframework</groupId>
-        <version>3.1.4</version>
+        <version>3.1.5</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -46,11 +46,6 @@
         <dependency>
             <groupId>com.lframework</groupId>
             <artifactId>common</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.lframework</groupId>
-            <artifactId>web-common</artifactId>
         </dependency>
 
         <dependency>
@@ -159,11 +154,6 @@
         <dependency>
             <groupId>cn.dev33</groupId>
             <artifactId>sa-token-dao-redis-jackson</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>cn.dev33</groupId>
-            <artifactId>sa-token-alone-redis</artifactId>
         </dependency>
 
         <dependency>

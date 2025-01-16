@@ -7,7 +7,7 @@
     <groupId>com.lframework</groupId>
     <artifactId>parent</artifactId>
     <name>【${project.artifactId}】Jugg基础框架</name>
-    <version>3.1.4</version>
+    <version>3.1.5</version>
     <packaging>pom</packaging>
 
     <url>https://gitee.com/lframework/jugg</url>
@@ -21,7 +21,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
         <spring.version>2.2.2.RELEASE</spring.version>
-        <jugg.version>3.1.4</jugg.version>
+        <jugg.version>3.1.5</jugg.version>
         <lombok.version>1.18.10</lombok.version>
         <slf4j.version>1.7.21</slf4j.version>
         <logback.version>1.1.7</logback.version>
@@ -56,10 +56,8 @@
     <modules>
       <module>common</module>
       <module>web-starter</module>
-      <module>web-common</module>
       <module>cloud-starter</module>
       <module>mq-starter</module>
-      <module>activemq-starter</module>
       <module>websocket-starter</module>
     </modules>
 
@@ -132,12 +130,6 @@
 
             <dependency>
                 <groupId>com.lframework</groupId>
-                <artifactId>web-common</artifactId>
-                <version>${jugg.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.lframework</groupId>
                 <artifactId>web-starter</artifactId>
                 <version>${jugg.version}</version>
             </dependency>
@@ -151,12 +143,6 @@
             <dependency>
                 <groupId>com.lframework</groupId>
                 <artifactId>mq-starter</artifactId>
-                <version>${jugg.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.lframework</groupId>
-                <artifactId>activemq-starter</artifactId>
                 <version>${jugg.version}</version>
             </dependency>
 

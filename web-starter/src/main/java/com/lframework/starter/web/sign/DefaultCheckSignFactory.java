@@ -1,7 +1,6 @@
 package com.lframework.starter.web.sign;
 
-import com.lframework.starter.web.common.utils.ApplicationUtil;
-import org.springframework.stereotype.Component;
+import com.lframework.starter.web.utils.ApplicationUtil;
 
 public class DefaultCheckSignFactory implements CheckSignFactory {
 

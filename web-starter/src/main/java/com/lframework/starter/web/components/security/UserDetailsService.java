@@ -1,7 +1,6 @@
 package com.lframework.starter.web.components.security;
 
 import com.lframework.starter.common.exceptions.impl.UserLoginException;
-import com.lframework.starter.web.common.security.AbstractUserDetails;
 
 public interface UserDetailsService {
 

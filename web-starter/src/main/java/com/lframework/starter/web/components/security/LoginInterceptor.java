@@ -5,7 +5,6 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.annotation.AnnotationUtil;
 import com.lframework.starter.common.exceptions.impl.AuthExpiredException;
 import com.lframework.starter.web.annotations.OpenApi;
-import com.lframework.starter.web.common.tenant.TenantContextHolder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -53,11 +52,5 @@ public class LoginInterceptor implements HandlerInterceptor {
     }
 
     return true;
-  }
-
-  @Override
-  public void afterCompletion(HttpServletRequest request, HttpServletResponse response,
-      Object handler, Exception ex) throws Exception {
-    TenantContextHolder.clearTenantId();
   }
 }
