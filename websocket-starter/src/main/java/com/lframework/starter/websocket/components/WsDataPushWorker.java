@@ -69,6 +69,9 @@ public class WsDataPushWorker {
     int currentRetryCount = retryCount;
     while (currentRetryCount > 0) {
       try {
+        if (log.isDebugEnabled()) {
+          log.debug("准备向sessionId {} 推送消息 {}", session.getWebSocketSession().getId(), message.getPayload());
+        }
         session.getWebSocketSession().sendMessage(message);
         break;
       } catch (IllegalStateException e) {
