@@ -7,7 +7,7 @@
     <groupId>com.lframework</groupId>
     <artifactId>parent</artifactId>
     <name>【${project.artifactId}】Jugg基础框架</name>
-    <version>3.1.5</version>
+    <version>3.1.6</version>
     <packaging>pom</packaging>
 
     <url>https://gitee.com/lframework/jugg</url>
@@ -21,7 +21,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
         <spring.version>2.2.2.RELEASE</spring.version>
-        <jugg.version>3.1.5</jugg.version>
+        <jugg.version>3.1.6</jugg.version>
         <lombok.version>1.18.10</lombok.version>
         <slf4j.version>1.7.21</slf4j.version>
         <logback.version>1.1.7</logback.version>
@@ -82,19 +82,6 @@
         </developerConnection>
         <url>https://gitee.com/lframework/jugg</url>
     </scm>
-
-    <distributionManagement>
-        <snapshotRepository>
-            <id>sonatype_snapshots</id>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
-            <layout>default</layout>
-        </snapshotRepository>
-        <repository>
-            <id>sonatype_releases</id>
-            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-            <layout>default</layout>
-        </repository>
-    </distributionManagement>
 
     <dependencyManagement>
         <dependencies>
@@ -471,6 +458,16 @@
                                 </goals>
                             </execution>
                         </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>0.7.0</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>central</publishingServerId>
+                            <tokenAuth>true</tokenAuth>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>

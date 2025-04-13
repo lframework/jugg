@@ -5,7 +5,7 @@ import com.lframework.starter.web.components.upload.client.UploadClient;
 import com.lframework.starter.web.components.upload.client.config.CosUploadConfig;
 import com.lframework.starter.web.components.upload.client.dto.UploadDto;
 import com.lframework.starter.web.components.upload.client.impl.CosUploadClient;
-import com.lframework.starter.web.components.upload.handler.UploadHandler;
+import com.lframework.starter.web.components.upload.handler.SecurityUploadHandler;
 import com.lframework.starter.web.service.SysConfService;
 import com.lframework.starter.web.utils.JsonUtil;
 import java.io.InputStream;
@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
-public class CosUploadHandler implements UploadHandler {
+public class CosSecurityUploadHandler implements SecurityUploadHandler {
 
   @Autowired
   private SysConfService sysConfService;
@@ -26,7 +26,7 @@ public class CosUploadHandler implements UploadHandler {
 
   @Override
   public UploadDto upload(InputStream is, List<String> locations, String fileName) {
-    String configStr = sysConfService.findRequiredByKey("upload.cos.config");
+    String configStr = sysConfService.findRequiredByKey("security-upload.cos.config");
     CosUploadConfig config = JsonUtil.parseObject(configStr, CosUploadConfig.class);
 
     Assert.notBlank(config.getEndpoint());
@@ -38,5 +38,15 @@ public class CosUploadHandler implements UploadHandler {
     UploadClient uploadClient = new CosUploadClient(config);
 
     return uploadClient.upload(is, locations, fileName);
+  }
+
+  @Override
+  public String generatePresignedUrl(String objectName, long expiration) {
+    String configStr = sysConfService.findRequiredByKey("security-upload.cos.config");
+    CosUploadConfig config = JsonUtil.parseObject(configStr, CosUploadConfig.class);
+
+    UploadClient uploadClient = new CosUploadClient(config);
+
+    return uploadClient.generatePresignedUrl(objectName, expiration);
   }
 }

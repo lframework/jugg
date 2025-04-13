@@ -63,11 +63,6 @@ public abstract class BaseController {
     return getPageSize(null);
   }
 
-  public int getExportSize() {
-
-    return MybatisConstants.DEFAULT_EXPORT_SIZE;
-  }
-
   /**
    * 获取当前登录用户信息
    *

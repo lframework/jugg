@@ -495,21 +495,6 @@ public class ExcelUtil {
       File file,
       String sheetName, Class<T> clazz) {
 
-    return multipartExportXls(file, sheetName, sheetName, clazz);
-  }
-
-  /**
-   * 分段导出Xls至文件
-   *
-   * @param fileName
-   * @param sheetName
-   * @param clazz
-   * @param <T>
-   */
-  public static <T extends ExcelModel> ExcelMultipartWriterSheetBuilder multipartExportXls(
-      File file, String fileName,
-      String sheetName, Class<T> clazz) {
-
     return multipartExportExcel(FileUtil.getOutputStream(file), sheetName, ExcelTypeEnum.XLS,
         clazz);
   }
@@ -524,21 +509,6 @@ public class ExcelUtil {
   public static <T extends ExcelModel> ExcelMultipartWriterSheetBuilder multipartExportXlsx(
       File file,
       String sheetName, Class<T> clazz) {
-
-    return multipartExportXlsx(file, sheetName, sheetName, clazz);
-  }
-
-  /**
-   * 分段导出Xlsx至文件
-   *
-   * @param fileName
-   * @param sheetName
-   * @param clazz
-   * @param <T>
-   */
-  public static <T extends ExcelModel> ExcelMultipartWriterSheetBuilder multipartExportXlsx(
-      File file,
-      String fileName, String sheetName, Class<T> clazz) {
 
     return multipartExportExcel(FileUtil.getOutputStream(file), sheetName, ExcelTypeEnum.XLSX,
         clazz);

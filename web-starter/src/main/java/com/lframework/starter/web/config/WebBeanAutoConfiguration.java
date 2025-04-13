@@ -11,10 +11,15 @@ import com.lframework.starter.web.components.generator.handler.impl.SnowFlakeGen
 import com.lframework.starter.web.components.generator.handler.impl.StaticStrGenerateCodeRuleHandler;
 import com.lframework.starter.web.components.generator.handler.impl.UUIDGenerateCodeRuleHandler;
 import com.lframework.starter.web.components.security.UserTokenResolver;
+import com.lframework.starter.web.components.upload.handler.SecurityUploadHandler;
 import com.lframework.starter.web.components.upload.handler.UploadHandler;
+import com.lframework.starter.web.components.upload.handler.impl.CosSecurityUploadHandler;
 import com.lframework.starter.web.components.upload.handler.impl.CosUploadHandler;
+import com.lframework.starter.web.components.upload.handler.impl.LocalSecurityUploadHandler;
 import com.lframework.starter.web.components.upload.handler.impl.LocalUploadHandler;
+import com.lframework.starter.web.components.upload.handler.impl.ObsSecurityUploadHandler;
 import com.lframework.starter.web.components.upload.handler.impl.ObsUploadHandler;
+import com.lframework.starter.web.components.upload.handler.impl.OssSecurityUploadHandler;
 import com.lframework.starter.web.components.upload.handler.impl.OssUploadHandler;
 import com.lframework.starter.web.resp.InvokeResultErrorBuilderWrapper;
 import com.lframework.starter.web.resp.ResponseErrorBuilder;
@@ -60,6 +65,26 @@ public class WebBeanAutoConfiguration {
   @Bean
   public UploadHandler ossUploadHandler() {
     return new OssUploadHandler();
+  }
+
+  @Bean
+  public SecurityUploadHandler ossSecurityUploadHandler() {
+    return new OssSecurityUploadHandler();
+  }
+
+  @Bean
+  public SecurityUploadHandler cosSecurityUploadHandler() {
+    return new CosSecurityUploadHandler();
+  }
+
+  @Bean
+  public SecurityUploadHandler localSecurityUploadHandler() {
+    return new LocalSecurityUploadHandler();
+  }
+
+  @Bean
+  public SecurityUploadHandler obsSecurityUploadHandler() {
+    return new ObsSecurityUploadHandler();
   }
 
   @Bean

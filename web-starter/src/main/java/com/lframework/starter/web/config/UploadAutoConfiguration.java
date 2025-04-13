@@ -1,6 +1,7 @@
 package com.lframework.starter.web.config;
 
 import com.lframework.starter.common.utils.StringUtil;
+import com.lframework.starter.web.config.properties.SecurityUploadProperties;
 import com.lframework.starter.web.config.properties.UploadProperties;
 import java.io.File;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-@EnableConfigurationProperties(UploadProperties.class)
+@EnableConfigurationProperties({UploadProperties.class, SecurityUploadProperties.class})
 public class UploadAutoConfiguration implements WebMvcConfigurer {
 
   @Autowired

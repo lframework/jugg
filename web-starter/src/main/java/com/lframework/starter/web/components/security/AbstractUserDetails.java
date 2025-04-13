@@ -74,6 +74,11 @@ public abstract class AbstractUserDetails implements UserDetails, Serializable {
    */
   private Boolean isAdmin;
 
+  /**
+   * loginId
+   */
+  private String loginId;
+
   @Override
   public boolean isAccountNonExpired() {
 

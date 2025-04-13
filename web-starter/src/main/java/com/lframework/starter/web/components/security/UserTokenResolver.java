@@ -8,7 +8,6 @@ public class UserTokenResolver implements IUserTokenResolver {
 
   @Override
   public String getToken() {
-
     return StpUtil.getTokenValue();
   }
 

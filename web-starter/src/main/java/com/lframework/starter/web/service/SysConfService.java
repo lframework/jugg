@@ -60,4 +60,20 @@ public interface SysConfService extends BaseService {
    * @return
    */
   Integer getInteger(String key, Integer defaultValue);
+
+  /**
+   * 根据Key查询Long
+   *
+   * @param key
+   * @return
+   */
+  Long getLong(String key);
+
+  /**
+   * 根据Key查询Long
+   *
+   * @param key
+   * @return
+   */
+  Long getLong(String key, Long defaultValue);
 }

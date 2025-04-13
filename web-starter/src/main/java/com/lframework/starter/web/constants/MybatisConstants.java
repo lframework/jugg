@@ -11,9 +11,4 @@ public interface MybatisConstants {
      * 默认每页条数
      */
     int DEFAULT_PAGE_SIZE = 20;
-
-    /**
-     * 默认导出条数
-     */
-    int DEFAULT_EXPORT_SIZE = 2000;
 }

@@ -89,8 +89,13 @@ public class SecurityUtil {
       return null;
     }
 
+    Object loginId = StpUtil.getLoginIdByToken(token);
+    if (loginId == null) {
+      return null;
+    }
+
     try {
-      SaSession session = StpUtil.getSession();
+      SaSession session = getSessionByLoginId(loginId);
       if (session == null) {
         return null;
       }
@@ -98,5 +103,9 @@ public class SecurityUtil {
     } catch (SaTokenException e) {
       return null;
     }
+  }
+
+  public static SaSession getSessionByLoginId(Object loginId) {
+    return StpUtil.getSessionByLoginId(loginId, false);
   }
 }
