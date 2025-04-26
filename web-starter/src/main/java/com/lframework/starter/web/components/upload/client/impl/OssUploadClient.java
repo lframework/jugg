@@ -9,6 +9,7 @@ import com.aliyun.oss.model.GeneratePresignedUrlRequest;
 import com.lframework.starter.common.constants.StringPool;
 import com.lframework.starter.common.exceptions.impl.DefaultSysException;
 import com.lframework.starter.common.utils.Assert;
+import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.common.utils.DateUtil;
 import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.web.components.upload.client.UploadClient;
@@ -50,7 +51,8 @@ public class OssUploadClient implements UploadClient {
             : internalEndPoint, accessKeyId,
         accessKeySecret);
 
-    String objectName = StringUtil.join("/", locations) + fileName;
+    String objectName = (CollectionUtil.isEmpty(locations) ? StringPool.EMPTY_STR
+        : (StringUtil.join("/", locations) + "/")) + fileName;
     try {
       // 这里不判断桶是否存在，通过控台创建
       ossClient.putObject(bucketName, objectName, is);

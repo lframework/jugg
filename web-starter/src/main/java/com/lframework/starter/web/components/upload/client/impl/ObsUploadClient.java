@@ -4,6 +4,7 @@ import cn.hutool.core.util.URLUtil;
 import com.lframework.starter.common.constants.StringPool;
 import com.lframework.starter.common.exceptions.impl.DefaultSysException;
 import com.lframework.starter.common.utils.Assert;
+import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.web.components.upload.client.UploadClient;
 import com.lframework.starter.web.components.upload.client.config.ObsUploadConfig;
@@ -41,7 +42,8 @@ public class ObsUploadClient implements UploadClient {
     Assert.notBlank(ak);
     Assert.notBlank(sk);
 
-    String objectName = StringUtil.join("/", locations) + fileName;
+    String objectName = (CollectionUtil.isEmpty(locations) ? StringPool.EMPTY_STR
+        : (StringUtil.join("/", locations) + "/")) + fileName;
 
     try (ObsClient obsClient = new ObsClient(ak, sk,
         endPoint)) {
