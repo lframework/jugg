@@ -9,8 +9,8 @@ import com.lframework.starter.common.utils.NumberUtil;
 import com.lframework.starter.common.utils.ReflectUtil;
 import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.web.annotations.excel.ExcelRequired;
-import com.lframework.starter.web.utils.ApplicationUtil;
 import com.lframework.starter.web.service.SysConfService;
+import com.lframework.starter.web.utils.ApplicationUtil;
 import com.lframework.starter.web.utils.ExcelImportUtil;
 import com.lframework.starter.web.utils.TransactionUtil;
 import java.lang.reflect.Field;
@@ -125,21 +125,19 @@ public abstract class ExcelImportListener<T extends ExcelModel> extends ExcelEve
       this.datas.add(data);
 
       // 校验必填项
-      this.checkFields(data);
+      this.checkFields(data, context);
 
       this.doInvoke(data, context);
     }
   }
 
-  private void checkFields(T data) {
+  private void checkFields(T data, AnalysisContext context) {
     if (data == null) {
       return;
     }
 
     Field[] fields = ReflectUtil.getFields(data.getClass());
-    int index = 0;
     for (Field field : fields) {
-      index++;
       ExcelRequired excelRequired = field.getAnnotation(ExcelRequired.class);
       if (excelRequired == null) {
         continue;
@@ -162,7 +160,8 @@ public abstract class ExcelImportListener<T extends ExcelModel> extends ExcelEve
           fieldName = ArrayUtil.join(fieldNames, "-");
         }
 
-        throw new DefaultClientException("第" + (index) + "行“" + fieldName + "”不能为空");
+        throw new DefaultClientException(
+            "第" + (context.readRowHolder().getRowIndex()) + "行“" + fieldName + "”不能为空");
       }
     }
   }
