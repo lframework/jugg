@@ -43,7 +43,7 @@ public class FlowGenerateCodeRuleHandler implements GenerateCodeRuleHandler<Flow
     String lockerName = LOCK_KEY + rule.getKey();
     String redisKey =
         lockerName + "_" + (TenantUtil.enableTenant() ? TenantContextHolder.getTenantId()
-            : "noTenant" + "_" + DateUtil.formatDate(LocalDate.now()));
+            : "noTenant") + "_" + DateUtil.formatDate(LocalDate.now());
     Locker locker = lockBuilder.buildLocker(redisKey + "_Locker", 60000L, 5000L);
     long no;
 
