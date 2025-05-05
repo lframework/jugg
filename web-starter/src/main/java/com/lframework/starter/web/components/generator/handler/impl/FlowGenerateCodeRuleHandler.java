@@ -4,6 +4,7 @@ import com.lframework.starter.common.exceptions.impl.DefaultClientException;
 import com.lframework.starter.common.exceptions.impl.DefaultSysException;
 import com.lframework.starter.common.locker.LockBuilder;
 import com.lframework.starter.common.locker.Locker;
+import com.lframework.starter.common.utils.DateUtil;
 import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.web.components.tenant.TenantContextHolder;
 import com.lframework.starter.web.components.generator.handler.GenerateCodeRuleHandler;
@@ -13,6 +14,7 @@ import com.lframework.starter.web.components.redis.RedisHandler;
 import com.lframework.starter.web.utils.IdUtil;
 import com.lframework.starter.web.utils.JsonUtil;
 import com.lframework.starter.web.utils.TenantUtil;
+import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class FlowGenerateCodeRuleHandler implements GenerateCodeRuleHandler<FlowGenerateCodeRule> {
@@ -41,7 +43,7 @@ public class FlowGenerateCodeRuleHandler implements GenerateCodeRuleHandler<Flow
     String lockerName = LOCK_KEY + rule.getKey();
     String redisKey =
         lockerName + "_" + (TenantUtil.enableTenant() ? TenantContextHolder.getTenantId()
-            : "noTenant");
+            : "noTenant" + "_" + DateUtil.formatDate(LocalDate.now()));
     Locker locker = lockBuilder.buildLocker(redisKey + "_Locker", 60000L, 5000L);
     long no;
 
