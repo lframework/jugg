@@ -2,6 +2,7 @@ package com.lframework.starter.web.utils;
 
 import cn.hutool.json.JSONUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
@@ -23,6 +24,19 @@ public class JsonUtil extends JSONUtil {
     }
     try {
       return OBJECT_MAPPER.writer().writeValueAsString(obj);
+    } catch (JsonProcessingException e) {
+      log.error(e.getMessage(), e);
+      throw new DefaultSysException(e.getMessage());
+    }
+  }
+
+  public static <T> T parseObject(String jsonStr, TypeReference<T> typeRef) {
+    if (StringUtil.isEmpty(jsonStr) || typeRef == null) {
+      return null;
+    }
+
+    try {
+      return OBJECT_MAPPER.readValue(jsonStr, typeRef);
     } catch (JsonProcessingException e) {
       log.error(e.getMessage(), e);
       throw new DefaultSysException(e.getMessage());
