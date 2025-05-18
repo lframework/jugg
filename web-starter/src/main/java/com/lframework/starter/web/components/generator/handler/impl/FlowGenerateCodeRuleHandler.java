@@ -6,11 +6,11 @@ import com.lframework.starter.common.locker.LockBuilder;
 import com.lframework.starter.common.locker.Locker;
 import com.lframework.starter.common.utils.DateUtil;
 import com.lframework.starter.common.utils.StringUtil;
-import com.lframework.starter.web.components.tenant.TenantContextHolder;
 import com.lframework.starter.web.components.generator.handler.GenerateCodeRuleHandler;
 import com.lframework.starter.web.components.generator.rule.GenerateCodeRule;
 import com.lframework.starter.web.components.generator.rule.impl.FlowGenerateCodeRule;
 import com.lframework.starter.web.components.redis.RedisHandler;
+import com.lframework.starter.web.components.tenant.TenantContextHolder;
 import com.lframework.starter.web.utils.IdUtil;
 import com.lframework.starter.web.utils.JsonUtil;
 import com.lframework.starter.web.utils.TenantUtil;
@@ -43,7 +43,8 @@ public class FlowGenerateCodeRuleHandler implements GenerateCodeRuleHandler<Flow
     String lockerName = LOCK_KEY + rule.getKey();
     String redisKey =
         lockerName + "_" + (TenantUtil.enableTenant() ? TenantContextHolder.getTenantId()
-            : "noTenant") + "_" + DateUtil.formatDate(LocalDate.now());
+            : "noTenant") + (rule.getExpireType() == 0 ? "_" + DateUtil.formatDate(LocalDate.now())
+            : "");
     Locker locker = lockBuilder.buildLocker(redisKey + "_Locker", 60000L, 5000L);
     long no;
 
@@ -56,7 +57,8 @@ public class FlowGenerateCodeRuleHandler implements GenerateCodeRuleHandler<Flow
     } else {
       throw new DefaultClientException("生成单号失败，请稍后重试！");
     }
-    redisHandler.expire(redisKey, rule.getExpireSeconds() * 1000L);
+    redisHandler.expire(redisKey,
+        (rule.getExpireType() == 0 ? 24 * 60 * 60 : rule.getExpireSeconds()) * 1000L);
 
     String noStr = String.valueOf(no);
     if (noStr.length() > codeLen) {
@@ -96,6 +98,10 @@ public class FlowGenerateCodeRuleHandler implements GenerateCodeRuleHandler<Flow
 
     if (rule.getStep() == null) {
       rule.setStep(1);
+    }
+
+    if (rule.getExpireType() == null) {
+      rule.setExpireType(0);
     }
 
     if (rule.getExpireSeconds() == null) {
