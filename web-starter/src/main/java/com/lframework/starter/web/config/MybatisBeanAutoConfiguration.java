@@ -1,6 +1,6 @@
 package com.lframework.starter.web.config;
 
-import com.lframework.starter.web.components.CaptchaValidator;
+import com.lframework.starter.web.core.components.captcha.CaptchaValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

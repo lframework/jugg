@@ -1,6 +1,12 @@
 package com.lframework.starter.mq.rabbitmq.config;
 
 import com.lframework.starter.common.utils.ArrayUtil;
+import com.lframework.starter.mq.rabbitmq.impl.RabbitMqProducerServiceImpl;
+import com.lframework.starter.mq.rabbitmq.listeners.app.ExportTaskNotifyListener;
+import com.lframework.starter.mq.rabbitmq.listeners.mq.ExportTaskListener;
+import com.lframework.starter.mq.rabbitmq.listeners.mq.SysMailMessageListener;
+import com.lframework.starter.mq.rabbitmq.listeners.mq.SysNotifyListener;
+import com.lframework.starter.mq.rabbitmq.listeners.mq.SysSiteMessageListener;
 import com.lframework.starter.mq.rabbitmq.producer.RabbitMqProducer;
 import org.aopalliance.aop.Advice;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
@@ -18,9 +24,18 @@ import org.springframework.boot.autoconfigure.amqp.SimpleRabbitListenerContainer
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 @EnableRabbit
 @Configuration
+@Import({
+    RabbitMqProducerServiceImpl.class,
+    SysMailMessageListener.class,
+    SysNotifyListener.class,
+    SysSiteMessageListener.class,
+    ExportTaskNotifyListener.class,
+    ExportTaskListener.class,
+})
 public class RabbitMqAutoConfiguration {
 
   private final ObjectProvider<MessageConverter> messageConverter;
@@ -33,7 +48,8 @@ public class RabbitMqAutoConfiguration {
 
   RabbitMqAutoConfiguration(ObjectProvider<MessageConverter> messageConverter,
       ObjectProvider<MessageRecoverer> messageRecoverer,
-      ObjectProvider<RabbitRetryTemplateCustomizer> retryTemplateCustomizers, RabbitProperties properties) {
+      ObjectProvider<RabbitRetryTemplateCustomizer> retryTemplateCustomizers,
+      RabbitProperties properties) {
     this.messageConverter = messageConverter;
     this.messageRecoverer = messageRecoverer;
     this.retryTemplateCustomizers = retryTemplateCustomizers;
@@ -49,7 +65,8 @@ public class RabbitMqAutoConfiguration {
   @ConditionalOnProperty(prefix = "spring.rabbitmq.listener", name = "type", havingValue = "simple",
       matchIfMissing = true)
   SimpleRabbitListenerContainerFactory simpleRabbitListenerContainerFactory(
-      SimpleRabbitListenerContainerFactoryConfigurer configurer, ConnectionFactory connectionFactory) {
+      SimpleRabbitListenerContainerFactoryConfigurer configurer,
+      ConnectionFactory connectionFactory) {
     SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
     configurer.configure(factory, connectionFactory);
     factory.setAdviceChain(combineAdvice(factory.getAdviceChain()));
@@ -59,7 +76,8 @@ public class RabbitMqAutoConfiguration {
   @Bean(name = "rabbitListenerContainerFactory")
   @ConditionalOnProperty(prefix = "spring.rabbitmq.listener", name = "type", havingValue = "direct")
   DirectRabbitListenerContainerFactory directRabbitListenerContainerFactory(
-      DirectRabbitListenerContainerFactoryConfigurer configurer, ConnectionFactory connectionFactory) {
+      DirectRabbitListenerContainerFactoryConfigurer configurer,
+      ConnectionFactory connectionFactory) {
     DirectRabbitListenerContainerFactory factory = new DirectRabbitListenerContainerFactory();
     configurer.configure(factory, connectionFactory);
     factory.setAdviceChain(combineAdvice(factory.getAdviceChain()));

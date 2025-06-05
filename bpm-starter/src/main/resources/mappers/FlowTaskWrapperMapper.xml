@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lframework.starter.bpm.mappers.FlowTaskWrapperMapper">
+  <select id="queryTodoList" resultType="com.lframework.starter.bpm.dto.FlowTaskDto">
+    SELECT
+      task.id AS task_id,
+      cuinst.title,
+      task.node_code,
+      task.node_name,
+      task.node_type,
+      task.flow_status,
+      definition.id AS flow_id,
+      definition.flow_code,
+      definition.flow_name,
+      definition.category AS category_id,
+      instance.id AS instance_id,
+      instance.business_id,
+      instance.ext,
+      instance.create_by AS start_by_id,
+      cuinst.start_time,
+      cuinst.end_time
+    FROM flow_task task
+    INNER JOIN flow_user flowUser ON flowUser.associated = task.id AND flowUser.del_flag = 0 AND flowUser.processed_by = #{userId}
+    INNER JOIN flow_instance instance ON instance.id = task.instance_id AND instance.del_flag = 0 AND instance.activity_status = 1
+    LEFT JOIN flow_cu_instance cuinst ON cuinst.id = instance.id
+    INNER JOIN flow_definition definition ON definition.id = instance.definition_id AND definition.del_flag = 0
+    <where>
+      <if test="vo.flowCode != null and vo.flowCode != ''">
+        AND definition.flow_code = #{vo.flowCode}
+      </if>
+      <if test="vo.flowName != null and vo.flowName != ''">
+        AND definition.flow_name  LIKE CONCAT('%', #{vo.flowName}, '%')
+      </if>
+      <if test="vo.title != null and vo.title != ''">
+        AND cuinst.title LIKE CONCAT('%', #{vo.title}, '%')
+      </if>
+      AND task.flow_status = 1
+      AND task.node_type = 1
+      AND task.del_flag = 0
+    </where>
+    ORDER BY task.create_time ASC
+  </select>
+  <select id="queryMyList" resultType="com.lframework.starter.bpm.dto.FlowTaskDto">
+    SELECT
+    NULL AS task_id,
+    cuinst.title,
+    instance.node_code,
+    instance.node_name,
+    instance.node_type,
+    instance.flow_status,
+    definition.id AS flow_id,
+    definition.flow_code,
+    definition.flow_name,
+    definition.category AS category_id,
+    instance.id AS instance_id,
+    instance.business_id,
+    instance.ext,
+    instance.create_by AS start_by_id,
+    cuinst.start_time,
+    cuinst.end_time
+    FROM flow_instance instance
+    LEFT JOIN flow_cu_instance cuinst ON cuinst.id = instance.id
+    INNER JOIN flow_definition definition ON definition.id = instance.definition_id
+    <where>
+      <if test="vo.flowCode != null and vo.flowCode != ''">
+        AND definition.flow_code = #{vo.flowCode}
+      </if>
+      <if test="vo.flowName != null and vo.flowName != ''">
+        AND definition.flow_name  LIKE CONCAT('%', #{vo.flowName}, '%')
+      </if>
+      <if test="vo.title != null and vo.title != ''">
+        AND cuinst.title LIKE CONCAT('%', #{vo.title}, '%')
+      </if>
+      AND instance.del_flag = 0
+      AND instance.create_by = #{userId}
+    </where>
+    ORDER BY instance.create_time DESC
+  </select>
+  <select id="queryInstanceList" resultType="com.lframework.starter.bpm.dto.FlowTaskDto">
+    SELECT
+    NULL AS task_id,
+    cuinst.title,
+    instance.node_code,
+    instance.node_name,
+    instance.node_type,
+    instance.flow_status,
+    definition.id AS flow_id,
+    definition.flow_code,
+    definition.flow_name,
+    definition.category AS category_id,
+    instance.id AS instance_id,
+    instance.business_id,
+    instance.ext,
+    instance.create_by AS start_by_id,
+    cuinst.start_time,
+    cuinst.end_time
+    FROM flow_instance instance
+    LEFT JOIN flow_cu_instance cuinst ON cuinst.id = instance.id
+    INNER JOIN flow_definition definition ON definition.id = instance.definition_id
+    <where>
+      <if test="vo.flowCode != null and vo.flowCode != ''">
+        AND definition.flow_code = #{vo.flowCode}
+      </if>
+      <if test="vo.flowName != null and vo.flowName != ''">
+        AND definition.flow_name  LIKE CONCAT('%', #{vo.flowName}, '%')
+      </if>
+      <if test="vo.title != null and vo.title != ''">
+        AND cuinst.title LIKE CONCAT('%', #{vo.title}, '%')
+      </if>
+      AND instance.del_flag = 0
+    </where>
+    ORDER BY instance.create_time DESC
+  </select>
+</mapper>

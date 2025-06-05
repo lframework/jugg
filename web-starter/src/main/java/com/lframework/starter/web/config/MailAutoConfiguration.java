@@ -2,10 +2,10 @@ package com.lframework.starter.web.config;
 
 import cn.hutool.extra.mail.MailAccount;
 import com.lframework.starter.web.config.properties.MailProperties;
-import com.lframework.starter.web.impl.MailServiceImpl;
-import com.lframework.starter.web.service.MailService;
-import com.lframework.starter.web.service.SysConfService;
-import com.lframework.starter.web.utils.JsonUtil;
+import com.lframework.starter.web.inner.impl.MailServiceImpl;
+import com.lframework.starter.web.inner.service.MailService;
+import com.lframework.starter.web.inner.service.SysConfService;
+import com.lframework.starter.web.core.utils.JsonUtil;
 import com.sun.mail.util.MailSSLSocketFactory;
 import java.security.GeneralSecurityException;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

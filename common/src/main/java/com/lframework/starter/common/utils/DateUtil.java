@@ -43,6 +43,10 @@ public class DateUtil extends cn.hutool.core.date.LocalDateTimeUtil {
     return LocalDateTimeUtil.of(date).toLocalDate();
   }
 
+  public static LocalDateTime toLocalDateTime(Date date) {
+    return LocalDateTimeUtil.of(date);
+  }
+
   public static Date toDate(LocalDateTime dateTime) {
 
     if (dateTime == null) {

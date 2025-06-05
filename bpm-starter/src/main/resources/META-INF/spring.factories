@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.lframework.starter.bpm.config.BpmBeanAutoConfiguration,\
+  com.lframework.starter.bpm.config.BpmSwaggerAutoConfiguration

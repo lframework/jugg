@@ -6,7 +6,7 @@
   <parent>
     <artifactId>mq-starter</artifactId>
     <groupId>com.lframework</groupId>
-    <version>3.1.8</version>
+    <version>4.0.0</version>
   </parent>
 
   <artifactId>activemq-starter</artifactId>

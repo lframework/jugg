@@ -5,8 +5,8 @@ import com.lframework.starter.common.utils.Assert;
 import com.lframework.starter.mq.core.producer.MqProducer;
 import com.lframework.starter.mq.core.queue.QueueDefinition;
 import com.lframework.starter.mq.rabbitmq.queue.RabbitMQQueueDefinition;
-import com.lframework.starter.web.components.tenant.TenantContextHolder;
-import com.lframework.starter.web.utils.TenantUtil;
+import com.lframework.starter.web.core.components.tenant.TenantContextHolder;
+import com.lframework.starter.web.core.utils.TenantUtil;
 import java.io.Serializable;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 

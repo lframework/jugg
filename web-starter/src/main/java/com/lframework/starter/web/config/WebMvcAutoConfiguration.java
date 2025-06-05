@@ -1,7 +1,7 @@
 package com.lframework.starter.web.config;
 
 import cn.dev33.satoken.interceptor.SaAnnotationInterceptor;
-import com.lframework.starter.web.components.security.PermitAllService;
+import com.lframework.starter.web.core.components.security.PermitAllService;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;

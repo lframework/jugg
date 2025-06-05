@@ -2,7 +2,7 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.lframework.starter.web.config.MybatisAutoConfiguration,\
   com.lframework.starter.web.config.MybatisBeanAutoConfiguration,\
   com.lframework.starter.web.config.TransactionAutoConfiguration,\
-  com.lframework.starter.web.config.TenantConfiguration,\
+  com.lframework.starter.web.config.TenantAutoConfiguration,\
   com.lframework.starter.web.config.CacheAutoConfiguration,\
   com.lframework.starter.web.config.KaptchaAutoConfiguration,\
   com.lframework.starter.web.config.LettuceAutoConfiguration,\
@@ -17,4 +17,9 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.lframework.starter.web.config.WebMvcAutoConfiguration,\
   com.lframework.starter.web.config.TenantSwitchConfiguration,\
   com.lframework.starter.web.config.WebCommonAutoConfiguration,\
-  com.lframework.starter.web.config.SaTokenAutoConfiguration
+  com.lframework.starter.web.config.TenantDynamicDataSourceAutoConfiguration,\
+  com.lframework.starter.web.config.SaTokenAutoConfiguration,\
+  com.lframework.starter.web.config.GenAutoConfiguration,\
+  com.lframework.starter.web.config.MagicCustomAutoConfiguration,\
+  com.lframework.starter.web.config.WebSwaggerAutoConfiguration,\
+  com.lframework.starter.web.config.WsAutoConfiguration

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lframework.starter.bpm.mappers.FlowDefinitionWrapperMapper">
+
+  <select id="selector"
+          resultType="com.lframework.starter.bpm.entity.FlowDefinitionWrapper">
+    SELECT
+        def.*
+    FROM flow_definition def
+    INNER JOIN (SELECT flow_code, MAX(version) AS max_version FROM flow_definition WHERE del_flag = 0 GROUP BY flow_code) AS max_def ON def.flow_code = max_def.flow_code
+    <where>
+      <if test="vo.code != null and vo.code != ''">
+        def.flow_code = #{vo.code}
+      </if>
+      <if test="vo.name != null and vo.name != ''">
+        def.flow_name LIKE CONCAT(CONCAT('%', #{vo.name}), '%')
+      </if>
+      <if test="vo.categoryId != null and vo.categoryId != ''">
+        def.category = #{vo.categoryId}
+      </if>
+      AND def.is_publish = 1
+      AND def.activity_status = 1
+      AND def.del_flag = 0
+      ORDER BY def.flow_code
+    </where>
+  </select>
+</mapper>

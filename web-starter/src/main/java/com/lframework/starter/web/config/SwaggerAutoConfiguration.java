@@ -1,6 +1,6 @@
 package com.lframework.starter.web.config;
 
-import com.lframework.starter.web.utils.ApplicationUtil;
+import com.lframework.starter.web.core.utils.ApplicationUtil;
 import java.net.InetAddress;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

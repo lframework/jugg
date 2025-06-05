@@ -101,4 +101,8 @@ public interface StringPool {
    * 租户ID在Qrtz中的Key
    */
   String TENANT_ID_QRTZ = "__tenantId";
+
+  String Y = "Y";
+
+  String N = "N";
 }

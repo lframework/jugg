@@ -3,8 +3,8 @@ package com.lframework.starter.cloud.resp;
 import com.lframework.starter.cloud.BaseFeignClient;
 import com.lframework.starter.common.exceptions.BaseException;
 import com.lframework.starter.common.exceptions.impl.DefaultSysException;
-import com.lframework.starter.web.resp.Response;
-import com.lframework.starter.web.resp.ResponseErrorBuilder;
+import com.lframework.starter.web.core.components.resp.Response;
+import com.lframework.starter.web.core.components.resp.ResponseErrorBuilder;
 
 public class ApiInvokeResultErrorBuilderWrapper implements ResponseErrorBuilder {
 

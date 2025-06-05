@@ -1,12 +1,11 @@
 package com.lframework.starter.cloud.interceptors;
 
-import com.lframework.starter.web.utils.RequestUtil;
+import com.lframework.starter.web.core.utils.RequestUtil;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 @Slf4j
 public class FeignRequestInterceptor implements RequestInterceptor {

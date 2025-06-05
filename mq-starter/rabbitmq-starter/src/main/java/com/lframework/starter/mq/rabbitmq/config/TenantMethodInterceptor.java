@@ -1,8 +1,8 @@
 package com.lframework.starter.mq.rabbitmq.config;
 
 import com.lframework.starter.common.utils.ArrayUtil;
-import com.lframework.starter.web.components.tenant.TenantContextHolder;
-import com.lframework.starter.web.utils.TenantUtil;
+import com.lframework.starter.web.core.components.tenant.TenantContextHolder;
+import com.lframework.starter.web.core.utils.TenantUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;

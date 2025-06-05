@@ -1,6 +1,6 @@
 package com.lframework.starter.web.config;
 
-import com.lframework.starter.web.components.security.PasswordEncoderWrapper;
+import com.lframework.starter.web.core.components.security.PasswordEncoderWrapper;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

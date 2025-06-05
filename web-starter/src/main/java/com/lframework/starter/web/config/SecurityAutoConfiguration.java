@@ -1,9 +1,9 @@
 package com.lframework.starter.web.config;
 
-import com.lframework.starter.web.components.security.LoginInterceptor;
-import com.lframework.starter.web.components.security.PermitAllService;
-import com.lframework.starter.web.components.tenant.DefaultTenantInterceptor;
-import com.lframework.starter.web.components.tenant.TenantInterceptor;
+import com.lframework.starter.web.core.interceptors.LoginInterceptor;
+import com.lframework.starter.web.core.components.security.PermitAllService;
+import com.lframework.starter.web.core.components.tenant.DefaultTenantInterceptor;
+import com.lframework.starter.web.core.components.tenant.TenantInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;

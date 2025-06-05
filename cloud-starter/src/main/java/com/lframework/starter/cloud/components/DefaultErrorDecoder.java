@@ -6,12 +6,11 @@ import com.lframework.starter.common.exceptions.impl.DefaultSysException;
 import com.lframework.starter.common.utils.ReflectUtil;
 import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.cloud.resp.ApiInvokeResult;
-import com.lframework.starter.web.utils.JsonUtil;
+import com.lframework.starter.web.core.utils.JsonUtil;
 import feign.Response;
 import feign.Util;
 import feign.codec.ErrorDecoder;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 @Slf4j
 public class DefaultErrorDecoder implements ErrorDecoder {

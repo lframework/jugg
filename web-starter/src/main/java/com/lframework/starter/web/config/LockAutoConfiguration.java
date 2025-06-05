@@ -1,10 +1,10 @@
 package com.lframework.starter.web.config;
 
 import com.lframework.starter.common.locker.LockBuilder;
-import com.lframework.starter.web.annotations.locker.EnableLock;
-import com.lframework.starter.web.annotations.locker.LockType;
-import com.lframework.starter.web.components.locker.DefaultLockBuilder;
-import com.lframework.starter.web.components.redis.locker.RedisLockBuilder;
+import com.lframework.starter.web.core.annotations.locker.EnableLock;
+import com.lframework.starter.web.core.annotations.locker.LockType;
+import com.lframework.starter.web.core.components.locker.DefaultLockBuilder;
+import com.lframework.starter.web.core.components.locker.RedisLockBuilder;
 import java.util.Map;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportSelector;
