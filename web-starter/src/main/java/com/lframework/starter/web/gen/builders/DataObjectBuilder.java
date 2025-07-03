@@ -24,7 +24,6 @@ import org.springframework.stereotype.Component;
 /**
  * 数据对象Builder
  */
-@Component
 public class DataObjectBuilder {
 
     @Autowired

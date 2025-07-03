@@ -7,6 +7,10 @@ import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSour
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.lframework.starter.web.config.properties.SecretProperties;
+import com.lframework.starter.web.gen.components.magic.MagicCustomAuthorizationInterceptor;
+import com.lframework.starter.web.gen.components.magic.MagicCustomJsonValueProvider;
+import com.lframework.starter.web.gen.components.magic.MagicCustomMagicFunction;
+import com.lframework.starter.web.gen.components.magic.MagicCustomSqlCache;
 import com.lframework.starter.web.inner.entity.Tenant;
 import com.lframework.starter.web.inner.service.TenantService;
 import com.lframework.starter.web.core.utils.DataSourceUtil;
@@ -17,11 +21,18 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.ssssssss.magicapi.datasource.model.MagicDynamicDataSource;
 
 @Configuration
+@Import({
+    MagicCustomAuthorizationInterceptor.class,
+    MagicCustomJsonValueProvider.class,
+    MagicCustomMagicFunction.class,
+    MagicCustomSqlCache.class
+})
 public class MagicCustomAutoConfiguration {
 
   @Autowired

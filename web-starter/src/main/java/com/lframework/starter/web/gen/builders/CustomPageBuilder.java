@@ -9,7 +9,6 @@ import com.lframework.starter.web.core.utils.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component
 public class CustomPageBuilder {
 
   @Autowired

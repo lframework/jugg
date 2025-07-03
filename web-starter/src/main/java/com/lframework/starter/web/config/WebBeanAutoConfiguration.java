@@ -17,6 +17,7 @@ import com.lframework.starter.web.core.components.resp.ResponseErrorBuilder;
 import com.lframework.starter.web.core.components.security.UserTokenResolverImpl;
 import com.lframework.starter.web.core.components.sign.CheckSignFactory;
 import com.lframework.starter.web.core.components.sign.DefaultCheckSignFactory;
+import com.lframework.starter.web.core.components.sign.handler.DefaultCheckSignHandler;
 import com.lframework.starter.web.core.components.upload.handler.SecurityUploadHandler;
 import com.lframework.starter.web.core.components.upload.handler.UploadHandler;
 import com.lframework.starter.web.core.components.upload.handler.impl.CosSecurityUploadHandler;
@@ -67,6 +68,7 @@ import com.lframework.starter.web.inner.controller.system.SysUserController;
 import com.lframework.starter.web.inner.controller.system.SysUserGroupController;
 import com.lframework.starter.web.inner.controller.system.SysUserRoleController;
 import com.lframework.starter.web.inner.controller.system.TenantController;
+import com.lframework.starter.web.inner.enums.system.SysDeptNodeType;
 import com.lframework.starter.web.inner.handlers.exception.AccessDeniedExceptionConverter;
 import com.lframework.starter.web.inner.handlers.exception.BindExceptionConverter;
 import com.lframework.starter.web.inner.handlers.exception.ClientExceptionConverter;
@@ -174,6 +176,7 @@ import org.springframework.core.env.Environment;
     SysMenuServiceImpl.class,
     SysNoticeLogServiceImpl.class,
     SysNoticeServiceImpl.class,
+    SysNoticeServiceImpl.ReloadNoticeListener.class,
     SysNotifyGroupReceiverServiceImpl.class,
     SysNotifyGroupServiceImpl.class,
     SysOpenDomainServiceImpl.class,
@@ -182,6 +185,7 @@ import org.springframework.core.env.Environment;
     SysRoleMenuServiceImpl.class,
     SysRoleServiceImpl.class,
     SysSiteMessageServiceImpl.class,
+    SysSiteMessageServiceImpl.ReloadSiteMessageListener.class,
     SysUserDeptServiceImpl.class,
     SysUserGroupDetailServiceImpl.class,
     SysUserGroupServiceImpl.class,
@@ -192,7 +196,8 @@ import org.springframework.core.env.Environment;
     SysModuleServiceImpl.class,
     SysModuleTenantServiceImpl.class,
     TenantServiceImpl.class,
-    DefaultUserDetailsService.class
+    DefaultUserDetailsService.class,
+    DefaultCheckSignHandler.class
 })
 @MapperScan("com.lframework.starter.web.**.mappers")
 public class WebBeanAutoConfiguration implements EnvironmentAware {
@@ -440,12 +445,17 @@ public class WebBeanAutoConfiguration implements EnvironmentAware {
   }
 
   @Bean
-   public OtherOpLogType otherOpLogType() {
+  public OtherOpLogType otherOpLogType() {
     return new OtherOpLogType();
   }
 
   @Override
   public void setEnvironment(Environment environment) {
     log.info("web-starter加载完成");
+  }
+
+  @Bean
+  public SysDeptNodeType sysDeptNodeType() {
+    return new SysDeptNodeType();
   }
 }

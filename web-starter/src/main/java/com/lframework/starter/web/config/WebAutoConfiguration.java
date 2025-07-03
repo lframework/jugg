@@ -30,7 +30,7 @@ import com.lframework.starter.web.config.properties.DefaultSettingProperties;
 import com.lframework.starter.web.config.properties.SecretProperties;
 import com.lframework.starter.web.config.properties.WebProperties;
 import com.lframework.starter.web.core.components.sign.CheckSignHandler;
-import com.lframework.starter.web.core.components.sign.DefaultCheckSignHandler;
+import com.lframework.starter.web.core.components.sign.handler.DefaultCheckSignHandler;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;

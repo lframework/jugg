@@ -21,7 +21,6 @@ import org.springframework.stereotype.Component;
 /**
  * 数据实体Builder
  */
-@Component
 public class DataEntityBuilder {
 
   @Autowired
