@@ -5,7 +5,7 @@
   <parent>
     <artifactId>mq-starter</artifactId>
     <groupId>com.lframework</groupId>
-    <version>4.0.1</version>
+    <version>4.0.2</version>
   </parent>
 
   <artifactId>rabbitmq-starter</artifactId>

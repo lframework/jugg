@@ -196,8 +196,7 @@ import org.springframework.core.env.Environment;
     SysModuleServiceImpl.class,
     SysModuleTenantServiceImpl.class,
     TenantServiceImpl.class,
-    DefaultUserDetailsService.class,
-    DefaultCheckSignHandler.class
+    DefaultUserDetailsService.class
 })
 @MapperScan("com.lframework.starter.web.**.mappers")
 public class WebBeanAutoConfiguration implements EnvironmentAware {
