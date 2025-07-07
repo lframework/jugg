@@ -3,6 +3,7 @@ package com.lframework.starter.bpm.entity;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lframework.starter.bpm.enums.FlowDefinitionActivityStatus;
 import com.lframework.starter.bpm.enums.FlowDefinitionIsPublish;
@@ -35,6 +36,9 @@ public class FlowDefinitionWrapper extends BaseEntity implements BaseDto, Serial
    */
   @TableField(fill = FieldFill.INSERT_UPDATE)
   private LocalDateTime updateTime;
+
+  @TableLogic(value = "0", delval = "1")
+  private String delFlag;
 
   /**
    * 租户ID
