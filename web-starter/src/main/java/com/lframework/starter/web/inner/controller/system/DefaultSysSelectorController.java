@@ -43,6 +43,7 @@ import com.lframework.starter.web.inner.service.system.SysRoleCategoryService;
 import com.lframework.starter.web.inner.service.system.SysRoleService;
 import com.lframework.starter.web.inner.service.system.SysUserGroupService;
 import com.lframework.starter.web.inner.service.system.SysUserService;
+import com.lframework.starter.web.inner.vo.system.dept.SysDeptSelectorVo;
 import com.lframework.starter.web.inner.vo.system.dic.SysDataDicSelectorVo;
 import com.lframework.starter.web.inner.vo.system.dic.category.SysDataDicCategorySelectorVo;
 import com.lframework.starter.web.inner.vo.system.menu.SysMenuSelectorVo;
@@ -139,10 +140,10 @@ public class DefaultSysSelectorController extends DefaultBaseController {
 
   @ApiOperation("部门")
   @GetMapping("/dept")
-  public InvokeResult<List<SysDeptSelectorBo>> dept() {
+  public InvokeResult<List<SysDeptSelectorBo>> dept(@Valid SysDeptSelectorVo vo) {
 
     List<SysDeptSelectorBo> results = CollectionUtil.emptyList();
-    List<SysDept> datas = sysDeptService.selector();
+    List<SysDept> datas = sysDeptService.selector(vo);
     if (CollectionUtil.isNotEmpty(datas)) {
       results = datas.stream().map(SysDeptSelectorBo::new).collect(Collectors.toList());
     }

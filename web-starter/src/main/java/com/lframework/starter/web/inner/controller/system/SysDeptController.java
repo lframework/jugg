@@ -1,16 +1,18 @@
 package com.lframework.starter.web.inner.controller.system;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.lframework.starter.common.exceptions.impl.DefaultClientException;
 import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.web.core.annotations.security.HasPermission;
-import com.lframework.starter.web.core.controller.DefaultBaseController;
 import com.lframework.starter.web.core.components.resp.InvokeResult;
 import com.lframework.starter.web.core.components.resp.InvokeResultBuilder;
-import com.lframework.starter.web.inner.service.RecursionMappingService;
+import com.lframework.starter.web.core.controller.DefaultBaseController;
 import com.lframework.starter.web.inner.bo.system.dept.GetSysDeptBo;
 import com.lframework.starter.web.inner.bo.system.dept.SysDeptTreeBo;
 import com.lframework.starter.web.inner.entity.SysDept;
 import com.lframework.starter.web.inner.enums.system.SysDeptNodeType;
+import com.lframework.starter.web.inner.service.RecursionMappingService;
 import com.lframework.starter.web.inner.service.system.SysDeptService;
 import com.lframework.starter.web.inner.vo.system.dept.CreateSysDeptVo;
 import com.lframework.starter.web.inner.vo.system.dept.UpdateSysDeptVo;
@@ -58,7 +60,9 @@ public class SysDeptController extends DefaultBaseController {
   @GetMapping("/trees")
   public InvokeResult<List<SysDeptTreeBo>> trees() {
 
-    List<SysDept> datas = sysDeptService.selector();
+    Wrapper<SysDept> queryWrapper = Wrappers.lambdaQuery(SysDept.class)
+        .orderByAsc(SysDept::getCode);
+    List<SysDept> datas = sysDeptService.list(queryWrapper);
     if (CollectionUtil.isEmpty(datas)) {
       return InvokeResultBuilder.success(CollectionUtil.emptyList());
     }

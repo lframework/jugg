@@ -10,6 +10,11 @@
 
     <select id="selector" resultType="com.lframework.starter.web.inner.entity.SysDept">
         <include refid="SysDeptDto_sql"/>
+        <where>
+            <if test="vo.available != null">
+                AND available = #{vo.available}
+            </if>
+        </where>
         ORDER BY code
     </select>
     <select id="findById" resultType="com.lframework.starter.web.inner.entity.SysDept">

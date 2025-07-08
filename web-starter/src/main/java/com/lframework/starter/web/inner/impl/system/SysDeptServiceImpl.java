@@ -18,6 +18,7 @@ import com.lframework.starter.web.inner.service.RecursionMappingService;
 import com.lframework.starter.web.inner.service.system.SysDeptService;
 import com.lframework.starter.web.core.utils.OpLogUtil;
 import com.lframework.starter.web.inner.vo.system.dept.CreateSysDeptVo;
+import com.lframework.starter.web.inner.vo.system.dept.SysDeptSelectorVo;
 import com.lframework.starter.web.inner.vo.system.dept.UpdateSysDeptVo;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -37,9 +38,9 @@ public class SysDeptServiceImpl extends BaseMpServiceImpl<SysDeptMapper, SysDept
   private RecursionMappingService recursionMappingService;
 
   @Override
-  public List<SysDept> selector() {
+  public List<SysDept> selector(SysDeptSelectorVo vo) {
 
-    return this.doSelector();
+    return this.doSelector(vo);
   }
 
   @Cacheable(value = SysDept.CACHE_NAME, key = "@cacheVariables.tenantId() + #id", unless = "#result == null")
@@ -119,9 +120,9 @@ public class SysDeptServiceImpl extends BaseMpServiceImpl<SysDeptMapper, SysDept
     OpLogUtil.setExtra(vo);
   }
 
-  protected List<SysDept> doSelector() {
+  protected List<SysDept> doSelector(SysDeptSelectorVo vo) {
 
-    return getBaseMapper().selector();
+    return getBaseMapper().selector(vo);
   }
 
   protected SysDept doGetById(String id) {

@@ -3,6 +3,7 @@ package com.lframework.starter.web.inner.service.system;
 import com.lframework.starter.web.core.service.BaseMpService;
 import com.lframework.starter.web.inner.entity.SysDept;
 import com.lframework.starter.web.inner.vo.system.dept.CreateSysDeptVo;
+import com.lframework.starter.web.inner.vo.system.dept.SysDeptSelectorVo;
 import com.lframework.starter.web.inner.vo.system.dept.UpdateSysDeptVo;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public interface SysDeptService extends BaseMpService<SysDept> {
    *
    * @return
    */
-  List<SysDept> selector();
+  List<SysDept> selector(SysDeptSelectorVo vo);
 
   /**
    * 根据ID查询
