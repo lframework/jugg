@@ -97,6 +97,7 @@ public class GenCustomPageServiceImpl extends
     record.setScriptCode(data.getScriptCode());
     record.setDescription(
         StringUtil.isBlank(data.getDescription()) ? StringPool.EMPTY_STR : data.getDescription());
+    record.setCategoryId(StringUtil.isBlank(data.getCategoryId()) ? null : data.getCategoryId());
 
     this.updateAllColumnById(record);
   }

@@ -1,9 +1,11 @@
 package com.lframework.starter.web.gen.service;
 
-import com.lframework.starter.web.gen.vo.custom.page.category.CreateGenCustomPageCategoryVo;
-import com.lframework.starter.web.gen.vo.custom.page.category.UpdateGenCustomPageCategoryVo;
-import com.lframework.starter.web.gen.entity.GenCustomPageCategory;
+import com.lframework.starter.web.core.components.resp.PageResult;
 import com.lframework.starter.web.core.service.BaseMpService;
+import com.lframework.starter.web.gen.entity.GenCustomPageCategory;
+import com.lframework.starter.web.gen.vo.custom.page.category.CreateGenCustomPageCategoryVo;
+import com.lframework.starter.web.gen.vo.custom.page.category.GenCustomPageCategorySelectorVo;
+import com.lframework.starter.web.gen.vo.custom.page.category.UpdateGenCustomPageCategoryVo;
 import java.util.List;
 
 /**
@@ -19,6 +21,15 @@ public interface GenCustomPageCategoryService extends BaseMpService<GenCustomPag
    * @return
    */
   List<GenCustomPageCategory> queryList();
+
+  /**
+   * 选择器
+   *
+   * @param vo
+   * @return
+   */
+  PageResult<GenCustomPageCategory> selector(Integer pageIndex, Integer pageSize,
+      GenCustomPageCategorySelectorVo vo);
 
   /**
    * 根据ID查询

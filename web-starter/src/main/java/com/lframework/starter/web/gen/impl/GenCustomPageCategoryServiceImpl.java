@@ -2,17 +2,23 @@ package com.lframework.starter.web.gen.impl;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.github.pagehelper.PageInfo;
 import com.lframework.starter.common.exceptions.impl.DefaultClientException;
+import com.lframework.starter.common.utils.Assert;
 import com.lframework.starter.common.utils.StringUtil;
-import com.lframework.starter.web.gen.service.GenCustomPageCategoryService;
-import com.lframework.starter.web.gen.service.GenCustomPageService;
-import com.lframework.starter.web.gen.vo.custom.page.category.CreateGenCustomPageCategoryVo;
-import com.lframework.starter.web.gen.vo.custom.page.category.UpdateGenCustomPageCategoryVo;
+import com.lframework.starter.web.core.components.resp.PageResult;
+import com.lframework.starter.web.core.impl.BaseMpServiceImpl;
+import com.lframework.starter.web.core.utils.IdUtil;
+import com.lframework.starter.web.core.utils.PageHelperUtil;
+import com.lframework.starter.web.core.utils.PageResultUtil;
 import com.lframework.starter.web.gen.entity.GenCustomPage;
 import com.lframework.starter.web.gen.entity.GenCustomPageCategory;
 import com.lframework.starter.web.gen.mappers.GenCustomPageCategoryMapper;
-import com.lframework.starter.web.core.impl.BaseMpServiceImpl;
-import com.lframework.starter.web.core.utils.IdUtil;
+import com.lframework.starter.web.gen.service.GenCustomPageCategoryService;
+import com.lframework.starter.web.gen.service.GenCustomPageService;
+import com.lframework.starter.web.gen.vo.custom.page.category.CreateGenCustomPageCategoryVo;
+import com.lframework.starter.web.gen.vo.custom.page.category.GenCustomPageCategorySelectorVo;
+import com.lframework.starter.web.gen.vo.custom.page.category.UpdateGenCustomPageCategoryVo;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
@@ -36,6 +42,18 @@ public class GenCustomPageCategoryServiceImpl extends
   @Override
   public List<GenCustomPageCategory> queryList() {
     return getBaseMapper().query();
+  }
+
+  @Override
+  public PageResult<GenCustomPageCategory> selector(Integer pageIndex, Integer pageSize,
+      GenCustomPageCategorySelectorVo vo) {
+    Assert.greaterThanZero(pageIndex);
+    Assert.greaterThanZero(pageSize);
+
+    PageHelperUtil.startPage(pageIndex, pageSize);
+    List<GenCustomPageCategory> datas = getBaseMapper().selector(vo);
+
+    return PageResultUtil.convert(new PageInfo<>(datas));
   }
 
   @Cacheable(value = GenCustomPageCategory.CACHE_NAME, key = "@cacheVariables.tenantId() + #id", unless = "#result == null")

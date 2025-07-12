@@ -1,8 +1,10 @@
 package com.lframework.starter.web.gen.mappers;
 
-import com.lframework.starter.web.gen.entity.GenCustomPageCategory;
 import com.lframework.starter.web.core.mapper.BaseMapper;
+import com.lframework.starter.web.gen.entity.GenCustomPageCategory;
+import com.lframework.starter.web.gen.vo.custom.page.category.GenCustomPageCategorySelectorVo;
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -19,4 +21,12 @@ public interface GenCustomPageCategoryMapper extends BaseMapper<GenCustomPageCat
    * @return
    */
   List<GenCustomPageCategory> query();
+
+  /**
+   * 选择器
+   *
+   * @param vo
+   * @return
+   */
+  List<GenCustomPageCategory> selector(@Param("vo") GenCustomPageCategorySelectorVo vo);
 }

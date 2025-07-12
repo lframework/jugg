@@ -12,4 +12,19 @@
     <include refid="GenCustomPageCategory_sql"/>
     ORDER BY tb.code ASC
   </select>
+  <select id="selector"
+          resultType="com.lframework.starter.web.gen.entity.GenCustomPageCategory">
+    <include refid="GenCustomPageCategory_sql"/>
+    <where>
+      <if test="vo != null">
+        <if test="vo.code != null and vo.code != ''">
+          AND tb.code = #{vo.code}
+        </if>
+        <if test="vo.name != null and vo.name != ''">
+          AND tb.name LIKE CONCAT('%', #{vo.name}, '%')
+        </if>
+      </if>
+    </where>
+    ORDER BY tb.code ASC
+  </select>
 </mapper>

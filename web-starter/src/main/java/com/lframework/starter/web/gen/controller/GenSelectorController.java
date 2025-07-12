@@ -2,10 +2,10 @@ package com.lframework.starter.web.gen.controller;
 
 import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.common.utils.StringUtil;
-import com.lframework.starter.web.core.controller.DefaultBaseController;
 import com.lframework.starter.web.core.components.resp.InvokeResult;
 import com.lframework.starter.web.core.components.resp.InvokeResultBuilder;
 import com.lframework.starter.web.core.components.resp.PageResult;
+import com.lframework.starter.web.core.controller.DefaultBaseController;
 import com.lframework.starter.web.core.utils.PageResultUtil;
 import com.lframework.starter.web.gen.bo.custom.list.GenCustomListSelectorBo;
 import com.lframework.starter.web.gen.bo.custom.list.category.GenCustomListCategorySelectorBo;
@@ -46,6 +46,7 @@ import com.lframework.starter.web.gen.service.SimpleDBService;
 import com.lframework.starter.web.gen.vo.custom.list.GenCustomListSelectorVo;
 import com.lframework.starter.web.gen.vo.custom.list.category.GenCustomListCategorySelectorVo;
 import com.lframework.starter.web.gen.vo.custom.page.GenCustomPageSelectorVo;
+import com.lframework.starter.web.gen.vo.custom.page.category.GenCustomPageCategorySelectorVo;
 import com.lframework.starter.web.gen.vo.custom.selector.GenCustomSelectorSelectorVo;
 import com.lframework.starter.web.gen.vo.custom.selector.category.GenCustomSelectorCategorySelectorVo;
 import com.lframework.starter.web.gen.vo.data.entity.GenDataEntityDetailSelectorVo;
@@ -453,15 +454,19 @@ public class GenSelectorController extends DefaultBaseController {
 
   @ApiOperation("自定义页面分类")
   @GetMapping("/custom/page/category")
-  public InvokeResult<List<GenCustomPageCategorySelectorBo>> customPageCategory() {
-    List<GenCustomPageCategory> datas = genCustomPageCategoryService.queryList();
+  public InvokeResult<PageResult<GenCustomPageCategorySelectorBo>> customPageCategory(@Valid GenCustomPageCategorySelectorVo vo) {
+
+    PageResult<GenCustomPageCategory> pageResult = genCustomPageCategoryService.selector(
+        getPageIndex(vo),
+        getPageSize(vo), vo);
+    List<GenCustomPageCategory> datas = pageResult.getDatas();
     List<GenCustomPageCategorySelectorBo> results = null;
     if (!CollectionUtil.isEmpty(datas)) {
       results = datas.stream().map(GenCustomPageCategorySelectorBo::new)
           .collect(Collectors.toList());
     }
 
-    return InvokeResultBuilder.success(results);
+    return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
   }
 
   /**

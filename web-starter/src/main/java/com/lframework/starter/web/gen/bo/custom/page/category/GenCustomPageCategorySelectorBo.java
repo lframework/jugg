@@ -26,12 +26,6 @@ public class GenCustomPageCategorySelectorBo extends BaseBo<GenCustomPageCategor
   @ApiModelProperty("名称")
   private String name;
 
-  /**
-   * 父级ID
-   */
-  @ApiModelProperty("父级ID")
-  private String parentId;
-
   public GenCustomPageCategorySelectorBo() {
   }
 
