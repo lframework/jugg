@@ -5,7 +5,7 @@
     <parent>
         <artifactId>parent</artifactId>
         <groupId>com.lframework</groupId>
-        <version>4.0.5</version>
+        <version>4.0.6</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -192,6 +192,16 @@
         <dependency>
             <groupId>org.ssssssss</groupId>
             <artifactId>magic-api-plugin-cluster</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jcodec</groupId>
+            <artifactId>jcodec</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jcodec</groupId>
+            <artifactId>jcodec-javase</artifactId>
         </dependency>
     </dependencies>
 </project>

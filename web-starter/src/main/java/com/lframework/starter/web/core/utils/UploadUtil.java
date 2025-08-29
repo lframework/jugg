@@ -7,6 +7,7 @@ import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.common.utils.DateUtil;
 import com.lframework.starter.common.utils.FileUtil;
 import com.lframework.starter.common.utils.StringUtil;
+import com.lframework.starter.web.core.components.tenant.TenantContextHolder;
 import com.lframework.starter.web.core.components.upload.UploadHandlerFactory;
 import com.lframework.starter.web.core.components.upload.client.dto.UploadDto;
 import com.lframework.starter.web.core.components.upload.handler.SecurityUploadHandler;
@@ -174,6 +175,9 @@ public class UploadUtil {
 
     LocalDate now = LocalDate.now();
     List<String> locations = new ArrayList<>();
+    if(TenantUtil.enableTenant()) {
+      locations.add(TenantContextHolder.getTenantIdStr());
+    }
     if (!CollectionUtil.isEmpty(parentPathList)) {
       locations.addAll(parentPathList.stream().filter(t -> !StringUtil.isBlank(t)).collect(
           Collectors.toList()));

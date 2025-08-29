@@ -89,15 +89,17 @@ public class RecursionMappingServiceImpl extends
   public void saveNode(@NonNull String nodeId, @NonNull Class<? extends NodeType> nodeTypeClazz, List<String> parentIds) {
 
     NodeType nodeType = ApplicationUtil.getBean(nodeTypeClazz);
-    Wrapper<RecursionMapping> deleteWrapper = Wrappers.lambdaQuery(RecursionMapping.class)
+    Wrapper<RecursionMapping> queryWrapper = Wrappers.lambdaQuery(RecursionMapping.class)
         .eq(RecursionMapping::getNodeId, nodeId)
         .eq(RecursionMapping::getNodeType, nodeType.getCode());
-    getBaseMapper().delete(deleteWrapper);
+    RecursionMapping data = getBaseMapper().selectOne(queryWrapper);
+    if(data == null) {
+      data = new RecursionMapping();
+      data.setId(IdUtil.getId());
+      data.setNodeId(nodeId);
+      data.setNodeType(nodeType.getCode());
+    }
 
-    RecursionMapping data = new RecursionMapping();
-    data.setId(IdUtil.getId());
-    data.setNodeId(nodeId);
-    data.setNodeType(nodeType.getCode());
     data.setLevel(1);
     data.setPath(StringPool.EMPTY_STR);
     if (!CollectionUtil.isEmpty(parentIds)) {
