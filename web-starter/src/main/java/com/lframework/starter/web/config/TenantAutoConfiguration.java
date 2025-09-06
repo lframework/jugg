@@ -11,6 +11,7 @@ import com.lframework.starter.web.core.listeners.TenantListener.ReloadTenantList
 import com.lframework.starter.web.core.listeners.TenantListener.SetTenantListener;
 import com.lframework.starter.web.core.components.tenant.TenantInterceptor;
 import com.lframework.starter.web.core.utils.EncryptUtil;
+import com.lframework.starter.web.inner.service.TenantService;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -31,8 +32,8 @@ public class TenantAutoConfiguration {
   private DynamicDataSourceProperties dynamicDataSourceProperties;
 
   @Bean
-  public TenantInterceptor tenantInterceptor() {
-    return new TenantInterceptorImpl();
+  public TenantInterceptor tenantInterceptor(TenantService tenantService) {
+    return new TenantInterceptorImpl(tenantService);
   }
 
   @Bean

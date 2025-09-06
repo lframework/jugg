@@ -1,5 +1,6 @@
 package com.lframework.starter.cloud.interceptors;
 
+import com.lframework.starter.web.core.components.tenant.TenantContextHolder;
 import com.lframework.starter.web.core.utils.RequestUtil;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
@@ -20,6 +21,9 @@ public class FeignRequestInterceptor implements RequestInterceptor {
         String headerName = headerNames.nextElement();
         requestTemplate.header(headerName, request.getHeader(headerName));
       }
+
+      // 远程调用传递租户ID
+      requestTemplate.header("X-Tenant-Id", TenantContextHolder.getTenantIdStr());
     } catch (Exception e) {
       log.warn(e.getMessage(), e);
     }

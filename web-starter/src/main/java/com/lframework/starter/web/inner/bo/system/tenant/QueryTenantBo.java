@@ -23,6 +23,12 @@ public class QueryTenantBo extends BaseBo<Tenant> {
   private String name;
 
   /**
+   * 绑定域名
+   */
+  @ApiModelProperty("绑定域名")
+  private String serverName;
+
+  /**
    * JdbcUrl
    */
   @ApiModelProperty("JdbcUrl")

@@ -11,9 +11,15 @@ import java.io.Serializable;
  * 用户登录请求参数
  */
 @Data
-public class GetLoginCaptchaRequieVo implements BaseVo, Serializable {
+public class GetLoginCaptchaRequireVo implements BaseVo, Serializable {
 
   private static final long serialVersionUID = 1L;
+
+  /**
+   * 租户ID
+   */
+  @ApiModelProperty("租户ID")
+  private Integer tenantId;
 
   /**
    * 租户名称

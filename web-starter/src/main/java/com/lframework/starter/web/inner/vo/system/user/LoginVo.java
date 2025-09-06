@@ -15,6 +15,12 @@ public class LoginVo implements BaseVo, Serializable {
   private static final long serialVersionUID = 1L;
 
   /**
+   * 租户ID
+   */
+  @ApiModelProperty("租户ID")
+  private Integer tenantId;
+
+  /**
    * 租户名称
    */
   @ApiModelProperty("租户名称")
