@@ -8,8 +8,8 @@ import com.github.pagehelper.PageInfo;
 import com.lframework.starter.common.exceptions.impl.DefaultClientException;
 import com.lframework.starter.common.utils.Assert;
 import com.lframework.starter.common.utils.StringUtil;
-import com.lframework.starter.web.core.impl.BaseMpServiceImpl;
 import com.lframework.starter.web.core.components.resp.PageResult;
+import com.lframework.starter.web.core.impl.BaseMpServiceImpl;
 import com.lframework.starter.web.core.utils.EncryptUtil;
 import com.lframework.starter.web.core.utils.PageHelperUtil;
 import com.lframework.starter.web.core.utils.PageResultUtil;
@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.util.List;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,6 +61,15 @@ public class TenantServiceImpl extends BaseMpServiceImpl<TenantMapper, Tenant> i
     return getById(id);
   }
 
+  @Cacheable(value = Tenant.CACHE_NAME, key = "'all'", unless = "#result == null")
+  @Override
+  public List<Tenant> findAll() {
+    Wrapper<Tenant> queryWrapper = Wrappers.lambdaQuery(Tenant.class)
+        .eq(Tenant::getAvailable, Boolean.TRUE);
+
+    return list(queryWrapper);
+  }
+
   @Transactional(rollbackFor = Exception.class)
   @Override
   public Integer create(CreateTenantVo data) {
@@ -71,6 +81,9 @@ public class TenantServiceImpl extends BaseMpServiceImpl<TenantMapper, Tenant> i
     }
     Tenant record = new Tenant();
     record.setName(data.getName());
+    if (StringUtil.isNotBlank(data.getServerName())) {
+      record.setServerName(data.getServerName());
+    }
     record.setJdbcUrl(data.getJdbcUrl());
     record.setJdbcUsername(data.getJdbcUsername());
     record.setJdbcPassword(EncryptUtil.encrypt(data.getJdbcPassword()));
@@ -98,6 +111,7 @@ public class TenantServiceImpl extends BaseMpServiceImpl<TenantMapper, Tenant> i
 
     LambdaUpdateWrapper<Tenant> updateWrapper = Wrappers.lambdaUpdate(Tenant.class)
         .eq(Tenant::getId, data.getId()).set(Tenant::getName, data.getName())
+        .set(Tenant::getServerName, data.getServerName())
         .set(Tenant::getAvailable, data.getAvailable());
     if (StringUtil.isNotBlank(data.getJdbcUrl())) {
       updateWrapper.set(Tenant::getJdbcUrl, data.getJdbcUrl());
@@ -112,7 +126,10 @@ public class TenantServiceImpl extends BaseMpServiceImpl<TenantMapper, Tenant> i
     this.update(updateWrapper);
   }
 
-  @CacheEvict(value = Tenant.CACHE_NAME, key = "#key")
+  @Caching(evict = {
+      @CacheEvict(value = Tenant.CACHE_NAME, key = "#key"),
+      @CacheEvict(value = Tenant.CACHE_NAME, key = "'all'")
+  })
   @Override
   public void cleanCacheByKey(Serializable key) {
 

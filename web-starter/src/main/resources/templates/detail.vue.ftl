@@ -5,7 +5,7 @@
         <#list columns as column>
         <a-descriptions-item label="${column.description}" :span="${column.span}">
             <#if column.fixEnum>
-          {{ $enums.${column.frontType}.getDesc(formData.${column.name}) }}
+          {{ ${column.frontType}.getDesc(formData.${column.name}) }}
             <#else>
                 <#if column.hasAvailableTag>
           <available-tag :available="formData.available" />
@@ -24,16 +24,32 @@
 <script>
 import { defineComponent } from 'vue';
 import * as api from '@/api/${moduleName}/${bizName}';
+<#list columns as column>
+<#if column.fixEnum>
+import { ${column.frontType} } from '@/enums/biz/${column.frontTypeFileName}';
+</#if>
+</#list>
+import AvailableTag from '@/components/Tag/AvailableTag.vue';
 
 export default defineComponent({
   // 使用组件
   components: {
+    AvailableTag,
   },
   props: {
     ${keys[0].name}: {
       type: ${keys[0].dataType},
       required: true,
     },
+  },
+  setup() {
+    return {
+      <#list columns as column>
+      <#if column.fixEnum>
+      ${column.frontType},
+      </#if>
+      </#list>
+    };
   },
   data() {
     return {

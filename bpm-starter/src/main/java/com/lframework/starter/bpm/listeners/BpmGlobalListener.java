@@ -37,6 +37,7 @@ import org.dromara.warm.flow.core.dto.NodeJson;
 import org.dromara.warm.flow.core.dto.PathWayData;
 import org.dromara.warm.flow.core.entity.Node;
 import org.dromara.warm.flow.core.enums.CooperateType;
+import org.dromara.warm.flow.core.enums.NodeType;
 import org.dromara.warm.flow.core.handler.PermissionHandler;
 import org.dromara.warm.flow.core.listener.GlobalListener;
 import org.dromara.warm.flow.core.listener.ListenerVariable;
@@ -89,7 +90,7 @@ public class BpmGlobalListener implements GlobalListener {
       this.addHandleInfo(listenerVariable, FlowSkipType.TERMINATION);
     } else if ("PASS"
         .equals(listenerVariable.getFlowParams().getSkipType())) {
-      if (!"start".equals(listenerVariable.getNode().getNodeCode())) {
+      if (!NodeType.START.getKey().equals(listenerVariable.getNode().getNodeType())) {
         this.addHandleInfo(listenerVariable, FlowSkipType.APPROVE_PASS);
       }
     } else if (CooperateType.isVoteSign(listenerVariable.getNode().getNodeRatio())
@@ -120,7 +121,7 @@ public class BpmGlobalListener implements GlobalListener {
     log.debug("全局分派监听器开始执行......");
     log.debug(JsonUtil.toJsonPrettyStr(listenerVariable));
 
-    if ("start".equals(listenerVariable.getNode().getNodeCode())) {
+    if (NodeType.START.getKey().equals(listenerVariable.getNode().getNodeType())) {
       this.addHandleInfo(listenerVariable, FlowSkipType.START);
     }
 

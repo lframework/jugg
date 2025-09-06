@@ -118,6 +118,11 @@ public class QueryTemplate {
     private String frontType;
 
     /**
+     * 前端字段类型对应的文件名 只有字段是枚举时生效，此值为前端枚举类型对应的文件名
+     */
+    private String frontTypeFileName;
+
+    /**
      * 是否数字类型
      */
     private Boolean isNumberType = Boolean.FALSE;

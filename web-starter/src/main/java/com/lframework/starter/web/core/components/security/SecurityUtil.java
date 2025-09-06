@@ -77,6 +77,14 @@ public class SecurityUtil {
   /**
    * 获取当前登录人租户ID
    *
+   * 注意和TenantContextHolder的获取租户ID方法区别
+   *
+   * 这里获取租户ID的话，就意味着当前请求已经登录。
+   *
+   * 但是TenantContextHolder的获取租户ID的方法则不一定已经登录。
+   *
+   * @see com.lframework.starter.web.core.components.tenant.TenantContextHolder
+   *
    * @return
    */
   public static Integer getCurrentTenantId() {

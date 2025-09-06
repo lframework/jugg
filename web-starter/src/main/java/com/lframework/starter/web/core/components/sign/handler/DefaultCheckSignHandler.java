@@ -72,6 +72,7 @@ public class DefaultCheckSignHandler implements CheckSignHandler {
       if (tenantId == null) {
         throw new DefaultSysException("开放域没有设置租户ID");
       } else {
+        // 开放域一定要重新设置租户ID，租户ID肯定是要和开放域配置的租户ID一致
         TenantContextHolder.setTenantId(domain.getTenantId());
       }
     }

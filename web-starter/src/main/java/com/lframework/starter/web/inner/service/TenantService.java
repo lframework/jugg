@@ -7,6 +7,7 @@ import com.lframework.starter.web.inner.vo.system.tenant.CreateTenantVo;
 import com.lframework.starter.web.inner.vo.system.tenant.QueryTenantVo;
 import com.lframework.starter.web.inner.vo.system.tenant.TenantSelectorVo;
 import com.lframework.starter.web.inner.vo.system.tenant.UpdateTenantVo;
+import java.util.List;
 
 /**
  * 租户Service
@@ -42,6 +43,13 @@ public interface TenantService extends BaseMpService<Tenant> {
    * @return
    */
   Tenant findById(Integer id);
+
+  /**
+   * 查询所有租户信息
+   *
+   * @return
+   */
+  List<Tenant> findAll();
 
   /**
    * 新增

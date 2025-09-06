@@ -24,14 +24,23 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * 文件上传工具类
+ * 提供文件上传功能，支持多种上传处理器和文件类型验证
+ * 包括文件上传、路径生成、文件类型检查等功能
+ *
+ * @author lframework@163.com
+ */
 @Slf4j
 public class UploadUtil {
 
   /**
-   * 上传文件
+   * 上传文件（使用默认参数）
+   * 使用默认设置上传文件，不进行文件类型限制
    *
-   * @param file
-   * @return
+   * @param file 上传文件，不能为null
+   * @return 上传结果DTO
+   * @throws DefaultSysException 当文件上传失败时抛出
    */
   public static UploadDto upload(MultipartFile file) {
 
@@ -39,10 +48,13 @@ public class UploadUtil {
   }
 
   /**
-   * 上传文件
+   * 上传文件（指定父路径）
+   * 使用指定的父路径上传文件
    *
-   * @param file
-   * @return
+   * @param file 上传文件，不能为null
+   * @param parentPath 父路径，不能为null
+   * @return 上传结果DTO
+   * @throws DefaultSysException 当文件上传失败时抛出
    */
   public static UploadDto upload(MultipartFile file, String parentPath) {
 
@@ -50,10 +62,14 @@ public class UploadUtil {
   }
 
   /**
-   * 上传文件
+   * 上传文件（指定父路径和安全设置）
+   * 使用指定的父路径和安全设置上传文件
    *
-   * @param file
-   * @return
+   * @param file 上传文件，不能为null
+   * @param parentPath 父路径，不能为null
+   * @param security 是否启用安全模式
+   * @return 上传结果DTO
+   * @throws DefaultSysException 当文件上传失败时抛出
    */
   public static UploadDto upload(MultipartFile file, String parentPath, Boolean security) {
 
@@ -61,10 +77,14 @@ public class UploadUtil {
   }
 
   /**
-   * 上传文件
+   * 上传文件（指定父路径列表和安全设置）
+   * 使用指定的父路径列表和安全设置上传文件
    *
-   * @param file
-   * @return
+   * @param file 上传文件，不能为null
+   * @param parentPathList 父路径列表，不能为null
+   * @param security 是否启用安全模式
+   * @return 上传结果DTO
+   * @throws DefaultSysException 当文件上传失败时抛出
    */
   public static UploadDto upload(MultipartFile file, List<String> parentPathList,
       Boolean security) {

@@ -21,6 +21,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 业务对象转换工具类
+ * 提供DTO到BO的转换功能，支持字段忽略、枚举转换、加密转换等
+ * 包括对象属性复制、字段转换、注解处理等功能
+ *
+ * @author lframework@163.com
+ */
 public class BoUtil {
 
   private static final Map<Class<? extends BaseBo>, CopyOptions> OPTIONS;

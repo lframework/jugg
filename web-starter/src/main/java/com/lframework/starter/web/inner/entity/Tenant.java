@@ -53,6 +53,11 @@ public class Tenant extends BaseEntity implements BaseDto {
   private String jdbcPassword;
 
   /**
+   * 域名
+   */
+  private String serverName;
+
+  /**
    * 状态
    */
   private Boolean available;

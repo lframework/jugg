@@ -25,12 +25,12 @@
 <#elseif column.viewType == 5>
 <#if column.fixEnum>
 <a-select v-model:value="${formData}.${column.name}" allow-clear>
-	<a-select-option v-for="item in $enums.${column.frontType}.values()" :key="item.code" :value="item.code">{{ item.desc }}</a-select-option>
+	<a-select-option v-for="item in ${column.frontType}.values()" :key="item.code" :value="item.code">{{ item.desc }}</a-select-option>
 </a-select>
 <#else>
 <#if column.hasAvailableTag>
 <a-select v-model:value="${formData}.${column.name}" allow-clear>
-	<a-select-option v-for="item in $enums.AVAILABLE.values()" :key="item.code" :value="item.code">{{ item.desc }}</a-select-option>
+	<a-select-option v-for="item in AVAILABLE.values()" :key="item.code" :value="item.code">{{ item.desc }}</a-select-option>
 </a-select>
 <#else>
 <a-select v-model:value="${formData}.${column.name}" allow-clear>

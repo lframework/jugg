@@ -27,6 +27,12 @@ public class UpdateTenantVo implements BaseVo, Serializable {
   private String name;
 
   /**
+   * 绑定域名
+   */
+  @ApiModelProperty("绑定域名")
+  private String serverName;
+
+  /**
    * JdbcUrl
    */
   @ApiModelProperty("JdbcUrl")

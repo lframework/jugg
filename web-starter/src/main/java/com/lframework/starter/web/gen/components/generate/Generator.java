@@ -599,6 +599,7 @@ public class Generator {
         columnObj.setDataType(
             column.getEnumBack().substring(column.getEnumBack().lastIndexOf(".") + 1));
         columnObj.setFrontType(column.getEnumFront());
+        columnObj.setFrontTypeFileName(StringUtil.toCamelCase(column.getEnumFront().toLowerCase()));
         importPackages.add(column.getEnumBack());
       } else {
         columnObj.setDataType(column.getDataType().getDesc());
@@ -929,6 +930,7 @@ public class Generator {
         columnObj.setDataType(
             column.getEnumBack().substring(column.getEnumBack().lastIndexOf(".") + 1));
         columnObj.setFrontType(column.getEnumFront());
+        columnObj.setFrontTypeFileName(StringUtil.toCamelCase(column.getEnumFront().toLowerCase()));
         columnObj.setFrontDataType("number");
         columnObj.setViewType(column.getViewType().getCode());
         columnObj.setEnumCodeType(column.getDataType().getDesc());
@@ -1021,6 +1023,7 @@ public class Generator {
         columnObj.setDataType(
             column.getEnumBack().substring(column.getEnumBack().lastIndexOf(".") + 1));
         columnObj.setFrontType(column.getEnumFront());
+        columnObj.setFrontTypeFileName(StringUtil.toCamelCase(column.getEnumFront().toLowerCase()));
         columnObj.setFrontDataType("number");
         columnObj.setViewType(column.getViewType().getCode());
         importPackages.add(column.getEnumBack());
@@ -1167,6 +1170,7 @@ public class Generator {
         columnObj.setDataType(
             column.getEnumBack().substring(column.getEnumBack().lastIndexOf(".") + 1));
         columnObj.setFrontType(column.getEnumFront());
+        columnObj.setFrontTypeFileName(StringUtil.toCamelCase(column.getEnumFront().toLowerCase()));
         columnObj.setViewType(column.getViewType().getCode());
         columnObj.setFrontDataType("number");
         importPackages.add(column.getEnumBack());
@@ -1319,6 +1323,7 @@ public class Generator {
         columnObj.setDataType(
             column.getEnumBack().substring(column.getEnumBack().lastIndexOf(".") + 1));
         columnObj.setFrontType(column.getEnumFront());
+        columnObj.setFrontTypeFileName(StringUtil.toCamelCase(column.getEnumFront().toLowerCase()));
         columnObj.setFrontDataType("number");
         columnObj.setViewType(column.getViewType().getCode());
         importPackages.add(column.getEnumBack());
@@ -1424,6 +1429,7 @@ public class Generator {
         columnObj.setDataType(
             column.getEnumBack().substring(column.getEnumBack().lastIndexOf(".") + 1));
         columnObj.setFrontType(column.getEnumFront());
+        columnObj.setFrontTypeFileName(StringUtil.toCamelCase(column.getEnumFront().toLowerCase()));
         columnObj.setFrontDataType("number");
         importPackages.add(column.getEnumBack());
         importPackages.add(EnumUtil.class.getName());

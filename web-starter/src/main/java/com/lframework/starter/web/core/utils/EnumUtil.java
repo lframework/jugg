@@ -19,8 +19,10 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * 枚举工具类
+ * 提供枚举操作相关的工具方法，支持BaseEnum接口的枚举处理
+ * 包括枚举值查找、描述获取、枚举列表获取等功能
  *
- * @author zmj
+ * @author lframework@163.com
  */
 @Slf4j
 public class EnumUtil {
@@ -31,6 +33,15 @@ public class EnumUtil {
     ENUM_POOL = new ConcurrentHashMap<>();
   }
 
+  /**
+   * 根据代码获取枚举描述
+   * 通过枚举代码查找对应的描述信息
+   *
+   * @param clazz 枚举类，不能为null
+   * @param code 枚举代码，不能为null
+   * @param <C> 枚举类型
+   * @return 枚举描述，如果未找到则返回null
+   */
   public static <C extends BaseEnum<? extends Serializable>> String getDesc(Class<C> clazz,
       Serializable code) {
 
@@ -45,6 +56,15 @@ public class EnumUtil {
     return null;
   }
 
+  /**
+   * 根据代码获取枚举实例
+   * 通过枚举代码查找对应的枚举实例
+   *
+   * @param clazz 枚举类，不能为null
+   * @param code 枚举代码，可以为null
+   * @param <C> 枚举类型
+   * @return 枚举实例，如果未找到则返回null
+   */
   public static <C extends BaseEnum<? extends Serializable>> C getByCode(Class<C> clazz,
       Serializable code) {
 
@@ -65,6 +85,15 @@ public class EnumUtil {
     return null;
   }
 
+  /**
+   * 根据描述获取枚举实例
+   * 通过枚举描述查找对应的枚举实例
+   *
+   * @param clazz 枚举类，不能为null
+   * @param desc 枚举描述，不能为null或空
+   * @param <C> 枚举类型
+   * @return 枚举实例，如果未找到则返回null
+   */
   public static <C extends BaseEnum<? extends Serializable>> C getByDesc(Class<C> clazz,
       String desc) {
 
@@ -82,11 +111,28 @@ public class EnumUtil {
     return null;
   }
 
+  /**
+   * 获取枚举的所有描述列表
+   * 返回指定枚举类的所有描述信息
+   *
+   * @param clazz 枚举类，不能为null
+   * @param <C> 枚举类型
+   * @return 描述列表
+   */
   public static <C extends BaseEnum<? extends Serializable>> List<String> getDescs(Class<C> clazz) {
     List<C> enumList = getEnumList(clazz);
     return enumList.stream().map(t -> t.getDesc()).collect(Collectors.toList());
   }
 
+  /**
+   * 获取枚举列表
+   * 从缓存或反射获取枚举实例列表
+   *
+   * @param clazz 枚举类，不能为null
+   * @param <C> 枚举类型
+   * @return 枚举实例列表
+   * @throws DefaultSysException 当获取枚举失败时抛出
+   */
   private static <C extends BaseEnum<? extends Serializable>> List<C> getEnumList(Class<C> clazz) {
 
     if (!ENUM_POOL.containsKey(clazz)) {

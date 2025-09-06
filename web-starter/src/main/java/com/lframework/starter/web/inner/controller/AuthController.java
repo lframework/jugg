@@ -38,6 +38,7 @@ import com.lframework.starter.web.inner.bo.auth.CollectMenuBo;
 import com.lframework.starter.web.inner.bo.auth.LoginBo;
 import com.lframework.starter.web.inner.bo.auth.MenuBo;
 import com.lframework.starter.web.inner.bo.auth.MenuBo.MetaBo;
+import com.lframework.starter.web.inner.bo.auth.TenantRequireBo;
 import com.lframework.starter.web.inner.components.oplog.AuthOpLogType;
 import com.lframework.starter.web.inner.dto.system.LoginDto;
 import com.lframework.starter.web.inner.dto.system.MenuDto;
@@ -58,7 +59,7 @@ import com.lframework.starter.web.inner.service.system.SysUserDeptService;
 import com.lframework.starter.web.inner.service.system.SysUserRoleService;
 import com.lframework.starter.web.inner.service.system.SysUserService;
 import com.lframework.starter.web.inner.vo.system.permission.SysDataPermissionModelDetailVo;
-import com.lframework.starter.web.inner.vo.system.user.GetLoginCaptchaRequieVo;
+import com.lframework.starter.web.inner.vo.system.user.GetLoginCaptchaRequireVo;
 import com.lframework.starter.web.inner.vo.system.user.LoginVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -148,8 +149,12 @@ public class AuthController extends DefaultBaseController {
   @ApiOperation(value = "是否为多租户")
   @OpenApi
   @GetMapping("/auth/tenant/require")
-  public InvokeResult<Boolean> getTenantRequire() {
-    return InvokeResultBuilder.success(TenantUtil.enableTenant());
+  public InvokeResult<TenantRequireBo> getTenantRequire() {
+    TenantRequireBo result = new TenantRequireBo();
+    result.setEnable(TenantUtil.enableTenant());
+    result.setTenantId(TenantContextHolder.getTenantId());
+
+    return InvokeResultBuilder.success(result);
   }
 
   /**
@@ -158,14 +163,20 @@ public class AuthController extends DefaultBaseController {
   @ApiOperation(value = "是否需要登录验证码")
   @OpenApi
   @PostMapping("/auth/captcha/require")
-  public InvokeResult<Boolean> getLoginCaptchaRequire(@Valid GetLoginCaptchaRequieVo vo) {
+  public InvokeResult<Boolean> getLoginCaptchaRequire(@Valid GetLoginCaptchaRequireVo vo) {
     String username = vo.getUsername();
     String tenantId = null;
     if (TenantUtil.enableTenant()) {
-      // 检查租户是否存在
-      Wrapper<Tenant> queryTenantWrapper = Wrappers.lambdaQuery(Tenant.class)
-          .eq(Tenant::getName, vo.getTenantName());
-      Tenant tenant = tenantService.getOne(queryTenantWrapper);
+      Tenant tenant = null;
+      if (vo.getTenantId() != null) {
+        tenant = tenantService.getById(vo.getTenantId());
+      } else {
+        // 检查租户是否存在
+        Wrapper<Tenant> queryTenantWrapper = Wrappers.lambdaQuery(Tenant.class)
+            .eq(Tenant::getName, vo.getTenantName());
+        tenant = tenantService.getOne(queryTenantWrapper);
+      }
+
       if (tenant == null) {
         throw new DefaultClientException("用户名或密码错误！");
       }
@@ -226,16 +237,21 @@ public class AuthController extends DefaultBaseController {
     String password = vo.getPassword();
     String tenantId = null;
     if (TenantUtil.enableTenant()) {
-      if (StringUtil.isBlank(vo.getTenantName())) {
-        throw new DefaultClientException("用户名或密码错误！");
+      Tenant tenant = null;
+      if (vo.getTenantId() != null) {
+        tenant = tenantService.getById(vo.getTenantId());
+      } else {
+        if (StringUtil.isBlank(vo.getTenantName())) {
+          throw new DefaultClientException("用户名或密码错误！");
+        }
+        // 检查租户是否存在
+        Wrapper<Tenant> queryTenantWrapper = Wrappers.lambdaQuery(Tenant.class)
+            .eq(Tenant::getName, vo.getTenantName());
+        tenant = tenantService.getOne(queryTenantWrapper);
       }
 
       username = vo.getUsername();
 
-      // 检查租户是否存在
-      Wrapper<Tenant> queryTenantWrapper = Wrappers.lambdaQuery(Tenant.class)
-          .eq(Tenant::getName, vo.getTenantName());
-      Tenant tenant = tenantService.getOne(queryTenantWrapper);
       if (tenant == null) {
         throw new DefaultClientException("用户名或密码错误！");
       }
