@@ -41,8 +41,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Excel工具类
+ * 提供Excel文件导入导出功能，基于EasyExcel实现
+ * 包括Excel读取、写入、样式设置、数据验证等功能
  *
- * @author zmj
+ * @author lframework@163.com
  */
 @Slf4j
 public class ExcelUtil {
@@ -53,10 +55,15 @@ public class ExcelUtil {
   private static final WriteHandler DEFAULT_COLUMN_WIDTH_STYLE_STRATEGY = new LongestMatchColumnWidthStyleStrategy();
 
   /**
-   * 读取Excel
+   * 读取Excel文件
+   * 使用EasyExcel读取Excel文件并返回读取构建器
    *
-   * @param file
-   * @param listener
+   * @param file Excel文件，不能为null
+   * @param clazz 目标类型，不能为null
+   * @param listener 读取监听器，不能为null
+   * @param <T> 目标类型泛型
+   * @return Excel读取构建器
+   * @throws DefaultSysException 当文件读取失败时抛出
    */
   public static <T> ExcelReaderBuilder read(MultipartFile file, Class<T> clazz,
       ReadListener<T> listener) {
@@ -69,11 +76,12 @@ public class ExcelUtil {
   }
 
   /**
-   * 导出Xls至Response
+   * 导出XLS文件到响应（使用默认文件名和空数据）
+   * 使用工作表名作为文件名，导出空的Excel文件
    *
-   * @param sheetName
-   * @param clazz
-   * @param <T>
+   * @param sheetName 工作表名称，不能为null
+   * @param clazz Excel模型类，不能为null
+   * @param <T> Excel模型类型
    */
   public static <T extends ExcelModel> void exportXls(String sheetName, Class<T> clazz) {
 
@@ -81,12 +89,13 @@ public class ExcelUtil {
   }
 
   /**
-   * 导出Xls至Response
+   * 导出XLS文件到响应（使用默认文件名）
+   * 使用工作表名作为文件名，导出包含数据的Excel文件
    *
-   * @param sheetName
-   * @param clazz
-   * @param datas
-   * @param <T>
+   * @param sheetName 工作表名称，不能为null
+   * @param clazz Excel模型类，不能为null
+   * @param datas 数据列表，不能为null
+   * @param <T> Excel模型类型
    */
   public static <T extends ExcelModel> void exportXls(String sheetName, Class<T> clazz,
       List<T> datas) {
@@ -95,12 +104,13 @@ public class ExcelUtil {
   }
 
   /**
-   * 导出Xls至Response
+   * 导出XLS文件到响应（使用空数据）
+   * 使用指定文件名，导出空的Excel文件
    *
-   * @param fileName
-   * @param sheetName
-   * @param clazz
-   * @param <T>
+   * @param fileName 文件名，不能为null
+   * @param sheetName 工作表名称，不能为null
+   * @param clazz Excel模型类，不能为null
+   * @param <T> Excel模型类型
    */
   public static <T extends ExcelModel> void exportXls(String fileName, String sheetName,
       Class<T> clazz) {
@@ -109,13 +119,14 @@ public class ExcelUtil {
   }
 
   /**
-   * 导出Xls至Response
+   * 导出XLS文件到响应（使用默认样式处理器）
+   * 使用指定文件名和数据，导出Excel文件
    *
-   * @param fileName
-   * @param sheetName
-   * @param clazz
-   * @param datas
-   * @param <T>
+   * @param fileName 文件名，不能为null
+   * @param sheetName 工作表名称，不能为null
+   * @param clazz Excel模型类，不能为null
+   * @param datas 数据列表，不能为null
+   * @param <T> Excel模型类型
    */
   public static <T extends ExcelModel> void exportXls(String fileName, String sheetName,
       Class<T> clazz,
@@ -125,14 +136,16 @@ public class ExcelUtil {
   }
 
   /**
-   * 导出Xls至Response
+   * 导出XLS文件到响应（完整参数）
+   * 使用指定文件名、数据和样式处理器，导出Excel文件
    *
-   * @param fileName
-   * @param sheetName
-   * @param clazz
-   * @param datas
-   * @param writeHandlers
-   * @param <T>
+   * @param fileName 文件名，不能为null
+   * @param sheetName 工作表名称，不能为null
+   * @param clazz Excel模型类，不能为null
+   * @param datas 数据列表，不能为null
+   * @param writeHandlers 样式处理器列表，可以为null
+   * @param <T> Excel模型类型
+   * @throws DefaultSysException 当文件写入失败时抛出
    */
   public static <T extends ExcelModel> void exportXls(String fileName, String sheetName,
       Class<T> clazz,
@@ -181,12 +194,13 @@ public class ExcelUtil {
   }
 
   /**
-   * 导出Xlsx至Response
+   * 导出XLSX文件到响应（使用空数据）
+   * 使用指定文件名，导出空的Excel文件
    *
-   * @param fileName
-   * @param sheetName
-   * @param clazz
-   * @param <T>
+   * @param fileName 文件名，不能为null
+   * @param sheetName 工作表名称，不能为null
+   * @param clazz Excel模型类，不能为null
+   * @param <T> Excel模型类型
    */
   public static <T extends ExcelModel> void exportXlsx(String fileName, String sheetName,
       Class<T> clazz) {
@@ -195,13 +209,14 @@ public class ExcelUtil {
   }
 
   /**
-   * 导出Xlsx至Response
+   * 导出XLSX文件到响应（使用默认样式处理器）
+   * 使用指定文件名和数据，导出Excel文件
    *
-   * @param fileName
-   * @param sheetName
-   * @param clazz
-   * @param datas
-   * @param <T>
+   * @param fileName 文件名，不能为null
+   * @param sheetName 工作表名称，不能为null
+   * @param clazz Excel模型类，不能为null
+   * @param datas 数据列表，不能为null
+   * @param <T> Excel模型类型
    */
   public static <T extends ExcelModel> void exportXlsx(String fileName, String sheetName,
       Class<T> clazz,
@@ -211,14 +226,16 @@ public class ExcelUtil {
   }
 
   /**
-   * 导出Xlsx至Response
+   * 导出XLSX文件到响应（完整参数）
+   * 使用指定文件名、数据和样式处理器，导出Excel文件
    *
-   * @param fileName
-   * @param sheetName
-   * @param clazz
-   * @param datas
-   * @param writeHandlers
-   * @param <T>
+   * @param fileName 文件名，不能为null
+   * @param sheetName 工作表名称，不能为null
+   * @param clazz Excel模型类，不能为null
+   * @param datas 数据列表，不能为null
+   * @param writeHandlers 样式处理器列表，可以为null
+   * @param <T> Excel模型类型
+   * @throws DefaultSysException 当文件写入失败时抛出
    */
   public static <T extends ExcelModel> void exportXlsx(String fileName, String sheetName,
       Class<T> clazz,
@@ -241,11 +258,13 @@ public class ExcelUtil {
   }
 
   /**
-   * 导出Xls至文件
+   * 导出XLS文件到本地文件（使用空数据）
+   * 使用指定文件路径，导出空的Excel文件
    *
-   * @param sheetName
-   * @param clazz
-   * @param <T>
+   * @param file 目标文件，不能为null
+   * @param sheetName 工作表名称，不能为null
+   * @param clazz Excel模型类，不能为null
+   * @param <T> Excel模型类型
    */
   public static <T extends ExcelModel> void exportXls(File file, String sheetName, Class<T> clazz) {
 
@@ -253,12 +272,14 @@ public class ExcelUtil {
   }
 
   /**
-   * 导出Xls至文件
+   * 导出XLS文件到本地文件（使用默认样式处理器）
+   * 使用指定文件路径和数据，导出Excel文件
    *
-   * @param sheetName
-   * @param clazz
-   * @param datas
-   * @param <T>
+   * @param file 目标文件，不能为null
+   * @param sheetName 工作表名称，不能为null
+   * @param clazz Excel模型类，不能为null
+   * @param datas 数据列表，不能为null
+   * @param <T> Excel模型类型
    */
   public static <T extends ExcelModel> void exportXls(File file, String sheetName, Class<T> clazz,
       List<T> datas) {
@@ -267,13 +288,15 @@ public class ExcelUtil {
   }
 
   /**
-   * 导出Xls至文件
+   * 导出XLS文件到本地文件（完整参数）
+   * 使用指定文件路径、数据和样式处理器，导出Excel文件
    *
-   * @param sheetName
-   * @param clazz
-   * @param datas
-   * @param writeHandlers
-   * @param <T>
+   * @param file 目标文件，不能为null
+   * @param sheetName 工作表名称，不能为null
+   * @param clazz Excel模型类，不能为null
+   * @param datas 数据列表，不能为null
+   * @param writeHandlers 样式处理器列表，可以为null
+   * @param <T> Excel模型类型
    */
   public static <T extends ExcelModel> void exportXls(File file, String sheetName, Class<T> clazz,
       List<T> datas,
@@ -400,11 +423,13 @@ public class ExcelUtil {
   }
 
   /**
-   * 分段导出Xls至Response
+   * 分段导出XLS文件到响应（使用默认文件名）
+   * 使用工作表名作为文件名，创建分段导出构建器
    *
-   * @param sheetName
-   * @param clazz
-   * @param <T>
+   * @param sheetName 工作表名称，不能为null
+   * @param clazz Excel模型类，不能为null
+   * @param <T> Excel模型类型
+   * @return 分段导出构建器
    */
   public static <T extends ExcelModel> ExcelMultipartWriterSheetBuilder multipartExportXls(
       String sheetName,
@@ -414,12 +439,15 @@ public class ExcelUtil {
   }
 
   /**
-   * 分段导出Xls至Response
+   * 分段导出XLS文件到响应（指定文件名）
+   * 使用指定文件名，创建分段导出构建器
    *
-   * @param fileName
-   * @param sheetName
-   * @param clazz
-   * @param <T>
+   * @param fileName 文件名，不能为null
+   * @param sheetName 工作表名称，不能为null
+   * @param clazz Excel模型类，不能为null
+   * @param <T> Excel模型类型
+   * @return 分段导出构建器
+   * @throws DefaultSysException 当文件写入失败时抛出
    */
   public static <T extends ExcelModel> ExcelMultipartWriterSheetBuilder multipartExportXls(
       String fileName,
@@ -443,11 +471,13 @@ public class ExcelUtil {
   }
 
   /**
-   * 分段导出Xlsx至Response
+   * 分段导出XLSX文件到响应（使用默认文件名）
+   * 使用工作表名作为文件名，创建分段导出构建器
    *
-   * @param sheetName
-   * @param clazz
-   * @param <T>
+   * @param sheetName 工作表名称，不能为null
+   * @param clazz Excel模型类，不能为null
+   * @param <T> Excel模型类型
+   * @return 分段导出构建器
    */
   public static <T extends ExcelModel> ExcelMultipartWriterSheetBuilder multipartExportXlsx(
       String sheetName,
@@ -457,12 +487,15 @@ public class ExcelUtil {
   }
 
   /**
-   * 分段导出Xlsx至Response
+   * 分段导出XLSX文件到响应（指定文件名）
+   * 使用指定文件名，创建分段导出构建器
    *
-   * @param fileName
-   * @param sheetName
-   * @param clazz
-   * @param <T>
+   * @param fileName 文件名，不能为null
+   * @param sheetName 工作表名称，不能为null
+   * @param clazz Excel模型类，不能为null
+   * @param <T> Excel模型类型
+   * @return 分段导出构建器
+   * @throws DefaultSysException 当文件写入失败时抛出
    */
   public static <T extends ExcelModel> ExcelMultipartWriterSheetBuilder multipartExportXlsx(
       String fileName,
@@ -563,9 +596,10 @@ public class ExcelUtil {
   }
 
   /**
-   * 获取WriteHandler
+   * 获取默认样式处理器列表
+   * 获取包含默认样式的WriteHandler列表
    *
-   * @return
+   * @return 样式处理器列表
    */
   public static List<WriteHandler> getWriteHandlers() {
 
@@ -573,10 +607,12 @@ public class ExcelUtil {
   }
 
   /**
-   * 获取WriteHandler 如果不存在列宽策略则指定默认列宽策略
+   * 获取样式处理器列表（指定列宽策略）
+   * 如果不存在列宽策略则指定默认列宽策略
    *
-   * @param writeHandlers
-   * @return
+   * @param writeHandlers 自定义样式处理器列表，可以为null
+   * @param headClass 表头类，可以为null
+   * @return 样式处理器列表
    */
   public static List<WriteHandler> getWriteHandlers(List<WriteHandler> writeHandlers,
       Class headClass) {
@@ -603,6 +639,13 @@ public class ExcelUtil {
     return retList;
   }
 
+  /**
+   * 获取默认样式处理器
+   * 根据必填字段名称创建默认的样式处理器
+   *
+   * @param requiredFiledNames 必填字段名称集合，不能为null
+   * @return 样式处理器列表
+   */
   private static List<WriteHandler> getDefaultStyle(Set<String> requiredFiledNames) {
 
     List<WriteHandler> handlerList = new ArrayList<>();

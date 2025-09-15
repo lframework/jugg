@@ -15,17 +15,20 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
- * HttpServeletRequest工具类
+ * HTTP请求工具类
+ * 提供HTTP请求相关的工具方法，支持请求信息获取和处理
+ * 包括请求头获取、参数提取、IP地址获取、请求体读取等功能
  *
- * @author zmj
+ * @author lframework@163.com
  */
 @Slf4j
 public class RequestUtil {
 
   /**
-   * 获取request
+   * 获取当前HTTP请求对象
+   * 从Spring的RequestContextHolder中获取当前请求
    *
-   * @return
+   * @return HTTP请求对象
    */
   public static HttpServletRequest getRequest() {
 
@@ -36,9 +39,10 @@ public class RequestUtil {
   }
 
   /**
-   * 获取response
+   * 获取当前HTTP响应对象
+   * 从Spring的RequestContextHolder中获取当前响应
    *
-   * @return
+   * @return HTTP响应对象
    */
   public static HttpServletResponse getResponse() {
 
@@ -49,9 +53,10 @@ public class RequestUtil {
   }
 
   /**
-   * 获取所有Request Header
+   * 获取所有请求头
+   * 获取当前请求的所有请求头信息
    *
-   * @return
+   * @return 请求头映射，如果无请求头则返回空Map
    */
   public static Map<String, String> getHeaders() {
 
@@ -73,9 +78,10 @@ public class RequestUtil {
 
   /**
    * 获取请求参数
+   * 从指定请求中提取所有参数
    *
-   * @param request
-   * @return
+   * @param request HTTP请求对象，不能为null
+   * @return 参数映射，参数名为键，参数值为值
    */
   public static Map<String, Object> getParameters(HttpServletRequest request) {
 
@@ -92,6 +98,13 @@ public class RequestUtil {
     return parameters;
   }
 
+  /**
+   * 获取请求体字节数组
+   * 从指定请求中读取请求体内容
+   *
+   * @param request HTTP请求对象，不能为null
+   * @return 请求体字节数组，如果读取失败则返回null
+   */
   public static byte[] getRequestBody(HttpServletRequest request) {
 
     int len = request.getContentLength();
@@ -110,18 +123,37 @@ public class RequestUtil {
     }
   }
 
+  /**
+   * 获取当前请求体字节数组
+   * 从当前请求中读取请求体内容
+   *
+   * @return 请求体字节数组，如果读取失败则返回null
+   */
   public static byte[] getRequestBody() {
 
     HttpServletRequest request = getRequest();
     return getRequestBody(request);
   }
 
+  /**
+   * 获取请求体字符串
+   * 从指定请求中读取请求体内容并转换为UTF-8字符串
+   *
+   * @param request HTTP请求对象，不能为null
+   * @return 请求体字符串，如果读取失败则返回null
+   */
   public static String getRequestBodyStr(HttpServletRequest request) {
     byte[] bytes = getRequestBody(request);
 
     return new String(bytes, StandardCharsets.UTF_8);
   }
 
+  /**
+   * 获取当前请求体字符串
+   * 从当前请求中读取请求体内容并转换为UTF-8字符串
+   *
+   * @return 请求体字符串，如果读取失败则返回null
+   */
   public static String getRequestBodyStr() {
     byte[] bytes = getRequestBody();
 
@@ -129,9 +161,10 @@ public class RequestUtil {
   }
 
   /**
-   * 获取请求参数
+   * 获取当前请求参数
+   * 从当前请求中提取所有参数
    *
-   * @return
+   * @return 参数映射，参数名为键，参数值为值
    */
   public static Map<String, Object> getParameters() {
 
@@ -149,9 +182,10 @@ public class RequestUtil {
   }
 
   /**
-   * 获取请求的客户端ip
+   * 获取请求的客户端IP地址
+   * 通过多种方式尝试获取真实的客户端IP地址
    *
-   * @return
+   * @return 客户端IP地址
    */
   public static String getRequestIp() {
 

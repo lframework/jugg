@@ -18,17 +18,20 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
- * HttpServletResponse工具类
+ * HTTP响应工具类
+ * 提供HTTP响应相关的工具方法，支持响应数据输出和文件下载
+ * 包括JSON响应、错误响应、文件下载等功能
  *
- * @author zmj
+ * @author lframework@163.com
  */
 @Slf4j
 public class ResponseUtil {
 
   /**
-   * 获取response
+   * 获取当前HTTP响应对象
+   * 从Spring的RequestContextHolder中获取当前响应
    *
-   * @return
+   * @return HTTP响应对象
    */
   public static HttpServletResponse getResponse() {
 
@@ -39,9 +42,11 @@ public class ResponseUtil {
 
   /**
    * 响应错误信息
+   * 将错误信息以JSON格式响应给客户端
    *
-   * @param response
-   * @param e
+   * @param response HTTP响应对象，不能为null
+   * @param e 业务异常，不能为null
+   * @throws DefaultSysException 当响应写入失败时抛出
    */
   public static void respFailJson(HttpServletResponse response, BaseException e) {
 
@@ -58,10 +63,12 @@ public class ResponseUtil {
   }
 
   /**
-   * 响应Json
+   * 响应成功JSON
+   * 将成功数据以JSON格式响应给客户端
    *
-   * @param response
-   * @param obj
+   * @param response HTTP响应对象，不能为null
+   * @param obj 响应数据，可以为null
+   * @throws DefaultSysException 当响应写入失败时抛出
    */
   public static void respSuccessJson(HttpServletResponse response, Object obj) {
 
@@ -78,9 +85,10 @@ public class ResponseUtil {
   }
 
   /**
-   * 下载文件
+   * 下载文件（使用文件名）
+   * 使用文件的原文件名进行下载
    *
-   * @param file
+   * @param file 要下载的文件，不能为null
    */
   public static void download(File file) {
 
@@ -88,10 +96,11 @@ public class ResponseUtil {
   }
 
   /**
-   * 下载文件
+   * 下载文件（指定文件名）
+   * 使用指定的文件名进行下载
    *
-   * @param file
-   * @param fileName
+   * @param file 要下载的文件，不能为null
+   * @param fileName 下载文件名，不能为null
    */
   public static void download(File file, String fileName) {
 
@@ -99,11 +108,13 @@ public class ResponseUtil {
   }
 
   /**
-   * 下载文件
+   * 下载文件（指定文件名和内容类型）
+   * 使用指定的文件名和内容类型进行下载
    *
-   * @param file
-   * @param fileName
-   * @param contentType
+   * @param file 要下载的文件，不能为null
+   * @param fileName 下载文件名，不能为null
+   * @param contentType 内容类型，不能为null
+   * @throws DefaultSysException 当文件读取失败时抛出
    */
   public static void download(File file, String fileName, String contentType) {
 

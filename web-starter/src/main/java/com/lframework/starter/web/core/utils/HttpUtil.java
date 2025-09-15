@@ -35,25 +35,43 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
 /**
- * 基于 httpclient 4.5版本的 http工具类
+ * HTTP工具类
+ * 基于Apache HttpClient 4.5版本提供HTTP请求功能
+ * 包括GET、POST请求、SSL支持、连接池管理等功能
+ *
+ * @author lframework@163.com
  */
 @Slf4j
 public class HttpUtil {
 
-  public static final String CHARSET = "UTF-8";
   /**
-   * 从连接池获取连接的timeout超出预设时间
+   * 默认字符编码
+   */
+  public static final String CHARSET = "UTF-8";
+  
+  /**
+   * 从连接池获取连接的超时时间（毫秒）
    */
   private static final int DEFAULT_CONNECTION_REQUST_TIME_OUT = 3000;
+  
   /**
-   * 客户端和服务器建立连接的timeout
+   * 客户端和服务器建立连接的超时时间（毫秒）
    */
   private static final int DEFAULT_CONNECT_TIME_OUT = 3000;
+  
   /**
-   * 客户端从服务器读取数据的timeout超出预期设定时间
+   * 客户端从服务器读取数据的超时时间（毫秒）
    */
   private static final int DEFAULT_SOCKET_TIME_OUT = 30000;
 
+  /**
+   * 执行GET请求（使用默认参数）
+   * 使用默认超时时间和字符编码执行GET请求
+   *
+   * @param url 请求URL，不能为null
+   * @return 响应内容字符串
+   * @throws IOException 当请求失败时抛出
+   */
   public static String doGet(String url) throws IOException {
 
     return doGet(url, null, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
@@ -61,6 +79,15 @@ public class HttpUtil {
         DEFAULT_SOCKET_TIME_OUT, null, null);
   }
 
+  /**
+   * 执行GET请求（带参数）
+   * 使用默认超时时间和字符编码执行带参数的GET请求
+   *
+   * @param url 请求URL，不能为null
+   * @param params 请求参数，可以为null
+   * @return 响应内容字符串
+   * @throws IOException 当请求失败时抛出
+   */
   public static String doGet(String url, Map<String, Object> params) throws IOException {
 
     return doGet(url, params, null, CHARSET, DEFAULT_CONNECTION_REQUST_TIME_OUT,
@@ -68,6 +95,16 @@ public class HttpUtil {
         DEFAULT_SOCKET_TIME_OUT, null, null);
   }
 
+  /**
+   * 执行GET请求（指定Socket超时时间）
+   * 使用指定的Socket超时时间执行GET请求
+   *
+   * @param url 请求URL，不能为null
+   * @param params 请求参数，可以为null
+   * @param socketTimeout Socket超时时间（毫秒）
+   * @return 响应内容字符串
+   * @throws IOException 当请求失败时抛出
+   */
   public static String doGet(String url, Map<String, Object> params, int socketTimeout)
       throws IOException {
 
@@ -76,6 +113,17 @@ public class HttpUtil {
         socketTimeout, null, null);
   }
 
+  /**
+   * 执行GET请求（指定连接和Socket超时时间）
+   * 使用指定的连接和Socket超时时间执行GET请求
+   *
+   * @param url 请求URL，不能为null
+   * @param params 请求参数，可以为null
+   * @param connectionTimeout 连接超时时间（毫秒）
+   * @param socketTimeout Socket超时时间（毫秒）
+   * @return 响应内容字符串
+   * @throws IOException 当请求失败时抛出
+   */
   public static String doGet(String url, Map<String, Object> params, int connectionTimeout,
       int socketTimeout)
       throws IOException {
@@ -85,6 +133,18 @@ public class HttpUtil {
         null, null);
   }
 
+  /**
+   * 执行GET请求（指定所有超时时间）
+   * 使用指定的所有超时时间执行GET请求
+   *
+   * @param url 请求URL，不能为null
+   * @param params 请求参数，可以为null
+   * @param connectionRequestTimeout 连接请求超时时间（毫秒）
+   * @param connectionTimeout 连接超时时间（毫秒）
+   * @param socketTimeout Socket超时时间（毫秒）
+   * @return 响应内容字符串
+   * @throws IOException 当请求失败时抛出
+   */
   public static String doGet(String url, Map<String, Object> params, int connectionRequestTimeout,
       int connectionTimeout, int socketTimeout) throws IOException {
 

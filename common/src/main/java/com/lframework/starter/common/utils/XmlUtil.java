@@ -16,20 +16,36 @@ import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
 
+/**
+ * XML工具类
+ * 提供XML与Map之间的相互转换、XML格式化等功能
+ * 支持带属性和不带属性的XML解析，以及XML文档的格式化输出
+ *
+ * @author lframework@163.com
+ */
 public class XmlUtil {
 
+  /**
+   * 将XML字符串转换为Map（不包含根节点键）
+   * 默认不包含根节点键，直接返回子节点内容
+   *
+   * @param xmlStr XML字符串，不能为null或空
+   * @return 转换后的Map对象
+   * @throws DocumentException 当XML格式错误时抛出
+   */
   public static Map<String, Object> xml2map(String xmlStr) throws DocumentException {
 
     return xml2map(xmlStr, false);
   }
 
   /**
-   * xml转map 不带属性
+   * 将XML字符串转换为Map（不带属性）
+   * 解析XML字符串并转换为Map结构，不包含XML属性信息
    *
-   * @param xmlStr      xml字符串
-   * @param needRootKey 是否需要在返回的map里加根节点键
-   * @return
-   * @throws DocumentException
+   * @param xmlStr XML字符串，不能为null或空
+   * @param needRootKey 是否需要在返回的Map中包含根节点键
+   * @return 转换后的Map对象，包含XML的层次结构
+   * @throws DocumentException 当XML格式错误时抛出
    */
   public static Map<String, Object> xml2map(String xmlStr, boolean needRootKey)
       throws DocumentException {
@@ -50,12 +66,14 @@ public class XmlUtil {
   }
 
   /**
-   * xml转map 带属性
+   * 将XML字符串转换为Map（带属性）
+   * 解析XML字符串并转换为Map结构，包含XML属性信息
+   * 属性以"@"前缀标识，文本内容以"#text"标识
    *
-   * @param xmlStr
-   * @param needRootKey 是否需要在返回的map里加根节点键
-   * @return
-   * @throws DocumentException
+   * @param xmlStr XML字符串，不能为null或空
+   * @param needRootKey 是否需要在返回的Map中包含根节点键
+   * @return 转换后的Map对象，包含XML的层次结构和属性信息
+   * @throws DocumentException 当XML格式错误时抛出
    */
   public static Map xml2mapWithAttr(String xmlStr, boolean needRootKey) throws DocumentException {
 
@@ -75,10 +93,11 @@ public class XmlUtil {
   }
 
   /**
-   * xml转map 不带属性
+   * 将XML元素转换为Map（不带属性）
+   * 递归处理XML元素，将子元素转换为Map结构
    *
-   * @param e
-   * @return
+   * @param e XML元素，不能为null
+   * @return 转换后的Map对象
    */
   private static Map xml2map(Element e) {
 
@@ -131,10 +150,12 @@ public class XmlUtil {
   }
 
   /**
-   * xml转map 带属性
+   * 将XML元素转换为Map（带属性）
+   * 递归处理XML元素，将子元素和属性转换为Map结构
+   * 属性以"@"前缀标识，文本内容以"#text"标识
    *
-   * @param element
-   * @return
+   * @param element XML元素，不能为null
+   * @return 转换后的Map对象，包含属性和文本内容
    */
   private static Map xml2mapWithAttr(Element element) {
 
@@ -228,10 +249,12 @@ public class XmlUtil {
   }
 
   /**
-   * map转xml map中没有根节点的键
+   * 将Map转换为XML文档（指定根节点名称）
+   * 当Map中没有根节点键时，使用指定的根节点名称创建XML文档
    *
-   * @param map
-   * @param rootName
+   * @param map 要转换的Map对象，不能为null
+   * @param rootName 根节点名称，不能为null或空
+   * @return 转换后的XML文档对象
    */
   public static Document map2xml(Map<String, Object> map, String rootName) {
 
@@ -243,9 +266,11 @@ public class XmlUtil {
   }
 
   /**
-   * map转xml map中含有根节点的键
+   * 将Map转换为XML文档（包含根节点键）
+   * 当Map中包含根节点键时，使用第一个键作为根节点名称创建XML文档
    *
-   * @param map
+   * @param map 要转换的Map对象，不能为null且不能为空
+   * @return 转换后的XML文档对象，如果Map为空则返回null
    */
   public static Document map2xml(Map<String, Object> map) {
 
@@ -262,11 +287,13 @@ public class XmlUtil {
   }
 
   /**
-   * map转xml
+   * 将Map转换为XML元素
+   * 递归处理Map，将键值对转换为XML元素和属性
+   * 支持List、Map等复杂数据结构的转换
    *
-   * @param map
-   * @param body xml元素
-   * @return
+   * @param map 要转换的Map对象，不能为null
+   * @param body 父级XML元素，不能为null
+   * @return 转换后的XML元素
    */
   private static Element map2xml(Map<String, Object> map, Element body) {
 
@@ -305,12 +332,13 @@ public class XmlUtil {
   }
 
   /**
-   * 格式化输出xml
+   * 格式化输出XML字符串
+   * 将XML字符串格式化为易读的格式，包含缩进和换行
    *
-   * @param xmlStr
-   * @return
-   * @throws DocumentException
-   * @throws IOException
+   * @param xmlStr 要格式化的XML字符串，不能为null或空
+   * @return 格式化后的XML字符串
+   * @throws DocumentException 当XML格式错误时抛出
+   * @throws IOException 当IO操作失败时抛出
    */
   public static String formatXml(String xmlStr) throws DocumentException, IOException {
 
@@ -319,11 +347,12 @@ public class XmlUtil {
   }
 
   /**
-   * 格式化输出xml
+   * 格式化输出XML文档
+   * 将XML文档格式化为易读的格式，包含缩进和换行
    *
-   * @param document
-   * @return
-   * @throws IOException
+   * @param document 要格式化的XML文档，不能为null
+   * @return 格式化后的XML字符串
+   * @throws IOException 当IO操作失败时抛出
    */
   public static String formatXml(Document document) throws IOException {
     // 格式化输出格式
