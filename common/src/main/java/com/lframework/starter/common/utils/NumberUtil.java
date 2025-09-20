@@ -260,6 +260,68 @@ public class NumberUtil {
   }
 
   /**
+   * 获取多个数字中的最小值
+   * 使用BigDecimal进行精确比较，避免浮点数比较问题
+   *
+   * @param numbers 参与比较的数字，不能为null且至少包含一个元素
+   * @return 所有数字中的最小值，使用BigDecimal保证精度
+   * @throws IllegalArgumentException 当数字数组为null或为空时抛出
+   */
+  public static BigDecimal min(Number... numbers) {
+    Assert.notEmpty(numbers);
+
+    BigDecimal min = getNumber(numbers[0]);
+    for (int i = 1; i < numbers.length; i++) {
+      BigDecimal current = getNumber(numbers[i]);
+      if (current.compareTo(min) < 0) {
+        min = current;
+      }
+    }
+
+    return min;
+  }
+
+  /**
+   * 获取多个数字中的最大值
+   * 使用BigDecimal进行精确比较，避免浮点数比较问题
+   *
+   * @param numbers 参与比较的数字，不能为null且至少包含一个元素
+   * @return 所有数字中的最大值，使用BigDecimal保证精度
+   * @throws IllegalArgumentException 当数字数组为null或为空时抛出
+   */
+  public static BigDecimal max(Number... numbers) {
+    Assert.notEmpty(numbers);
+
+    BigDecimal max = getNumber(numbers[0]);
+    for (int i = 1; i < numbers.length; i++) {
+      BigDecimal current = getNumber(numbers[i]);
+      if (current.compareTo(max) > 0) {
+        max = current;
+      }
+    }
+
+    return max;
+  }
+
+  /**
+   * 获取数字的绝对值
+   * 使用BigDecimal进行精确计算，避免浮点数精度问题
+   *
+   * @param number 待计算绝对值的数字，不能为null
+   * @return 数字的绝对值，使用BigDecimal保证精度
+   * @throws IllegalArgumentException 当数字为null时抛出
+   */
+  public static BigDecimal abs(Number number) {
+    Assert.notNull(number);
+
+    if (number instanceof BigDecimal) {
+      return ((BigDecimal) number).abs();
+    } else {
+      return BigDecimal.valueOf(number.doubleValue()).abs();
+    }
+  }
+
+  /**
    * 将数字格式化为指定精度的小数
    * 使用四舍五入模式保留指定的小数位数
    *
@@ -273,7 +335,7 @@ public class NumberUtil {
 
     BigDecimal result = getNumber(number).setScale(precision, BigDecimal.ROUND_HALF_UP);
 
-    return result;
+    return result.stripTrailingZeros();
   }
 
   /**
