@@ -1,4 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.lframework.starter.cloud.config.CloudAutoConfiguration,\
-  com.lframework.starter.cloud.config.CloudBeanAutoConfiguration,\
-  com.lframework.starter.cloud.config.CloudSecurityConfigurer
+  com.lframework.starter.cloud.config.CloudBeanAutoConfiguration
