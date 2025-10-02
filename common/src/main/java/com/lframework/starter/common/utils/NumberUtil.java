@@ -51,6 +51,27 @@ public class NumberUtil {
   }
 
   /**
+   * 判断数字是否为整数
+   * 检查Number对象是否表示一个整数值（没有小数部分）
+   *
+   * @param number 待检查的数字，不能为null
+   * @return true-是整数，false-不是整数或参数为null
+   */
+  public static boolean isInteger(Number number) {
+    if (number == null) {
+      return false;
+    }
+
+    if (number instanceof Integer || number instanceof Long || number instanceof Short
+        || number instanceof Byte) {
+      return true;
+    }
+
+    BigDecimal bigDecimal = getNumber(number);
+    return bigDecimal.compareTo(new BigDecimal(bigDecimal.toBigInteger())) == 0;
+  }
+
+  /**
    * 精确加法运算
    * 对多个数字进行精确的加法计算，避免浮点数精度问题
    *
