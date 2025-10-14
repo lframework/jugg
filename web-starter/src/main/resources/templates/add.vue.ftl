@@ -21,9 +21,32 @@
 <script>
 import { defineComponent } from 'vue';
 import * as api from '@/api/${moduleName}/${bizName}';
+import { isEmpty } from '@/utils/utils';
+import { createSuccess } from '@/hooks/web/msg';
+<#list columns as column>
+<#if column.fixEnum>
+import { ${column.frontType} } from '@/enums/biz/${column.frontTypeFileName}';
+</#if>
+<#if column.hasAvailableTag>
+import { AVAILABLE } from '@/enums/biz/available';
+</#if>
+</#list>
 
 export default defineComponent({
   components: {
+  },
+  setup() {
+    return {
+      isEmpty,
+      <#list columns as column>
+      <#if column.fixEnum>
+      ${column.frontType},
+      </#if>
+      <#if column.hasAvailableTag>
+      AVAILABLE,
+      </#if>
+      </#list>
+    };
   },
   data() {
     return {
@@ -43,7 +66,7 @@ export default defineComponent({
           {
             validator: (rule, value, callback) => {
               <#if !column.required>
-              if (this.$utils.isEmpty(value)) {
+              if (this.isEmpty(value)) {
                 return Promise.resolve();
               }
               </#if>
@@ -92,7 +115,7 @@ export default defineComponent({
         if (valid) {
           this.loading = true;
           api.create(this.formData).then(() => {
-            this.$msg.success('新增成功！');
+            createSuccess('新增成功！');
             this.$emit('confirm');
             this.visible = false;
           }).finally(() => {

@@ -90,29 +90,55 @@
 <script>
 import { h, defineComponent } from 'vue';
 <#if create??>
-import Add from './add.vue.ftl';
+import Add from './add.vue';
 </#if>
 <#if update??>
-import Modify from './modify.vue.ftl';
+import Modify from './modify.vue';
 </#if>
 <#if detail??>
-import Detail from './detail.vue.ftl';
+import Detail from './detail.vue';
 </#if>
 <#if hasAvailableTag>
 </#if>
 import * as api from '@/api/${moduleName}/${bizName}';
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons-vue';
+<#if hasDelete>
+import { createSuccess, createConfirm } from '@/hooks/web/msg';
+</#if>
+<#list query.columns as column>
+<#if column.fixEnum>
+import { ${column.frontType} } from '@/enums/biz/${column.frontTypeFileName}';
+</#if>
+</#list>
+<#list queryParams.columns as column>
+<#if column.fixEnum>
+import { ${column.frontType} } from '@/enums/biz/${column.frontTypeFileName}';
+</#if>
+<#if column.hasAvailableTag>
+import { AVAILABLE } from '@/enums/biz/available';
+</#if>
+</#list>
+import AvailableTag from '@/components/Tag/AvailableTag.vue';
 
 export default defineComponent({
   name: '${className}',
   components: {
     <#if create??>Add, </#if><#if update??>Modify, </#if><#if detail??>Detail, </#if>
+    AvailableTag,
   },
   setup() {
     return {
       h,
       PlusOutlined,
       SearchOutlined,
+      <#list queryParams.columns as column>
+      <#if column.fixEnum>
+      ${column.frontType},
+      </#if>
+      <#if column.hasAvailableTag>
+      AVAILABLE,
+      </#if>
+      </#list>
     };
   },
   data() {
@@ -145,7 +171,7 @@ export default defineComponent({
         { type: 'seq', width: 40 },
         <#if query??>
         <#list query.columns as column>
-        { field: '${column.name}', title: '${column.description}', <#if column.widthType == 0>width<#else>minWidth</#if>: ${column.width}<#if column.sortable>, sortable: true</#if><#if column.isNumberType>, align: 'right'</#if><#if column.hasAvailableTag>, slots: {default: 'available_default'}</#if><#if column.fixEnum>, formatter: ({ cellValue }) => { return this.${r"$enums"}.${column.frontType}.getDesc(cellValue) }</#if> },
+        { field: '${column.name}', title: '${column.description}', <#if column.widthType == 0>width<#else>minWidth</#if>: ${column.width}<#if column.sortable>, sortable: true</#if><#if column.isNumberType>, align: 'right'</#if><#if column.hasAvailableTag>, slots: {default: 'available_default'}</#if><#if column.fixEnum>, formatter: ({ cellValue }) => { return ${column.frontType}.getDesc(cellValue) }</#if> },
         </#list>
         </#if>
         { title: '操作', width: <#if hasDelete>150<#else>120</#if>, fixed: 'right', slots: { default: 'action_default' }},
@@ -176,10 +202,10 @@ export default defineComponent({
     },
     <#if hasDelete>
     deleteRow(id) {
-      this.$msg.createConfirm('是否确定删除该${classDescription}？').then(() => {
+      createConfirm('是否确定删除该${classDescription}？').then(() => {
         this.loading = true;
         this.$api.${moduleName}.${bizName}.deleteById(id).then(() => {
-          this.$msg.createSuccess('删除成功！');
+          createSuccess('删除成功！');
           this.search();
         }).finally(() => {
           this.loading = false;
