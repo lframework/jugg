@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.lframework.starter.bpm.bo.flow.category.DetailFlowCategoryBo;
 import com.lframework.starter.bpm.bo.flow.category.QueryFlowCategoryTreeBo;
 import com.lframework.starter.bpm.entity.FlowCategory;
+import com.lframework.starter.bpm.entity.FlowDefinitionWrapper;
 import com.lframework.starter.bpm.service.FlowCategoryService;
+import com.lframework.starter.bpm.service.FlowDefinitionWrapperService;
 import com.lframework.starter.bpm.vo.flow.category.CreateFlowCategoryVo;
 import com.lframework.starter.bpm.vo.flow.category.UpdateFlowCategoryVo;
 import com.lframework.starter.common.exceptions.impl.DefaultClientException;
@@ -36,6 +38,9 @@ public class FlowCategoryController extends DefaultBaseController {
 
   @Autowired
   private FlowCategoryService flowCategoryService;
+
+  @Autowired
+  private FlowDefinitionWrapperService flowDefinitionWrapperService;
 
   /**
    * 根据ID查询
@@ -113,6 +118,12 @@ public class FlowCategoryController extends DefaultBaseController {
         .eq(FlowCategory::getParentId, id);
     if (flowCategoryService.count(checkWrapper) > 0) {
       throw new DefaultClientException("当前分类存在子分类，不允许删除！");
+    }
+
+    Wrapper<FlowDefinitionWrapper> queryDefinitionWrapper = Wrappers.lambdaQuery(FlowDefinitionWrapper.class)
+            .eq(FlowDefinitionWrapper::getCategory, id);
+    if (flowDefinitionWrapperService.count(queryDefinitionWrapper) > 0) {
+      throw new DefaultClientException("当前分类下存在流程定义，不允许删除！");
     }
     flowCategoryService.removeById(id);
 
