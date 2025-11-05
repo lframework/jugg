@@ -4,9 +4,12 @@ import static cn.hutool.core.date.DatePattern.NORM_DATETIME_PATTERN;
 import static cn.hutool.core.date.DatePattern.NORM_DATE_PATTERN;
 import static cn.hutool.core.date.DatePattern.NORM_TIME_PATTERN;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jdk8.PackageVersion;
@@ -18,6 +21,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
+import java.io.IOException;
 import com.lframework.starter.common.constants.StringPool;
 import com.lframework.starter.common.utils.IdWorker;
 import com.lframework.starter.common.utils.StringUtil;
@@ -31,6 +35,7 @@ import com.lframework.starter.web.config.properties.SecretProperties;
 import com.lframework.starter.web.config.properties.WebProperties;
 import com.lframework.starter.web.core.components.sign.CheckSignHandler;
 import com.lframework.starter.web.core.components.sign.handler.DefaultCheckSignHandler;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -133,10 +138,16 @@ public class WebAutoConfiguration {
         .configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true)
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         .registerModule(new ParameterNamesModule()).registerModule(new Jdk8Module())
-        .registerModule(new JavaTimeModule()).registerModule(new JavaLocalDateTimeModule());
+        .registerModule(new JavaTimeModule()).registerModule(new JavaLocalDateTimeModule())
+        .registerModule(new JavaBigDecimalModule());
     return om;
   }
 
+  /**
+   * 自定义模块，用于格式化LocalDateTime、LocalDate、LocalTime
+   *
+   * @author lframework@163.com
+   */
   class JavaLocalDateTimeModule extends SimpleModule {
 
     public JavaLocalDateTimeModule() {
@@ -154,7 +165,40 @@ public class WebAutoConfiguration {
           new LocalDateDeserializer(DateTimeFormatter.ofPattern(NORM_DATE_PATTERN)));
       this.addDeserializer(LocalTime.class,
           new LocalTimeDeserializer(DateTimeFormatter.ofPattern(NORM_TIME_PATTERN)));
+    }
+  }
 
+  /**
+   * 自定义模块，用于格式化BigDecimal
+   *
+   * @author lframework@163.com
+   */
+  class JavaBigDecimalModule extends SimpleModule {
+
+    public JavaBigDecimalModule() {
+      super(PackageVersion.VERSION);
+      // 添加BigDecimal序列化器，避免科学计数法，舍弃无效的小数0
+      this.addSerializer(BigDecimal.class, new BigDecimalSerializer());
+    }
+  }
+
+  /**
+   * BigDecimal自定义序列化器
+   * 不使用科学计数法，并且舍弃小数的无效0
+   *
+   * @author lframework@163.com
+   */
+  class BigDecimalSerializer extends JsonSerializer<BigDecimal> {
+
+    @Override
+    public void serialize(BigDecimal value, JsonGenerator gen, SerializerProvider serializers)
+        throws IOException {
+      if (value == null) {
+        gen.writeNull();
+      } else {
+        // 使用stripTrailingZeros()去除尾部无效的0，然后使用toPlainString()避免科学计数法
+        gen.writeNumber(value.stripTrailingZeros().toPlainString());
+      }
     }
   }
 
