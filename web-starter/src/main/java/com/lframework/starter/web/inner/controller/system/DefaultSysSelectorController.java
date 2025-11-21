@@ -2,11 +2,11 @@ package com.lframework.starter.web.inner.controller.system;
 
 import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.common.utils.StringUtil;
-import com.lframework.starter.web.core.components.tenant.TenantContextHolder;
-import com.lframework.starter.web.core.controller.DefaultBaseController;
 import com.lframework.starter.web.core.components.resp.InvokeResult;
 import com.lframework.starter.web.core.components.resp.InvokeResultBuilder;
 import com.lframework.starter.web.core.components.resp.PageResult;
+import com.lframework.starter.web.core.components.tenant.TenantContextHolder;
+import com.lframework.starter.web.core.controller.DefaultBaseController;
 import com.lframework.starter.web.core.utils.PageResultUtil;
 import com.lframework.starter.web.core.utils.TenantUtil;
 import com.lframework.starter.web.inner.bo.system.dept.SysDeptSelectorBo;
@@ -147,6 +147,26 @@ public class DefaultSysSelectorController extends DefaultBaseController {
     if (CollectionUtil.isNotEmpty(datas)) {
       results = datas.stream().map(SysDeptSelectorBo::new).collect(Collectors.toList());
     }
+
+    return InvokeResultBuilder.success(results);
+  }
+
+  /**
+   * 加载部门
+   */
+  @ApiOperation("加载部门")
+  @PostMapping("/dept/load")
+  public InvokeResult<List<SysDeptSelectorBo>> loadDept(
+      @RequestBody(required = false) List<String> ids) {
+
+    if (CollectionUtil.isEmpty(ids)) {
+      return InvokeResultBuilder.success(CollectionUtil.emptyList());
+    }
+
+    List<SysDept> datas = ids.stream().filter(StringUtil::isNotBlank)
+        .map(t -> sysDeptService.findById(t)).filter(Objects::nonNull).collect(Collectors.toList());
+    List<SysDeptSelectorBo> results = datas.stream().map(SysDeptSelectorBo::new)
+        .collect(Collectors.toList());
 
     return InvokeResultBuilder.success(results);
   }

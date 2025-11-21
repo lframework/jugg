@@ -11,21 +11,23 @@ import com.lframework.starter.common.utils.Assert;
 import com.lframework.starter.common.utils.ObjectUtil;
 import com.lframework.starter.common.utils.RegUtil;
 import com.lframework.starter.common.utils.StringUtil;
+import com.lframework.starter.web.core.annotations.oplog.OpLog;
+import com.lframework.starter.web.core.components.resp.PageResult;
 import com.lframework.starter.web.core.components.security.PasswordEncoderWrapper;
 import com.lframework.starter.web.core.impl.BaseMpServiceImpl;
-import com.lframework.starter.web.core.components.resp.PageResult;
+import com.lframework.starter.web.core.utils.ApplicationUtil;
 import com.lframework.starter.web.core.utils.EnumUtil;
 import com.lframework.starter.web.core.utils.IdUtil;
+import com.lframework.starter.web.core.utils.OpLogUtil;
 import com.lframework.starter.web.core.utils.PageHelperUtil;
 import com.lframework.starter.web.core.utils.PageResultUtil;
-import com.lframework.starter.web.core.annotations.oplog.OpLog;
 import com.lframework.starter.web.inner.components.oplog.SystemOpLogType;
+import com.lframework.starter.web.inner.dto.system.UserInfoDto;
 import com.lframework.starter.web.inner.entity.SysUser;
 import com.lframework.starter.web.inner.enums.system.Gender;
-import com.lframework.starter.web.inner.service.GenerateCodeService;
-import com.lframework.starter.web.core.utils.OpLogUtil;
-import com.lframework.starter.web.inner.dto.system.UserInfoDto;
+import com.lframework.starter.web.inner.events.system.DeleteSysUserEvent;
 import com.lframework.starter.web.inner.mappers.system.SysUserMapper;
+import com.lframework.starter.web.inner.service.GenerateCodeService;
 import com.lframework.starter.web.inner.service.system.SysUserDeptService;
 import com.lframework.starter.web.inner.service.system.SysUserRoleService;
 import com.lframework.starter.web.inner.service.system.SysUserService;
@@ -97,20 +99,19 @@ public class SysUserServiceImpl extends BaseMpServiceImpl<SysUserMapper, SysUser
     return getOne(queryWrapper);
   }
 
-  @OpLog(type = SystemOpLogType.class, name = "启用用户，ID：{}", params = "#id")
+  @OpLog(type = SystemOpLogType.class, name = "删除用户，ID：{}", params = "#id")
   @Transactional(rollbackFor = Exception.class)
   @Override
-  public void enable(String id) {
+  public void deleteById(String id) {
 
-    this.doEnable(id);
-  }
+    this.doDelete(id);
 
-  @OpLog(type = SystemOpLogType.class, name = "停用用户，ID：{}", params = "#id")
-  @Transactional(rollbackFor = Exception.class)
-  @Override
-  public void unable(String id) {
+    SysUser user = this.findById(id);
 
-    this.doUnable(id);
+    DeleteSysUserEvent event = new DeleteSysUserEvent(user);
+    event.setId(user.getId());
+    event.setName(user.getName());
+    ApplicationUtil.publishEvent(event);
   }
 
   @OpLog(type = SystemOpLogType.class, name = "新增用户，ID：{}, 编号：{}", params = {"#id",
@@ -122,13 +123,15 @@ public class SysUserServiceImpl extends BaseMpServiceImpl<SysUserMapper, SysUser
     SysUser record = this.doCreate(vo);
 
     SysUserDeptSettingVo deptSettingVo = new SysUserDeptSettingVo();
-    deptSettingVo.setUserId(record.getId());
+    deptSettingVo.setHandleType(1);
+    deptSettingVo.setUserIds(Collections.singletonList(record.getId()));
     deptSettingVo.setDeptIds(vo.getDeptIds());
     sysUserDeptService.setting(deptSettingVo);
 
     SysUserRoleSettingVo roleSettingVo = new SysUserRoleSettingVo();
     roleSettingVo.setUserIds(Collections.singletonList(record.getId()));
     roleSettingVo.setRoleIds(vo.getRoleIds());
+    roleSettingVo.setHandleType(1);
     sysUserRoleService.setting(roleSettingVo);
 
     OpLogUtil.setVariable("id", record.getId());
@@ -165,13 +168,15 @@ public class SysUserServiceImpl extends BaseMpServiceImpl<SysUserMapper, SysUser
     this.doUpdate(vo);
 
     SysUserDeptSettingVo deptSettingVo = new SysUserDeptSettingVo();
-    deptSettingVo.setUserId(vo.getId());
+    deptSettingVo.setHandleType(2);
+    deptSettingVo.setUserIds(Collections.singletonList(vo.getId()));
     deptSettingVo.setDeptIds(vo.getDeptIds());
     sysUserDeptService.setting(deptSettingVo);
 
     SysUserRoleSettingVo roleSettingVo = new SysUserRoleSettingVo();
     roleSettingVo.setUserIds(Collections.singletonList(vo.getId()));
     roleSettingVo.setRoleIds(vo.getRoleIds());
+    roleSettingVo.setHandleType(2);
     sysUserRoleService.setting(roleSettingVo);
 
     OpLogUtil.setVariable("id", data.getId());
@@ -210,14 +215,7 @@ public class SysUserServiceImpl extends BaseMpServiceImpl<SysUserMapper, SysUser
     return getBaseMapper().findById(id);
   }
 
-  protected void doEnable(String id) {
-
-    Wrapper<SysUser> updateWrapper = Wrappers.lambdaUpdate(SysUser.class)
-        .set(SysUser::getAvailable, Boolean.TRUE).eq(SysUser::getId, id);
-    getBaseMapper().update(updateWrapper);
-  }
-
-  protected void doUnable(String id) {
+  protected void doDelete(String id) {
 
     Wrapper<SysUser> updateWrapper = Wrappers.lambdaUpdate(SysUser.class)
         .set(SysUser::getAvailable, Boolean.FALSE).eq(SysUser::getId, id);
@@ -227,13 +225,13 @@ public class SysUserServiceImpl extends BaseMpServiceImpl<SysUserMapper, SysUser
   protected SysUser doCreate(CreateSysUserVo vo) {
 
     Wrapper<SysUser> checkCodeWrapper = Wrappers.lambdaQuery(SysUser.class)
-        .eq(SysUser::getCode, vo.getCode());
+        .eq(SysUser::getCode, vo.getCode()).eq(SysUser::getAvailable, true);
     if (getBaseMapper().selectCount(checkCodeWrapper) > 0) {
       throw new DefaultClientException("编号重复，请重新输入！");
     }
 
     Wrapper<SysUser> checkUsernameWrapper = Wrappers.lambdaQuery(SysUser.class)
-        .eq(SysUser::getUsername, vo.getUsername());
+        .eq(SysUser::getUsername, vo.getUsername()).eq(SysUser::getAvailable, true);
     if (getBaseMapper().selectCount(checkUsernameWrapper) > 0) {
       throw new DefaultClientException("用户名重复，请重新输入！");
     }
@@ -265,13 +263,15 @@ public class SysUserServiceImpl extends BaseMpServiceImpl<SysUserMapper, SysUser
   protected void doUpdate(UpdateSysUserVo vo) {
 
     Wrapper<SysUser> checkCodeWrapper = Wrappers.lambdaQuery(SysUser.class)
-        .eq(SysUser::getCode, vo.getCode()).ne(SysUser::getId, vo.getId());
+        .eq(SysUser::getCode, vo.getCode()).eq(SysUser::getAvailable, true)
+        .ne(SysUser::getId, vo.getId());
     if (getBaseMapper().selectCount(checkCodeWrapper) > 0) {
       throw new DefaultClientException("编号重复，请重新输入！");
     }
 
     Wrapper<SysUser> checkUsernameWrapper = Wrappers.lambdaQuery(SysUser.class)
-        .eq(SysUser::getUsername, vo.getUsername()).ne(SysUser::getId, vo.getId());
+        .eq(SysUser::getUsername, vo.getUsername()).eq(SysUser::getAvailable, true)
+        .ne(SysUser::getId, vo.getId());
     if (getBaseMapper().selectCount(checkUsernameWrapper) > 0) {
       throw new DefaultClientException("用户名重复，请重新输入！");
     }
@@ -282,7 +282,7 @@ public class SysUserServiceImpl extends BaseMpServiceImpl<SysUserMapper, SysUser
         .set(SysUser::getName, vo.getName())
         .set(SysUser::getEmail, null).set(SysUser::getTelephone, null)
         .set(SysUser::getGender, EnumUtil.getByCode(Gender.class, vo.getGender()))
-        .set(SysUser::getAvailable, vo.getAvailable()).set(SysUser::getDescription,
+        .set(SysUser::getDescription,
             StringUtil.isBlank(vo.getDescription()) ? StringPool.EMPTY_STR : vo.getDescription());
 
     if (!StringUtil.isBlank(vo.getPassword())) {

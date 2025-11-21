@@ -176,7 +176,6 @@ public class SysNoticeServiceImpl extends BaseMpServiceImpl<SysNoticeMapper, Sys
 
     // 查询所有用户
     QuerySysUserVo querySysUserVo = new QuerySysUserVo();
-    querySysUserVo.setAvailable(true);
     List<SysUser> users = sysUserService.query(querySysUserVo);
 
     Wrapper<SysNotice> updateWrapper = Wrappers.lambdaUpdate(SysNotice.class)

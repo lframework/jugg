@@ -28,8 +28,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,6 +61,7 @@ public class SysDeptController extends DefaultBaseController {
   public InvokeResult<List<SysDeptTreeBo>> trees() {
 
     Wrapper<SysDept> queryWrapper = Wrappers.lambdaQuery(SysDept.class)
+        .eq(SysDept::getAvailable, true)
         .orderByAsc(SysDept::getCode);
     List<SysDept> datas = sysDeptService.list(queryWrapper);
     if (CollectionUtil.isEmpty(datas)) {
@@ -93,42 +94,20 @@ public class SysDeptController extends DefaultBaseController {
   }
 
   /**
-   * 停用部门
+   * 删除部门
    */
-  @ApiOperation("停用部门")
-  @HasPermission({"system:dept:modify"})
-  @PatchMapping("/unable")
-  public InvokeResult<Void> unable(
+  @ApiOperation("删除部门")
+  @HasPermission({"system:dept:delete"})
+  @DeleteMapping
+  public InvokeResult<Void> deleteById(
       @ApiParam(value = "部门ID", required = true) @NotEmpty(message = "部门ID不能为空！") String id) {
 
-    sysDeptService.unable(id);
+    sysDeptService.deleteById(id);
 
     List<String> batchIds = new ArrayList<>();
     batchIds.add(id);
 
     List<String> tmp = recursionMappingService.getNodeChildIds(id,
-        SysDeptNodeType.class);
-    batchIds.addAll(tmp);
-    sysDeptService.cleanCacheByKeys(batchIds);
-
-    return InvokeResultBuilder.success();
-  }
-
-  /**
-   * 启用部门
-   */
-  @ApiOperation("启用部门")
-  @HasPermission({"system:dept:modify"})
-  @PatchMapping("/enable")
-  public InvokeResult<Void> enable(
-      @ApiParam(value = "部门ID", required = true) @NotEmpty(message = "部门ID不能为空！") String id) {
-
-    sysDeptService.enable(id);
-
-    List<String> batchIds = new ArrayList<>();
-    batchIds.add(id);
-
-    List<String> tmp = recursionMappingService.getNodeParentIds(id,
         SysDeptNodeType.class);
     batchIds.addAll(tmp);
     sysDeptService.cleanCacheByKeys(batchIds);
@@ -159,20 +138,7 @@ public class SysDeptController extends DefaultBaseController {
 
     sysDeptService.update(vo);
 
-    List<String> batchIds = new ArrayList<>();
-    batchIds.add(vo.getId());
-
-    if (vo.getAvailable()) {
-      List<String> ids = recursionMappingService.getNodeParentIds(vo.getId(),
-          SysDeptNodeType.class);
-      batchIds.addAll(ids);
-    } else {
-      List<String> ids = recursionMappingService.getNodeChildIds(vo.getId(),
-          SysDeptNodeType.class);
-      batchIds.addAll(ids);
-    }
-
-    sysDeptService.cleanCacheByKeys(batchIds);
+    sysDeptService.cleanCacheByKey(vo.getId());
 
     return InvokeResultBuilder.success();
   }

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lframework.starter.web.inner.mappers.system.SysNotifyGroupReceiverMapper">
+    <sql id="SysNotifyGroupReceiver_sql">
+        SELECT
+            tb.*
+        FROM sys_notify_group_receiver AS tb
+    </sql>
+    <select id="hasUserGroup" resultType="java.lang.Boolean">
+        SELECT COUNT(*) > 0
+        FROM sys_notify_group_receiver AS tb
+        LEFT JOIN sys_notify_group sng ON tb.group_id = sng.id
+        WHERE tb.receiver_id = #{userGroupId}
+          AND sng.receiver_type = 3
+          AND sng.available = TRUE
+    </select>
+</mapper>

@@ -24,4 +24,10 @@ public class SysUserRoleSettingVo implements BaseVo, Serializable {
    */
   @ApiModelProperty("角色ID")
   private List<String> roleIds;
+
+  /**
+   * 处理方式 1：新增 2：替换 3：删除
+   */
+  @ApiModelProperty(value = "处理方式", required = true)
+  private Integer handleType;
 }

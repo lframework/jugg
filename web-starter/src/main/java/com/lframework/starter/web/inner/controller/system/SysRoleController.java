@@ -26,8 +26,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -88,31 +88,15 @@ public class SysRoleController extends DefaultBaseController {
   }
 
   /**
-   * 停用角色
+   * 删除角色
    */
-  @ApiOperation("停用角色")
-  @HasPermission({"system:role:modify"})
-  @PatchMapping("/unable")
-  public InvokeResult<Void> unable(
+  @ApiOperation("删除角色")
+  @HasPermission({"system:role:delete"})
+  @DeleteMapping
+  public InvokeResult<Void> deleteById(
       @ApiParam(value = "角色ID", required = true) @NotEmpty(message = "角色ID不能为空！") String id) {
 
-    sysRoleService.unable(id);
-
-    sysRoleService.cleanCacheByKey(id);
-
-    return InvokeResultBuilder.success();
-  }
-
-  /**
-   * 启用角色
-   */
-  @ApiOperation("启用角色")
-  @HasPermission({"system:role:modify"})
-  @PatchMapping("/enable")
-  public InvokeResult<Void> enable(
-      @ApiParam(value = "角色ID", required = true) @NotEmpty(message = "角色ID不能为空！") String id) {
-
-    sysRoleService.enable(id);
+    sysRoleService.deleteById(id);
 
     sysRoleService.cleanCacheByKey(id);
 

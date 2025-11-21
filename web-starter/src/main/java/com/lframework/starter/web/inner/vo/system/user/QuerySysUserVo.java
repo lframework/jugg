@@ -36,10 +36,10 @@ public class QuerySysUserVo extends SortPageVo implements BaseVo, Serializable {
   private String deptId;
 
   /**
-   * 状态
+   * 角色ID
    */
-  @ApiModelProperty("状态")
-  private Boolean available;
+  @ApiModelProperty("角色ID")
+  private String roleId;
 
   /**
    * 是否锁定

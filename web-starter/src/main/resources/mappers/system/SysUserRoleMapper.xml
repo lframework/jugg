@@ -11,12 +11,14 @@
     <select id="getByUserId" resultType="com.lframework.starter.web.inner.entity.SysUserRole">
         <include refid="SysUserRoleDto_sql"/>
         WHERE ur.user_id = #{userId}
+        AND r.available = TRUE
         ORDER BY r.code
     </select>
   <select id="getByRoleId"
           resultType="com.lframework.starter.web.inner.entity.SysUserRole">
       <include refid="SysUserRoleDto_sql"/>
       WHERE ur.role_id = #{roleId}
+      AND u.available = TRUE
       ORDER BY u.code
   </select>
 </mapper>

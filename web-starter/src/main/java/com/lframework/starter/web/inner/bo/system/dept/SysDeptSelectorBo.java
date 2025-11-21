@@ -15,6 +15,12 @@ public class SysDeptSelectorBo extends BaseBo<SysDept> {
   private String id;
 
   /**
+   * 编号
+   */
+  @ApiModelProperty("编号")
+  private String code;
+
+  /**
    * 名称
    */
   @ApiModelProperty("名称")
@@ -25,12 +31,6 @@ public class SysDeptSelectorBo extends BaseBo<SysDept> {
    */
   @ApiModelProperty("父级ID")
   private String parentId;
-
-  /**
-   * 状态
-   */
-  @ApiModelProperty("状态")
-  private Boolean available;
 
   public SysDeptSelectorBo() {
 

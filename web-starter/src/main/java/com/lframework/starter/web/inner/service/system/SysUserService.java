@@ -48,18 +48,11 @@ public interface SysUserService extends BaseMpService<SysUser> {
   SysUser findByCode(String code);
 
   /**
-   * 启用
-   *
-   * @param id
-   */
-  void enable(String id);
-
-  /**
    * 停用
    *
    * @param id
    */
-  void unable(String id);
+  void deleteById(String id);
 
   /**
    * 创建

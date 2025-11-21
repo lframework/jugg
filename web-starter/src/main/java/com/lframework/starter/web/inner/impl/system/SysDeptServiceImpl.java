@@ -9,14 +9,16 @@ import com.lframework.starter.common.utils.ObjectUtil;
 import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.web.core.annotations.oplog.OpLog;
 import com.lframework.starter.web.core.impl.BaseMpServiceImpl;
+import com.lframework.starter.web.core.utils.ApplicationUtil;
 import com.lframework.starter.web.core.utils.IdUtil;
+import com.lframework.starter.web.core.utils.OpLogUtil;
 import com.lframework.starter.web.inner.components.oplog.SystemOpLogType;
 import com.lframework.starter.web.inner.entity.SysDept;
 import com.lframework.starter.web.inner.enums.system.SysDeptNodeType;
+import com.lframework.starter.web.inner.events.system.DeleteSysDeptEvent;
 import com.lframework.starter.web.inner.mappers.system.SysDeptMapper;
 import com.lframework.starter.web.inner.service.RecursionMappingService;
 import com.lframework.starter.web.inner.service.system.SysDeptService;
-import com.lframework.starter.web.core.utils.OpLogUtil;
 import com.lframework.starter.web.inner.vo.system.dept.CreateSysDeptVo;
 import com.lframework.starter.web.inner.vo.system.dept.SysDeptSelectorVo;
 import com.lframework.starter.web.inner.vo.system.dept.UpdateSysDeptVo;
@@ -24,6 +26,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -56,10 +59,10 @@ public class SysDeptServiceImpl extends BaseMpServiceImpl<SysDeptMapper, SysDept
     return getOne(queryWrapper);
   }
 
-  @OpLog(type = SystemOpLogType.class, name = "停用部门，ID：{}", params = "#id")
+  @OpLog(type = SystemOpLogType.class, name = "删除部门，ID：{}", params = "#id")
   @Transactional(rollbackFor = Exception.class)
   @Override
-  public void unable(String id) {
+  public void deleteById(String id) {
 
     List<String> batchIds = new ArrayList<>();
     batchIds.add(id);
@@ -69,23 +72,16 @@ public class SysDeptServiceImpl extends BaseMpServiceImpl<SysDeptMapper, SysDept
       batchIds.addAll(nodeChildIds);
     }
 
-    this.doBatchUnable(batchIds);
-  }
+    this.doBatchDelete(batchIds);
 
-  @OpLog(type = SystemOpLogType.class, name = "启用部门，ID：{}", params = "#id")
-  @Transactional(rollbackFor = Exception.class)
-  @Override
-  public void enable(String id) {
+    for (String batchId : batchIds) {
+      SysDept dept = this.findById(batchId);
 
-    List<String> batchIds = new ArrayList<>();
-    batchIds.add(id);
-    List<String> nodeChildIds = recursionMappingService.getNodeParentIds(id,
-        SysDeptNodeType.class);
-    if (CollectionUtil.isNotEmpty(nodeChildIds)) {
-      batchIds.addAll(nodeChildIds);
+      DeleteSysDeptEvent event = new DeleteSysDeptEvent(this);
+      event.setId(dept.getId());
+      event.setName(dept.getName());
+      ApplicationUtil.publishEvent(event);
     }
-
-    this.doBatchEnable(batchIds);
   }
 
   @OpLog(type = SystemOpLogType.class, name = "新增部门，ID：{}, 编号：{}", params = {"#id",
@@ -96,7 +92,7 @@ public class SysDeptServiceImpl extends BaseMpServiceImpl<SysDeptMapper, SysDept
 
     SysDept data = this.doCreate(vo);
 
-    this.saveRecursion(data.getId(), data.getParentId());
+    this.saveRecursion(true, data.getId(), data.getParentId());
 
     OpLogUtil.setVariable("id", data.getId());
     OpLogUtil.setVariable("code", vo.getCode());
@@ -111,9 +107,13 @@ public class SysDeptServiceImpl extends BaseMpServiceImpl<SysDeptMapper, SysDept
   @Override
   public void update(UpdateSysDeptVo vo) {
 
+    SysDept oldData = this.findById(vo.getId());
+
     this.doUpdate(vo);
 
-    this.saveRecursion(vo.getId(), vo.getParentId());
+    if (!StringUtil.equals(oldData.getParentId(), vo.getParentId())) {
+      this.saveRecursion(false, vo.getId(), vo.getParentId());
+    }
 
     OpLogUtil.setVariable("id", vo.getId());
     OpLogUtil.setVariable("code", vo.getCode());
@@ -130,17 +130,10 @@ public class SysDeptServiceImpl extends BaseMpServiceImpl<SysDeptMapper, SysDept
     return getBaseMapper().findById(id);
   }
 
-  protected void doBatchUnable(Collection<String> ids) {
+  protected void doBatchDelete(Collection<String> ids) {
 
     Wrapper<SysDept> updateWrapper = Wrappers.lambdaUpdate(SysDept.class)
         .set(SysDept::getAvailable, Boolean.FALSE).in(SysDept::getId, ids);
-    getBaseMapper().update(updateWrapper);
-  }
-
-  protected void doBatchEnable(Collection<String> ids) {
-
-    Wrapper<SysDept> updateWrapper = Wrappers.lambdaUpdate(SysDept.class)
-        .set(SysDept::getAvailable, Boolean.TRUE).in(SysDept::getId, ids);
     getBaseMapper().update(updateWrapper);
   }
 
@@ -148,14 +141,14 @@ public class SysDeptServiceImpl extends BaseMpServiceImpl<SysDeptMapper, SysDept
 
     //查询Code是否重复
     Wrapper<SysDept> checkWrapper = Wrappers.lambdaQuery(SysDept.class)
-        .eq(SysDept::getCode, vo.getCode());
+        .eq(SysDept::getCode, vo.getCode()).eq(SysDept::getAvailable, true);
     if (getBaseMapper().selectCount(checkWrapper) > 0) {
       throw new DefaultClientException("编号重复，请重新输入！");
     }
 
     //查询Name是否重复
     checkWrapper = Wrappers.lambdaQuery(SysDept.class)
-        .eq(SysDept::getName, vo.getName());
+        .eq(SysDept::getName, vo.getName()).eq(SysDept::getAvailable, true);
     if (getBaseMapper().selectCount(checkWrapper) > 0) {
       throw new DefaultClientException("名称重复，请重新输入！");
     }
@@ -163,7 +156,9 @@ public class SysDeptServiceImpl extends BaseMpServiceImpl<SysDeptMapper, SysDept
     SysDept parentDept = null;
     //如果parentId不为空，查询上级部门是否存在
     if (!StringUtil.isBlank(vo.getParentId())) {
-      parentDept = this.getById(vo.getParentId());
+      Wrapper<SysDept> queryParentWrapper = Wrappers.lambdaQuery(SysDept.class)
+          .eq(SysDept::getId, vo.getParentId()).eq(SysDept::getAvailable, true);
+      parentDept = this.getOne(queryParentWrapper);
       if (parentDept == null) {
         throw new DefaultClientException("上级部门不存在，请检查！");
       }
@@ -177,7 +172,7 @@ public class SysDeptServiceImpl extends BaseMpServiceImpl<SysDeptMapper, SysDept
     if (!StringUtil.isBlank(vo.getParentId())) {
       data.setParentId(vo.getParentId());
     }
-    data.setAvailable(parentDept == null ? Boolean.TRUE : parentDept.getAvailable());
+    data.setAvailable(Boolean.TRUE);
     data.setDescription(vo.getDescription());
 
     getBaseMapper().insert(data);
@@ -188,13 +183,14 @@ public class SysDeptServiceImpl extends BaseMpServiceImpl<SysDeptMapper, SysDept
   protected void doUpdate(UpdateSysDeptVo vo) {
 
     SysDept data = this.findById(vo.getId());
-    if (data == null) {
+    if (data == null || !data.getAvailable()) {
       throw new DefaultClientException("部门不存在！");
     }
 
     //查询Code是否重复
     Wrapper<SysDept> checkWrapper = Wrappers.lambdaQuery(SysDept.class)
-        .eq(SysDept::getCode, vo.getCode()).ne(SysDept::getId, data.getId());
+        .eq(SysDept::getCode, vo.getCode()).ne(SysDept::getId, data.getId())
+        .eq(SysDept::getAvailable, true);
     if (getBaseMapper().selectCount(checkWrapper) > 0) {
       throw new DefaultClientException("编号重复，请重新输入！");
     }
@@ -202,7 +198,7 @@ public class SysDeptServiceImpl extends BaseMpServiceImpl<SysDeptMapper, SysDept
     //查询Name是否重复
     checkWrapper = Wrappers.lambdaQuery(SysDept.class)
         .eq(SysDept::getName, vo.getName())
-        .ne(SysDept::getId, data.getId());
+        .ne(SysDept::getId, data.getId()).eq(SysDept::getAvailable, true);
     if (getBaseMapper().selectCount(checkWrapper) > 0) {
       throw new DefaultClientException("名称重复，请重新输入！");
     }
@@ -213,7 +209,7 @@ public class SysDeptServiceImpl extends BaseMpServiceImpl<SysDeptMapper, SysDept
         throw new DefaultClientException("上级部门不能是当前部门！");
       }
       Wrapper<SysDept> checkParentWrapper = Wrappers.lambdaQuery(SysDept.class)
-          .eq(SysDept::getId, vo.getParentId());
+          .eq(SysDept::getId, vo.getParentId()).eq(SysDept::getAvailable, true);
       if (getBaseMapper().selectCount(checkParentWrapper) == 0) {
         throw new DefaultClientException("上级部门不存在，请检查！");
       }
@@ -226,15 +222,9 @@ public class SysDeptServiceImpl extends BaseMpServiceImpl<SysDeptMapper, SysDept
             StringUtil.isBlank(vo.getParentId()) ? null : vo.getParentId())
         .set(SysDept::getDescription,
             StringUtil.isBlank(vo.getDescription()) ? StringPool.EMPTY_STR : vo.getDescription())
-        .set(SysDept::getAvailable, vo.getAvailable()).eq(SysDept::getId, vo.getId());
+        .eq(SysDept::getId, vo.getId());
 
     getBaseMapper().update(updateWrapper);
-
-    if (vo.getAvailable()) {
-      this.enable(vo.getId());
-    } else {
-      this.unable(vo.getId());
-    }
   }
 
   /**
@@ -243,7 +233,11 @@ public class SysDeptServiceImpl extends BaseMpServiceImpl<SysDeptMapper, SysDept
    * @param deptId
    * @param parentId
    */
-  protected void saveRecursion(String deptId, String parentId) {
+  protected void saveRecursion(boolean isCreate, String deptId, String parentId) {
+
+    if (!isCreate) {
+      recursionMappingService.deleteNode(deptId, SysDeptNodeType.class);
+    }
 
     if (!StringUtil.isBlank(parentId)) {
       List<String> parentIds = recursionMappingService.getNodeParentIds(parentId,
@@ -257,6 +251,31 @@ public class SysDeptServiceImpl extends BaseMpServiceImpl<SysDeptMapper, SysDept
           parentIds);
     } else {
       recursionMappingService.saveNode(deptId, SysDeptNodeType.class);
+    }
+
+    // 还要更新这个节点的子节点
+    List<String> childIds = recursionMappingService.getNodeChildIds(deptId,
+        SysDeptNodeType.class);
+
+    for (String childId : childIds) {
+      List<SysDept> parentDeptList = new ArrayList<>();
+      SysDept sysDept = this.findById(childId);
+      if (!sysDept.getAvailable()) {
+        continue;
+      }
+
+      while (StringUtil.isNotBlank(sysDept.getParentId())) {
+        sysDept = this.findById(sysDept.getParentId());
+        if (sysDept == null) {
+          break;
+        }
+        parentDeptList.add(sysDept);
+      }
+
+      parentDeptList = CollectionUtil.reverse(parentDeptList);
+      recursionMappingService.deleteNode(childId, SysDeptNodeType.class);
+      recursionMappingService.saveNode(childId, SysDeptNodeType.class,
+          parentDeptList.stream().map(SysDept::getId).collect(Collectors.toList()));
     }
   }
 

@@ -22,10 +22,4 @@ public class SysRoleSelectorVo extends PageVo implements BaseVo, Serializable {
    */
   @ApiModelProperty("名称")
   private String name;
-
-  /**
-   * 状态
-   */
-  @ApiModelProperty("状态")
-  private Boolean available;
 }

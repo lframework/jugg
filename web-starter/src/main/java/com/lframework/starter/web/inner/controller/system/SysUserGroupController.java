@@ -18,12 +18,15 @@ import com.lframework.starter.web.inner.vo.system.user.group.UpdateSysUserGroupV
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -49,7 +52,7 @@ public class SysUserGroupController extends DefaultBaseController {
    * 查询列表
    */
   @ApiOperation("查询列表")
-  @HasPermission({"system:notify-group:query"})
+  @HasPermission({"system:user-group:query"})
   @GetMapping("/query")
   public InvokeResult<PageResult<QuerySysUserGroupBo>> query(
       @Valid QuerySysUserGroupVo vo) {
@@ -73,7 +76,7 @@ public class SysUserGroupController extends DefaultBaseController {
    */
   @ApiOperation("根据ID查询")
   @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
-  @HasPermission({"system:notify-group:query"})
+  @HasPermission({"system:user-group:query"})
   @GetMapping("/detail")
   public InvokeResult<GetSysUserGroupBo> getDetail(
       @NotBlank(message = "id不能为空！") String id) {
@@ -92,7 +95,7 @@ public class SysUserGroupController extends DefaultBaseController {
    * 新增
    */
   @ApiOperation("新增")
-  @HasPermission({"system:notify-group:add"})
+  @HasPermission({"system:user-group:add"})
   @PostMapping
   public InvokeResult<Void> create(@Valid @RequestBody CreateSysUserGroupVo vo) {
 
@@ -105,13 +108,25 @@ public class SysUserGroupController extends DefaultBaseController {
    * 修改
    */
   @ApiOperation("修改")
-  @HasPermission({"system:notify-group:modify"})
+  @HasPermission({"system:user-group:modify"})
   @PutMapping
   public InvokeResult<Void> update(@Valid @RequestBody UpdateSysUserGroupVo vo) {
 
     sysUserGroupService.update(vo);
 
     sysUserGroupService.cleanCacheByKey(vo.getId());
+
+    return InvokeResultBuilder.success();
+  }
+
+  @ApiOperation("根据ID删除")
+  @HasPermission({"system:user-group:delete"})
+  @DeleteMapping
+  public InvokeResult<Void> deleteById(
+      @ApiParam(value = "ID", required = true) @NotEmpty(message = "ID不能为空！") String id) {
+
+    sysUserGroupService.deleteById(id);
+    sysUserGroupService.cleanCacheByKey(id);
 
     return InvokeResultBuilder.success();
   }

@@ -16,5 +16,6 @@
     <select id="findByUsername" resultType="com.lframework.starter.web.core.components.security.DefaultUserDetails">
         SELECT id, username, password, name, email, telephone, available, lock_status FROM sys_user
         WHERE username = #{username}
+        AND available = TRUE
     </select>
 </mapper>

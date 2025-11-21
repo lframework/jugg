@@ -9,16 +9,18 @@ import com.lframework.starter.common.exceptions.impl.DefaultClientException;
 import com.lframework.starter.common.utils.Assert;
 import com.lframework.starter.common.utils.ObjectUtil;
 import com.lframework.starter.common.utils.StringUtil;
+import com.lframework.starter.web.core.annotations.oplog.OpLog;
+import com.lframework.starter.web.core.components.resp.PageResult;
 import com.lframework.starter.web.core.components.security.SecurityConstants;
 import com.lframework.starter.web.core.impl.BaseMpServiceImpl;
-import com.lframework.starter.web.core.components.resp.PageResult;
+import com.lframework.starter.web.core.utils.ApplicationUtil;
 import com.lframework.starter.web.core.utils.IdUtil;
+import com.lframework.starter.web.core.utils.OpLogUtil;
 import com.lframework.starter.web.core.utils.PageHelperUtil;
 import com.lframework.starter.web.core.utils.PageResultUtil;
-import com.lframework.starter.web.core.annotations.oplog.OpLog;
 import com.lframework.starter.web.inner.components.oplog.SystemOpLogType;
-import com.lframework.starter.web.core.utils.OpLogUtil;
 import com.lframework.starter.web.inner.entity.SysRole;
+import com.lframework.starter.web.inner.events.system.DeleteSysRoleEvent;
 import com.lframework.starter.web.inner.mappers.system.SysRoleMapper;
 import com.lframework.starter.web.inner.service.system.SysMenuService;
 import com.lframework.starter.web.inner.service.system.SysRoleService;
@@ -80,34 +82,24 @@ public class SysRoleServiceImpl extends BaseMpServiceImpl<SysRoleMapper, SysRole
     return PageResultUtil.convert(new PageInfo<>(datas));
   }
 
-  @OpLog(type = SystemOpLogType.class, name = "停用角色，ID：{}", params = "#id")
+  @OpLog(type = SystemOpLogType.class, name = "删除角色，ID：{}", params = "#id")
   @Transactional(rollbackFor = Exception.class)
   @Override
-  public void unable(String id) {
+  public void deleteById(String id) {
 
     SysRole role = this.findById(id);
     if (SecurityConstants.PERMISSION_ADMIN_NAME.equals(role.getPermission())) {
       throw new DefaultClientException(
           "角色【" + role.getName() + "】的权限为【" + SecurityConstants.PERMISSION_ADMIN_NAME
-              + "】，不允许停用！");
+              + "】，不允许删除！");
     }
 
-    this.doUnable(id);
-  }
+    this.doDelete(id);
 
-  @OpLog(type = SystemOpLogType.class, name = "启用角色，ID：{}", params = "#id")
-  @Transactional(rollbackFor = Exception.class)
-  @Override
-  public void enable(String id) {
-
-    SysRole role = this.findById(id);
-    if (SecurityConstants.PERMISSION_ADMIN_NAME.equals(role.getPermission())) {
-      throw new DefaultClientException(
-          "角色【" + role.getName() + "】的权限为【" + SecurityConstants.PERMISSION_ADMIN_NAME
-              + "】，不允许启用！");
-    }
-
-    this.doEnable(id);
+    DeleteSysRoleEvent event = new DeleteSysRoleEvent(this);
+    event.setId(role.getId());
+    event.setName(role.getName());
+    ApplicationUtil.publishEvent(event);
   }
 
   @OpLog(type = SystemOpLogType.class, name = "新增角色，ID：{}, 编号：{}", params = {"#id",
@@ -196,30 +188,23 @@ public class SysRoleServiceImpl extends BaseMpServiceImpl<SysRoleMapper, SysRole
     return getBaseMapper().selector(vo);
   }
 
-  protected void doUnable(String id) {
+  protected void doDelete(String id) {
 
     Wrapper<SysRole> updateWrapper = Wrappers.lambdaUpdate(SysRole.class)
         .set(SysRole::getAvailable, Boolean.FALSE).eq(SysRole::getId, id);
     getBaseMapper().update(updateWrapper);
   }
 
-  protected void doEnable(String id) {
-
-    Wrapper<SysRole> updateWrapper = Wrappers.lambdaUpdate(SysRole.class)
-        .set(SysRole::getAvailable, Boolean.TRUE).eq(SysRole::getId, id);
-    getBaseMapper().update(updateWrapper);
-  }
-
   protected SysRole doCreate(CreateSysRoleVo vo) {
 
     Wrapper<SysRole> checkWrapper = Wrappers.lambdaQuery(SysRole.class)
-        .eq(SysRole::getCode, vo.getCode());
+        .eq(SysRole::getCode, vo.getCode()).eq(SysRole::getAvailable, true);
     if (getBaseMapper().selectCount(checkWrapper) > 0) {
       throw new DefaultClientException("编号重复，请重新输入！");
     }
 
     checkWrapper = Wrappers.lambdaQuery(SysRole.class)
-        .eq(SysRole::getName, vo.getName());
+        .eq(SysRole::getName, vo.getName()).eq(SysRole::getAvailable, true);
     if (getBaseMapper().selectCount(checkWrapper) > 0) {
       throw new DefaultClientException("名称重复，请重新输入！");
     }
@@ -247,13 +232,15 @@ public class SysRoleServiceImpl extends BaseMpServiceImpl<SysRoleMapper, SysRole
   protected void doUpdate(UpdateSysRoleVo vo) {
 
     Wrapper<SysRole> checkWrapper = Wrappers.lambdaQuery(SysRole.class)
-        .eq(SysRole::getCode, vo.getCode()).ne(SysRole::getId, vo.getId());
+        .eq(SysRole::getCode, vo.getCode()).eq(SysRole::getAvailable, true)
+        .ne(SysRole::getId, vo.getId());
     if (getBaseMapper().selectCount(checkWrapper) > 0) {
       throw new DefaultClientException("编号重复，请重新输入！");
     }
 
     checkWrapper = Wrappers.lambdaQuery(SysRole.class)
         .eq(SysRole::getName, vo.getName())
+        .eq(SysRole::getAvailable, true)
         .ne(SysRole::getId, vo.getId());
     if (getBaseMapper().selectCount(checkWrapper) > 0) {
       throw new DefaultClientException("名称重复，请重新输入！");
@@ -263,7 +250,6 @@ public class SysRoleServiceImpl extends BaseMpServiceImpl<SysRoleMapper, SysRole
         .set(SysRole::getCode, vo.getCode()).set(SysRole::getName, vo.getName())
         .set(SysRole::getPermission, null)
         .set(SysRole::getCategoryId, vo.getCategoryId())
-        .set(SysRole::getAvailable, vo.getAvailable())
         .set(SysRole::getDescription,
             StringUtil.isBlank(vo.getDescription()) ? StringPool.EMPTY_STR : vo.getDescription())
         .eq(SysRole::getId, vo.getId());

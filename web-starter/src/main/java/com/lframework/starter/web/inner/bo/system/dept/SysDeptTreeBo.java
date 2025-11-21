@@ -26,12 +26,6 @@ public class SysDeptTreeBo extends BaseBo<SysDept> {
   @ApiModelProperty("父级ID")
   private String parentId;
 
-  /**
-   * 状态
-   */
-  @ApiModelProperty("状态")
-  private Boolean available;
-
   public SysDeptTreeBo() {
 
   }

@@ -79,12 +79,6 @@ public class QuerySysUserBo extends BaseBo<SysUser> {
   private Integer gender;
 
   /**
-   * 状态
-   */
-  @ApiModelProperty("状态")
-  private Boolean available;
-
-  /**
    * 是否锁定
    */
   @ApiModelProperty("是否锁定")

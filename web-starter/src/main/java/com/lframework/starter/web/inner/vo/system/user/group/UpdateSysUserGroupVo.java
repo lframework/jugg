@@ -16,11 +16,4 @@ public class UpdateSysUserGroupVo extends CreateSysUserGroupVo {
   @ApiModelProperty(value = "ID", required = true)
   @NotBlank(message = "id不能为空！")
   private String id;
-
-  /**
-   * 状态
-   */
-  @ApiModelProperty(value = "状态", required = true)
-  @NotNull(message = "状态不能为空！")
-  private Boolean available;
 }

@@ -117,7 +117,7 @@ public class SysRoleCategoryServiceImpl extends
   public void deleteById(String id) {
 
     Wrapper<SysRole> queryWrapper = Wrappers.lambdaQuery(SysRole.class)
-        .eq(SysRole::getCategoryId, id);
+        .eq(SysRole::getCategoryId, id).eq(SysRole::getAvailable, true);
     if (sysRoleService.count(queryWrapper) > 0) {
       throw new DefaultClientException("此分类下存在角色，无法删除！");
     }

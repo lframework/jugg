@@ -57,12 +57,6 @@ public class GetSysNotifyGroupBo extends BaseBo<SysNotifyGroup> {
   @ApiModelProperty("备注")
   private String description;
 
-  /**
-   * 状态
-   */
-  @ApiModelProperty("状态")
-  private Boolean available;
-
   public GetSysNotifyGroupBo() {
 
   }
