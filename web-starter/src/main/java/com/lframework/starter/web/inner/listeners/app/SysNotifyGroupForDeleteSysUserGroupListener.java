@@ -16,9 +16,9 @@ public class SysNotifyGroupForDeleteSysUserGroupListener implements
 
   @Override
   public void onApplicationEvent(DeleteSysUserGroupEvent event) {
-    if (sysNotifyGroupReceiverService.hasUserGroup(event.getId())) {
+    if (sysNotifyGroupReceiverService.hasUserGroup(event.getEntity().getId())) {
       throw new DefaultClientException(
-          "用户分组：" + event.getName() + "存在关联的消息通知组，请先解除关联关系！");
+          "用户分组：" + event.getEntity().getName() + "存在关联的消息通知组，请先解除关联关系！");
     }
   }
 }

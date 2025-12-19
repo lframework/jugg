@@ -8,8 +8,8 @@ import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.common.utils.ObjectUtil;
 import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.web.core.annotations.oplog.OpLog;
+import com.lframework.starter.web.core.event.DataChangeEventBuilder;
 import com.lframework.starter.web.core.impl.BaseMpServiceImpl;
-import com.lframework.starter.web.core.utils.ApplicationUtil;
 import com.lframework.starter.web.core.utils.IdUtil;
 import com.lframework.starter.web.core.utils.OpLogUtil;
 import com.lframework.starter.web.inner.components.oplog.SystemOpLogType;
@@ -77,10 +77,7 @@ public class SysDeptServiceImpl extends BaseMpServiceImpl<SysDeptMapper, SysDept
     for (String batchId : batchIds) {
       SysDept dept = this.findById(batchId);
 
-      DeleteSysDeptEvent event = new DeleteSysDeptEvent(this);
-      event.setId(dept.getId());
-      event.setName(dept.getName());
-      ApplicationUtil.publishEvent(event);
+      DataChangeEventBuilder.publishLogicDelete(this, DeleteSysDeptEvent.class, dept);
     }
   }
 

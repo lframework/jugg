@@ -23,9 +23,10 @@ public class GenCustomSelectorListener {
     public void onApplicationEvent(CustomListDeleteEvent event) {
 
       Wrapper<GenCustomSelector> queryWrapper = Wrappers.lambdaQuery(GenCustomSelector.class)
-          .eq(GenCustomSelector::getCustomListId, event.getId());
+          .eq(GenCustomSelector::getCustomListId, event.getEntity().getId());
       if (genCustomSelectorService.count(queryWrapper) > 0) {
-        throw new DefaultClientException("自定义列表【" + event.getName() + "】已关联自定义选择器，无法删除！");
+        throw new DefaultClientException(
+            "自定义列表【" + event.getEntity().getName() + "】已关联自定义选择器，无法删除！");
       }
     }
   }

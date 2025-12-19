@@ -17,7 +17,7 @@ public class GenerateInfoListener {
     @Override
     public void onApplicationEvent(DataEntityDeleteEvent event) {
 
-      generateInfoService.deleteByEntityId(event.getId());
+      generateInfoService.deleteByEntityId(event.getEntity().getId());
     }
   }
 }

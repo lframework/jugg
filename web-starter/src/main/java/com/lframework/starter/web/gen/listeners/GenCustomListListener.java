@@ -28,9 +28,10 @@ public class GenCustomListListener {
     public void onApplicationEvent(DataObjDeleteEvent event) {
 
       Wrapper<GenCustomList> queryWrapper = Wrappers.lambdaQuery(GenCustomList.class)
-          .eq(GenCustomList::getDataObjId, event.getId());
+          .eq(GenCustomList::getDataObjId, event.getEntity().getId());
       if (genCustomListService.count(queryWrapper) > 0) {
-        throw new DefaultClientException("数据对象【" + event.getName() + "】已关联自定义列表，无法删除！");
+        throw new DefaultClientException(
+            "数据对象【" + event.getEntity().getName() + "】已关联自定义列表，无法删除！");
       }
     }
   }
@@ -49,15 +50,19 @@ public class GenCustomListListener {
     public void onApplicationEvent(DataEntityDetailDeleteEvent event) {
 
       Wrapper<GenCustomListDetail> queryDetailWrapper = Wrappers.lambdaQuery(
-          GenCustomListDetail.class).eq(GenCustomListDetail::getDataEntityId, event.getId());
+              GenCustomListDetail.class)
+          .eq(GenCustomListDetail::getDataEntityId, event.getEntity().getId());
       if (genCustomListDetailService.count(queryDetailWrapper) > 0) {
-        throw new DefaultClientException("字段【" + event.getName() + "】已关联自定义列表，无法删除！");
+        throw new DefaultClientException(
+            "字段【" + event.getEntity().getName() + "】已关联自定义列表，无法删除！");
       }
 
       Wrapper<GenCustomListQueryParams> queryQueryDetailWrapper = Wrappers.lambdaQuery(
-          GenCustomListQueryParams.class).eq(GenCustomListQueryParams::getRelaId, event.getId());
+              GenCustomListQueryParams.class)
+          .eq(GenCustomListQueryParams::getRelaId, event.getEntity().getId());
       if (genCustomListQueryParamsService.count(queryQueryDetailWrapper) > 0) {
-        throw new DefaultClientException("字段【" + event.getName() + "】已关联自定义列表，无法删除！");
+        throw new DefaultClientException(
+            "字段【" + event.getEntity().getName() + "】已关联自定义列表，无法删除！");
       }
     }
   }
@@ -75,15 +80,19 @@ public class GenCustomListListener {
     @Override
     public void onApplicationEvent(DataObjQueryDetailDeleteEvent event) {
       Wrapper<GenCustomListDetail> queryDetailWrapper = Wrappers.lambdaQuery(
-          GenCustomListDetail.class).eq(GenCustomListDetail::getDataEntityId, event.getId());
+              GenCustomListDetail.class)
+          .eq(GenCustomListDetail::getDataEntityId, event.getEntity().getId());
       if (genCustomListDetailService.count(queryDetailWrapper) > 0) {
-        throw new DefaultClientException("字段【" + event.getName() + "】已关联自定义列表，无法删除！");
+        throw new DefaultClientException(
+            "字段【" + event.getEntity().getCustomName() + "】已关联自定义列表，无法删除！");
       }
 
       Wrapper<GenCustomListQueryParams> queryQueryDetailWrapper = Wrappers.lambdaQuery(
-          GenCustomListQueryParams.class).eq(GenCustomListQueryParams::getRelaId, event.getId());
+              GenCustomListQueryParams.class)
+          .eq(GenCustomListQueryParams::getRelaId, event.getEntity().getId());
       if (genCustomListQueryParamsService.count(queryQueryDetailWrapper) > 0) {
-        throw new DefaultClientException("字段【" + event.getName() + "】已关联自定义列表，无法删除！");
+        throw new DefaultClientException(
+            "字段【" + event.getEntity().getCustomName() + "】已关联自定义列表，无法删除！");
       }
     }
   }

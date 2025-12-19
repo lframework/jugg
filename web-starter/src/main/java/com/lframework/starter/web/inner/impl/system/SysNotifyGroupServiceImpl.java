@@ -10,6 +10,7 @@ import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.web.core.annotations.oplog.OpLog;
 import com.lframework.starter.web.core.components.resp.PageResult;
+import com.lframework.starter.web.core.event.DataChangeEventBuilder;
 import com.lframework.starter.web.core.impl.BaseMpServiceImpl;
 import com.lframework.starter.web.core.utils.ApplicationUtil;
 import com.lframework.starter.web.core.utils.EnumUtil;
@@ -274,11 +275,7 @@ public class SysNotifyGroupServiceImpl extends
     this.update(deleteWrapper);
 
     SysNotifyGroup record = this.findById(id);
-    DeleteSysNotifyGroupEvent event = new DeleteSysNotifyGroupEvent(this);
-    event.setId(record.getId());
-    event.setName(record.getName());
-
-    ApplicationUtil.publishEvent(event);
+    DataChangeEventBuilder.publishLogicDelete(this, DeleteSysNotifyGroupEvent.class, record);
   }
 
   @CacheEvict(value = SysNotifyGroup.CACHE_NAME, key = "@cacheVariables.tenantId() + #key")

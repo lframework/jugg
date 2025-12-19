@@ -12,8 +12,8 @@ import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.web.core.annotations.oplog.OpLog;
 import com.lframework.starter.web.core.components.resp.PageResult;
 import com.lframework.starter.web.core.components.security.SecurityConstants;
+import com.lframework.starter.web.core.event.DataChangeEventBuilder;
 import com.lframework.starter.web.core.impl.BaseMpServiceImpl;
-import com.lframework.starter.web.core.utils.ApplicationUtil;
 import com.lframework.starter.web.core.utils.IdUtil;
 import com.lframework.starter.web.core.utils.OpLogUtil;
 import com.lframework.starter.web.core.utils.PageHelperUtil;
@@ -96,10 +96,7 @@ public class SysRoleServiceImpl extends BaseMpServiceImpl<SysRoleMapper, SysRole
 
     this.doDelete(id);
 
-    DeleteSysRoleEvent event = new DeleteSysRoleEvent(this);
-    event.setId(role.getId());
-    event.setName(role.getName());
-    ApplicationUtil.publishEvent(event);
+    DataChangeEventBuilder.publishLogicDelete(this, DeleteSysRoleEvent.class, role);
   }
 
   @OpLog(type = SystemOpLogType.class, name = "新增角色，ID：{}, 编号：{}", params = {"#id",

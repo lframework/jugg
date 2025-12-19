@@ -9,8 +9,8 @@ import com.lframework.starter.common.utils.Assert;
 import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.web.core.annotations.oplog.OpLog;
 import com.lframework.starter.web.core.components.resp.PageResult;
+import com.lframework.starter.web.core.event.DataChangeEventBuilder;
 import com.lframework.starter.web.core.impl.BaseMpServiceImpl;
-import com.lframework.starter.web.core.utils.ApplicationUtil;
 import com.lframework.starter.web.core.utils.IdUtil;
 import com.lframework.starter.web.core.utils.PageHelperUtil;
 import com.lframework.starter.web.core.utils.PageResultUtil;
@@ -172,11 +172,7 @@ public class SysUserGroupServiceImpl extends
     this.update(deleteWrapper);
 
     SysUserGroup record = this.findById(id);
-    DeleteSysUserGroupEvent event = new DeleteSysUserGroupEvent(this);
-    event.setId(record.getId());
-    event.setName(record.getName());
-
-    ApplicationUtil.publishEvent(event);
+    DataChangeEventBuilder.publishLogicDelete(this, DeleteSysUserGroupEvent.class, record);
   }
 
   @CacheEvict(value = SysUserGroup.CACHE_NAME, key = "@cacheVariables.tenantId() + #key")

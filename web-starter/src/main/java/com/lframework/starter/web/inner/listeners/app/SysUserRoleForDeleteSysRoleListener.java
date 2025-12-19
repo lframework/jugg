@@ -19,8 +19,8 @@ public class SysUserRoleForDeleteSysRoleListener implements
 
   @Override
   public void onApplicationEvent(DeleteSysRoleEvent event) {
-    String roleId = event.getId();
-    String roleName = event.getName();
+    String roleId = event.getEntity().getId();
+    String roleName = event.getEntity().getName();
     // 判断是否有用户关联了该角色
     List<SysUserRole> result = sysUserRoleService.getByRoleId(roleId);
     if (CollectionUtil.isNotEmpty(result)) {

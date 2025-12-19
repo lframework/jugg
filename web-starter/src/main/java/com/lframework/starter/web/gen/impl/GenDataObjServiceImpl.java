@@ -9,6 +9,7 @@ import com.lframework.starter.common.utils.Assert;
 import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.common.utils.ThreadUtil;
+import com.lframework.starter.web.core.event.DataChangeEventBuilder;
 import com.lframework.starter.web.gen.components.data.obj.DataObjectQueryObj;
 import com.lframework.starter.web.gen.entity.GenDataObj;
 import com.lframework.starter.web.gen.entity.GenDataObjDetail;
@@ -230,16 +231,8 @@ public class GenDataObjServiceImpl extends
         .filter(t -> !newQueryDetailIds.contains(t)).collect(
             Collectors.toList());
 
-    if (!CollectionUtil.isEmpty(deleteQueryDetailIds)) {
-      for (String deleteDetailId : deleteQueryDetailIds) {
-        DataObjQueryDetailDeleteEvent event = new DataObjQueryDetailDeleteEvent(this);
-        event.setId(deleteDetailId);
-        event.setName(
-            queryDetails.stream().filter(t -> t.getId().equals(deleteDetailId)).findFirst().get()
-                .getCustomName());
-
-        ApplicationUtil.publishEvent(event);
-      }
+    for (GenDataObjQueryDetail queryDetail : queryDetails) {
+      DataChangeEventBuilder.publishDelete(this, DataObjQueryDetailDeleteEvent.class, queryDetail);
     }
   }
 
@@ -260,9 +253,7 @@ public class GenDataObjServiceImpl extends
 
     genDataObjQueryDetailService.deleteByObjId(id);
 
-    DataObjDeleteEvent event = new DataObjDeleteEvent(this);
-    event.setId(id);
-    event.setName(record.getName());
+    DataObjDeleteEvent event = DataChangeEventBuilder.delete(this, DataObjDeleteEvent.class, record);
     event.setDetailIds(details.stream().map(GenDataObjDetail::getId).collect(Collectors.toList()));
     event.setQueryDetailIds(queryDetails.stream().map(GenDataObjQueryDetail::getId).collect(
         Collectors.toList()));

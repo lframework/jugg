@@ -9,6 +9,14 @@ import com.lframework.starter.common.utils.Assert;
 import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.common.utils.ObjectUtil;
 import com.lframework.starter.common.utils.StringUtil;
+import com.lframework.starter.web.core.components.resp.PageResult;
+import com.lframework.starter.web.core.event.DataChangeEventBuilder;
+import com.lframework.starter.web.core.impl.BaseMpServiceImpl;
+import com.lframework.starter.web.core.utils.ApplicationUtil;
+import com.lframework.starter.web.core.utils.EnumUtil;
+import com.lframework.starter.web.core.utils.IdUtil;
+import com.lframework.starter.web.core.utils.PageHelperUtil;
+import com.lframework.starter.web.core.utils.PageResultUtil;
 import com.lframework.starter.web.gen.converters.GenStringConverter;
 import com.lframework.starter.web.gen.converters.GenViewTypeConverter;
 import com.lframework.starter.web.gen.dto.data.entity.DataEntityGenerateDto;
@@ -18,6 +26,7 @@ import com.lframework.starter.web.gen.dto.gen.GenGenerateInfoDto;
 import com.lframework.starter.web.gen.dto.gen.GenQueryColumnConfigDto;
 import com.lframework.starter.web.gen.dto.gen.GenQueryParamsColumnConfigDto;
 import com.lframework.starter.web.gen.dto.gen.GenUpdateColumnConfigDto;
+import com.lframework.starter.web.gen.dto.simpledb.OriSimpleTableDto;
 import com.lframework.starter.web.gen.entity.GenDataEntity;
 import com.lframework.starter.web.gen.entity.GenDataEntityDetail;
 import com.lframework.starter.web.gen.entity.GenSimpleTableColumn;
@@ -40,21 +49,13 @@ import com.lframework.starter.web.gen.service.GenQueryParamsColumnConfigService;
 import com.lframework.starter.web.gen.service.GenUpdateColumnConfigService;
 import com.lframework.starter.web.gen.service.GenerateInfoService;
 import com.lframework.starter.web.gen.service.SimpleDBService;
+import com.lframework.starter.web.gen.vo.UpdateGenerateInfoVo;
 import com.lframework.starter.web.gen.vo.data.entity.CreateDataEntityVo;
 import com.lframework.starter.web.gen.vo.data.entity.GenDataEntityDetailVo;
 import com.lframework.starter.web.gen.vo.data.entity.GenDataEntitySelectorVo;
 import com.lframework.starter.web.gen.vo.data.entity.QueryDataEntityVo;
 import com.lframework.starter.web.gen.vo.data.entity.UpdateDataEntityGenerateVo;
 import com.lframework.starter.web.gen.vo.data.entity.UpdateDataEntityVo;
-import com.lframework.starter.web.gen.vo.UpdateGenerateInfoVo;
-import com.lframework.starter.web.gen.dto.simpledb.OriSimpleTableDto;
-import com.lframework.starter.web.core.impl.BaseMpServiceImpl;
-import com.lframework.starter.web.core.components.resp.PageResult;
-import com.lframework.starter.web.core.utils.PageHelperUtil;
-import com.lframework.starter.web.core.utils.PageResultUtil;
-import com.lframework.starter.web.core.utils.ApplicationUtil;
-import com.lframework.starter.web.core.utils.EnumUtil;
-import com.lframework.starter.web.core.utils.IdUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -143,8 +144,6 @@ public class GenDataEntityServiceImpl extends
     record.setDescription(
         StringUtil.isBlank(data.getDescription()) ? StringPool.EMPTY_STR : data.getDescription());
 
-
-
     OriSimpleTableDto table = simpleDBService.getByTableName(data.getTableName());
     if (ObjectUtil.isNull(table)) {
       throw new DefaultClientException("数据表【" + data.getTableName() + "】不存在！");
@@ -184,10 +183,10 @@ public class GenDataEntityServiceImpl extends
     updateGenerateInfoVo.setModuleName(StringPool.EMPTY_STR);
     updateGenerateInfoVo.setBizName(
         GenStringConverter.convertToNormalLowerCase(GenConvertType.UNDERLINE_TO_CAMEL,
-                record.getTableName()));
+            record.getTableName()));
     // 强制转驼峰并且首字母大写
     String className = GenStringConverter.convertToCamelCase(GenConvertType.UNDERLINE_TO_CAMEL,
-            record.getTableName());
+        record.getTableName());
     updateGenerateInfoVo.setClassName(
         className.substring(0, 1).toUpperCase() + className.substring(1));
     updateGenerateInfoVo.setClassDescription(
@@ -253,11 +252,14 @@ public class GenDataEntityServiceImpl extends
       if (!genViewTypeConverter.canConvert(detail.getViewType(), detail.getDataType())) {
         List<GenViewType> viewTypes = genViewTypeConverter.convert(detail.getDataType());
         throw new DefaultClientException(
-            "字段【" + detail.getName() + "】数据类型和显示类型不匹配，当前数据类型为【" + detail.getDataType().getDesc()
-                + "】，" + (!CollectionUtil.isEmpty(viewTypes) ? "显示类型只能为【" + CollectionUtil.join(
+            "字段【" + detail.getName() + "】数据类型和显示类型不匹配，当前数据类型为【"
+                + detail.getDataType().getDesc()
+                + "】，" + (!CollectionUtil.isEmpty(viewTypes) ? "显示类型只能为【"
+                + CollectionUtil.join(
                 genViewTypeConverter.convert(detail.getDataType()).stream()
                     .map(GenViewType::getDesc)
-                    .collect(Collectors.toList()), StringPool.STR_SPLIT_CN) + "】" : "暂不支持显示此数据类型"));
+                    .collect(Collectors.toList()), StringPool.STR_SPLIT_CN) + "】"
+                : "暂不支持显示此数据类型"));
       }
       detail.setColumnOrder(orderNo);
 
@@ -284,9 +286,8 @@ public class GenDataEntityServiceImpl extends
 
     genDataEntityDetailService.deleteByEntityId(id);
 
-    DataEntityDeleteEvent event = new DataEntityDeleteEvent(this);
-    event.setId(id);
-    event.setName(record.getName());
+    DataEntityDeleteEvent event = DataChangeEventBuilder.delete(this, DataEntityDeleteEvent.class,
+        record);
     event.setColumnIds(columnIds);
 
     ApplicationUtil.publishEvent(event);
@@ -387,7 +388,8 @@ public class GenDataEntityServiceImpl extends
     // 类型发生变化的列
     List<GenSimpleTableColumn> changeTypeColumns = oriColumns.stream().filter(
             t -> finalColumns.stream().anyMatch(
-                c -> c.getDbColumnName().equals(t.getDbColumnName()) && c.getDbDataType() != t.getDataType()))
+                c -> c.getDbColumnName().equals(t.getDbColumnName())
+                    && c.getDbDataType() != t.getDataType()))
         .collect(Collectors.toList());
     if (!CollectionUtil.isEmpty(changeTypeColumns)) {
       newDbColumns.addAll(changeTypeColumns);
@@ -405,10 +407,7 @@ public class GenDataEntityServiceImpl extends
       for (GenDataEntityDetail deleteDbColumn : deleteDbColumns) {
         genDataEntityDetailService.removeById(deleteDbColumn.getId());
         // 发布删除事件
-        DataEntityDetailDeleteEvent event = new DataEntityDetailDeleteEvent(this);
-        event.setId(deleteDbColumn.getId());
-        event.setName(deleteDbColumn.getDbColumnName());
-        ApplicationUtil.publishEvent(event);
+        DataChangeEventBuilder.publishDelete(this, DataEntityDetailDeleteEvent.class, deleteDbColumn);
       }
     }
 
@@ -516,10 +515,13 @@ public class GenDataEntityServiceImpl extends
     if (!genViewTypeConverter.canConvert(detail.getViewType(), detail.getDataType())) {
       List<GenViewType> viewTypes = genViewTypeConverter.convert(detail.getDataType());
       throw new DefaultClientException(
-          "字段【" + detail.getName() + "】数据类型和显示类型不匹配，当前数据类型为【" + detail.getDataType().getDesc()
-              + "】，" + (!CollectionUtil.isEmpty(viewTypes) ? "显示类型只能为【" + CollectionUtil.join(
+          "字段【" + detail.getName() + "】数据类型和显示类型不匹配，当前数据类型为【"
+              + detail.getDataType().getDesc()
+              + "】，" + (!CollectionUtil.isEmpty(viewTypes) ? "显示类型只能为【"
+              + CollectionUtil.join(
               genViewTypeConverter.convert(detail.getDataType()).stream().map(GenViewType::getDesc)
-                  .collect(Collectors.toList()), StringPool.STR_SPLIT_CN) + "】" : "暂不支持显示此数据类型"));
+                  .collect(Collectors.toList()), StringPool.STR_SPLIT_CN) + "】"
+              : "暂不支持显示此数据类型"));
     }
 
     return detail;

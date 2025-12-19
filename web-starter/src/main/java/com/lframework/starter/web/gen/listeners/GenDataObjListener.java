@@ -29,15 +29,15 @@ public class GenDataObjListener {
     public void onApplicationEvent(DataEntityDeleteEvent event) {
 
       Wrapper<GenDataObj> queryWrapper = Wrappers.lambdaQuery(GenDataObj.class)
-          .eq(GenDataObj::getMainTableId, event.getId());
+          .eq(GenDataObj::getMainTableId, event.getEntity().getId());
       if (genDataObjService.count(queryWrapper) > 0) {
-        throw new DefaultClientException("数据实体【" + event.getName() + "】已关联数据对象，无法删除！");
+        throw new DefaultClientException("数据实体【" + event.getEntity().getName() + "】已关联数据对象，无法删除！");
       }
 
       Wrapper<GenDataObjDetail> queryDetailWrapper = Wrappers.lambdaQuery(GenDataObjDetail.class)
-          .eq(GenDataObjDetail::getSubTableId, event.getId());
+          .eq(GenDataObjDetail::getSubTableId, event.getEntity().getId());
       if (genDataObjDetailService.count(queryDetailWrapper) > 0) {
-        throw new DefaultClientException("数据实体【" + event.getName() + "】已关联数据对象，无法删除！");
+        throw new DefaultClientException("数据实体【" + event.getEntity().getName() + "】已关联数据对象，无法删除！");
       }
     }
   }
@@ -51,8 +51,8 @@ public class GenDataObjListener {
 
     @Override
     public void onApplicationEvent(DataEntityDetailDeleteEvent event) {
-      if (genDataObjDetailService.entityDetailIsRela(event.getId())) {
-        throw new DefaultClientException("字段【" + event.getName() + "】已关联数据对象，无法删除！");
+      if (genDataObjDetailService.entityDetailIsRela(event.getEntity().getId())) {
+        throw new DefaultClientException("字段【" + event.getEntity().getName() + "】已关联数据对象，无法删除！");
       }
     }
   }

@@ -1,36 +1,13 @@
 package com.lframework.starter.web.gen.event;
 
-import org.springframework.context.ApplicationEvent;
+import com.lframework.starter.web.core.event.DataChangeEvent;
+import com.lframework.starter.web.core.event.DataChangeType;
+import com.lframework.starter.web.gen.entity.GenCustomList;
 
-public class CustomListDeleteEvent extends ApplicationEvent {
+public class CustomListDeleteEvent extends DataChangeEvent<GenCustomList> {
 
-  /**
-   * 自定义列表ID
-   */
-  private String id;
-
-  /**
-   * 自定义列表名称
-   */
-  private String name;
-
-  public CustomListDeleteEvent(Object source) {
-    super(source);
-  }
-
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
+  public CustomListDeleteEvent(Object source, GenCustomList entity,
+      DataChangeType type) {
+    super(source, entity, type);
   }
 }

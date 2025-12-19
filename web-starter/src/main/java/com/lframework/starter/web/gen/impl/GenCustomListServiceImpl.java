@@ -9,6 +9,15 @@ import com.lframework.starter.common.utils.Assert;
 import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.common.utils.ThreadUtil;
+import com.lframework.starter.web.core.components.resp.PageResult;
+import com.lframework.starter.web.core.event.DataChangeEventBuilder;
+import com.lframework.starter.web.core.impl.BaseMpServiceImpl;
+import com.lframework.starter.web.core.utils.ApplicationUtil;
+import com.lframework.starter.web.core.utils.EnumUtil;
+import com.lframework.starter.web.core.utils.IdUtil;
+import com.lframework.starter.web.core.utils.JsonUtil;
+import com.lframework.starter.web.core.utils.PageHelperUtil;
+import com.lframework.starter.web.core.utils.PageResultUtil;
 import com.lframework.starter.web.gen.components.custom.list.CustomListConfig;
 import com.lframework.starter.web.gen.entity.GenCustomList;
 import com.lframework.starter.web.gen.entity.GenCustomListDetail;
@@ -37,14 +46,6 @@ import com.lframework.starter.web.gen.vo.custom.list.GenCustomListSelectorVo;
 import com.lframework.starter.web.gen.vo.custom.list.GenCustomListToolbarVo;
 import com.lframework.starter.web.gen.vo.custom.list.QueryGenCustomListVo;
 import com.lframework.starter.web.gen.vo.custom.list.UpdateGenCustomListVo;
-import com.lframework.starter.web.core.impl.BaseMpServiceImpl;
-import com.lframework.starter.web.core.components.resp.PageResult;
-import com.lframework.starter.web.core.utils.PageHelperUtil;
-import com.lframework.starter.web.core.utils.PageResultUtil;
-import com.lframework.starter.web.core.utils.ApplicationUtil;
-import com.lframework.starter.web.core.utils.EnumUtil;
-import com.lframework.starter.web.core.utils.IdUtil;
-import com.lframework.starter.web.core.utils.JsonUtil;
 import java.io.Serializable;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -458,10 +459,7 @@ public class GenCustomListServiceImpl extends
     genCustomListQueryParamsService.deleteByCustomListId(id);
 
     if (data != null) {
-      CustomListDeleteEvent event = new CustomListDeleteEvent(this);
-      event.setId(id);
-      event.setName(data.getName());
-      ApplicationUtil.publishEvent(event);
+      DataChangeEventBuilder.publishDelete(this, CustomListDeleteEvent.class, data);
     }
   }
 
@@ -493,7 +491,8 @@ public class GenCustomListServiceImpl extends
     return getBaseMapper().getRelaGenDataEntityIds(entityId);
   }
 
-  @CacheEvict(value = {GenCustomList.CACHE_NAME, CustomListConfig.CACHE_NAME}, key = "@cacheVariables.tenantId() + #key")
+  @CacheEvict(value = {GenCustomList.CACHE_NAME,
+      CustomListConfig.CACHE_NAME}, key = "@cacheVariables.tenantId() + #key")
   @Override
   public void cleanCacheByKey(Serializable key) {
     ThreadUtil.execAsync(() -> {

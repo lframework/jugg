@@ -1,48 +1,19 @@
 package com.lframework.starter.web.gen.event;
 
+import com.lframework.starter.web.core.event.DataChangeEvent;
+import com.lframework.starter.web.core.event.DataChangeType;
+import com.lframework.starter.web.gen.entity.GenDataObj;
 import java.util.List;
-import org.springframework.context.ApplicationEvent;
 
-public class DataObjDeleteEvent extends ApplicationEvent {
-
-  /**
-   * 数据对象ID
-   */
-  private String id;
-
-  /**
-   * 数据对象名称
-   */
-  private String name;
+public class DataObjDeleteEvent extends DataChangeEvent<GenDataObj> {
 
   private List<String> detailIds;
 
   private List<String> queryDetailIds;
 
-  /**
-   * Create a new {@code ApplicationEvent}.
-   *
-   * @param source the object on which the event initially occurred or with which the event is
-   *               associated (never {@code null})
-   */
-  public DataObjDeleteEvent(Object source) {
-    super(source);
-  }
-
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
+  public DataObjDeleteEvent(Object source, GenDataObj entity,
+      DataChangeType type) {
+    super(source, entity, type);
   }
 
   public List<String> getDetailIds() {

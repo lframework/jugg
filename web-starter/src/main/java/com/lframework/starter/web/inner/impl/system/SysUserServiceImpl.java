@@ -14,8 +14,8 @@ import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.web.core.annotations.oplog.OpLog;
 import com.lframework.starter.web.core.components.resp.PageResult;
 import com.lframework.starter.web.core.components.security.PasswordEncoderWrapper;
+import com.lframework.starter.web.core.event.DataChangeEventBuilder;
 import com.lframework.starter.web.core.impl.BaseMpServiceImpl;
-import com.lframework.starter.web.core.utils.ApplicationUtil;
 import com.lframework.starter.web.core.utils.EnumUtil;
 import com.lframework.starter.web.core.utils.IdUtil;
 import com.lframework.starter.web.core.utils.OpLogUtil;
@@ -108,10 +108,7 @@ public class SysUserServiceImpl extends BaseMpServiceImpl<SysUserMapper, SysUser
 
     SysUser user = this.findById(id);
 
-    DeleteSysUserEvent event = new DeleteSysUserEvent(user);
-    event.setId(user.getId());
-    event.setName(user.getName());
-    ApplicationUtil.publishEvent(event);
+    DataChangeEventBuilder.publishLogicDelete(this, DeleteSysUserEvent.class, user);
   }
 
   @OpLog(type = SystemOpLogType.class, name = "新增用户，ID：{}, 编号：{}", params = {"#id",

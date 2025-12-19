@@ -1,24 +1,17 @@
 package com.lframework.starter.web.inner.events.system;
 
+import com.lframework.starter.web.core.event.DataChangeEvent;
+import com.lframework.starter.web.core.event.DataChangeType;
+import com.lframework.starter.web.inner.entity.SysUser;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.context.ApplicationEvent;
 
 @Getter
 @Setter
-public class DeleteSysUserEvent extends ApplicationEvent {
+public class DeleteSysUserEvent extends DataChangeEvent<SysUser> {
 
-  /**
-   * 用户ID
-   */
-  private String id;
-
-  /**
-   * 用户姓名
-   */
-  private String name;
-
-  public DeleteSysUserEvent(Object source) {
-    super(source);
+  public DeleteSysUserEvent(Object source, SysUser entity,
+      DataChangeType type) {
+    super(source, entity, type);
   }
 }

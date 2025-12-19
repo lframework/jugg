@@ -34,7 +34,7 @@ public class CreateColumnConfigListener {
     @Override
     public void onApplicationEvent(DataEntityDetailDeleteEvent event) {
 
-      genCreateColumnConfigService.deleteById(event.getId());
+      genCreateColumnConfigService.deleteById(event.getEntity().getId());
     }
   }
 }

@@ -16,8 +16,8 @@ public class SysUserDeptForDeleteSysDeptListener implements
 
   @Override
   public void onApplicationEvent(DeleteSysDeptEvent event) {
-    String deptId = event.getId();
-    String deptName = event.getName();
+    String deptId = event.getEntity().getId();
+    String deptName = event.getEntity().getName();
     // 判断是否有用户关联了该部门
     Boolean result = sysUserDeptService.hasByDeptId(deptId);
     if (result) {

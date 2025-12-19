@@ -34,7 +34,7 @@ public class QueryColumnConfigListener {
     @Override
     public void onApplicationEvent(DataEntityDetailDeleteEvent event) {
 
-      genQueryColumnConfigService.deleteById(event.getId());
+      genQueryColumnConfigService.deleteById(event.getEntity().getId());
     }
   }
 }

@@ -1,24 +1,17 @@
 package com.lframework.starter.web.inner.events.system;
 
+import com.lframework.starter.web.core.event.DataChangeEvent;
+import com.lframework.starter.web.core.event.DataChangeType;
+import com.lframework.starter.web.inner.entity.SysRole;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.context.ApplicationEvent;
 
 @Getter
 @Setter
-public class DeleteSysRoleEvent extends ApplicationEvent {
+public class DeleteSysRoleEvent extends DataChangeEvent<SysRole> {
 
-  /**
-   * 角色ID
-   */
-  private String id;
-
-  /**
-   * 角色名称
-   */
-  private String name;
-
-  public DeleteSysRoleEvent(Object source) {
-    super(source);
+  public DeleteSysRoleEvent(Object source, SysRole entity,
+      DataChangeType type) {
+    super(source, entity, type);
   }
 }
