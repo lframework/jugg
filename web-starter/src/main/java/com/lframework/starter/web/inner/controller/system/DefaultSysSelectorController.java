@@ -2,6 +2,7 @@ package com.lframework.starter.web.inner.controller.system;
 
 import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.common.utils.StringUtil;
+import com.lframework.starter.web.core.annotations.security.HasPermission;
 import com.lframework.starter.web.core.components.resp.InvokeResult;
 import com.lframework.starter.web.core.components.resp.InvokeResultBuilder;
 import com.lframework.starter.web.core.components.resp.PageResult;
@@ -119,8 +120,11 @@ public class DefaultSysSelectorController extends DefaultBaseController {
    * 系统菜单
    */
   @ApiOperation("系统菜单")
+  @HasPermission(requirePlatform = true)
   @GetMapping("/menu")
   public InvokeResult<List<SysMenuSelectorBo>> menu(@Valid SysMenuSelectorVo vo) {
+
+    TenantContextHolder.setTenantId(vo.getTenantId());
 
     // 先查询当前租户使用的module
     List<Integer> moduleIds = null;
@@ -243,6 +247,7 @@ public class DefaultSysSelectorController extends DefaultBaseController {
   }
 
   @ApiOperation("租户")
+  @HasPermission(requirePlatform = true)
   @GetMapping("/tenant")
   public InvokeResult<PageResult<TenantSelectorBo>> tenant(@Valid TenantSelectorVo vo) {
 
@@ -260,6 +265,7 @@ public class DefaultSysSelectorController extends DefaultBaseController {
    * 加载租户
    */
   @ApiOperation("加载租户")
+  @HasPermission(requirePlatform = true)
   @PostMapping("/tenant/load")
   public InvokeResult<List<TenantSelectorBo>> loadTenant(
       @RequestBody(required = false) List<Integer> ids) {

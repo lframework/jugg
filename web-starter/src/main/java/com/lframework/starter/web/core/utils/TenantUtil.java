@@ -1,7 +1,5 @@
 package com.lframework.starter.web.core.utils;
 
-import com.lframework.starter.web.config.properties.TenantProperties;
-
 /**
  * 多租户工具类
  * 提供多租户相关的工具方法，支持租户功能开关控制
@@ -18,7 +16,6 @@ public class TenantUtil {
    * @return true-已启用多租户，false-未启用多租户
    */
   public static boolean enableTenant() {
-    TenantProperties properties = ApplicationUtil.getBean(TenantProperties.class);
-    return properties.getEnabled();
+    return true;
   }
 }

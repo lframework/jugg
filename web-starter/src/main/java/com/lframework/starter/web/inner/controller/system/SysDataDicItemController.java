@@ -2,30 +2,33 @@ package com.lframework.starter.web.inner.controller.system;
 
 import com.lframework.starter.common.exceptions.impl.DefaultClientException;
 import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.web.core.annotations.security.HasPermission;
+import com.lframework.starter.web.core.components.resp.InvokeResult;
+import com.lframework.starter.web.core.components.resp.InvokeResultBuilder;
+import com.lframework.starter.web.core.components.resp.PageResult;
+import com.lframework.starter.web.core.components.tenant.TenantContextHolder;
+import com.lframework.starter.web.core.controller.DefaultBaseController;
+import com.lframework.starter.web.core.utils.PageResultUtil;
+import com.lframework.starter.web.inner.bo.system.dic.item.GetSysDataDicItemBo;
+import com.lframework.starter.web.inner.bo.system.dic.item.QuerySysDataDicItemBo;
+import com.lframework.starter.web.inner.bo.system.dic.item.SysDataDicItemBo;
 import com.lframework.starter.web.inner.entity.SysDataDic;
 import com.lframework.starter.web.inner.entity.SysDataDicItem;
-import com.lframework.starter.web.core.components.resp.PageResult;
 import com.lframework.starter.web.inner.service.system.SysDataDicItemService;
 import com.lframework.starter.web.inner.service.system.SysDataDicService;
 import com.lframework.starter.web.inner.vo.system.dic.item.CreateSysDataDicItemVo;
 import com.lframework.starter.web.inner.vo.system.dic.item.QuerySysDataDicItemVo;
 import com.lframework.starter.web.inner.vo.system.dic.item.UpdateSysDataDicItemVo;
-import com.lframework.starter.web.core.utils.PageResultUtil;
-import com.lframework.starter.web.inner.bo.system.dic.item.GetSysDataDicItemBo;
-import com.lframework.starter.web.inner.bo.system.dic.item.QuerySysDataDicItemBo;
-import com.lframework.starter.web.inner.bo.system.dic.item.SysDataDicItemBo;
-import com.lframework.starter.web.core.controller.DefaultBaseController;
-import com.lframework.starter.web.core.components.resp.InvokeResult;
-import com.lframework.starter.web.core.components.resp.InvokeResultBuilder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.lframework.starter.web.core.annotations.security.HasPermission;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,9 +58,12 @@ public class SysDataDicItemController extends DefaultBaseController {
    * 查询列表
    */
   @ApiOperation("查询列表")
-  @HasPermission({"system:dic-item:*"})
+  @HasPermission(value = {"system:dic-item:*"}, requirePlatform = true)
   @GetMapping("/query")
   public InvokeResult<PageResult<QuerySysDataDicItemBo>> query(@Valid QuerySysDataDicItemVo vo) {
+
+    TenantContextHolder.setTenantId(vo.getTenantId());
+
     PageResult<SysDataDicItem> pageResult = sysDataDicItemService.query(getPageIndex(vo),
         getPageSize(vo), vo);
     List<SysDataDicItem> datas = pageResult.getDatas();
@@ -73,10 +79,16 @@ public class SysDataDicItemController extends DefaultBaseController {
    * 根据ID查询
    */
   @ApiOperation("根据ID查询")
-  @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
-  @HasPermission({"system:dic-item:*"})
+  @ApiImplicitParams({
+      @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true),
+      @ApiImplicitParam(value = "租户ID", name = "tenantId", paramType = "query", required = true)
+  })
+  @HasPermission(value = {"system:dic-item:*"}, requirePlatform = true)
   @GetMapping
-  public InvokeResult<GetSysDataDicItemBo> get(@NotBlank(message = "ID不能为空！") String id) {
+  public InvokeResult<GetSysDataDicItemBo> get(@NotBlank(message = "ID不能为空！") String id,
+      @NotNull(message = "租户ID不能为空！") Integer tenantId) {
+
+    TenantContextHolder.setTenantId(tenantId);
 
     SysDataDicItem data = sysDataDicItemService.findById(id);
     if (data == null) {
@@ -108,9 +120,11 @@ public class SysDataDicItemController extends DefaultBaseController {
    * 新增数据字典值
    */
   @ApiOperation("新增数据字典值")
-  @HasPermission({"system:dic-item:add"})
+  @HasPermission(value = {"system:dic-item:add"}, requirePlatform = true)
   @PostMapping
   public InvokeResult<Void> create(@Valid CreateSysDataDicItemVo vo) {
+
+    TenantContextHolder.setTenantId(vo.getTenantId());
 
     sysDataDicItemService.create(vo);
 
@@ -124,9 +138,11 @@ public class SysDataDicItemController extends DefaultBaseController {
    * 修改数据字典值
    */
   @ApiOperation("修改数据字典值")
-  @HasPermission({"system:dic-item:modify"})
+  @HasPermission(value = {"system:dic-item:modify"}, requirePlatform = true)
   @PutMapping
   public InvokeResult<Void> update(@Valid UpdateSysDataDicItemVo vo) {
+
+    TenantContextHolder.setTenantId(vo.getTenantId());
 
     SysDataDicItem item = sysDataDicItemService.findById(vo.getId());
 
@@ -144,9 +160,16 @@ public class SysDataDicItemController extends DefaultBaseController {
    * 删除数据字典值
    */
   @ApiOperation("删除数据字典值")
-  @HasPermission({"system:dic-item:delete"})
+  @ApiImplicitParams({
+      @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true),
+      @ApiImplicitParam(value = "租户ID", name = "tenantId", paramType = "query", required = true)
+  })
+  @HasPermission(value = {"system:dic-item:delete"}, requirePlatform = true)
   @DeleteMapping
-  public InvokeResult<Void> delete(@NotBlank(message = "ID不能为空！") String id) {
+  public InvokeResult<Void> delete(@NotBlank(message = "ID不能为空！") String id,
+      @NotNull(message = "租户ID不能为空！") Integer tenantId) {
+
+    TenantContextHolder.setTenantId(tenantId);
 
     SysDataDicItem item = sysDataDicItemService.findById(id);
 

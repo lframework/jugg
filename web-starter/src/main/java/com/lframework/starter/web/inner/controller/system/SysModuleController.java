@@ -49,7 +49,7 @@ public class SysModuleController extends DefaultBaseController {
    * 查询列表
    */
   @ApiOperation("查询列表")
-  @HasPermission(value = {"system:tenant:module"})
+  @HasPermission(value = {"system:tenant:module"}, requirePlatform = true)
   @GetMapping("/query")
   public InvokeResult<List<QuerySysModuleBo>> query(@NotNull(message = "租户ID不能为空！") Integer tenantId) {
 
@@ -84,7 +84,7 @@ public class SysModuleController extends DefaultBaseController {
    * 模块授权
    */
   @ApiOperation("模块授权")
-  @HasPermission(value = {"system:tenant:module"})
+  @HasPermission(value = {"system:tenant:module"}, requirePlatform = true)
   @PostMapping("/setting")
   public InvokeResult<Void> setting(
       @RequestBody(required = false) @Valid SysModuleTenantVo vo) {

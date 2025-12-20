@@ -58,6 +58,11 @@ public class Tenant extends BaseEntity implements BaseDto {
   private String serverName;
 
   /**
+   * 是否为平台管理租户
+   */
+  private Boolean isPlatform;
+
+  /**
    * 状态
    */
   private Boolean available;

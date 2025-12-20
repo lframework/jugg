@@ -14,6 +14,13 @@ public class UpdateSysDataDicVo implements BaseVo, Serializable {
   private static final long serialVersionUID = 1L;
 
   /**
+   * 租户ID
+   */
+  @ApiModelProperty(value = "租户ID", required = true)
+  @NotNull(message = "租户ID不能为空！")
+  private Integer tenantId;
+
+  /**
    * ID
    */
   @ApiModelProperty(value = "ID", required = true)

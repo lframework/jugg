@@ -4,6 +4,7 @@ import com.lframework.starter.web.core.vo.BaseVo;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
@@ -44,4 +45,11 @@ public class CreateTenantVo implements BaseVo, Serializable {
   @ApiModelProperty(value = "Jdbc密码", required = true)
   @NotBlank(message = "请输入Jdbc密码！")
   private String jdbcPassword;
+
+  /**
+   * 是否为平台管理租户
+   */
+  @ApiModelProperty(value = "是否为平台管理租户", required = true)
+  @NotNull(message = "请选择是否为平台管理租户！")
+  private Boolean isPlatform;
 }

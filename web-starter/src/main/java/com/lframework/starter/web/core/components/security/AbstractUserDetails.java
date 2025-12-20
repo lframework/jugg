@@ -79,6 +79,11 @@ public abstract class AbstractUserDetails implements UserDetails, Serializable {
    */
   private String loginId;
 
+  /**
+   * 是否为平台管理租户
+   */
+  private Boolean isPlatform;
+
   @Override
   public boolean isAccountNonExpired() {
 
