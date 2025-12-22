@@ -235,9 +235,9 @@ public class AuthController extends DefaultBaseController {
 
     String username = vo.getUsername();
     String password = vo.getPassword();
+    Tenant tenant = null;
     String tenantId = null;
     if (TenantUtil.enableTenant()) {
-      Tenant tenant = null;
       if (vo.getTenantId() != null) {
         tenant = tenantService.getById(vo.getTenantId());
       } else {
@@ -278,6 +278,12 @@ public class AuthController extends DefaultBaseController {
     this.checkUserLogin(tenantId == null ? null : Integer.valueOf(tenantId), username, password);
 
     AbstractUserDetails user = userDetailsService.loadUserByUsername(username);
+
+    if (TenantUtil.enableTenant()) {
+      user.setIsPlatform(tenant.getIsPlatform());
+    } else {
+      user.setIsPlatform(true);
+    }
 
     LoginDto dto = this.doLogin(user);
 
@@ -386,14 +392,6 @@ public class AuthController extends DefaultBaseController {
                 meta.setFrameSrc(menuBo.getPath().substring(menuBo.getPath().indexOf("?src=") + 5));
                 menuBo.setPath(menuBo.getPath().substring(0, menuBo.getPath().indexOf("?src=")));
               }
-            } else if (SysMenuComponentType.CUSTOM_LIST.getCode().equals(t.getComponentType())) {
-              // 自定义列表
-              menuBo.setComponent("CUSTOMLIST");
-              meta.setCustomListId(t.getComponent());
-            } else if (SysMenuComponentType.CUSTOM_PAGE.getCode().equals(t.getComponentType())) {
-              // 自定义页面
-              menuBo.setComponent("CUSTOMPAGE");
-              meta.setCustomPageId(t.getComponent());
             }
           }
 
