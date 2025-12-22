@@ -11,9 +11,7 @@
     <select id="selector" resultType="com.lframework.starter.web.inner.entity.SysDept">
         <include refid="SysDeptDto_sql"/>
         <where>
-            <if test="vo.available != null">
-                AND available = #{vo.available}
-            </if>
+            AND available = true
         </where>
         ORDER BY code
     </select>

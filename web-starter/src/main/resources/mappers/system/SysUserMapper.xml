@@ -18,19 +18,20 @@
                 <if test="vo.deptId != null and vo.deptId != ''">
                     AND u.id IN (SELECT user_id FROM sys_user_dept WHERE dept_id = #{vo.deptId})
                 </if>
+                <if test="vo.roleId != null and vo.roleId != ''">
+                    AND u.id IN (SELECT user_id FROM sys_user_role WHERE role_id = #{vo.roleId})
+                </if>
                 <if test="vo.username != null and vo.username != ''">
                     AND u.username LIKE CONCAT('%', #{vo.username}, '%')
                 </if>
                 <if test="vo.name != null and vo.name != ''">
                     AND u.name LIKE CONCAT('%', #{vo.name}, '%')
                 </if>
-                <if test="vo.available != null">
-                    AND u.available = #{vo.available}
-                </if>
                 <if test="vo.lockStatus != null">
                     AND u.lock_status = #{vo.lockStatus}
                 </if>
             </if>
+            AND u.available = TRUE
         </where>
         ORDER BY u.code
     </select>
@@ -52,10 +53,8 @@
                 <if test="vo.name != null and vo.name != ''">
                     AND u.name LIKE CONCAT('%', #{vo.name}, '%')
                 </if>
-                <if test="vo.available != null">
-                    AND u.available = #{vo.available}
-                </if>
             </if>
+            AND u.available = TRUE
         </where>
         ORDER BY u.code
     </select>

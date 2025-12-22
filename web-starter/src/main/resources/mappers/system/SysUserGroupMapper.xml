@@ -24,9 +24,7 @@
             AND tb.create_time <= #{vo.createTimeEnd}
             ]]>
             </if>
-            <if test="vo.available != null">
-            AND tb.available = #{vo.available}
-            </if>
+            AND tb.available = TRUE
         </where>
         ORDER BY tb.create_time DESC
     </select>
@@ -40,9 +38,7 @@
           <if test="vo.name != null and vo.name != ''">
               AND tb.name LIKE CONCAT('%', #{vo.name}, '%')
           </if>
-          <if test="vo.available != null">
-              AND tb.available = #{vo.available}
-          </if>
+          AND tb.available = TRUE
       </where>
       ORDER BY tb.create_time DESC
   </select>

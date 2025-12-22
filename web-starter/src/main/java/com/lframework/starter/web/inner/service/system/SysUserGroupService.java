@@ -60,4 +60,11 @@ public interface SysUserGroupService extends BaseMpService<SysUserGroup> {
    * @param vo
    */
   void update(UpdateSysUserGroupVo vo);
+
+  /**
+   * 根据ID删除
+   *
+   * @param id
+   */
+  void deleteById(String id);
 }

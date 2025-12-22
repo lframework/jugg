@@ -49,7 +49,7 @@ public class SysOpenDomainController extends DefaultBaseController {
    * 查询列表
    */
   @ApiOperation("查询列表")
-  @HasPermission({"system:open-domain:config"})
+  @HasPermission(value = {"system:open-domain:config"}, requirePlatform = true)
   @GetMapping("/query")
   public InvokeResult<PageResult<QuerySysOpenDomainBo>> query(@Valid QuerySysOpenDomainVo vo) {
 
@@ -70,7 +70,7 @@ public class SysOpenDomainController extends DefaultBaseController {
    */
   @ApiOperation("详情")
   @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
-  @HasPermission({"system:open-domain:config"})
+  @HasPermission(value = {"system:open-domain:config"}, requirePlatform = true)
   @GetMapping
   public InvokeResult<GetSysOpenDomainBo> get(@NotNull(message = "ID不能为空！") Integer id) {
 
@@ -88,7 +88,7 @@ public class SysOpenDomainController extends DefaultBaseController {
    * 新增
    */
   @ApiOperation("新增")
-  @HasPermission({"system:open-domain:config"})
+  @HasPermission(value = {"system:open-domain:config"}, requirePlatform = true)
   @PostMapping
   public InvokeResult<Void> create(@Valid CreateSysOpenDomainVo vo) {
 
@@ -101,7 +101,7 @@ public class SysOpenDomainController extends DefaultBaseController {
    * 修改
    */
   @ApiOperation("修改")
-  @HasPermission({"system:open-domain:config"})
+  @HasPermission(value = {"system:open-domain:config"}, requirePlatform = true)
   @PutMapping
   public InvokeResult<Void> update(@Valid UpdateSysOpenDomainVo vo) {
 
@@ -116,7 +116,7 @@ public class SysOpenDomainController extends DefaultBaseController {
    * 修改Api密钥
    */
   @ApiOperation("修改Api密钥")
-  @HasPermission({"system:open-domain:config"})
+  @HasPermission(value = {"system:open-domain:config"}, requirePlatform = true)
   @PutMapping("/secret")
   public InvokeResult<Void> updateSecret(@Valid UpdateSysOpenDomainSecretVo vo) {
 

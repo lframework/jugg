@@ -2,22 +2,22 @@ package com.lframework.starter.web.inner.controller.system;
 
 import com.lframework.starter.common.exceptions.impl.DefaultClientException;
 import com.lframework.starter.common.utils.StringUtil;
+import com.lframework.starter.web.core.annotations.security.HasPermission;
+import com.lframework.starter.web.core.components.resp.InvokeResult;
+import com.lframework.starter.web.core.components.resp.InvokeResultBuilder;
+import com.lframework.starter.web.core.components.resp.PageResult;
+import com.lframework.starter.web.core.controller.DefaultBaseController;
+import com.lframework.starter.web.core.event.ReloadTenantEvent;
+import com.lframework.starter.web.core.utils.ApplicationUtil;
 import com.lframework.starter.web.core.utils.EncryptUtil;
+import com.lframework.starter.web.core.utils.PageResultUtil;
 import com.lframework.starter.web.inner.bo.system.tenant.GetTenantBo;
 import com.lframework.starter.web.inner.bo.system.tenant.QueryTenantBo;
 import com.lframework.starter.web.inner.entity.Tenant;
-import com.lframework.starter.web.core.components.resp.PageResult;
 import com.lframework.starter.web.inner.service.TenantService;
 import com.lframework.starter.web.inner.vo.system.tenant.CreateTenantVo;
 import com.lframework.starter.web.inner.vo.system.tenant.QueryTenantVo;
 import com.lframework.starter.web.inner.vo.system.tenant.UpdateTenantVo;
-import com.lframework.starter.web.core.utils.PageResultUtil;
-import com.lframework.starter.web.core.annotations.security.HasPermission;
-import com.lframework.starter.web.core.event.ReloadTenantEvent;
-import com.lframework.starter.web.core.utils.ApplicationUtil;
-import com.lframework.starter.web.core.controller.DefaultBaseController;
-import com.lframework.starter.web.core.components.resp.InvokeResult;
-import com.lframework.starter.web.core.components.resp.InvokeResultBuilder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -54,7 +54,7 @@ public class TenantController extends DefaultBaseController {
    */
   @ApiOperation("查询列表")
   @HasPermission(value = {"system:tenant:query", "system:tenant:add",
-      "system:tenant:modify"})
+      "system:tenant:modify"}, requirePlatform = true)
   @GetMapping("/query")
   public InvokeResult<PageResult<QueryTenantBo>> query(@Valid QueryTenantVo vo) {
 
@@ -74,7 +74,7 @@ public class TenantController extends DefaultBaseController {
   @ApiOperation("查询详情")
   @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
   @HasPermission(value = {"system:tenant:query", "system:tenant:add",
-      "system:tenant:modify"})
+      "system:tenant:modify"}, requirePlatform = true)
   @GetMapping
   public InvokeResult<GetTenantBo> get(@NotNull(message = "ID不能为空！") Integer id) {
 
@@ -92,7 +92,7 @@ public class TenantController extends DefaultBaseController {
    * 新增租户
    */
   @ApiOperation("新增租户")
-  @HasPermission(value = {"system:tenant:add"})
+  @HasPermission(value = {"system:tenant:add"}, requirePlatform = true)
   @PostMapping
   public InvokeResult<Void> create(@Valid CreateTenantVo vo) {
 
@@ -115,7 +115,7 @@ public class TenantController extends DefaultBaseController {
    * 修改租户
    */
   @ApiOperation("修改租户")
-  @HasPermission(value = {"system:tenant:modify"})
+  @HasPermission(value = {"system:tenant:modify"}, requirePlatform = true)
   @PutMapping
   public InvokeResult<Void> update(@Valid UpdateTenantVo vo) {
 

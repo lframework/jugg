@@ -27,6 +27,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -93,31 +94,15 @@ public class SysUserController extends DefaultBaseController {
   }
 
   /**
-   * 停用用户
+   * 根据ID删除
    */
-  @ApiOperation("停用用户")
-  @HasPermission({"system:user:modify"})
-  @PatchMapping("/unable")
-  public InvokeResult<Void> unable(
+  @ApiOperation("根据ID删除")
+  @HasPermission({"system:user:delete"})
+  @DeleteMapping
+  public InvokeResult<Void> deleteById(
       @ApiParam(value = "用户ID", required = true) @NotEmpty(message = "用户ID不能为空！") String id) {
 
-    sysUserService.unable(id);
-
-    sysUserService.cleanCacheByKey(id);
-
-    return InvokeResultBuilder.success();
-  }
-
-  /**
-   * 启用用户
-   */
-  @ApiOperation("启用用户")
-  @HasPermission({"system:user:modify"})
-  @PatchMapping("/enable")
-  public InvokeResult<Void> enable(
-      @ApiParam(value = "用户ID", required = true) @NotEmpty(message = "用户ID不能为空！") String id) {
-
-    sysUserService.enable(id);
+    sysUserService.deleteById(id);
 
     sysUserService.cleanCacheByKey(id);
 

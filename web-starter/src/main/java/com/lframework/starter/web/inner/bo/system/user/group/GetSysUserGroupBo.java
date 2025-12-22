@@ -48,12 +48,6 @@ public class GetSysUserGroupBo extends BaseBo<SysUserGroup> {
   @ApiModelProperty("备注")
   private String description;
 
-  /**
-   * 状态
-   */
-  @ApiModelProperty("状态")
-  private Boolean available;
-
   public GetSysUserGroupBo() {
 
   }

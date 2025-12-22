@@ -65,12 +65,6 @@ public class QuerySysNotifyGroupBo extends BaseBo<SysNotifyGroup> {
   @JsonFormat(pattern = StringPool.DATE_TIME_PATTERN)
   private LocalDateTime createTime;
 
-  /**
-   * 状态
-   */
-  @ApiModelProperty("状态")
-  private Boolean available;
-
   public QuerySysNotifyGroupBo() {
 
   }

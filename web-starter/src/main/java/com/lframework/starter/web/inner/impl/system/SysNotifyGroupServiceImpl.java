@@ -8,16 +8,16 @@ import com.lframework.starter.common.exceptions.impl.DefaultClientException;
 import com.lframework.starter.common.utils.Assert;
 import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.common.utils.StringUtil;
-import com.lframework.starter.web.core.impl.BaseMpServiceImpl;
+import com.lframework.starter.web.core.annotations.oplog.OpLog;
 import com.lframework.starter.web.core.components.resp.PageResult;
+import com.lframework.starter.web.core.event.DataChangeEventBuilder;
+import com.lframework.starter.web.core.impl.BaseMpServiceImpl;
 import com.lframework.starter.web.core.utils.ApplicationUtil;
 import com.lframework.starter.web.core.utils.EnumUtil;
 import com.lframework.starter.web.core.utils.IdUtil;
 import com.lframework.starter.web.core.utils.PageHelperUtil;
 import com.lframework.starter.web.core.utils.PageResultUtil;
-import com.lframework.starter.web.core.annotations.oplog.OpLog;
 import com.lframework.starter.web.inner.components.oplog.SystemOpLogType;
-import com.lframework.starter.web.inner.service.RecursionMappingService;
 import com.lframework.starter.web.inner.entity.SysNotifyGroup;
 import com.lframework.starter.web.inner.entity.SysNotifyGroupReceiver;
 import com.lframework.starter.web.inner.entity.SysUserDept;
@@ -25,7 +25,9 @@ import com.lframework.starter.web.inner.entity.SysUserGroupDetail;
 import com.lframework.starter.web.inner.entity.SysUserRole;
 import com.lframework.starter.web.inner.enums.system.SysDeptNodeType;
 import com.lframework.starter.web.inner.enums.system.SysNotifyReceiverType;
+import com.lframework.starter.web.inner.events.system.DeleteSysNotifyGroupEvent;
 import com.lframework.starter.web.inner.mappers.system.SysNotifyGroupMapper;
+import com.lframework.starter.web.inner.service.RecursionMappingService;
 import com.lframework.starter.web.inner.service.system.SysNotifyGroupReceiverService;
 import com.lframework.starter.web.inner.service.system.SysNotifyGroupService;
 import com.lframework.starter.web.inner.service.system.SysUserDeptService;
@@ -107,7 +109,7 @@ public class SysNotifyGroupServiceImpl extends
   public String create(CreateSysNotifyGroupVo vo) {
 
     Wrapper<SysNotifyGroup> checkWrapper = Wrappers.lambdaQuery(SysNotifyGroup.class)
-        .eq(SysNotifyGroup::getName, vo.getName());
+        .eq(SysNotifyGroup::getName, vo.getName()).eq(SysNotifyGroup::getAvailable, true);
     if (this.count(checkWrapper) > 0) {
       throw new DefaultClientException("名称不允许重复！");
     }
@@ -149,6 +151,7 @@ public class SysNotifyGroupServiceImpl extends
 
     Wrapper<SysNotifyGroup> checkWrapper = Wrappers.lambdaQuery(SysNotifyGroup.class)
         .eq(SysNotifyGroup::getName, vo.getName())
+        .eq(SysNotifyGroup::getAvailable, true)
         .ne(SysNotifyGroup::getId, record.getId());
     if (this.count(checkWrapper) > 0) {
       throw new DefaultClientException("名称不允许重复！");
@@ -162,8 +165,7 @@ public class SysNotifyGroupServiceImpl extends
         .set(SysNotifyGroup::getReceiverType,
             EnumUtil.getByCode(SysNotifyReceiverType.class, vo.getReceiverType()))
         .set(SysNotifyGroup::getMessageType,
-            StringUtil.join(StringPool.STR_SPLIT, vo.getMessageType()))
-        .set(SysNotifyGroup::getAvailable, vo.getAvailable());
+            StringUtil.join(StringPool.STR_SPLIT, vo.getMessageType()));
     this.update(updateWrapper);
 
     Wrapper<SysNotifyGroupReceiver> deleteReceiverWrapper = Wrappers.lambdaQuery(
@@ -251,7 +253,8 @@ public class SysNotifyGroupServiceImpl extends
               .in(SysUserGroupDetail::getGroupId, userGroupIds);
           List<SysUserGroupDetail> sysUserRoleList = sysUserGroupDetailService.list(queryWrapper);
           userIds.addAll(
-              sysUserRoleList.stream().map(SysUserGroupDetail::getUserId).collect(Collectors.toList()));
+              sysUserRoleList.stream().map(SysUserGroupDetail::getUserId)
+                  .collect(Collectors.toList()));
         }
 
         break;
@@ -261,6 +264,18 @@ public class SysNotifyGroupServiceImpl extends
     }
 
     return userIds;
+  }
+
+  @Transactional(rollbackFor = Exception.class)
+  @OpLog(type = SystemOpLogType.class, name = "删除消息通知组，ID：{}", params = "#id")
+  @Override
+  public void deleteById(String id) {
+    Wrapper<SysNotifyGroup> deleteWrapper = Wrappers.lambdaUpdate(SysNotifyGroup.class)
+        .eq(SysNotifyGroup::getId, id).set(SysNotifyGroup::getAvailable, false);
+    this.update(deleteWrapper);
+
+    SysNotifyGroup record = this.findById(id);
+    DataChangeEventBuilder.publishLogicDelete(this, DeleteSysNotifyGroupEvent.class, record);
   }
 
   @CacheEvict(value = SysNotifyGroup.CACHE_NAME, key = "@cacheVariables.tenantId() + #key")

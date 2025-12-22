@@ -69,4 +69,11 @@ public interface SysNotifyGroupService extends BaseMpService<SysNotifyGroup> {
    * @return
    */
   Set<String> getReceiveUserIds(String id);
+
+  /**
+   * 根据ID删除
+   *
+   * @param id
+   */
+  void deleteById(String id);
 }

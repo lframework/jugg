@@ -12,4 +12,11 @@ import com.lframework.starter.web.inner.entity.SysNotifyGroupReceiver;
  */
 public interface SysNotifyGroupReceiverMapper extends BaseMapper<SysNotifyGroupReceiver> {
 
+  /**
+   * 判断是否存在用户组
+   *
+   * @param userGroupId
+   * @return
+   */
+  Boolean hasUserGroup(String userGroupId);
 }

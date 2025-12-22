@@ -41,6 +41,11 @@ public class SysModule extends BaseEntity implements BaseDto {
   private String description;
 
   /**
+   * 是否为平台功能模块
+   */
+  private Boolean isPlatform;
+
+  /**
    * 创建人ID 新增时赋值
    */
   @TableField(fill = FieldFill.INSERT)

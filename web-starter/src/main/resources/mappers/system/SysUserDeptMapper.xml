@@ -12,18 +12,21 @@
     <select id="getByUserId" resultType="com.lframework.starter.web.inner.entity.SysUserDept">
         <include refid="SysUserDeptDto_sql"/>
         WHERE ud.user_id = #{userId}
+        AND d.available = TRUE
         ORDER BY d.code
     </select>
 
     <select id="hasByDeptId" resultType="com.lframework.starter.web.inner.entity.SysUserDept">
         <include refid="SysUserDeptDto_sql"/>
         WHERE ud.dept_id = #{deptId}
+        AND u.available = TRUE
         LIMIT 1
     </select>
   <select id="getByDeptId"
           resultType="com.lframework.starter.web.inner.entity.SysUserDept">
       <include refid="SysUserDeptDto_sql"/>
       WHERE ud.dept_id = #{deptId}
+      AND u.available = TRUE
       ORDER BY u.code
   </select>
 </mapper>

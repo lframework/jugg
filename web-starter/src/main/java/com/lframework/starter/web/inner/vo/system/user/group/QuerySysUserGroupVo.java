@@ -38,12 +38,4 @@ public class QuerySysUserGroupVo extends SortPageVo implements BaseVo, Serializa
   @ApiModelProperty("创建时间 截止时间")
   @TypeMismatch(message = "创建时间截止时间格式有误！")
   private LocalDateTime createTimeEnd;
-
-  /**
-   * 状态
-   */
-  @ApiModelProperty("状态")
-  @TypeMismatch(message = "状态格式有误！")
-  private Boolean available;
-
 }

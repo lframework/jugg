@@ -4,12 +4,12 @@ import com.baomidou.dynamic.datasource.provider.AbstractJdbcDataSourceProvider;
 import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DataSourceProperty;
 import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceProperties;
 import com.lframework.starter.web.config.properties.SecretProperties;
-import com.lframework.starter.web.core.utils.DataSourceUtil;
+import com.lframework.starter.web.core.components.tenant.TenantInterceptor;
 import com.lframework.starter.web.core.interceptors.TenantInterceptorImpl;
 import com.lframework.starter.web.core.listeners.TenantListener.ClearTenantListener;
 import com.lframework.starter.web.core.listeners.TenantListener.ReloadTenantListener;
 import com.lframework.starter.web.core.listeners.TenantListener.SetTenantListener;
-import com.lframework.starter.web.core.components.tenant.TenantInterceptor;
+import com.lframework.starter.web.core.utils.DataSourceUtil;
 import com.lframework.starter.web.core.utils.EncryptUtil;
 import com.lframework.starter.web.inner.service.TenantService;
 import java.sql.ResultSet;
@@ -25,7 +25,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Slf4j
 @Configuration
-@ConditionalOnProperty(prefix = "jugg.tenant", value = "enabled", matchIfMissing = false, havingValue = "true")
 public class TenantAutoConfiguration {
 
   @Autowired
@@ -52,7 +51,8 @@ public class TenantAutoConfiguration {
   }
 
   @Bean
-  public AbstractJdbcDataSourceProvider tenantDataSourceProvider(SecretProperties secretProperties) {
+  public AbstractJdbcDataSourceProvider tenantDataSourceProvider(
+      SecretProperties secretProperties) {
     DataSourceProperty dataSourceProperty = dynamicDataSourceProperties.getDatasource()
         .get("master");
     return new AbstractJdbcDataSourceProvider(dataSourceProperty.getDriverClassName(),
@@ -65,14 +65,26 @@ public class TenantAutoConfiguration {
         // 这里只加载启用的租户
         ResultSet rs = statement.executeQuery("select * from tenant where available = true");
         while (rs.next()) {
-          String name = rs.getString("id");
-          String username = rs.getString("jdbc_username");
-          String password = rs.getString("jdbc_password");
-          String url = rs.getString("jdbc_url");
-          DataSourceProperty property = DataSourceUtil.createDataSourceProperty(dataSourceProperty,
-              url, username, EncryptUtil.decrypt(password, secretProperties));
-          log.info("加载租户 {} 数据源 url {}", name, property.getUrl());
-          dataSourcePropertyMap.put(name, property);
+          try {
+            String name = rs.getString("id");
+            String username = rs.getString("jdbc_username");
+            String password = rs.getString("jdbc_password");
+            String url = rs.getString("jdbc_url");
+
+            DataSourceProperty property = DataSourceUtil.createDataSourceProperty(
+                dataSourceProperty,
+                url, username, EncryptUtil.decrypt(password, secretProperties));
+
+            if (!DataSourceUtil.validConnection(property.getUrl(), property.getUsername(),
+                property.getPassword())) {
+              log.warn("租户 {} 数据源连接失败 url {}", name, url);
+              continue;
+            }
+            log.info("加载租户 {} 数据源 url {}", name, property.getUrl());
+            dataSourcePropertyMap.put(name, property);
+          } catch (Exception e) {
+            log.error(e.getMessage(), e);
+          }
         }
         return dataSourcePropertyMap;
       }

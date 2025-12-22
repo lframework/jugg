@@ -41,48 +41,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SysUserRoleController extends DefaultBaseController {
 
   @Autowired
-  private SysRoleService sysRoleService;
-
-  @Autowired
   private SysUserRoleService sysUserRoleService;
-
-  /**
-   * 查询角色列表
-   */
-  @ApiOperation("查询角色列表")
-  @ApiImplicitParams({@ApiImplicitParam(value = "用户ID", name = "userId", paramType = "query")})
-  @HasPermission({"system:user:permission"})
-  @GetMapping("/roles")
-  public InvokeResult<List<QueryUserRoleBo>> roles(String userId) {
-
-    List<QueryUserRoleBo> results = CollectionUtil.emptyList();
-    //查询所有角色
-    QuerySysRoleVo sysRoleVo = new QuerySysRoleVo();
-    sysRoleVo.setAvailable(Boolean.TRUE);
-    List<SysRole> allRole = sysRoleService.query(sysRoleVo);
-    if (!CollectionUtil.isEmpty(allRole)) {
-      if (!SecurityUtil.getCurrentUser().isAdmin()) {
-        allRole = allRole.stream()
-            .filter(t -> !SecurityConstants.PERMISSION_ADMIN_NAME.equals(t.getPermission()))
-            .collect(
-                Collectors.toList());
-      }
-      results = allRole.stream().map(QueryUserRoleBo::new).collect(Collectors.toList());
-
-      if (!StringUtil.isBlank(userId)) {
-        List<SysRole> menus = sysRoleService.getByUserId(userId);
-        if (!CollectionUtil.isEmpty(menus)) {
-          //当用户角色存在时，设置已选择属性
-          for (QueryUserRoleBo result : results) {
-            result.setSelected(
-                menus.stream().anyMatch(t -> StringUtil.equals(t.getId(), result.getId())));
-          }
-        }
-      }
-    }
-
-    return InvokeResultBuilder.success(results);
-  }
 
   /**
    * 用户授权

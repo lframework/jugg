@@ -91,12 +91,6 @@ public class GetSysUserBo extends BaseBo<SysUser> {
   private String roleName;
 
   /**
-   * 状态
-   */
-  @ApiModelProperty("状态")
-  private Boolean available;
-
-  /**
    * 是否锁定
    */
   @ApiModelProperty("是否锁定")

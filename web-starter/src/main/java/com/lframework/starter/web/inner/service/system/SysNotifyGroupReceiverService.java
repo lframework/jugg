@@ -13,4 +13,12 @@ public interface SysNotifyGroupReceiverService extends BaseMpService<SysNotifyGr
    * @return
    */
   List<String> getReceiverIdsByGroupId(String groupId);
+
+  /**
+   * 是否存在用户组
+   *
+   * @param userGroupId
+   * @return
+   */
+  Boolean hasUserGroup(String userGroupId);
 }

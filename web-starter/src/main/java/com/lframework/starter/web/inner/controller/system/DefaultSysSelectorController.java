@@ -2,11 +2,12 @@ package com.lframework.starter.web.inner.controller.system;
 
 import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.common.utils.StringUtil;
-import com.lframework.starter.web.core.components.tenant.TenantContextHolder;
-import com.lframework.starter.web.core.controller.DefaultBaseController;
+import com.lframework.starter.web.core.annotations.security.HasPermission;
 import com.lframework.starter.web.core.components.resp.InvokeResult;
 import com.lframework.starter.web.core.components.resp.InvokeResultBuilder;
 import com.lframework.starter.web.core.components.resp.PageResult;
+import com.lframework.starter.web.core.components.tenant.TenantContextHolder;
+import com.lframework.starter.web.core.controller.DefaultBaseController;
 import com.lframework.starter.web.core.utils.PageResultUtil;
 import com.lframework.starter.web.core.utils.TenantUtil;
 import com.lframework.starter.web.inner.bo.system.dept.SysDeptSelectorBo;
@@ -119,8 +120,11 @@ public class DefaultSysSelectorController extends DefaultBaseController {
    * 系统菜单
    */
   @ApiOperation("系统菜单")
+  @HasPermission(requirePlatform = true)
   @GetMapping("/menu")
   public InvokeResult<List<SysMenuSelectorBo>> menu(@Valid SysMenuSelectorVo vo) {
+
+    TenantContextHolder.setTenantId(vo.getTenantId());
 
     // 先查询当前租户使用的module
     List<Integer> moduleIds = null;
@@ -147,6 +151,26 @@ public class DefaultSysSelectorController extends DefaultBaseController {
     if (CollectionUtil.isNotEmpty(datas)) {
       results = datas.stream().map(SysDeptSelectorBo::new).collect(Collectors.toList());
     }
+
+    return InvokeResultBuilder.success(results);
+  }
+
+  /**
+   * 加载部门
+   */
+  @ApiOperation("加载部门")
+  @PostMapping("/dept/load")
+  public InvokeResult<List<SysDeptSelectorBo>> loadDept(
+      @RequestBody(required = false) List<String> ids) {
+
+    if (CollectionUtil.isEmpty(ids)) {
+      return InvokeResultBuilder.success(CollectionUtil.emptyList());
+    }
+
+    List<SysDept> datas = ids.stream().filter(StringUtil::isNotBlank)
+        .map(t -> sysDeptService.findById(t)).filter(Objects::nonNull).collect(Collectors.toList());
+    List<SysDeptSelectorBo> results = datas.stream().map(SysDeptSelectorBo::new)
+        .collect(Collectors.toList());
 
     return InvokeResultBuilder.success(results);
   }
@@ -223,6 +247,7 @@ public class DefaultSysSelectorController extends DefaultBaseController {
   }
 
   @ApiOperation("租户")
+  @HasPermission(requirePlatform = true)
   @GetMapping("/tenant")
   public InvokeResult<PageResult<TenantSelectorBo>> tenant(@Valid TenantSelectorVo vo) {
 
@@ -240,6 +265,7 @@ public class DefaultSysSelectorController extends DefaultBaseController {
    * 加载租户
    */
   @ApiOperation("加载租户")
+  @HasPermission(requirePlatform = true)
   @PostMapping("/tenant/load")
   public InvokeResult<List<TenantSelectorBo>> loadTenant(
       @RequestBody(required = false) List<Integer> ids) {

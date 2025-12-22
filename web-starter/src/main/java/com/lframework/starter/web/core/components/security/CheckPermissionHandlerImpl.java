@@ -16,14 +16,25 @@ import lombok.extern.slf4j.Slf4j;
 public class CheckPermissionHandlerImpl implements CheckPermissionHandler {
 
   @Override
-  public boolean valid(PermissionCalcType calcType, String... permissions) {
-    if (ArrayUtil.isEmpty(permissions)) {
+  public boolean valid(PermissionCalcType calcType, boolean requirePlatform,
+      String... permissions) {
+    if (ArrayUtil.isEmpty(permissions) && !requirePlatform) {
       return false;
     }
 
     AbstractUserDetails user = SecurityUtil.getCurrentUser();
     if (user == null) {
       return false;
+    }
+
+    if (requirePlatform) {
+      if (!user.getIsPlatform()) {
+        return false;
+      }
+
+      if (ArrayUtil.isEmpty(permissions)) {
+        return true;
+      }
     }
 
     if (user.hasAdminPermission()) {

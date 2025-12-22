@@ -50,6 +50,12 @@ public class QueryTenantBo extends BaseBo<Tenant> {
   private String jdbcPassword;
 
   /**
+   * 是否为平台管理租户
+   */
+  @ApiModelProperty("是否为平台管理租户")
+  private Boolean isPlatform;
+
+  /**
    * 状态
    */
   @ApiModelProperty("状态")

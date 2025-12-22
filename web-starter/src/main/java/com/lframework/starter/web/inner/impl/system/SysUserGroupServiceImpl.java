@@ -9,6 +9,7 @@ import com.lframework.starter.common.utils.Assert;
 import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.web.core.annotations.oplog.OpLog;
 import com.lframework.starter.web.core.components.resp.PageResult;
+import com.lframework.starter.web.core.event.DataChangeEventBuilder;
 import com.lframework.starter.web.core.impl.BaseMpServiceImpl;
 import com.lframework.starter.web.core.utils.IdUtil;
 import com.lframework.starter.web.core.utils.PageHelperUtil;
@@ -16,6 +17,7 @@ import com.lframework.starter.web.core.utils.PageResultUtil;
 import com.lframework.starter.web.inner.components.oplog.SystemOpLogType;
 import com.lframework.starter.web.inner.entity.SysUserGroup;
 import com.lframework.starter.web.inner.entity.SysUserGroupDetail;
+import com.lframework.starter.web.inner.events.system.DeleteSysUserGroupEvent;
 import com.lframework.starter.web.inner.mappers.system.SysUserGroupMapper;
 import com.lframework.starter.web.inner.service.system.SysUserGroupDetailService;
 import com.lframework.starter.web.inner.service.system.SysUserGroupService;
@@ -79,13 +81,13 @@ public class SysUserGroupServiceImpl extends
   public String create(CreateSysUserGroupVo vo) {
 
     Wrapper<SysUserGroup> checkWrapper = Wrappers.lambdaQuery(SysUserGroup.class)
-        .eq(SysUserGroup::getCode, vo.getCode());
+        .eq(SysUserGroup::getCode, vo.getCode()).eq(SysUserGroup::getAvailable, true);
     if (this.count(checkWrapper) > 0) {
       throw new DefaultClientException("编号不允许重复！");
     }
 
     checkWrapper = Wrappers.lambdaQuery(SysUserGroup.class)
-        .eq(SysUserGroup::getName, vo.getName());
+        .eq(SysUserGroup::getName, vo.getName()).eq(SysUserGroup::getAvailable, true);
     if (this.count(checkWrapper) > 0) {
       throw new DefaultClientException("名称不允许重复！");
     }
@@ -125,14 +127,14 @@ public class SysUserGroupServiceImpl extends
     }
 
     Wrapper<SysUserGroup> checkWrapper = Wrappers.lambdaQuery(SysUserGroup.class)
-        .eq(SysUserGroup::getCode, vo.getCode())
+        .eq(SysUserGroup::getCode, vo.getCode()).eq(SysUserGroup::getAvailable, true)
         .ne(SysUserGroup::getId, record.getId());
     if (this.count(checkWrapper) > 0) {
       throw new DefaultClientException("编号不允许重复！");
     }
 
     checkWrapper = Wrappers.lambdaQuery(SysUserGroup.class)
-        .eq(SysUserGroup::getName, vo.getName())
+        .eq(SysUserGroup::getName, vo.getName()).eq(SysUserGroup::getAvailable, true)
         .ne(SysUserGroup::getId, record.getId());
     if (this.count(checkWrapper) > 0) {
       throw new DefaultClientException("名称不允许重复！");
@@ -142,8 +144,7 @@ public class SysUserGroupServiceImpl extends
         .eq(SysUserGroup::getId, vo.getId())
         .set(SysUserGroup::getName, vo.getName())
         .set(SysUserGroup::getDescription,
-            StringUtil.isBlank(vo.getDescription()) ? StringPool.EMPTY_STR : vo.getDescription())
-        .set(SysUserGroup::getAvailable, vo.getAvailable());
+            StringUtil.isBlank(vo.getDescription()) ? StringPool.EMPTY_STR : vo.getDescription());
     this.update(updateWrapper);
 
     Wrapper<SysUserGroupDetail> deleteDetailWrapper = Wrappers.lambdaQuery(
@@ -160,6 +161,18 @@ public class SysUserGroupServiceImpl extends
     }).collect(Collectors.toList());
 
     sysUserGroupDetailService.saveBatch(receiverList);
+  }
+
+  @OpLog(type = SystemOpLogType.class, name = "删除用户组，ID：{}", params = "#id")
+  @Transactional(rollbackFor = Exception.class)
+  @Override
+  public void deleteById(String id) {
+    Wrapper<SysUserGroup> deleteWrapper = Wrappers.lambdaUpdate(SysUserGroup.class)
+        .eq(SysUserGroup::getId, id).set(SysUserGroup::getAvailable, false);
+    this.update(deleteWrapper);
+
+    SysUserGroup record = this.findById(id);
+    DataChangeEventBuilder.publishLogicDelete(this, DeleteSysUserGroupEvent.class, record);
   }
 
   @CacheEvict(value = SysUserGroup.CACHE_NAME, key = "@cacheVariables.tenantId() + #key")

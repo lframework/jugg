@@ -2,25 +2,29 @@ package com.lframework.starter.web.inner.controller.system;
 
 import com.lframework.starter.common.exceptions.impl.DefaultClientException;
 import com.lframework.starter.common.utils.CollectionUtil;
+import com.lframework.starter.web.core.annotations.security.HasPermission;
+import com.lframework.starter.web.core.components.resp.InvokeResult;
+import com.lframework.starter.web.core.components.resp.InvokeResultBuilder;
+import com.lframework.starter.web.core.components.tenant.TenantContextHolder;
+import com.lframework.starter.web.core.controller.DefaultBaseController;
+import com.lframework.starter.web.inner.bo.system.dic.category.GetSysDataDicCategoryBo;
 import com.lframework.starter.web.inner.bo.system.dic.category.QuerySysDataDicCategoryBo;
 import com.lframework.starter.web.inner.entity.SysDataDicCategory;
 import com.lframework.starter.web.inner.service.system.SysDataDicCategoryService;
 import com.lframework.starter.web.inner.vo.system.dic.category.CreateSysDataDicCategoryVo;
+import com.lframework.starter.web.inner.vo.system.dic.category.QuerySysDataDicCategoryVo;
 import com.lframework.starter.web.inner.vo.system.dic.category.UpdateSysDataDicCategoryVo;
-import com.lframework.starter.web.inner.bo.system.dic.category.GetSysDataDicCategoryBo;
-import com.lframework.starter.web.core.controller.DefaultBaseController;
-import com.lframework.starter.web.core.components.resp.InvokeResult;
-import com.lframework.starter.web.core.components.resp.InvokeResultBuilder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.lframework.starter.web.core.annotations.security.HasPermission;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,9 +51,12 @@ public class SysDataDicCategoryController extends DefaultBaseController {
    * 查询列表
    */
   @ApiOperation("查询列表")
-  @HasPermission({"system:dic-category:*"})
+  @HasPermission(value = {"system:dic-category:*"}, requirePlatform = true)
   @GetMapping("/query")
-  public InvokeResult<List<QuerySysDataDicCategoryBo>> query() {
+  public InvokeResult<List<QuerySysDataDicCategoryBo>> query(@Valid QuerySysDataDicCategoryVo vo) {
+
+    TenantContextHolder.setTenantId(vo.getTenantId());
+
     List<SysDataDicCategory> datas = sysDataDicCategoryService.queryList();
     List<QuerySysDataDicCategoryBo> results = CollectionUtil.emptyList();
     if (!CollectionUtil.isEmpty(datas)) {
@@ -63,10 +70,16 @@ public class SysDataDicCategoryController extends DefaultBaseController {
    * 根据ID查询
    */
   @ApiOperation("根据ID查询")
-  @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
-  @HasPermission({"system:dic-category:*"})
+  @ApiImplicitParams({
+      @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true),
+      @ApiImplicitParam(value = "租户ID", name = "tenantId", paramType = "query", required = true)
+  })
+  @HasPermission(value = {"system:dic-category:*"}, requirePlatform = true)
   @GetMapping
-  public InvokeResult<GetSysDataDicCategoryBo> get(@NotBlank(message = "ID不能为空！") String id) {
+  public InvokeResult<GetSysDataDicCategoryBo> get(@NotBlank(message = "ID不能为空！") String id,
+      @NotNull(message = "租户ID不能为空！") Integer tenantId) {
+
+    TenantContextHolder.setTenantId(tenantId);
 
     SysDataDicCategory data = sysDataDicCategoryService.findById(id);
     if (data == null) {
@@ -82,9 +95,11 @@ public class SysDataDicCategoryController extends DefaultBaseController {
    * 新增数据字典分类
    */
   @ApiOperation("新增数据字典分类")
-  @HasPermission({"system:dic-category:add"})
+  @HasPermission(value = {"system:dic-category:add"}, requirePlatform = true)
   @PostMapping
   public InvokeResult<Void> create(@Valid CreateSysDataDicCategoryVo vo) {
+
+    TenantContextHolder.setTenantId(vo.getTenantId());
 
     sysDataDicCategoryService.create(vo);
 
@@ -97,9 +112,11 @@ public class SysDataDicCategoryController extends DefaultBaseController {
    * 修改数据字典分类
    */
   @ApiOperation("修改数据字典分类")
-  @HasPermission({"system:dic-category:modify"})
+  @HasPermission(value = {"system:dic-category:modify"}, requirePlatform = true)
   @PutMapping
   public InvokeResult<Void> update(@Valid UpdateSysDataDicCategoryVo vo) {
+
+    TenantContextHolder.setTenantId(vo.getTenantId());
 
     sysDataDicCategoryService.update(vo);
 
@@ -109,9 +126,16 @@ public class SysDataDicCategoryController extends DefaultBaseController {
   }
 
   @ApiOperation("删除数据字典分类")
-  @HasPermission({"system:dic-category:delete"})
+  @ApiImplicitParams({
+      @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true),
+      @ApiImplicitParam(value = "租户ID", name = "tenantId", paramType = "query", required = true)
+  })
+  @HasPermission(value = {"system:dic-category:delete"}, requirePlatform = true)
   @DeleteMapping
-  public InvokeResult<Void> delete(@NotBlank(message = "ID不能为空！") String id) {
+  public InvokeResult<Void> delete(@NotBlank(message = "ID不能为空！") String id,
+      @NotNull(message = "租户ID不能为空！") Integer tenantId) {
+
+    TenantContextHolder.setTenantId(tenantId);
 
     sysDataDicCategoryService.deleteById(id);
 

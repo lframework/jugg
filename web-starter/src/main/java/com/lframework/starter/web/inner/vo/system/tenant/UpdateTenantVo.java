@@ -51,6 +51,13 @@ public class UpdateTenantVo implements BaseVo, Serializable {
   private String jdbcPassword;
 
   /**
+   * 是否为平台管理租户
+   */
+  @ApiModelProperty(value = "是否为平台管理租户", required = true)
+  @NotNull(message = "请选择是否为平台管理租户！")
+  private Boolean isPlatform;
+
+  /**
    * 状态
    */
   @ApiModelProperty(value = "状态", required = true)

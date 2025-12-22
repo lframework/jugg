@@ -5,7 +5,7 @@ import com.lframework.starter.web.core.enums.BaseEnum;
 
 public enum SysMenuComponentType implements BaseEnum<Integer> {
 
-  NORMAL(0, "普通"), CUSTOM_LIST(1, "自定义列表"), CUSTOM_PAGE(3, "自定义页面");
+  NORMAL(0, "普通");
 
   @EnumValue
   private final Integer code;

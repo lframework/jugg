@@ -23,4 +23,9 @@ public class SysNotifyGroupReceiverServiceImpl extends
     return this.list(queryWrapper).stream().map(SysNotifyGroupReceiver::getReceiverId)
         .collect(Collectors.toList());
   }
+
+  @Override
+  public Boolean hasUserGroup(String userGroupId) {
+    return getBaseMapper().hasUserGroup(userGroupId);
+  }
 }

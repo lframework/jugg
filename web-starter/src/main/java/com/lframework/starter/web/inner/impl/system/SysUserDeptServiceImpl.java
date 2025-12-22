@@ -12,6 +12,7 @@ import com.lframework.starter.web.inner.mappers.system.SysUserDeptMapper;
 import com.lframework.starter.web.inner.service.system.SysUserDeptService;
 import com.lframework.starter.web.inner.vo.system.dept.SysUserDeptSettingVo;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -22,8 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class SysUserDeptServiceImpl extends
     BaseMpServiceImpl<SysUserDeptMapper, SysUserDept> implements SysUserDeptService {
 
-  @OpLog(type = SystemOpLogType.class, name = "用户设置部门，用户ID：{}，部门ID：{}", params = {"#vo.userId",
-      "#vo.deptIds"}, loopFormat = true)
+  @OpLog(type = SystemOpLogType.class, name = "用户设置部门，用户ID：{}，部门ID：{}，操作类型：{}", params = {
+      "#vo.userIds", "#vo.deptIds", "#vo.handleType"}, loopFormat = true)
   @Transactional(rollbackFor = Exception.class)
   @Override
   public void setting(SysUserDeptSettingVo vo) {
@@ -31,7 +32,7 @@ public class SysUserDeptServiceImpl extends
     this.doSetting(vo);
 
     SysUserDeptService thisService = getThis(this.getClass());
-    thisService.cleanCacheByKey(vo.getUserId());
+    thisService.cleanCacheByKeys(vo.getUserIds());
   }
 
   @Cacheable(value = SysUserDept.CACHE_NAME, key = "@cacheVariables.tenantId() + #userId")
@@ -54,20 +55,52 @@ public class SysUserDeptServiceImpl extends
   }
 
   protected void doSetting(SysUserDeptSettingVo vo) {
-
-    Wrapper<SysUserDept> deleteWrapper = Wrappers.lambdaQuery(SysUserDept.class)
-        .eq(SysUserDept::getUserId, vo.getUserId());
-    getBaseMapper().delete(deleteWrapper);
-
-    if (!CollectionUtil.isEmpty(vo.getDeptIds())) {
-      for (String deptId : vo.getDeptIds()) {
-        SysUserDept record = new SysUserDept();
-        record.setId(IdUtil.getId());
-        record.setUserId(vo.getUserId());
-        record.setDeptId(deptId);
-
-        getBaseMapper().insert(record);
+    List<SysUserDept> records = new ArrayList<>();
+    if (vo.getHandleType() == 1) {
+      // 新增
+      if (CollectionUtil.isNotEmpty(vo.getDeptIds())) {
+        Wrapper<SysUserDept> deleteWrapper = Wrappers.lambdaQuery(SysUserDept.class)
+            .in(SysUserDept::getUserId, vo.getUserIds())
+            .in(SysUserDept::getDeptId, vo.getDeptIds());
+        getBaseMapper().delete(deleteWrapper);
+        for (String userId : vo.getUserIds()) {
+          for (String deptId : vo.getDeptIds()) {
+            SysUserDept record = new SysUserDept();
+            record.setId(IdUtil.getId());
+            record.setUserId(userId);
+            record.setDeptId(deptId);
+            records.add(record);
+          }
+        }
       }
+    } else if (vo.getHandleType() == 2) {
+      // 替换
+      Wrapper<SysUserDept> deleteWrapper = Wrappers.lambdaQuery(SysUserDept.class)
+          .in(SysUserDept::getUserId, vo.getUserIds());
+      getBaseMapper().delete(deleteWrapper);
+      if (CollectionUtil.isNotEmpty(vo.getDeptIds())) {
+        for (String userId : vo.getUserIds()) {
+          for (String deptId : vo.getDeptIds()) {
+            SysUserDept record = new SysUserDept();
+            record.setId(IdUtil.getId());
+            record.setUserId(userId);
+            record.setDeptId(deptId);
+            records.add(record);
+          }
+        }
+      }
+    } else if (vo.getHandleType() == 3) {
+      // 删除
+      if (CollectionUtil.isNotEmpty(vo.getDeptIds())) {
+        Wrapper<SysUserDept> deleteWrapper = Wrappers.lambdaQuery(SysUserDept.class)
+            .in(SysUserDept::getUserId, vo.getUserIds())
+            .in(SysUserDept::getDeptId, vo.getDeptIds());
+        getBaseMapper().delete(deleteWrapper);
+      }
+    }
+
+    if (CollectionUtil.isNotEmpty(records)) {
+      this.saveBatch(records);
     }
   }
 

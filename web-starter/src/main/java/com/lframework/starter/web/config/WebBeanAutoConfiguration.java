@@ -17,7 +17,6 @@ import com.lframework.starter.web.core.components.resp.ResponseErrorBuilder;
 import com.lframework.starter.web.core.components.security.UserTokenResolverImpl;
 import com.lframework.starter.web.core.components.sign.CheckSignFactory;
 import com.lframework.starter.web.core.components.sign.DefaultCheckSignFactory;
-import com.lframework.starter.web.core.components.sign.handler.DefaultCheckSignHandler;
 import com.lframework.starter.web.core.components.upload.handler.SecurityUploadHandler;
 import com.lframework.starter.web.core.components.upload.handler.UploadHandler;
 import com.lframework.starter.web.core.components.upload.handler.impl.CosSecurityUploadHandler;
@@ -65,6 +64,7 @@ import com.lframework.starter.web.inner.controller.system.SysRoleController;
 import com.lframework.starter.web.inner.controller.system.SysRoleMenuController;
 import com.lframework.starter.web.inner.controller.system.SysSiteMessageController;
 import com.lframework.starter.web.inner.controller.system.SysUserController;
+import com.lframework.starter.web.inner.controller.system.SysUserDeptController;
 import com.lframework.starter.web.inner.controller.system.SysUserGroupController;
 import com.lframework.starter.web.inner.controller.system.SysUserRoleController;
 import com.lframework.starter.web.inner.controller.system.TenantController;
@@ -119,6 +119,9 @@ import com.lframework.starter.web.inner.impl.system.SysUserRoleServiceImpl;
 import com.lframework.starter.web.inner.impl.system.SysUserServiceImpl;
 import com.lframework.starter.web.inner.impl.system.SysUserTelephoneServiceImpl;
 import com.lframework.starter.web.inner.listeners.OpLogTimerListener;
+import com.lframework.starter.web.inner.listeners.app.SysNotifyGroupForDeleteSysUserGroupListener;
+import com.lframework.starter.web.inner.listeners.app.SysUserDeptForDeleteSysDeptListener;
+import com.lframework.starter.web.inner.listeners.app.SysUserRoleForDeleteSysRoleListener;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -159,6 +162,7 @@ import org.springframework.core.env.Environment;
     SysRoleMenuController.class,
     SysSiteMessageController.class,
     SysUserController.class,
+    SysUserDeptController.class,
     SysUserGroupController.class,
     SysUserRoleController.class,
     TenantController.class,
@@ -196,7 +200,10 @@ import org.springframework.core.env.Environment;
     SysModuleServiceImpl.class,
     SysModuleTenantServiceImpl.class,
     TenantServiceImpl.class,
-    DefaultUserDetailsService.class
+    DefaultUserDetailsService.class,
+    SysUserDeptForDeleteSysDeptListener.class,
+    SysUserRoleForDeleteSysRoleListener.class,
+    SysNotifyGroupForDeleteSysUserGroupListener.class,
 })
 @MapperScan("com.lframework.starter.web.**.mappers")
 public class WebBeanAutoConfiguration implements EnvironmentAware {

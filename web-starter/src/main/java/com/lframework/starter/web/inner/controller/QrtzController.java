@@ -45,7 +45,7 @@ public class QrtzController extends DefaultBaseController {
    * @return
    */
   @ApiOperation("查询列表")
-  @HasPermission({"development:qrtz:manage"})
+  @HasPermission(value = {"development:qrtz:manage"}, requirePlatform = true)
   @GetMapping("/query")
   public InvokeResult<PageResult<QueryQrtzBo>> query(@Valid QueryQrtzVo vo) {
 
@@ -66,7 +66,7 @@ public class QrtzController extends DefaultBaseController {
    * @return
    */
   @ApiOperation("查询")
-  @HasPermission({"development:qrtz:manage"})
+  @HasPermission(value = {"development:qrtz:manage"},requirePlatform = true)
   @GetMapping
   public InvokeResult<GetQrtzBo> get(@NotBlank(message = "名称不能为空！") String name,
       @NotBlank(message = "组不能为空！") String group) {
@@ -85,7 +85,7 @@ public class QrtzController extends DefaultBaseController {
    * @return
    */
   @ApiOperation("创建")
-  @HasPermission({"development:qrtz:manage"})
+  @HasPermission(value = {"development:qrtz:manage"},requirePlatform = true)
   @PostMapping
   public InvokeResult<Void> create(@Valid @RequestBody CreateQrtzVo vo) {
     qrtzService.create(vo);
@@ -100,7 +100,7 @@ public class QrtzController extends DefaultBaseController {
    * @return
    */
   @ApiOperation("修改")
-  @HasPermission({"development:qrtz:manage"})
+  @HasPermission(value = {"development:qrtz:manage"},requirePlatform = true)
   @PutMapping
   public InvokeResult<Void> update(@Valid @RequestBody UpdateQrtzVo vo) {
     qrtzService.update(vo);
@@ -114,7 +114,7 @@ public class QrtzController extends DefaultBaseController {
    * @return
    */
   @ApiOperation("暂停")
-  @HasPermission({"development:qrtz:manage"})
+  @HasPermission(value = {"development:qrtz:manage"},requirePlatform = true)
   @PutMapping("/pause")
   public InvokeResult<Void> pause(@NotBlank(message = "名称不能为空！") String name,
       @NotBlank(message = "组不能为空！") String group) {
@@ -129,7 +129,7 @@ public class QrtzController extends DefaultBaseController {
    * @return
    */
   @ApiOperation("恢复")
-  @HasPermission({"development:qrtz:manage"})
+  @HasPermission(value = {"development:qrtz:manage"},requirePlatform = true)
   @PutMapping("/resume")
   public InvokeResult<Void> resume(@NotBlank(message = "名称不能为空！") String name,
       @NotBlank(message = "组不能为空！") String group) {
@@ -144,7 +144,7 @@ public class QrtzController extends DefaultBaseController {
    * @return
    */
   @ApiOperation("触发")
-  @HasPermission({"development:qrtz:manage"})
+  @HasPermission(value = {"development:qrtz:manage"},requirePlatform = true)
   @PutMapping("/trigger")
   public InvokeResult<Void> trigger(@NotBlank(message = "名称不能为空！") String name,
       @NotBlank(message = "组不能为空！") String group) {
@@ -159,7 +159,7 @@ public class QrtzController extends DefaultBaseController {
    * @return
    */
   @ApiOperation("删除")
-  @HasPermission({"development:qrtz:manage"})
+  @HasPermission(value = {"development:qrtz:manage"},requirePlatform = true)
   @DeleteMapping
   public InvokeResult<Void> delete(@NotBlank(message = "名称不能为空！") String name,
       @NotBlank(message = "组不能为空！") String group) {

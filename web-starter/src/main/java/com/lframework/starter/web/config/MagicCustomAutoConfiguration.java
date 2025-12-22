@@ -7,14 +7,14 @@ import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSour
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.lframework.starter.web.config.properties.SecretProperties;
-import com.lframework.starter.web.gen.components.magic.MagicCustomAuthorizationInterceptor;
-import com.lframework.starter.web.gen.components.magic.MagicCustomJsonValueProvider;
-import com.lframework.starter.web.gen.components.magic.MagicCustomMagicFunction;
-import com.lframework.starter.web.gen.components.magic.MagicCustomSqlCache;
-import com.lframework.starter.web.inner.entity.Tenant;
-import com.lframework.starter.web.inner.service.TenantService;
+import com.lframework.starter.web.core.components.magic.MagicCustomAuthorizationInterceptor;
+import com.lframework.starter.web.core.components.magic.MagicCustomJsonValueProvider;
+import com.lframework.starter.web.core.components.magic.MagicCustomMagicFunction;
+import com.lframework.starter.web.core.components.magic.MagicCustomSqlCache;
 import com.lframework.starter.web.core.utils.DataSourceUtil;
 import com.lframework.starter.web.core.utils.EncryptUtil;
+import com.lframework.starter.web.inner.entity.Tenant;
+import com.lframework.starter.web.inner.service.TenantService;
 import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
@@ -48,7 +48,8 @@ public class MagicCustomAutoConfiguration {
 
   @Bean
   public MagicDynamicDataSource magicDynamicDataSource(DynamicRoutingDataSource dataSource,
-      TenantService tenantService, BasicDataSourceCreator basicDataSourceCreator, SecretProperties secretProperties) {
+      TenantService tenantService, BasicDataSourceCreator basicDataSourceCreator,
+      SecretProperties secretProperties) {
     Map<String, DataSource> dataSourceMap = dataSource.getDataSources();
     MagicDynamicDataSource dynamicDataSource = new MagicDynamicDataSource();
     dynamicDataSource.setDefault(dataSourceMap.get("master"));
@@ -64,7 +65,8 @@ public class MagicCustomAutoConfiguration {
       dynamicDataSource.add(String.valueOf(tenant.getId()),
           basicDataSourceCreator.createDataSource(
               DataSourceUtil.createDataSourceProperty(dataSourceProperty, tenant.getJdbcUrl(),
-                  tenant.getJdbcUsername(), EncryptUtil.decrypt(tenant.getJdbcPassword(), secretProperties))));
+                  tenant.getJdbcUsername(),
+                  EncryptUtil.decrypt(tenant.getJdbcPassword(), secretProperties))));
     }
 
     return dynamicDataSource;

@@ -6,10 +6,10 @@ import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.common.utils.ObjectUtil;
 import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.web.core.annotations.security.HasPermission;
-import com.lframework.starter.web.core.components.tenant.TenantContextHolder;
-import com.lframework.starter.web.core.controller.DefaultBaseController;
 import com.lframework.starter.web.core.components.resp.InvokeResult;
 import com.lframework.starter.web.core.components.resp.InvokeResultBuilder;
+import com.lframework.starter.web.core.components.tenant.TenantContextHolder;
+import com.lframework.starter.web.core.controller.DefaultBaseController;
 import com.lframework.starter.web.core.utils.EnumUtil;
 import com.lframework.starter.web.core.utils.TenantUtil;
 import com.lframework.starter.web.inner.bo.system.menu.GetSysMenuBo;
@@ -19,9 +19,11 @@ import com.lframework.starter.web.inner.enums.system.SysMenuDisplay;
 import com.lframework.starter.web.inner.service.SysModuleTenantService;
 import com.lframework.starter.web.inner.service.system.SysMenuService;
 import com.lframework.starter.web.inner.vo.system.menu.CreateSysMenuVo;
+import com.lframework.starter.web.inner.vo.system.menu.QuerySysMenuVo;
 import com.lframework.starter.web.inner.vo.system.menu.UpdateSysMenuVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import java.util.List;
@@ -29,6 +31,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -60,15 +63,17 @@ public class SysMenuController extends DefaultBaseController {
    * 系统菜单列表
    */
   @ApiOperation("系统菜单列表")
-  @HasPermission({"system:menu:query", "system:menu:add"})
+  @HasPermission(value = {"system:menu:query", "system:menu:add"}, requirePlatform = true)
   @GetMapping("/query")
-  public InvokeResult<List<QuerySysMenuBo>> query() {
+  public InvokeResult<List<QuerySysMenuBo>> query(@Valid QuerySysMenuVo vo) {
+
+    TenantContextHolder.setTenantId(vo.getTenantId());
 
     // 先查询当前租户使用的module
     List<Integer> moduleIds = null;
     if (TenantUtil.enableTenant()) {
       moduleIds = sysModuleTenantService.getAvailableModuleIdsByTenantId(
-          TenantContextHolder.getTenantId());
+          vo.getTenantId());
     }
 
     List<QuerySysMenuBo> results = CollectionUtil.emptyList();
@@ -84,9 +89,11 @@ public class SysMenuController extends DefaultBaseController {
    * 新增系统菜单
    */
   @ApiOperation("新增系统菜单")
-  @HasPermission({"system:menu:add"})
+  @HasPermission(value = {"system:menu:add"}, requirePlatform = true)
   @PostMapping
   public InvokeResult<Void> add(@Valid CreateSysMenuVo vo) {
+
+    TenantContextHolder.setTenantId(vo.getTenantId());
 
     this.validVo(vo);
 
@@ -99,10 +106,16 @@ public class SysMenuController extends DefaultBaseController {
    * 查看系统菜单
    */
   @ApiOperation("查看系统菜单")
-  @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
+  @ApiImplicitParams({
+      @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true),
+      @ApiImplicitParam(value = "租户ID", name = "tenantId", paramType = "query", required = true)
+  })
   @HasPermission({"system:menu:query", "system:menu:add", "system:menu:modify"})
   @GetMapping
-  public InvokeResult<GetSysMenuBo> get(@NotBlank(message = "ID不能为空！") String id) {
+  public InvokeResult<GetSysMenuBo> get(@NotBlank(message = "ID不能为空！") String id,
+      @NotNull(message = "租户ID不能为空！") Integer tenantId) {
+
+    TenantContextHolder.setTenantId(tenantId);
 
     SysMenu data = sysMenuService.findById(id);
     if (ObjectUtil.isNull(data)) {
@@ -116,9 +129,11 @@ public class SysMenuController extends DefaultBaseController {
    * 修改系统菜单
    */
   @ApiOperation("修改系统菜单")
-  @HasPermission({"system:menu:modify"})
+  @HasPermission(value = {"system:menu:modify"}, requirePlatform = true)
   @PutMapping
   public InvokeResult<Void> modify(@Valid UpdateSysMenuVo vo) {
+
+    TenantContextHolder.setTenantId(vo.getTenantId());
 
     this.validVo(vo);
 
@@ -133,10 +148,16 @@ public class SysMenuController extends DefaultBaseController {
    * 根据ID删除
    */
   @ApiOperation("根据ID删除")
-  @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
-  @HasPermission({"system:menu:delete"})
+  @ApiImplicitParams({
+      @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true),
+      @ApiImplicitParam(value = "租户ID", name = "tenantId", paramType = "query", required = true)
+  })
+  @HasPermission(value = {"system:menu:delete"}, requirePlatform = true)
   @DeleteMapping
-  public InvokeResult<Void> delete(@NotBlank(message = "ID不能为空！") String id) {
+  public InvokeResult<Void> delete(@NotBlank(message = "ID不能为空！") String id,
+      @NotNull(message = "租户ID不能为空！") Integer tenantId) {
+
+    TenantContextHolder.setTenantId(tenantId);
 
     sysMenuService.deleteById(id);
 
@@ -149,10 +170,17 @@ public class SysMenuController extends DefaultBaseController {
    * 启用
    */
   @ApiOperation("启用")
-  @HasPermission({"system:menu:modify"})
+  @ApiImplicitParams({
+      @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true),
+      @ApiImplicitParam(value = "租户ID", name = "tenantId", paramType = "query", required = true)
+  })
+  @HasPermission(value = {"system:menu:modify"}, requirePlatform = true)
   @PatchMapping("/enable")
   public InvokeResult<Void> enable(
-      @ApiParam(value = "菜单ID", required = true) @NotEmpty(message = "菜单ID不能为空！") String id) {
+      @ApiParam(value = "菜单ID", required = true) @NotEmpty(message = "菜单ID不能为空！") String id,
+      @NotNull(message = "租户ID不能为空！") Integer tenantId) {
+
+    TenantContextHolder.setTenantId(tenantId);
 
     sysMenuService.enable(id);
 
@@ -165,10 +193,17 @@ public class SysMenuController extends DefaultBaseController {
    * 停用
    */
   @ApiOperation("停用")
-  @HasPermission({"system:menu:modify"})
+  @ApiImplicitParams({
+      @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true),
+      @ApiImplicitParam(value = "租户ID", name = "tenantId", paramType = "query", required = true)
+  })
+  @HasPermission(value = {"system:menu:modify"}, requirePlatform = true)
   @PatchMapping("/unable")
   public InvokeResult<Void> unable(
-      @ApiParam(value = "菜单ID", required = true) @NotEmpty(message = "菜单ID不能为空！") String id) {
+      @ApiParam(value = "菜单ID", required = true) @NotEmpty(message = "菜单ID不能为空！") String id,
+      @NotNull(message = "租户ID不能为空！") Integer tenantId) {
+
+    TenantContextHolder.setTenantId(tenantId);
 
     sysMenuService.unable(id);
 

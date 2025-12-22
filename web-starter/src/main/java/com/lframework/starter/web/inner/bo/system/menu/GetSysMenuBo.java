@@ -3,10 +3,7 @@ package com.lframework.starter.web.inner.bo.system.menu;
 import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.web.core.bo.BaseBo;
 import com.lframework.starter.web.core.utils.ApplicationUtil;
-import com.lframework.starter.web.gen.entity.GenCustomList;
-import com.lframework.starter.web.gen.service.GenCustomListService;
 import com.lframework.starter.web.inner.entity.SysMenu;
-import com.lframework.starter.web.inner.enums.system.SysMenuComponentType;
 import com.lframework.starter.web.inner.service.system.SysMenuService;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -179,14 +176,5 @@ public class GetSysMenuBo extends BaseBo<SysMenu> {
     }
 
     this.componentType = dto.getComponentType() == null ? null : dto.getComponentType().getCode();
-    if (dto.getComponentType() == SysMenuComponentType.CUSTOM_LIST) {
-      this.customListId = dto.getComponent();
-      GenCustomListService genCustomListService = ApplicationUtil
-          .getBean(GenCustomListService.class);
-      GenCustomList customList = genCustomListService.findById(dto.getComponent());
-      this.customListName = customList.getName();
-    } else if (dto.getComponentType() == SysMenuComponentType.CUSTOM_PAGE) {
-      this.customPageId = dto.getComponent();
-    }
   }
 }

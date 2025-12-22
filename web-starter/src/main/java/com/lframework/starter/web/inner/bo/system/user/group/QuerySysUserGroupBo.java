@@ -55,12 +55,6 @@ public class QuerySysUserGroupBo extends BaseBo<SysUserGroup> {
   @JsonFormat(pattern = StringPool.DATE_TIME_PATTERN)
   private LocalDateTime createTime;
 
-  /**
-   * 状态
-   */
-  @ApiModelProperty("状态")
-  private Boolean available;
-
   public QuerySysUserGroupBo() {
 
   }
