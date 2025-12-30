@@ -30,7 +30,7 @@ public interface StringPool {
   /**
    * 中文字符串分隔符
    */
-  String STR_SPLIT_CN = "，";
+  String STR_SPLIT_CN = "、";
 
   /**
    * 城市名称分隔符

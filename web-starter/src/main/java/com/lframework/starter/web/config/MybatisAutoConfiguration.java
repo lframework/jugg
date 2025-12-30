@@ -16,6 +16,9 @@ import com.lframework.starter.web.core.interceptors.CustomSortInterceptor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 
 @Configuration
 public class MybatisAutoConfiguration {
@@ -39,6 +42,7 @@ public class MybatisAutoConfiguration {
     return interceptor;
   }
 
+  @Primary
   @Bean
   public MybatisPlusUpdateAllColumnInjector mybatisPlusUpdateAllColumnInjector() {
     return new MybatisPlusUpdateAllColumnInjector();

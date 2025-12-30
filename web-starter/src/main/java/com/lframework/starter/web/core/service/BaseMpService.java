@@ -4,6 +4,7 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
+import com.github.yulichang.base.MPJBaseService;
 import com.lframework.starter.common.utils.BeanUtil;
 import com.lframework.starter.common.utils.CollectionUtil;
 import com.lframework.starter.web.core.constants.MyBatisStringPool;
@@ -18,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author zmj
  */
-public interface BaseMpService<T> extends IService<T> {
+public interface BaseMpService<T> extends MPJBaseService<T> {
 
   default <S> S getThis(Class<S> clazz) {
 

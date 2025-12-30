@@ -3,6 +3,7 @@ package com.lframework.starter.web.core.mapper;
 import com.baomidou.mybatisplus.core.conditions.AbstractWrapper;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
+import com.github.yulichang.base.MPJBaseMapper;
 import com.lframework.starter.common.exceptions.impl.DefaultSysException;
 import com.lframework.starter.common.utils.ArrayUtil;
 import com.lframework.starter.common.utils.ReflectUtil;
@@ -18,7 +19,7 @@ import org.slf4j.LoggerFactory;
  * @param <T>
  * @author zmj
  */
-public interface BaseMapper<T> extends com.baomidou.mybatisplus.core.mapper.BaseMapper<T> {
+public interface BaseMapper<T> extends MPJBaseMapper<T> {
 
   Logger LOGGER = LoggerFactory.getLogger(BaseMapper.class);
 

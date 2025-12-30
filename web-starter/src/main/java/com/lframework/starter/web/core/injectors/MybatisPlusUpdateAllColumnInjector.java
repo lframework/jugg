@@ -4,12 +4,12 @@ import static java.util.stream.Collectors.joining;
 
 import com.baomidou.mybatisplus.core.enums.SqlMethod;
 import com.baomidou.mybatisplus.core.injector.AbstractMethod;
-import com.baomidou.mybatisplus.core.injector.DefaultSqlInjector;
 import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.core.toolkit.sql.SqlScriptUtils;
+import com.github.yulichang.injector.MPJSqlInjector;
 import com.lframework.starter.web.core.constants.SqlMethodConstants;
 import java.util.List;
 import java.util.Objects;
@@ -19,7 +19,7 @@ import lombok.experimental.Accessors;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlSource;
 
-public class MybatisPlusUpdateAllColumnInjector extends DefaultSqlInjector {
+public class MybatisPlusUpdateAllColumnInjector extends MPJSqlInjector {
 
   @Override
   public List<AbstractMethod> getMethodList(Class<?> mapperClass) {

@@ -1,11 +1,13 @@
 package com.lframework.starter.web.inner.listeners;
 
-import com.lframework.starter.web.core.components.tenant.TenantContextHolder;
-import com.lframework.starter.web.core.components.qrtz.QrtzJob;
-import com.lframework.starter.web.core.utils.TenantUtil;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.lframework.starter.web.core.components.qrtz.QrtzHandler;
-import com.lframework.starter.web.inner.service.OpLogsService;
+import com.lframework.starter.web.core.components.qrtz.QrtzJob;
+import com.lframework.starter.web.core.components.tenant.TenantContextHolder;
+import com.lframework.starter.web.core.utils.TenantUtil;
 import com.lframework.starter.web.inner.entity.Tenant;
+import com.lframework.starter.web.inner.service.OpLogsService;
 import com.lframework.starter.web.inner.service.TenantService;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -73,7 +75,9 @@ public class OpLogTimerListener implements ApplicationListener<ApplicationReadyE
       LocalDateTime endTime = now.minusDays(retainDays);
 
       if (TenantUtil.enableTenant()) {
-        List<Tenant> tenants = tenantService.list();
+        Wrapper<Tenant> queryWrapper = Wrappers.lambdaQuery(Tenant.class)
+            .eq(Tenant::getAvailable, true);
+        List<Tenant> tenants = tenantService.list(queryWrapper);
         for (Tenant tenant : tenants) {
           TenantContextHolder.setTenantId(tenant.getId());
           opLogsService.clearLogs(endTime);

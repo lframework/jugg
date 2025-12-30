@@ -13,6 +13,7 @@ import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
+import com.github.yulichang.base.MPJBaseServiceImpl;
 import com.lframework.starter.common.exceptions.impl.DefaultSysException;
 import com.lframework.starter.common.utils.ArrayUtil;
 import com.lframework.starter.common.utils.ReflectUtil;
@@ -27,7 +28,7 @@ import java.util.Objects;
 import org.apache.ibatis.binding.MapperMethod;
 import org.springframework.transaction.annotation.Transactional;
 
-public abstract class BaseMpServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<M, T>
+public abstract class BaseMpServiceImpl<M extends BaseMapper<T>, T> extends MPJBaseServiceImpl<M, T>
     implements BaseMpService<T> {
 
   @Transactional(rollbackFor = Exception.class)
