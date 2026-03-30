@@ -3,6 +3,7 @@ package com.lframework.starter.web.inner.service.system;
 import com.lframework.starter.web.inner.dto.system.MenuDto;
 import com.lframework.starter.web.inner.entity.SysMenu;
 import com.lframework.starter.web.core.service.BaseMpService;
+import com.lframework.starter.web.inner.vo.auth.SaveUserMenuSortVo;
 import com.lframework.starter.web.inner.vo.system.menu.CreateSysMenuVo;
 import com.lframework.starter.web.inner.vo.system.menu.SysMenuSelectorVo;
 import com.lframework.starter.web.inner.vo.system.menu.UpdateSysMenuVo;
@@ -138,4 +139,10 @@ public interface SysMenuService extends BaseMpService<SysMenu> {
    * @return
    */
   List<String> getParentMenuIds(String menuId);
+
+  /**
+   * 保存用户菜单排序偏好
+   */
+  void saveUserMenuSort(String userId, boolean isAdmin, List<Integer> moduleIds,
+      SaveUserMenuSortVo vo);
 }

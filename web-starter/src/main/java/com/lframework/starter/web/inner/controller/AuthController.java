@@ -58,6 +58,7 @@ import com.lframework.starter.web.inner.service.system.SysMenuService;
 import com.lframework.starter.web.inner.service.system.SysUserDeptService;
 import com.lframework.starter.web.inner.service.system.SysUserRoleService;
 import com.lframework.starter.web.inner.service.system.SysUserService;
+import com.lframework.starter.web.inner.vo.auth.SaveUserMenuSortVo;
 import com.lframework.starter.web.inner.vo.system.permission.SysDataPermissionModelDetailVo;
 import com.lframework.starter.web.inner.vo.system.user.GetLoginCaptchaRequireVo;
 import com.lframework.starter.web.inner.vo.system.user.LoginVo;
@@ -82,6 +83,7 @@ import org.springframework.util.FastByteArrayOutputStream;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -352,6 +354,22 @@ public class AuthController extends DefaultBaseController {
     }
 
     return InvokeResultBuilder.success(results);
+  }
+
+  @ApiOperation("保存用户菜单排序")
+  @PostMapping("/auth/menus/sort")
+  public InvokeResult<Void> saveMenusSort(@Valid @RequestBody SaveUserMenuSortVo vo) {
+
+    AbstractUserDetails user = getCurrentUser();
+    List<Integer> moduleIds = null;
+    if (TenantUtil.enableTenant()) {
+      moduleIds = sysModuleTenantService.getAvailableModuleIdsByTenantId(
+          TenantContextHolder.getTenantId());
+    }
+
+    sysMenuService.saveUserMenuSort(user.getId(), user.isAdmin(), moduleIds, vo);
+
+    return InvokeResultBuilder.success();
   }
 
   @ApiOperation("验证当前登录人的登录密码")

@@ -115,6 +115,7 @@ import com.lframework.starter.web.inner.impl.system.SysSiteMessageServiceImpl;
 import com.lframework.starter.web.inner.impl.system.SysUserDeptServiceImpl;
 import com.lframework.starter.web.inner.impl.system.SysUserGroupDetailServiceImpl;
 import com.lframework.starter.web.inner.impl.system.SysUserGroupServiceImpl;
+import com.lframework.starter.web.inner.impl.system.SysUserMenuSortServiceImpl;
 import com.lframework.starter.web.inner.impl.system.SysUserRoleServiceImpl;
 import com.lframework.starter.web.inner.impl.system.SysUserServiceImpl;
 import com.lframework.starter.web.inner.impl.system.SysUserTelephoneServiceImpl;
@@ -193,6 +194,7 @@ import org.springframework.core.env.Environment;
     SysUserDeptServiceImpl.class,
     SysUserGroupDetailServiceImpl.class,
     SysUserGroupServiceImpl.class,
+    SysUserMenuSortServiceImpl.class,
     SysUserRoleServiceImpl.class,
     SysUserServiceImpl.class,
     SysUserTelephoneServiceImpl.class,

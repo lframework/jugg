@@ -19,11 +19,15 @@ import com.lframework.starter.web.core.utils.SpelUtil;
 import com.lframework.starter.web.inner.components.oplog.SystemOpLogType;
 import com.lframework.starter.web.inner.dto.system.MenuDto;
 import com.lframework.starter.web.inner.entity.SysMenu;
+import com.lframework.starter.web.inner.entity.SysUserMenuSort;
 import com.lframework.starter.web.inner.enums.system.SysMenuComponentType;
 import com.lframework.starter.web.inner.enums.system.SysMenuDisplay;
 import com.lframework.starter.web.inner.mappers.system.SysMenuMapper;
 import com.lframework.starter.web.inner.service.system.SysMenuService;
+import com.lframework.starter.web.inner.service.system.SysUserMenuSortService;
 import com.lframework.starter.web.core.utils.OpLogUtil;
+import com.lframework.starter.web.inner.support.system.UserMenuSortSupport;
+import com.lframework.starter.web.inner.vo.auth.SaveUserMenuSortVo;
 import com.lframework.starter.web.inner.vo.system.menu.CreateSysMenuVo;
 import com.lframework.starter.web.inner.vo.system.menu.SysMenuSelectorVo;
 import com.lframework.starter.web.inner.vo.system.menu.UpdateSysMenuVo;
@@ -59,6 +63,11 @@ public class SysMenuServiceImpl extends BaseMpServiceImpl<SysMenuMapper, SysMenu
 
   @Autowired
   private UserTokenResolver userTokenResolver;
+
+  @Autowired
+  private SysUserMenuSortService sysUserMenuSortService;
+
+  private final UserMenuSortSupport userMenuSortSupport = new UserMenuSortSupport();
 
   @Override
   public List<SysMenu> queryList(List<Integer> moduleIds) {
@@ -381,6 +390,11 @@ public class SysMenuServiceImpl extends BaseMpServiceImpl<SysMenuMapper, SysMenu
           menu.setIsCollect(collectionMenuIds.contains(menu.getId()));
         });
       }
+
+      List<SysUserMenuSort> userMenuSorts = sysUserMenuSortService.getByUserId(userId);
+      if (CollectionUtil.isNotEmpty(userMenuSorts)) {
+        menus = userMenuSortSupport.sortMenus(menus, userMenuSorts);
+      }
     }
 
     return menus;
@@ -438,6 +452,15 @@ public class SysMenuServiceImpl extends BaseMpServiceImpl<SysMenuMapper, SysMenu
     }
 
     return results;
+  }
+
+  @Override
+  public void saveUserMenuSort(String userId, boolean isAdmin, List<Integer> moduleIds,
+      SaveUserMenuSortVo vo) {
+
+    List<MenuDto> menus = this.doGetMenus(userId, isAdmin, moduleIds);
+    List<SysUserMenuSort> records = userMenuSortSupport.buildSortRecords(userId, menus, vo);
+    sysUserMenuSortService.replaceUserSorts(userId, records);
   }
 
   private List<String> getAllExpressions(String s) {
