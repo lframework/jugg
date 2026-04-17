@@ -11,14 +11,14 @@ import com.lframework.starter.web.inner.entity.SysRoleCategory;
 import com.lframework.starter.web.inner.service.system.SysRoleCategoryService;
 import com.lframework.starter.web.inner.vo.system.role.category.CreateSysRoleCategoryVo;
 import com.lframework.starter.web.inner.vo.system.role.category.UpdateSysRoleCategoryVo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author zmj
  */
-@Api(tags = "角色分类")
+@Tag(name = "角色分类")
 @Validated
 @RestController
 @RequestMapping("/sys/role/category")
@@ -45,7 +45,7 @@ public class SysRoleCategoryController extends DefaultBaseController {
   /**
    * 查询列表
    */
-  @ApiOperation("查询列表")
+  @Operation(summary = "查询列表")
   @GetMapping("/query")
   public InvokeResult<List<QuerySysRoleCategoryBo>> query() {
     List<SysRoleCategory> datas = sysRoleCategoryService.queryList();
@@ -60,8 +60,8 @@ public class SysRoleCategoryController extends DefaultBaseController {
   /**
    * 根据ID查询
    */
-  @ApiOperation("根据ID查询")
-  @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
+  @Operation(summary = "根据ID查询")
+  @Parameter(name = "id", description = "ID", required = true)
   @GetMapping
   public InvokeResult<GetSysRoleCategoryBo> get(@NotBlank(message = "ID不能为空！") String id) {
 
@@ -78,7 +78,7 @@ public class SysRoleCategoryController extends DefaultBaseController {
   /**
    * 新增角色分类
    */
-  @ApiOperation("新增角色分类")
+  @Operation(summary = "新增角色分类")
   @PostMapping
   public InvokeResult<Void> create(@Valid CreateSysRoleCategoryVo vo) {
 
@@ -92,7 +92,7 @@ public class SysRoleCategoryController extends DefaultBaseController {
   /**
    * 修改角色分类
    */
-  @ApiOperation("修改角色分类")
+  @Operation(summary = "修改角色分类")
   @PutMapping
   public InvokeResult<Void> update(@Valid UpdateSysRoleCategoryVo vo) {
 
@@ -103,7 +103,7 @@ public class SysRoleCategoryController extends DefaultBaseController {
     return InvokeResultBuilder.success();
   }
 
-  @ApiOperation("删除角色分类")
+  @Operation(summary = "删除角色分类")
   @DeleteMapping
   public InvokeResult<Void> delete(@NotBlank(message = "ID不能为空！") String id) {
 

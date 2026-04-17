@@ -5,7 +5,7 @@ import com.lframework.starter.bpm.service.FlowCategoryService;
 import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.web.core.bo.BaseBo;
 import com.lframework.starter.web.core.utils.ApplicationUtil;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
@@ -14,23 +14,23 @@ public class DetailFlowCategoryBo extends BaseBo<FlowCategory> {
   /**
    * ID
    */
-  @ApiModelProperty("ID")
+  @Schema(description = "ID")
   private String id;
   /**
    * 流程类型名称
    */
-  @ApiModelProperty("流程类型名称")
+  @Schema(description = "流程类型名称")
   private String name;
   /**
    * 父节点ID
    */
-  @ApiModelProperty("父节点ID")
+  @Schema(description = "父节点ID")
   private String parentId;
 
   /**
    * 父节点名称
    */
-  @ApiModelProperty("父节点名称")
+  @Schema(description = "父节点名称")
   private String parentName;
 
   public DetailFlowCategoryBo(FlowCategory dto) {

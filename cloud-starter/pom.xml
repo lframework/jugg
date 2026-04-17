@@ -5,7 +5,7 @@
   <parent>
     <artifactId>parent</artifactId>
     <groupId>com.lframework</groupId>
-    <version>4.1.2</version>
+    <version>5.0.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -49,11 +49,6 @@
       <artifactId>spring-cloud-alibaba-seata</artifactId>
       <groupId>com.alibaba.cloud</groupId>
     </dependency>-->
-
-    <dependency>
-      <artifactId>spring-cloud-starter-zipkin</artifactId>
-      <groupId>org.springframework.cloud</groupId>
-    </dependency>
 
     <dependency>
       <groupId>com.alibaba.cloud</groupId>

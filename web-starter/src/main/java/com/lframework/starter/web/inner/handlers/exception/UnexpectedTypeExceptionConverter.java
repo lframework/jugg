@@ -4,7 +4,7 @@ package com.lframework.starter.web.inner.handlers.exception;
 import com.lframework.starter.common.exceptions.BaseException;
 import com.lframework.starter.common.exceptions.impl.InputErrorException;
 import com.lframework.starter.web.core.handlers.exception.WebExceptionConverter;
-import javax.validation.UnexpectedTypeException;
+import jakarta.validation.UnexpectedTypeException;
 
 /**
  * 处理传入参数类型转换错误异常

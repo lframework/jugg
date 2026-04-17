@@ -13,13 +13,13 @@ import com.lframework.starter.web.inner.bo.system.oplog.QueryOpLogBo;
 import com.lframework.starter.web.inner.entity.OpLogs;
 import com.lframework.starter.web.inner.service.OpLogsService;
 import com.lframework.starter.web.inner.vo.oplogs.QueryOpLogsVo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author zmj
  */
-@Api(tags = "操作日志")
+@Tag(name = "操作日志")
 @Validated
 @RestController
 @RequestMapping("/system/oplog")
@@ -43,7 +43,7 @@ public class OpLogController extends DefaultBaseController {
   /**
    * 操作日志列表
    */
-  @ApiOperation("操作日志列表")
+  @Operation(summary = "操作日志列表")
   @HasPermission({"system:oplog:query"})
   @GetMapping("/query")
   public InvokeResult<PageResult<QueryOpLogBo>> query(@Valid QueryOpLogsVo vo) {
@@ -64,8 +64,8 @@ public class OpLogController extends DefaultBaseController {
   /**
    * 操作日志详情
    */
-  @ApiOperation("操作日志详情")
-  @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
+  @Operation(summary = "操作日志详情")
+  @Parameter(name = "id", description = "ID", required = true)
   @HasPermission({"system:oplog:query"})
   @GetMapping
   public InvokeResult<GetOpLogBo> findById(@NotBlank(message = "ID不能为空") String id) {

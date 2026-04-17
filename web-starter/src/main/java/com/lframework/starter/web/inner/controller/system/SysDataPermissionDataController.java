@@ -14,12 +14,12 @@ import com.lframework.starter.web.core.components.resp.InvokeResult;
 import com.lframework.starter.web.core.components.resp.InvokeResultBuilder;
 import com.lframework.starter.web.core.utils.EnumUtil;
 import com.lframework.starter.web.core.utils.IdUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author zmj
  */
-@Api(tags = "数据权限数据")
+@Tag(name = "数据权限数据")
 @Validated
 @RestController
 @RequestMapping("/system/data/permission/data")
@@ -44,7 +44,7 @@ public class SysDataPermissionDataController extends DefaultBaseController {
   @Autowired
   private SysRoleService sysRoleService;
 
-  @ApiOperation("保存")
+  @Operation(summary = "保存")
   @PostMapping
   public InvokeResult<Void> save(@Valid @RequestBody List<CreateSysDataPermissionDataVo> data) {
     if (CollectionUtil.isEmpty(data)) {

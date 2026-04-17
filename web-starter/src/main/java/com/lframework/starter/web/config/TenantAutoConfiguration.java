@@ -1,7 +1,8 @@
 package com.lframework.starter.web.config;
 
+import com.baomidou.dynamic.datasource.creator.DefaultDataSourceCreator;
+import com.baomidou.dynamic.datasource.creator.DataSourceProperty;
 import com.baomidou.dynamic.datasource.provider.AbstractJdbcDataSourceProvider;
-import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DataSourceProperty;
 import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceProperties;
 import com.lframework.starter.web.config.properties.SecretProperties;
 import com.lframework.starter.web.core.components.tenant.TenantInterceptor;
@@ -52,10 +53,11 @@ public class TenantAutoConfiguration {
 
   @Bean
   public AbstractJdbcDataSourceProvider tenantDataSourceProvider(
-      SecretProperties secretProperties) {
+      DefaultDataSourceCreator defaultDataSourceCreator, SecretProperties secretProperties) {
     DataSourceProperty dataSourceProperty = dynamicDataSourceProperties.getDatasource()
         .get("master");
-    return new AbstractJdbcDataSourceProvider(dataSourceProperty.getDriverClassName(),
+    return new AbstractJdbcDataSourceProvider(defaultDataSourceCreator,
+        dataSourceProperty.getDriverClassName(),
         dataSourceProperty.getUrl(), dataSourceProperty.getUsername(),
         dataSourceProperty.getPassword()) {
       @Override

@@ -2,7 +2,7 @@ package com.lframework.starter.web.inner.vo.system.role;
 
 import com.lframework.starter.web.core.vo.BaseVo;
 import com.lframework.starter.web.core.vo.SortPageVo;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
 import lombok.Data;
 
@@ -14,18 +14,18 @@ public class QuerySysRoleVo extends SortPageVo implements BaseVo, Serializable {
   /**
    * 编号
    */
-  @ApiModelProperty("编号")
+  @Schema(description = "编号")
   private String code;
 
   /**
    * 名称
    */
-  @ApiModelProperty("名称")
+  @Schema(description = "名称")
   private String name;
 
   /**
    * 分类ID
    */
-  @ApiModelProperty("分类ID")
+  @Schema(description = "分类ID")
   private String categoryId;
 }

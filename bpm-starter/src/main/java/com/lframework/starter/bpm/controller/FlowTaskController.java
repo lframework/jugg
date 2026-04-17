@@ -21,13 +21,13 @@ import com.lframework.starter.web.core.components.resp.InvokeResultBuilder;
 import com.lframework.starter.web.core.components.resp.PageResult;
 import com.lframework.starter.web.core.controller.DefaultBaseController;
 import com.lframework.starter.web.core.utils.PageResultUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.dromara.warm.flow.core.entity.Task;
 import org.dromara.warm.flow.core.enums.CooperateType;
 import org.dromara.warm.flow.core.service.TaskService;
@@ -41,7 +41,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api(tags = "流程任务")
+@Tag(name = "流程任务")
 @Validated
 @RestController
 @RequestMapping("/flow/task")
@@ -56,7 +56,7 @@ public class FlowTaskController extends DefaultBaseController {
   @Autowired
   private FlowNodeMapper flowNodeMapper;
 
-  @ApiOperation("查询待办任务列表")
+  @Operation(summary = "查询待办任务列表")
   @GetMapping("/list/todo")
   public InvokeResult<PageResult<QueryTodoTaskListBo>> queryTodoList(
       @Valid QueryTodoTaskListVo vo) {
@@ -69,7 +69,7 @@ public class FlowTaskController extends DefaultBaseController {
     return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
   }
 
-  @ApiOperation("查询我的发起列表")
+  @Operation(summary = "查询我的发起列表")
   @GetMapping("/list/my")
   public InvokeResult<PageResult<QueryMyTaskListBo>> queryMyList(
       @Valid QueryMyTaskListVo vo) {
@@ -82,7 +82,7 @@ public class FlowTaskController extends DefaultBaseController {
     return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
   }
 
-  @ApiOperation("查询流程实例列表")
+  @Operation(summary = "查询流程实例列表")
   @GetMapping("/list/instance")
   public InvokeResult<PageResult<QueryInstanceListBo>> queryInstanceList(
       @Valid QueryInstanceListVo vo) {
@@ -95,8 +95,8 @@ public class FlowTaskController extends DefaultBaseController {
     return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
   }
 
-  @ApiOperation("根据ID查询审核类型")
-  @ApiImplicitParam(value = "流程任务ID", name = "id", paramType = "query", required = true)
+  @Operation(summary = "根据ID查询审核类型")
+  @Parameter(name = "id", description = "流程任务ID", required = true)
   @GetMapping("/cooperate")
   public InvokeResult<Integer> getCooperateType(@NotNull(message = "流程任务ID不能为空！") Long id) {
     Task task = taskService.getById(id);
@@ -122,35 +122,35 @@ public class FlowTaskController extends DefaultBaseController {
     }
   }
 
-  @ApiOperation("审核通过")
+  @Operation(summary = "审核通过")
   @PostMapping("/approve/pass")
   public InvokeResult<Void> approvePass(@Valid @RequestBody ApprovePassTaskVo vo) {
     flowTaskWrapperService.approvePass(vo);
     return InvokeResultBuilder.success();
   }
 
-  @ApiOperation("审核拒绝")
+  @Operation(summary = "审核拒绝")
   @PostMapping("/approve/refuse")
   public InvokeResult<Void> approveRefuse(@Valid @RequestBody ApproveRefuseTaskVo vo) {
     flowTaskWrapperService.approveRefuse(vo);
     return InvokeResultBuilder.success();
   }
 
-  @ApiOperation("撤回")
+  @Operation(summary = "撤回")
   @PostMapping("/undo")
   public InvokeResult<Void> undo(@Valid @RequestBody UndoTaskVo vo) {
     flowTaskWrapperService.undo(vo);
     return InvokeResultBuilder.success();
   }
 
-  @ApiOperation("反对")
+  @Operation(summary = "反对")
   @PostMapping("/reject")
   public InvokeResult<Void> reject(@Valid @RequestBody RejectTaskVo vo) {
     flowTaskWrapperService.reject(vo);
     return InvokeResultBuilder.success();
   }
 
-  @ApiOperation("终止")
+  @Operation(summary = "终止")
   @PostMapping("/termination")
   public InvokeResult<Void> termination(@NotNull(message = "流程实例ID不能为空！") Long instanceId) {
     flowTaskWrapperService.termination(instanceId);

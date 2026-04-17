@@ -6,7 +6,7 @@ import com.lframework.starter.web.core.bo.BaseBo;
 import com.lframework.starter.web.core.utils.EnumUtil;
 import com.lframework.starter.web.inner.entity.SysNotifyGroup;
 import com.lframework.starter.web.inner.enums.system.SysNotifyMessageType;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -25,43 +25,43 @@ public class QuerySysNotifyGroupBo extends BaseBo<SysNotifyGroup> {
   /**
    * ID
    */
-  @ApiModelProperty("ID")
+  @Schema(description = "ID")
   private String id;
 
   /**
    * 名称
    */
-  @ApiModelProperty("名称")
+  @Schema(description = "名称")
   private String name;
 
   /**
    * 接收者类型
    */
-  @ApiModelProperty("接收者类型")
+  @Schema(description = "接收者类型")
   private String receiverType;
 
   /**
    * 消息类型
    */
-  @ApiModelProperty("消息类型")
+  @Schema(description = "消息类型")
   private String messageType;
 
   /**
    * 备注
    */
-  @ApiModelProperty("备注")
+  @Schema(description = "备注")
   private String description;
 
   /**
    * 创建人
    */
-  @ApiModelProperty("创建人")
+  @Schema(description = "创建人")
   private String createBy;
 
   /**
    * 创建时间
    */
-  @ApiModelProperty("创建时间")
+  @Schema(description = "创建时间")
   @JsonFormat(pattern = StringPool.DATE_TIME_PATTERN)
   private LocalDateTime createTime;
 
@@ -75,6 +75,7 @@ public class QuerySysNotifyGroupBo extends BaseBo<SysNotifyGroup> {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public BaseBo<SysNotifyGroup> convert(SysNotifyGroup dto) {
     return super.convert(dto, QuerySysNotifyGroupBo::getReceiverType,
         QuerySysNotifyGroupBo::getMessageType);

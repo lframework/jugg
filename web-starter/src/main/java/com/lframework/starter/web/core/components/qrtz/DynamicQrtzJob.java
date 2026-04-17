@@ -7,6 +7,7 @@ import com.lframework.starter.web.core.utils.EnumUtil;
 import com.lframework.starter.web.core.utils.GroovyUtil;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Objects;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
@@ -26,14 +27,14 @@ public class DynamicQrtzJob extends QrtzJob {
     if (jobType == QrtzJobType.EXCUTE_CLASS) {
       String targetClassName = jobDataMap.getString("targetClassName");
       String targetMethodName = jobDataMap.getString("targetMethodName");
-      List<String> targetParamTypes = (List<String>) jobDataMap.get("targetParamTypes");
-      List<String> targetParams = (List<String>) jobDataMap.get("targetParams");
+      List<String> targetParamTypes = toStringList(jobDataMap.get("targetParamTypes"));
+      List<String> targetParams = toStringList(jobDataMap.get("targetParams"));
 
-      Class clazz = Class.forName(targetClassName);
+      Class<?> clazz = Class.forName(targetClassName);
       Object target = ReflectUtil.newInstance(clazz);
-      Class[] paramTypes = null;
+      Class<?>[] paramTypes = null;
       if (!CollectionUtil.isEmpty(targetParamTypes)) {
-        paramTypes = new Class[targetParamTypes.size()];
+        paramTypes = new Class<?>[targetParamTypes.size()];
         for (int i = 0; i < targetParamTypes.size(); i++) {
           String targetParamType = targetParamTypes.get(i);
           paramTypes[i] = Class.forName(targetParamType);
@@ -54,5 +55,13 @@ public class DynamicQrtzJob extends QrtzJob {
       String script = jobDataMap.getString("script");
       GroovyUtil.excuteScript(script);
     }
+  }
+
+  private List<String> toStringList(Object value) {
+    if (!(value instanceof List<?> list)) {
+      return null;
+    }
+
+    return list.stream().filter(Objects::nonNull).map(String::valueOf).toList();
   }
 }

@@ -9,19 +9,19 @@ import com.lframework.starter.common.exceptions.impl.DefaultClientException;
 import com.lframework.starter.web.core.components.resp.InvokeResult;
 import com.lframework.starter.web.core.components.resp.InvokeResultBuilder;
 import com.lframework.starter.web.core.controller.DefaultBaseController;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api(tags = "流程实例")
+@Tag(name = "流程实例")
 @Validated
 @RestController
 @RequestMapping("/flow/instance")
@@ -35,8 +35,8 @@ public class FlowInstanceController extends DefaultBaseController {
    *
    * @return
    */
-  @ApiOperation("根据业务ID查询")
-  @ApiImplicitParam(value = "业务ID", name = "businessId", paramType = "query", required = true)
+  @Operation(summary = "根据业务ID查询")
+  @Parameter(name = "businessId", description = "业务ID", required = true)
   @GetMapping("/list/business")
   public InvokeResult<List<QueryBusinessFlowInstanceBo>> listBusiness(
       @NotNull(message = "业务ID不能为空！") String businessId) {
@@ -54,8 +54,8 @@ public class FlowInstanceController extends DefaultBaseController {
     return InvokeResultBuilder.success(results);
   }
 
-  @ApiOperation("根据ID查询状态")
-  @ApiImplicitParam(value = "流程实例ID", name = "id", paramType = "query", required = true)
+  @Operation(summary = "根据ID查询状态")
+  @Parameter(name = "id", description = "流程实例ID", required = true)
   @GetMapping("/status")
   public InvokeResult<String> getStatus(@NotNull(message = "流程实例ID不能为空！") Long id) {
     FlowInstanceWrapper instance = flowInstanceWrapperService.getById(id);

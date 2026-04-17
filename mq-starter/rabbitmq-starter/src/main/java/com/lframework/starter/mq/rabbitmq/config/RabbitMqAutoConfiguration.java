@@ -1,5 +1,6 @@
 package com.lframework.starter.mq.rabbitmq.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lframework.starter.common.utils.ArrayUtil;
 import com.lframework.starter.mq.rabbitmq.impl.RabbitMqProducerServiceImpl;
 import com.lframework.starter.mq.rabbitmq.listeners.app.ExportTaskNotifyListener;
@@ -15,6 +16,7 @@ import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFacto
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.retry.MessageRecoverer;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.amqp.DirectRabbitListenerContainerFactoryConfigurer;
@@ -59,6 +61,11 @@ public class RabbitMqAutoConfiguration {
   @Bean
   public RabbitMqProducer activeMQProducer(RabbitTemplate rabbitTemplate) {
     return new RabbitMqProducer(rabbitTemplate);
+  }
+
+  @Bean
+  public MessageConverter rabbitMqMessageConverter(ObjectMapper objectMapper) {
+    return new Jackson2JsonMessageConverter(objectMapper);
   }
 
   @Bean(name = "rabbitListenerContainerFactory")

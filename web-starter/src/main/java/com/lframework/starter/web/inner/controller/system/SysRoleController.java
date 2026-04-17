@@ -15,15 +15,14 @@ import com.lframework.starter.web.core.annotations.security.HasPermission;
 import com.lframework.starter.web.core.controller.DefaultBaseController;
 import com.lframework.starter.web.core.components.resp.InvokeResult;
 import com.lframework.starter.web.core.components.resp.InvokeResultBuilder;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,7 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author zmj
  */
-@Api(tags = "角色管理")
+@Tag(name = "角色管理")
 @Validated
 @RestController
 @RequestMapping("/system/role")
@@ -50,7 +49,7 @@ public class SysRoleController extends DefaultBaseController {
   /**
    * 角色列表
    */
-  @ApiOperation("角色列表")
+  @Operation(summary = "角色列表")
   @HasPermission({"system:role:query","system:role:add","system:role:modify"})
   @GetMapping("/query")
   public InvokeResult<PageResult<QuerySysRoleBo>> query(@Valid QuerySysRoleVo vo) {
@@ -71,8 +70,8 @@ public class SysRoleController extends DefaultBaseController {
   /**
    * 查询角色
    */
-  @ApiOperation("查询角色")
-  @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
+  @Operation(summary = "查询角色")
+  @Parameter(name = "id", description = "ID", required = true)
   @HasPermission({"system:role:query","system:role:add","system:role:modify"})
   @GetMapping
   public InvokeResult<GetSysRoleBo> get(@NotBlank(message = "ID不能为空！") String id) {
@@ -90,11 +89,11 @@ public class SysRoleController extends DefaultBaseController {
   /**
    * 删除角色
    */
-  @ApiOperation("删除角色")
+  @Operation(summary = "删除角色")
   @HasPermission({"system:role:delete"})
   @DeleteMapping
   public InvokeResult<Void> deleteById(
-      @ApiParam(value = "角色ID", required = true) @NotEmpty(message = "角色ID不能为空！") String id) {
+      @Parameter(description = "角色ID", required = true) @NotEmpty(message = "角色ID不能为空！") String id) {
 
     sysRoleService.deleteById(id);
 
@@ -106,7 +105,7 @@ public class SysRoleController extends DefaultBaseController {
   /**
    * 新增角色
    */
-  @ApiOperation("新增角色")
+  @Operation(summary = "新增角色")
   @HasPermission({"system:role:add"})
   @PostMapping
   public InvokeResult<Void> create(@Valid CreateSysRoleVo vo) {
@@ -119,7 +118,7 @@ public class SysRoleController extends DefaultBaseController {
   /**
    * 修改角色
    */
-  @ApiOperation("修改角色")
+  @Operation(summary = "修改角色")
   @HasPermission({"system:role:modify"})
   @PutMapping
   public InvokeResult<Void> update(@Valid UpdateSysRoleVo vo) {

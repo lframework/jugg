@@ -2,15 +2,15 @@ package com.lframework.starter.web.core.components.validation;
 
 import com.lframework.starter.common.utils.RegUtil;
 import com.lframework.starter.common.utils.StringUtil;
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 /**
  * 正则表达式校验 如果参数是null or empty 则通过校验
  *
  * @author zmj
  */
-public class PatternValidator implements ConstraintValidator<Pattern, Object> {
+public class RegexValidator implements ConstraintValidator<Regex, Object> {
 
   /**
    * 正则表达式
@@ -18,7 +18,7 @@ public class PatternValidator implements ConstraintValidator<Pattern, Object> {
   private String regExp;
 
   @Override
-  public void initialize(Pattern constraintAnnotation) {
+  public void initialize(Regex constraintAnnotation) {
 
     this.regExp = constraintAnnotation.regexp();
   }

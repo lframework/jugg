@@ -55,12 +55,12 @@ import com.lframework.starter.web.inner.vo.system.role.category.SysRoleCategoryS
 import com.lframework.starter.web.inner.vo.system.tenant.TenantSelectorVo;
 import com.lframework.starter.web.inner.vo.system.user.SysUserSelectorVo;
 import com.lframework.starter.web.inner.vo.system.user.group.SysUserGroupSelectorVo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -74,7 +74,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author zmj
  */
-@Api(tags = "数据选择器")
+@Tag(name = "数据选择器")
 @Validated
 @RestController
 @RequestMapping("/selector")
@@ -119,7 +119,7 @@ public class DefaultSysSelectorController extends DefaultBaseController {
   /**
    * 系统菜单
    */
-  @ApiOperation("系统菜单")
+  @Operation(summary = "系统菜单")
   @HasPermission(requirePlatform = true)
   @GetMapping("/menu")
   public InvokeResult<List<SysMenuSelectorBo>> menu(@Valid SysMenuSelectorVo vo) {
@@ -142,7 +142,7 @@ public class DefaultSysSelectorController extends DefaultBaseController {
     return InvokeResultBuilder.success(results);
   }
 
-  @ApiOperation("部门")
+  @Operation(summary = "部门")
   @GetMapping("/dept")
   public InvokeResult<List<SysDeptSelectorBo>> dept(@Valid SysDeptSelectorVo vo) {
 
@@ -158,7 +158,7 @@ public class DefaultSysSelectorController extends DefaultBaseController {
   /**
    * 加载部门
    */
-  @ApiOperation("加载部门")
+  @Operation(summary = "加载部门")
   @PostMapping("/dept/load")
   public InvokeResult<List<SysDeptSelectorBo>> loadDept(
       @RequestBody(required = false) List<String> ids) {
@@ -175,7 +175,7 @@ public class DefaultSysSelectorController extends DefaultBaseController {
     return InvokeResultBuilder.success(results);
   }
 
-  @ApiOperation("角色")
+  @Operation(summary = "角色")
   @GetMapping("/role")
   public InvokeResult<PageResult<SysRoleSelectorBo>> role(@Valid SysRoleSelectorVo vo) {
 
@@ -192,7 +192,7 @@ public class DefaultSysSelectorController extends DefaultBaseController {
   /**
    * 加载角色
    */
-  @ApiOperation("加载角色")
+  @Operation(summary = "加载角色")
   @PostMapping("/role/load")
   public InvokeResult<List<SysRoleSelectorBo>> loadRole(
       @RequestBody(required = false) List<String> ids) {
@@ -209,7 +209,7 @@ public class DefaultSysSelectorController extends DefaultBaseController {
     return InvokeResultBuilder.success(results);
   }
 
-  @ApiOperation("角色分类")
+  @Operation(summary = "角色分类")
   @GetMapping("/role/category")
   public InvokeResult<PageResult<SysRoleCategorySelectorBo>> roleCategory(
       @Valid SysRoleCategorySelectorVo vo) {
@@ -228,7 +228,7 @@ public class DefaultSysSelectorController extends DefaultBaseController {
   /**
    * 加载角色分类
    */
-  @ApiOperation("加载角色分类")
+  @Operation(summary = "加载角色分类")
   @PostMapping("/role/category/load")
   public InvokeResult<List<SysRoleCategorySelectorBo>> loadRoleCategory(
       @RequestBody(required = false) List<String> ids) {
@@ -246,7 +246,7 @@ public class DefaultSysSelectorController extends DefaultBaseController {
     return InvokeResultBuilder.success(results);
   }
 
-  @ApiOperation("租户")
+  @Operation(summary = "租户")
   @HasPermission(requirePlatform = true)
   @GetMapping("/tenant")
   public InvokeResult<PageResult<TenantSelectorBo>> tenant(@Valid TenantSelectorVo vo) {
@@ -264,7 +264,7 @@ public class DefaultSysSelectorController extends DefaultBaseController {
   /**
    * 加载租户
    */
-  @ApiOperation("加载租户")
+  @Operation(summary = "加载租户")
   @HasPermission(requirePlatform = true)
   @PostMapping("/tenant/load")
   public InvokeResult<List<TenantSelectorBo>> loadTenant(
@@ -282,7 +282,7 @@ public class DefaultSysSelectorController extends DefaultBaseController {
     return InvokeResultBuilder.success(results);
   }
 
-  @ApiOperation("用户")
+  @Operation(summary = "用户")
   @GetMapping("/user")
   public InvokeResult<PageResult<SysUserSelectorBo>> user(@Valid SysUserSelectorVo vo) {
 
@@ -300,7 +300,7 @@ public class DefaultSysSelectorController extends DefaultBaseController {
   /**
    * 加载用户
    */
-  @ApiOperation("加载用户")
+  @Operation(summary = "加载用户")
   @PostMapping("/user/load")
   public InvokeResult<List<SysUserSelectorBo>> loadUser(
       @RequestBody(required = false) List<String> ids) {
@@ -317,7 +317,7 @@ public class DefaultSysSelectorController extends DefaultBaseController {
     return InvokeResultBuilder.success(results);
   }
 
-  @ApiOperation("数据字典分类")
+  @Operation(summary = "数据字典分类")
   @GetMapping("/dic/category")
   public InvokeResult<PageResult<SysDataDicCategorySelectorBo>> dataDicCategory(
       @Valid SysDataDicCategorySelectorVo vo) {
@@ -337,7 +337,7 @@ public class DefaultSysSelectorController extends DefaultBaseController {
   /**
    * 加载数据字典分类
    */
-  @ApiOperation("加载数据字典分类")
+  @Operation(summary = "加载数据字典分类")
   @PostMapping("/dic/category/load")
   public InvokeResult<List<SysDataDicCategorySelectorBo>> loadDataDicCategory(
       @RequestBody(required = false) List<String> ids) {
@@ -355,7 +355,7 @@ public class DefaultSysSelectorController extends DefaultBaseController {
     return InvokeResultBuilder.success(results);
   }
 
-  @ApiOperation("数据字典")
+  @Operation(summary = "数据字典")
   @GetMapping("/dic")
   public InvokeResult<PageResult<SysDataDicSelectorBo>> dataDic(@Valid SysDataDicSelectorVo vo) {
 
@@ -374,7 +374,7 @@ public class DefaultSysSelectorController extends DefaultBaseController {
   /**
    * 加载数据字典
    */
-  @ApiOperation("加载数据字典")
+  @Operation(summary = "加载数据字典")
   @PostMapping("/dic/load")
   public InvokeResult<List<SysDataDicSelectorBo>> loadDataDic(
       @RequestBody(required = false) List<String> ids) {
@@ -395,7 +395,7 @@ public class DefaultSysSelectorController extends DefaultBaseController {
   /**
    * 开放域
    */
-  @ApiOperation("开放域")
+  @Operation(summary = "开放域")
   @GetMapping("/openDomain")
   public InvokeResult<PageResult<SysOpenDomainSelectorBo>> openDomain(
       @Valid SysOpenDomainSelectorVo vo) {
@@ -415,7 +415,7 @@ public class DefaultSysSelectorController extends DefaultBaseController {
   /**
    * 加载开放域
    */
-  @ApiOperation("加载开放域")
+  @Operation(summary = "加载开放域")
   @PostMapping("/openDomain/load")
   public InvokeResult<List<SysOpenDomainSelectorBo>> openDomain(
       @RequestBody(required = false) List<Integer> ids) {
@@ -433,7 +433,7 @@ public class DefaultSysSelectorController extends DefaultBaseController {
     return InvokeResultBuilder.success(results);
   }
 
-  @ApiOperation("消息通知组")
+  @Operation(summary = "消息通知组")
   @GetMapping("/notify/group")
   public InvokeResult<PageResult<SysNotifyGroupSelectorBo>> notifyGroup(
       @Valid SysNotifyGroupSelectorVo vo) {
@@ -452,7 +452,7 @@ public class DefaultSysSelectorController extends DefaultBaseController {
   /**
    * 加载消息通知组
    */
-  @ApiOperation("加载消息通知组")
+  @Operation(summary = "加载消息通知组")
   @PostMapping("/notify/group/load")
   public InvokeResult<List<SysNotifyGroupSelectorBo>> loadNotifyGroup(
       @RequestBody(required = false) List<String> ids) {
@@ -470,7 +470,7 @@ public class DefaultSysSelectorController extends DefaultBaseController {
     return InvokeResultBuilder.success(results);
   }
 
-  @ApiOperation("用户组")
+  @Operation(summary = "用户组")
   @GetMapping("/user/group")
   public InvokeResult<PageResult<SysUserGroupSelectorBo>> userGroup(
       @Valid SysUserGroupSelectorVo vo) {
@@ -489,7 +489,7 @@ public class DefaultSysSelectorController extends DefaultBaseController {
   /**
    * 加载用户组
    */
-  @ApiOperation("加载用户组")
+  @Operation(summary = "加载用户组")
   @PostMapping("/user/group/load")
   public InvokeResult<List<SysUserGroupSelectorBo>> loadUserGroup(
       @RequestBody(required = false) List<String> ids) {

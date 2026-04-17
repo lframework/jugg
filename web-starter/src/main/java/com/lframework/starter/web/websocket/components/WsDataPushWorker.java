@@ -34,7 +34,7 @@ public class WsDataPushWorker {
       WsSessionManager.getAllAvailableSessions(data.getTenantId(), data.getIncludeSessionIds(),
               data.getExcludeSessionIds())
           .stream().forEach(t -> {
-            Map<String, Object> obj = new HashMap(2, 1);
+            Map<String, Object> obj = new HashMap<>(2, 1);
             obj.put("bizType", data.getBizType());
             obj.put("data", data.getData());
             sendMessage(t, new TextMessage(JsonUtil.toJsonString(obj)));
@@ -56,7 +56,7 @@ public class WsDataPushWorker {
       WsSessionManager.getAvailableSessionsByUserIds(data.getTenantId(), userIds,
           data.getIncludeSessionIds(),
           data.getExcludeSessionIds()).forEach(t -> {
-        Map<String, Object> obj = new HashMap(2, 1);
+        Map<String, Object> obj = new HashMap<>(2, 1);
         obj.put("bizType", data.getBizType());
         obj.put("data", data.getData());
         sendMessage(t, new TextMessage(JsonUtil.toJsonString(obj)));

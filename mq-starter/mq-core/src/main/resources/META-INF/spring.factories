@@ -1,2 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.lframework.starter.mq.core.config.MqBeanAutoConfiguration,\
-  com.lframework.starter.mq.core.config.MqSwaggerAutoConfiguration

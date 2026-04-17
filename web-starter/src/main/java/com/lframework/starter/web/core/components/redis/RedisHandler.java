@@ -7,7 +7,6 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 /**
@@ -18,7 +17,7 @@ import org.springframework.util.CollectionUtils;
 public class RedisHandler {
 
   @Autowired
-  private RedisTemplate redisTemplate;
+  private RedisTemplate<Object, Object> redisTemplate;
 
   /**
    * 指定缓存失效时间
@@ -200,11 +199,12 @@ public class RedisHandler {
    * @param key
    * @return
    */
+  @SuppressWarnings("unchecked")
   public Map<String, Object> hgetAll(String key) {
 
     Assert.notNull(key);
 
-    return redisTemplate.opsForHash().entries(key);
+    return (Map<String, Object>) (Map<?, ?>) redisTemplate.opsForHash().entries(key);
   }
 
   /**
@@ -279,7 +279,7 @@ public class RedisHandler {
     Assert.notNull(key);
     Assert.notEmpty(items);
 
-    redisTemplate.opsForHash().delete(key, items);
+    redisTemplate.opsForHash().delete(key, (Object[]) items);
   }
 
   /**

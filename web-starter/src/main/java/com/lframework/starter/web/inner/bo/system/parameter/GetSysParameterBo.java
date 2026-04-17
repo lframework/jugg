@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.lframework.starter.web.inner.entity.SysParameter;
 import com.lframework.starter.web.core.bo.BaseBo;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -21,25 +21,25 @@ public class GetSysParameterBo extends BaseBo<SysParameter> {
    * ID
    */
   @JsonSerialize(using = ToStringSerializer.class)
-  @ApiModelProperty("ID")
+  @Schema(description = "ID")
   private Long id;
 
   /**
    * 键
    */
-  @ApiModelProperty("键")
+  @Schema(description = "键")
   private String pmKey;
 
   /**
    * 值
    */
-  @ApiModelProperty("值")
+  @Schema(description = "值")
   private String pmValue;
 
   /**
    * 备注
    */
-  @ApiModelProperty("备注")
+  @Schema(description = "备注")
   private String description;
 
   public GetSysParameterBo() {

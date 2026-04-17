@@ -8,7 +8,6 @@ import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.core.toolkit.Assert;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
-import com.baomidou.mybatisplus.core.toolkit.ReflectionKit;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -33,11 +32,12 @@ public abstract class BaseMpServiceImpl<M extends BaseMapper<T>, T> extends MPJB
 
   @Transactional(rollbackFor = Exception.class)
   @Override
+  @SuppressWarnings("unchecked")
   public boolean update(Wrapper<T> updateWrapper) {
     T entity = null;
     try {
-      if (updateWrapper instanceof AbstractWrapper) {
-        entity = (T) ((AbstractWrapper) updateWrapper).getEntityClass().newInstance();
+      if (updateWrapper instanceof AbstractWrapper<?, ?, ?> abstractWrapper) {
+        entity = (T) abstractWrapper.getEntityClass().getDeclaredConstructor().newInstance();
         // 将所有的值设置为null
         Field[] fields = ReflectUtil.getFields(entity.getClass());
         if (ArrayUtil.isNotEmpty(fields)) {
@@ -66,17 +66,21 @@ public abstract class BaseMpServiceImpl<M extends BaseMapper<T>, T> extends MPJB
     String keyProperty = tableInfo.getKeyProperty();
     Assert.notEmpty(keyProperty,
         "error: can not execute. because can not find column for id from entity!");
-    return SqlHelper.saveOrUpdateBatch(this.entityClass, this.mapperClass, this.log, entityList,
-        batchSize, (sqlSession, entity) -> {
-          Object idVal = ReflectionKit.getFieldValue(entity, keyProperty);
-          return StringUtils.checkValNull(idVal)
-              || CollectionUtils.isEmpty(
-              sqlSession.selectList(getSqlStatement(SqlMethod.SELECT_BY_ID), entity));
-        }, (sqlSession, entity) -> {
-          MapperMethod.ParamMap<T> param = new MapperMethod.ParamMap<>();
-          param.put(Constants.ENTITY, entity);
-          sqlSession.update(getSqlStatement(SqlMethodConstants.UPDATE_ALL_COLUMN_BY_ID), param);
-        });
+    String selectByIdStatement = getSqlStatement(SqlMethod.SELECT_BY_ID);
+    String insertStatement = getSqlStatement(SqlMethod.INSERT_ONE);
+    String updateStatement = getSqlStatement(SqlMethodConstants.UPDATE_ALL_COLUMN_BY_ID);
+    return executeBatch(entityList, batchSize, (sqlSession, entity) -> {
+      Object idVal = ReflectUtil.getFieldValue(entity, keyProperty);
+      if (StringUtils.checkValNull(idVal)
+          || CollectionUtils.isEmpty(sqlSession.selectList(selectByIdStatement, entity))) {
+        sqlSession.insert(insertStatement, entity);
+        return;
+      }
+
+      MapperMethod.ParamMap<T> param = new MapperMethod.ParamMap<>();
+      param.put(Constants.ENTITY, entity);
+      sqlSession.update(updateStatement, param);
+    });
   }
 
   @Transactional(rollbackFor = Exception.class)
@@ -105,7 +109,7 @@ public abstract class BaseMpServiceImpl<M extends BaseMapper<T>, T> extends MPJB
       String keyProperty = tableInfo.getKeyProperty();
       Assert.notEmpty(keyProperty,
           "error: can not execute. because can not find column for id from entity!");
-      Object idVal = ReflectionKit.getFieldValue(entity, tableInfo.getKeyProperty());
+      Object idVal = ReflectUtil.getFieldValue(entity, tableInfo.getKeyProperty());
       return StringUtils.checkValNull(idVal) || Objects.isNull(getById((Serializable) idVal))
           ? save(entity) : updateAllColumnById(entity);
     }

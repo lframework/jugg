@@ -1,7 +1,7 @@
 package com.lframework.starter.bpm.vo.flow.task;
 
 import com.lframework.starter.web.core.vo.PageVo;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
 import lombok.Data;
 
@@ -13,18 +13,18 @@ public class QueryMyTaskListVo extends PageVo implements Serializable {
   /**
    * 流程编号
    */
-  @ApiModelProperty("流程编号")
+  @Schema(description = "流程编号")
   private String flowCode;
 
   /**
    * 流程名称
    */
-  @ApiModelProperty("流程名称")
+  @Schema(description = "流程名称")
   private String flowName;
 
   /**
    * 任务标题
    */
-  @ApiModelProperty("任务标题")
+  @Schema(description = "任务标题")
   private String title;
 }

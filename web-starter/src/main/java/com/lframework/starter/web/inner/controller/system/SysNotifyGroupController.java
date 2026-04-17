@@ -15,15 +15,14 @@ import com.lframework.starter.web.inner.service.system.SysNotifyGroupService;
 import com.lframework.starter.web.inner.vo.system.notify.CreateSysNotifyGroupVo;
 import com.lframework.starter.web.inner.vo.system.notify.QuerySysNotifyGroupVo;
 import com.lframework.starter.web.inner.vo.system.notify.UpdateSysNotifyGroupVo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,7 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author zmj
  */
-@Api(tags = "消息通知组")
+@Tag(name = "消息通知组")
 @Validated
 @RestController
 @RequestMapping("/sys/notify/group")
@@ -51,7 +50,7 @@ public class SysNotifyGroupController extends DefaultBaseController {
   /**
    * 查询列表
    */
-  @ApiOperation("查询列表")
+  @Operation(summary = "查询列表")
   @HasPermission({"system:notify-group:query"})
   @GetMapping("/query")
   public InvokeResult<PageResult<QuerySysNotifyGroupBo>> query(
@@ -74,8 +73,8 @@ public class SysNotifyGroupController extends DefaultBaseController {
   /**
    * 根据ID查询
    */
-  @ApiOperation("根据ID查询")
-  @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
+  @Operation(summary = "根据ID查询")
+  @Parameter(name = "id", description = "ID", required = true)
   @HasPermission({"system:notify-group:query"})
   @GetMapping("/detail")
   public InvokeResult<GetSysNotifyGroupBo> getDetail(
@@ -94,7 +93,7 @@ public class SysNotifyGroupController extends DefaultBaseController {
   /**
    * 新增
    */
-  @ApiOperation("新增")
+  @Operation(summary = "新增")
   @HasPermission({"system:notify-group:add"})
   @PostMapping
   public InvokeResult<Void> create(@Valid @RequestBody CreateSysNotifyGroupVo vo) {
@@ -107,7 +106,7 @@ public class SysNotifyGroupController extends DefaultBaseController {
   /**
    * 修改
    */
-  @ApiOperation("修改")
+  @Operation(summary = "修改")
   @HasPermission({"system:notify-group:modify"})
   @PutMapping
   public InvokeResult<Void> update(@Valid @RequestBody UpdateSysNotifyGroupVo vo) {
@@ -119,11 +118,11 @@ public class SysNotifyGroupController extends DefaultBaseController {
     return InvokeResultBuilder.success();
   }
 
-  @ApiOperation("根据ID删除")
+  @Operation(summary = "根据ID删除")
   @HasPermission({"system:notify-group:delete"})
   @DeleteMapping
   public InvokeResult<Void> deleteById(
-      @ApiParam(value = "ID", required = true) @NotEmpty(message = "ID不能为空！") String id) {
+      @Parameter(description = "ID", required = true) @NotEmpty(message = "ID不能为空！") String id) {
 
     sysNotifyGroupService.deleteById(id);
     sysNotifyGroupService.cleanCacheByKey(id);

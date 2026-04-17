@@ -3,7 +3,7 @@ package com.lframework.starter.web.inner.dto.system.notice;
 import com.lframework.starter.web.inner.entity.SysNotice;
 import com.lframework.starter.web.core.bo.BaseBo;
 import com.lframework.starter.web.core.dto.BaseDto;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
 import lombok.Data;
 
@@ -19,13 +19,13 @@ public class SysNoticeDto extends BaseBo<SysNotice> implements BaseDto, Serializ
   /**
    * 标题
    */
-  @ApiModelProperty("标题")
+  @Schema(description = "标题")
   private String title;
 
   /**
    * 内容
    */
-  @ApiModelProperty("内容")
+  @Schema(description = "内容")
   private String content;
 
   public SysNoticeDto(SysNotice dto) {

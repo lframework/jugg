@@ -22,7 +22,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class JsonUtil extends JSONUtil {
 
-  private static final ObjectMapper OBJECT_MAPPER = ApplicationUtil.getBean(ObjectMapper.class);
+  private static ObjectMapper getObjectMapper() {
+    return ApplicationUtil.getBean(ObjectMapper.class);
+  }
 
   /**
    * 将对象转换为JSON字符串
@@ -38,7 +40,7 @@ public class JsonUtil extends JSONUtil {
       return null;
     }
     try {
-      return OBJECT_MAPPER.writer().writeValueAsString(obj);
+      return getObjectMapper().writer().writeValueAsString(obj);
     } catch (JsonProcessingException e) {
       log.error(e.getMessage(), e);
       throw new DefaultSysException(e.getMessage());
@@ -61,7 +63,7 @@ public class JsonUtil extends JSONUtil {
     }
 
     try {
-      return OBJECT_MAPPER.readValue(jsonStr, typeRef);
+      return getObjectMapper().readValue(jsonStr, typeRef);
     } catch (JsonProcessingException e) {
       log.error(e.getMessage(), e);
       throw new DefaultSysException(e.getMessage());
@@ -85,7 +87,7 @@ public class JsonUtil extends JSONUtil {
     }
 
     try {
-      return OBJECT_MAPPER.readValue(jsonStr, clazz);
+      return getObjectMapper().readValue(jsonStr, clazz);
     } catch (JsonProcessingException e) {
       log.error(e.getMessage(), e);
       throw new DefaultSysException(e.getMessage());
@@ -110,8 +112,9 @@ public class JsonUtil extends JSONUtil {
     }
 
     try {
-      return OBJECT_MAPPER.readValue(jsonStr,
-          OBJECT_MAPPER.getTypeFactory().constructMapType(Map.class, keyClazz, valueClazz));
+      ObjectMapper objectMapper = getObjectMapper();
+      return objectMapper.readValue(jsonStr,
+          objectMapper.getTypeFactory().constructMapType(Map.class, keyClazz, valueClazz));
     } catch (JsonProcessingException e) {
       log.error(e.getMessage(), e);
       throw new DefaultSysException(e.getMessage());
@@ -135,8 +138,9 @@ public class JsonUtil extends JSONUtil {
     }
 
     try {
-      return OBJECT_MAPPER.readValue(jsonStr,
-          OBJECT_MAPPER.getTypeFactory().constructCollectionType(List.class, clazz));
+      ObjectMapper objectMapper = getObjectMapper();
+      return objectMapper.readValue(jsonStr,
+          objectMapper.getTypeFactory().constructCollectionType(List.class, clazz));
     } catch (JsonProcessingException e) {
       log.error(e.getMessage(), e);
       throw new DefaultSysException(e.getMessage());
@@ -158,7 +162,7 @@ public class JsonUtil extends JSONUtil {
       return null;
     }
 
-    return OBJECT_MAPPER.convertValue(obj, clazz);
+    return getObjectMapper().convertValue(obj, clazz);
   }
 
   /**
@@ -175,7 +179,7 @@ public class JsonUtil extends JSONUtil {
     }
 
     try {
-      JsonNode jsonNode = OBJECT_MAPPER.readTree(jsonStr);
+      JsonNode jsonNode = getObjectMapper().readTree(jsonStr);
       return jsonNode.getNodeType() != JsonNodeType.ARRAY;
     } catch (JsonProcessingException e) {
       return false;
@@ -196,7 +200,7 @@ public class JsonUtil extends JSONUtil {
     }
 
     try {
-      JsonNode jsonNode = OBJECT_MAPPER.readTree(jsonStr);
+      JsonNode jsonNode = getObjectMapper().readTree(jsonStr);
       return jsonNode.getNodeType() == JsonNodeType.ARRAY;
     } catch (JsonProcessingException e) {
       return false;
@@ -217,7 +221,7 @@ public class JsonUtil extends JSONUtil {
     }
 
     try {
-      OBJECT_MAPPER.readTree(jsonStr);
+      getObjectMapper().readTree(jsonStr);
     } catch (JsonProcessingException e) {
       return false;
     }

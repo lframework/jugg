@@ -9,7 +9,7 @@ import com.lframework.starter.web.core.components.resp.PageResult;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import lombok.NonNull;
 
 /**

@@ -23,8 +23,13 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 @Slf4j
 public class QrtzHandler {
 
-  private static final SchedulerFactoryBean SCHEDULER_FACTORY = ApplicationUtil.getBean(
-      SchedulerFactoryBean.class);
+  private static SchedulerFactoryBean getSchedulerFactory() {
+    return ApplicationUtil.getBean(SchedulerFactoryBean.class);
+  }
+
+  private static Scheduler getScheduler() throws SchedulerException {
+    return getSchedulerFactory().getScheduler();
+  }
 
   public static void addJob(Class<? extends QrtzJob> jobClass, String cron,
       Map<String, Object> jobDatas) {
@@ -66,7 +71,7 @@ public class QrtzHandler {
 
     try {
       DynamicDataSourceContextHolder.push("master");
-      Scheduler sched = SCHEDULER_FACTORY.getScheduler();
+      Scheduler sched = getScheduler();
       JobBuilder jobBuilder = JobBuilder.newJob(jobClass);
       if (!StringUtil.isBlank(jobName)) {
         jobBuilder.withIdentity(jobName, jobGroupName);
@@ -110,7 +115,7 @@ public class QrtzHandler {
 
     try {
       DynamicDataSourceContextHolder.push("master");
-      Scheduler sched = SCHEDULER_FACTORY.getScheduler();
+      Scheduler sched = getScheduler();
       TriggerKey triggerKey = TriggerKey.triggerKey(triggerName, triggerGroupName);
       CronTrigger trigger = (CronTrigger) sched.getTrigger(triggerKey);
 
@@ -134,7 +139,7 @@ public class QrtzHandler {
 
     try {
       DynamicDataSourceContextHolder.push("master");
-      Scheduler sched = SCHEDULER_FACTORY.getScheduler();
+      Scheduler sched = getScheduler();
       JobDetail jobDetail = sched.getJobDetail(JobKey.jobKey(jobName, jobGroupName));
       return jobDetail;
     } catch (Exception e) {
@@ -156,7 +161,7 @@ public class QrtzHandler {
 
     try {
       DynamicDataSourceContextHolder.push("master");
-      Scheduler sched = SCHEDULER_FACTORY.getScheduler();
+      Scheduler sched = getScheduler();
       CronTrigger trigger = getTrigger(triggerName, triggerGroupName);
       if (trigger == null) {
         return;
@@ -192,7 +197,7 @@ public class QrtzHandler {
 
     try {
       DynamicDataSourceContextHolder.push("master");
-      Scheduler sched = SCHEDULER_FACTORY.getScheduler();
+      Scheduler sched = getScheduler();
 
       TriggerKey triggerKey = TriggerKey.triggerKey(triggerName, triggerGroupName);
 
@@ -214,7 +219,7 @@ public class QrtzHandler {
 
     try {
       DynamicDataSourceContextHolder.push("master");
-      Scheduler sched = SCHEDULER_FACTORY.getScheduler();
+      Scheduler sched = getScheduler();
       sched.start();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
@@ -231,7 +236,7 @@ public class QrtzHandler {
 
     try {
       DynamicDataSourceContextHolder.push("master");
-      Scheduler sched = SCHEDULER_FACTORY.getScheduler();
+      Scheduler sched = getScheduler();
       if (!sched.isShutdown()) {
         sched.shutdown();
       }
@@ -252,9 +257,10 @@ public class QrtzHandler {
 
     try {
       DynamicDataSourceContextHolder.push("master");
-      int executingJobSize = SCHEDULER_FACTORY.getScheduler().getCurrentlyExecutingJobs().size();
+      SchedulerFactoryBean schedulerFactoryBean = getSchedulerFactory();
+      int executingJobSize = schedulerFactoryBean.getScheduler().getCurrentlyExecutingJobs().size();
       log.info("当前运行任务个数：{}，等待完成后关闭", executingJobSize);
-      SCHEDULER_FACTORY.getScheduler().shutdown(true);
+      schedulerFactoryBean.getScheduler().shutdown(true);
     } finally {
       DynamicDataSourceContextHolder.poll();
     }
@@ -269,7 +275,7 @@ public class QrtzHandler {
   public static void resume(String jobName, String jobGroupName) {
     try {
       DynamicDataSourceContextHolder.push("master");
-      Scheduler sched = SCHEDULER_FACTORY.getScheduler();
+      Scheduler sched = getScheduler();
       sched.resumeJob(JobKey.jobKey(jobName, jobGroupName));
     } catch (SchedulerException e) {
       log.error(e.getMessage(), e);
@@ -289,7 +295,7 @@ public class QrtzHandler {
 
     try {
       DynamicDataSourceContextHolder.push("master");
-      Scheduler sched = SCHEDULER_FACTORY.getScheduler();
+      Scheduler sched = getScheduler();
       sched.pauseJob(JobKey.jobKey(jobName, jobGroupName));
     } catch (SchedulerException e) {
       log.error(e.getMessage(), e);
@@ -309,7 +315,7 @@ public class QrtzHandler {
 
     try {
       DynamicDataSourceContextHolder.push("master");
-      Scheduler sched = SCHEDULER_FACTORY.getScheduler();
+      Scheduler sched = getScheduler();
       sched.triggerJob(JobKey.jobKey(jobName, jobGroupName));
     } catch (SchedulerException e) {
       log.error(e.getMessage(), e);

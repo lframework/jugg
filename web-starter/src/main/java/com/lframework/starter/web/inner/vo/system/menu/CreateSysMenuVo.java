@@ -5,10 +5,10 @@ import com.lframework.starter.web.inner.enums.system.SysMenuDisplay;
 import com.lframework.starter.web.core.components.validation.IsCode;
 import com.lframework.starter.web.core.components.validation.IsEnum;
 import com.lframework.starter.web.core.vo.BaseVo;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 /**
@@ -22,14 +22,14 @@ public class CreateSysMenuVo implements BaseVo, Serializable {
   /**
    * 租户ID
    */
-  @ApiModelProperty(value = "租户ID", required = true)
+  @Schema(description = "租户ID", requiredMode = Schema.RequiredMode.REQUIRED)
   @NotNull(message = "租户ID不能为空！")
   private Integer tenantId;
 
   /**
    * 编号
    */
-  @ApiModelProperty(value = "编号", required = true)
+  @Schema(description = "编号", requiredMode = Schema.RequiredMode.REQUIRED)
   @IsCode
   @NotBlank(message = "请输入编号！")
   private String code;
@@ -37,20 +37,20 @@ public class CreateSysMenuVo implements BaseVo, Serializable {
   /**
    * 标题
    */
-  @ApiModelProperty(value = "标题", required = true)
+  @Schema(description = "标题", requiredMode = Schema.RequiredMode.REQUIRED)
   @NotBlank(message = "请输入标题！")
   private String title;
 
   /**
    * 图标
    */
-  @ApiModelProperty("图标")
+  @Schema(description = "图标")
   private String icon;
 
   /**
    * 类型
    */
-  @ApiModelProperty(value = "类型", required = true)
+  @Schema(description = "类型", requiredMode = Schema.RequiredMode.REQUIRED)
   @NotNull(message = "请选择类型！")
   @IsEnum(message = "请选择类型！", enumClass = SysMenuDisplay.class)
   private Integer display;
@@ -58,19 +58,19 @@ public class CreateSysMenuVo implements BaseVo, Serializable {
   /**
    * 父级ID
    */
-  @ApiModelProperty("父级ID")
+  @Schema(description = "父级ID")
   private String parentId;
 
   /**
    * 权限
    */
-  @ApiModelProperty("权限")
+  @Schema(description = "权限")
   private String permission;
 
   /**
    * 备注
    */
-  @ApiModelProperty("备注")
+  @Schema(description = "备注")
   private String description;
 
   // 以下均为前端配置项
@@ -78,43 +78,43 @@ public class CreateSysMenuVo implements BaseVo, Serializable {
   /**
    * 路由名称
    */
-  @ApiModelProperty("路由名称")
+  @Schema(description = "路由名称")
   private String name;
 
   /**
    * 组件类型
    */
-  @ApiModelProperty("组件类型")
+  @Schema(description = "组件类型")
   @IsEnum(message = "组件类型格式错误！", enumClass = SysMenuComponentType.class)
   private Integer componentType;
 
   /**
    * 组件
    */
-  @ApiModelProperty("组件")
+  @Schema(description = "组件")
   private String component;
 
   /**
    * 自定义请求参数
    */
-  @ApiModelProperty("自定义请求参数")
+  @Schema(description = "自定义请求参数")
   private String requestParam;
 
   /**
    * 路径
    */
-  @ApiModelProperty("路径")
+  @Schema(description = "路径")
   private String path;
 
   /**
    * 是否隐藏
    */
-  @ApiModelProperty("是否隐藏")
+  @Schema(description = "是否隐藏")
   private Boolean hidden;
 
   /**
    * 是否不缓存
    */
-  @ApiModelProperty("是否不缓存")
+  @Schema(description = "是否不缓存")
   private Boolean noCache;
 }

@@ -4,11 +4,11 @@ import com.lframework.starter.web.core.components.validation.IsCode;
 import com.lframework.starter.web.core.components.validation.IsEnum;
 import com.lframework.starter.web.core.vo.BaseVo;
 import com.lframework.starter.web.inner.enums.system.Gender;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
 import java.util.List;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
@@ -19,14 +19,14 @@ public class UpdateSysUserVo implements BaseVo, Serializable {
   /**
    * ID
    */
-  @ApiModelProperty(value = "ID", required = true)
+  @Schema(description = "ID", requiredMode = Schema.RequiredMode.REQUIRED)
   @NotBlank(message = "ID不能为空！")
   private String id;
 
   /**
    * 编号
    */
-  @ApiModelProperty(value = "编号", required = true)
+  @Schema(description = "编号", requiredMode = Schema.RequiredMode.REQUIRED)
   @IsCode
   @NotBlank(message = "请输入编号！")
   private String code;
@@ -34,39 +34,39 @@ public class UpdateSysUserVo implements BaseVo, Serializable {
   /**
    * 姓名
    */
-  @ApiModelProperty(value = "姓名", required = true)
+  @Schema(description = "姓名", requiredMode = Schema.RequiredMode.REQUIRED)
   @NotBlank(message = "请输入姓名！")
   private String name;
 
   /**
    * 用户名
    */
-  @ApiModelProperty(value = "用户名", required = true)
+  @Schema(description = "用户名", requiredMode = Schema.RequiredMode.REQUIRED)
   @NotBlank(message = "请输入用户名！")
   private String username;
 
   /**
    * 密码 如果不为空则为修改密码
    */
-  @ApiModelProperty("密码 如果不为空则为修改密码")
+  @Schema(description = "密码 如果不为空则为修改密码")
   private String password;
 
   /**
    * 邮箱
    */
-  @ApiModelProperty("邮箱")
+  @Schema(description = "邮箱")
   private String email;
 
   /**
    * 联系电话
    */
-  @ApiModelProperty("联系电话")
+  @Schema(description = "联系电话")
   private String telephone;
 
   /**
    * 性别
    */
-  @ApiModelProperty(value = "性别", required = true)
+  @Schema(description = "性别", requiredMode = Schema.RequiredMode.REQUIRED)
   @NotNull(message = "请选择性别！")
   @IsEnum(message = "请选择性别！", enumClass = Gender.class)
   private Integer gender;
@@ -74,18 +74,18 @@ public class UpdateSysUserVo implements BaseVo, Serializable {
   /**
    * 角色ID
    */
-  @ApiModelProperty("角色ID")
+  @Schema(description = "角色ID")
   private List<String> roleIds;
 
   /**
    * 部门ID
    */
-  @ApiModelProperty("部门ID")
+  @Schema(description = "部门ID")
   private List<String> deptIds;
 
   /**
    * 备注
    */
-  @ApiModelProperty("备注")
+  @Schema(description = "备注")
   private String description;
 }

@@ -1,6 +1,6 @@
 package com.lframework.starter.web.core.vo;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
 import lombok.Data;
 
@@ -17,12 +17,12 @@ public abstract class PageVo implements BaseVo, Serializable {
   /**
    * 当前页码
    */
-  @ApiModelProperty(value = "当前页码", required = true)
+  @Schema(description = "当前页码", requiredMode = Schema.RequiredMode.REQUIRED)
   private Integer pageIndex;
 
   /**
    * 每页条数
    */
-  @ApiModelProperty(value = "每页条数", required = true)
+  @Schema(description = "每页条数", requiredMode = Schema.RequiredMode.REQUIRED)
   private Integer pageSize;
 }

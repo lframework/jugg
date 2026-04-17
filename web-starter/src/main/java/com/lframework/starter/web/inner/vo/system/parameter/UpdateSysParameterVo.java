@@ -1,9 +1,9 @@
 package com.lframework.starter.web.inner.vo.system.parameter;
 
 import com.lframework.starter.web.core.vo.BaseVo;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
@@ -14,27 +14,27 @@ public class UpdateSysParameterVo implements BaseVo, Serializable {
   /**
    * 租户ID
    */
-  @ApiModelProperty(value = "租户ID", required = true)
+  @Schema(description = "租户ID", requiredMode = Schema.RequiredMode.REQUIRED)
   @NotNull(message = "租户ID不能为空！")
   private Integer tenantId;
 
   /**
    * ID
    */
-  @ApiModelProperty(value = "ID", required = true)
+  @Schema(description = "ID", requiredMode = Schema.RequiredMode.REQUIRED)
   @NotNull(message = "id不能为空！")
   private Long id;
 
   /**
    * 值
    */
-  @ApiModelProperty("值")
+  @Schema(description = "值")
   private String pmValue;
 
   /**
    * 备注
    */
-  @ApiModelProperty("备注")
+  @Schema(description = "备注")
   private String description;
 
 }

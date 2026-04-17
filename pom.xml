@@ -7,7 +7,7 @@
     <groupId>com.lframework</groupId>
     <artifactId>parent</artifactId>
     <name>【${project.artifactId}】Jugg基础框架</name>
-    <version>4.1.2</version>
+    <version>5.0.0</version>
     <packaging>pom</packaging>
 
     <url>https://gitee.com/lframework/jugg</url>
@@ -16,37 +16,35 @@
     </description>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
-        <spring.version>2.2.2.RELEASE</spring.version>
-        <jugg.version>4.1.2</jugg.version>
-        <lombok.version>1.18.10</lombok.version>
-        <slf4j.version>1.7.21</slf4j.version>
-        <logback.version>1.1.7</logback.version>
+        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+        <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
+        <spring.version>3.5.0</spring.version>
+        <jugg.version>5.0.0</jugg.version>
+        <lombok.version>1.18.32</lombok.version>
         <hutool.version>5.7.17</hutool.version>
-        <druid-spring-boot-starter.version>1.2.16</druid-spring-boot-starter.version>
-        <pagehelper-spring-boot-starter.version>1.3.1</pagehelper-spring-boot-starter.version>
-        <mybatis-plus-boot-starter.version>3.4.2</mybatis-plus-boot-starter.version>
+        <druid-spring-boot-starter.version>1.2.23</druid-spring-boot-starter.version>
+        <pagehelper-spring-boot-starter.version>2.1.0</pagehelper-spring-boot-starter.version>
+        <mybatis-plus-boot-starter.version>3.5.6</mybatis-plus-boot-starter.version>
         <mybatis-plus-join-boot-starter.version>1.5.6</mybatis-plus-join-boot-starter.version>
-        <dynamic-datasource-spring-boot-starter.version>3.6.1</dynamic-datasource-spring-boot-starter.version>
-        <kaptcha.version>2.3.2</kaptcha.version>
+        <dynamic-datasource-spring-boot-starter.version>4.3.1</dynamic-datasource-spring-boot-starter.version>
         <jjwt.version>0.9.1</jjwt.version>
         <easyexcel.version>2.2.10</easyexcel.version>
         <httpclient.version>4.5.10</httpclient.version>
         <dom4j.version>1.6.1</dom4j.version>
         <commons-codec.version>1.13</commons-codec.version>
         <groovy.version>3.0.9</groovy.version>
-        <javax.mail.version>1.6.2</javax.mail.version>
-        <knife4j-spring-boot-starter.version>2.0.9</knife4j-spring-boot-starter.version>
-        <sa-token.version>1.29.0</sa-token.version>
-        <spring-cloud-alibaba.version>2.2.0.RELEASE</spring-cloud-alibaba.version>
-        <spring-cloud-alibaba-nacos.version>1.4.4</spring-cloud-alibaba-nacos.version>
+        <jakarta.mail.version>2.0.1</jakarta.mail.version>
+        <springdoc-openapi.version>2.8.17</springdoc-openapi.version>
+        <knife4j-spring-boot-starter.version>4.5.0</knife4j-spring-boot-starter.version>
+        <sa-token.version>1.39.0</sa-token.version>
+        <spring-cloud-alibaba.version>2025.0.0.0</spring-cloud-alibaba.version>
+        <spring-cloud-alibaba-nacos.version>2.3.2</spring-cloud-alibaba-nacos.version>
         <spring-cloud-alibaba-seata.version>1.5.2</spring-cloud-alibaba-seata.version>
-        <spring-cloud.version>Hoxton.RELEASE</spring-cloud.version>
-        <magic-api-spring-boot-starter.version>2.1.1</magic-api-spring-boot-starter.version>
-        <magic-api-plugin-cluster.version>2.1.1</magic-api-plugin-cluster.version>
+        <spring-cloud.version>2025.0.0</spring-cloud.version>
         <aliyun-sdk-oss.version>3.16.3</aliyun-sdk-oss.version>
         <esdk-obs-java.version>3.19.7</esdk-obs-java.version>
         <cos_api.version>5.6.133</cos_api.version>
@@ -147,19 +145,6 @@
                 <version>${lombok.version}</version>
             </dependency>
 
-            <!-- log -->
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>${slf4j.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>${logback.version}</version>
-            </dependency>
-
             <!-- hutool工具类库 -->
             <dependency>
                 <groupId>cn.hutool</groupId>
@@ -172,7 +157,7 @@
             <!-- druid数据库连接池 -->
             <dependency>
                 <groupId>com.alibaba</groupId>
-                <artifactId>druid-spring-boot-starter</artifactId>
+                <artifactId>druid-spring-boot-3-starter</artifactId>
                 <version>${druid-spring-boot-starter.version}</version>
             </dependency>
 
@@ -196,7 +181,7 @@
             <!-- mybaits plus -->
             <dependency>
                 <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
                 <version>${mybatis-plus-boot-starter.version}</version>
             </dependency>
 
@@ -210,15 +195,8 @@
             <!-- 多数据源 -->
             <dependency>
                 <groupId>com.baomidou</groupId>
-                <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+                <artifactId>dynamic-datasource-spring-boot3-starter</artifactId>
                 <version>${dynamic-datasource-spring-boot-starter.version}</version>
-            </dependency>
-
-            <!-- 验证码 -->
-            <dependency>
-                <groupId>com.github.penggle</groupId>
-                <artifactId>kaptcha</artifactId>
-                <version>${kaptcha.version}</version>
             </dependency>
 
             <!-- jwt -->
@@ -265,27 +243,33 @@
 
             <dependency>
                 <groupId>com.sun.mail</groupId>
-                <artifactId>javax.mail</artifactId>
-                <version>${javax.mail.version}</version>
+                <artifactId>jakarta.mail</artifactId>
+                <version>${jakarta.mail.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>${springdoc-openapi.version}</version>
             </dependency>
 
             <!-- knife4j -->
             <dependency>
                 <groupId>com.github.xiaoymin</groupId>
-                <artifactId>knife4j-spring-boot-starter</artifactId>
+                <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
                 <version>${knife4j-spring-boot-starter.version}</version>
             </dependency>
 
             <!-- sa-token -->
             <dependency>
                 <groupId>cn.dev33</groupId>
-                <artifactId>sa-token-spring-boot-starter</artifactId>
+                <artifactId>sa-token-spring-boot3-starter</artifactId>
                 <version>${sa-token.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>cn.dev33</groupId>
-                <artifactId>sa-token-dao-redis-jackson</artifactId>
+                <artifactId>sa-token-redis-jackson</artifactId>
                 <version>${sa-token.version}</version>
             </dependency>
 
@@ -341,17 +325,6 @@
                 <artifactId>seata-spring-boot-starter</artifactId>
                 <groupId>io.seata</groupId>
                 <version>${spring-cloud-alibaba-seata.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.ssssssss</groupId>
-                <artifactId>magic-api-spring-boot-starter</artifactId>
-                <version>${magic-api-spring-boot-starter.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.ssssssss</groupId>
-                <artifactId>magic-api-plugin-cluster</artifactId>
-                <version>${magic-api-plugin-cluster.version}</version>
             </dependency>
 
             <!-- OSS SDK -->
@@ -422,10 +395,15 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${maven-compiler-plugin.version}</version>
                     <configuration>
-                        <source>${maven.compiler.source}</source>
-                        <target>${maven.compiler.target}</target>
+                        <release>${maven.compiler.release}</release>
                         <encoding>UTF-8</encoding>
+                        <parameters>true</parameters>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven-surefire-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -433,6 +411,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

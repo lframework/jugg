@@ -5,7 +5,7 @@
   <parent>
     <artifactId>mq-starter</artifactId>
     <groupId>com.lframework</groupId>
-    <version>4.1.2</version>
+    <version>5.0.0</version>
   </parent>
 
   <artifactId>rabbitmq-starter</artifactId>
@@ -23,10 +23,31 @@
       <groupId>com.lframework</groupId>
       <artifactId>mq-core</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.lframework</groupId>
+      <artifactId>common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-amqp</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.baomidou</groupId>
+      <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.github.yulichang</groupId>
+      <artifactId>mybatis-plus-join-boot-starter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>

@@ -76,7 +76,7 @@ public abstract class ExcelImportListener<T extends ExcelModel> extends ExcelEve
       this.interrupt = true;
       throw new DefaultClientException("一次最多允许导入" + limitRows + "条");
     }
-    Class<T> clazz = context.readWorkbookHolder().getClazz();
+    Class<T> clazz = this.getModelClass(context);
     if (clazz != null) {
       this.checkHeadMap(headMap, clazz);
     }
@@ -106,6 +106,11 @@ public abstract class ExcelImportListener<T extends ExcelModel> extends ExcelEve
   }
 
   protected void doInvokeHeadMap(Map<Integer, String> headMap, AnalysisContext context) {
+  }
+
+  @SuppressWarnings("unchecked")
+  private Class<T> getModelClass(AnalysisContext context) {
+    return (Class<T>) context.readWorkbookHolder().getClazz();
   }
 
   @Override

@@ -13,7 +13,6 @@ import com.lframework.starter.web.websocket.listener.WsUserConnectListener;
 import com.lframework.starter.web.websocket.listener.WsUserDisConnectListener;
 import java.nio.charset.StandardCharsets;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,17 +23,18 @@ import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistration;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
 
 @Configuration
+@EnableWebSocket
 @EnableConfigurationProperties(WsProperties.class)
-@ConditionalOnProperty(prefix = "jugg.ws", value = "enabled", havingValue = "true")
 public class WsAutoConfiguration implements WebSocketConfigurer {
 
   @Autowired
   private WsProperties properties;
 
   @Bean
-  public WsDataPusher wsDataPusher(RedisTemplate redisTemplate) {
+  public WsDataPusher wsDataPusher(RedisTemplate<Object, Object> redisTemplate) {
     return new WsDataPusherImpl(redisTemplate, properties);
   }
 
@@ -76,7 +76,7 @@ public class WsAutoConfiguration implements WebSocketConfigurer {
     WebSocketHandlerRegistration registration = registry.addHandler(wsHandler(), "/message/bus")
         .addInterceptors(wsHandshakeInterceptor());
     if (properties.isSupportCrossDomain()) {
-      registration.setAllowedOrigins("*");
+      registration.setAllowedOriginPatterns("*");
     }
   }
 }

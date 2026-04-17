@@ -3,6 +3,7 @@ package com.lframework.starter.web.config;
 import static cn.hutool.core.date.DatePattern.NORM_DATETIME_PATTERN;
 import static cn.hutool.core.date.DatePattern.NORM_DATE_PATTERN;
 import static cn.hutool.core.date.DatePattern.NORM_TIME_PATTERN;
+import static com.fasterxml.jackson.core.json.JsonReadFeature.ALLOW_UNESCAPED_CONTROL_CHARS;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
@@ -40,8 +41,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import io.micrometer.tracing.Tracer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -67,7 +70,7 @@ public class WebAutoConfiguration {
     CorsConfiguration config = new CorsConfiguration();
     config.setAllowCredentials(true);
     // 设置访问源地址
-    config.addAllowedOrigin("*");
+    config.addAllowedOriginPattern("*");
     // 设置访问源请求头
     config.addAllowedHeader("*");
     // 设置访问源请求方法
@@ -135,7 +138,7 @@ public class WebAutoConfiguration {
   public ObjectMapper getObjectMapper(Jackson2ObjectMapperBuilder builder) {
 
     ObjectMapper om = builder.build().configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true)
-        .configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true)
+        .configure(ALLOW_UNESCAPED_CONTROL_CHARS.mappedFeature(), true)
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         .registerModule(new ParameterNamesModule()).registerModule(new Jdk8Module())
         .registerModule(new JavaTimeModule()).registerModule(new JavaLocalDateTimeModule())
@@ -230,8 +233,8 @@ public class WebAutoConfiguration {
 
   @Bean
   @ConditionalOnMissingBean(TraceBuilder.class)
-  public TraceBuilder getTraceBuilder() {
-    return new DefaultTraceBuilder();
+  public TraceBuilder getTraceBuilder(ObjectProvider<Tracer> tracerProvider) {
+    return new DefaultTraceBuilder(tracerProvider.getIfAvailable());
   }
 
   @Bean

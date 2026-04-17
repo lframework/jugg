@@ -1,0 +1,2 @@
+com.lframework.starter.cloud.config.CloudAutoConfiguration
+com.lframework.starter.cloud.config.CloudBeanAutoConfiguration

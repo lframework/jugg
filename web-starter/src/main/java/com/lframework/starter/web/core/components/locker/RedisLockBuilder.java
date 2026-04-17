@@ -6,7 +6,7 @@ import com.lframework.starter.web.core.utils.IdUtil;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
@@ -25,7 +25,7 @@ public class RedisLockBuilder implements LockBuilder {
   }
 
   @Resource(name = "redisTemplate")
-  private RedisTemplate redisTemplate;
+  private RedisTemplate<String, Object> redisTemplate;
 
   @Override
   public Locker buildLocker(String lockName, long expireTime, long waitTime) {
@@ -168,8 +168,9 @@ public class RedisLockBuilder implements LockBuilder {
           log.debug("key={}, requestId={}", new String(key), new String(requestId));
         }
 
-        return connection.set(key, requestId, Expiration.from(expireTime, TimeUnit.MILLISECONDS),
-            RedisStringCommands.SetOption.ifAbsent());
+        return connection.stringCommands()
+            .set(key, requestId, Expiration.from(expireTime, TimeUnit.MILLISECONDS),
+                RedisStringCommands.SetOption.ifAbsent());
       }
     }
 
@@ -178,7 +179,8 @@ public class RedisLockBuilder implements LockBuilder {
       @Override
       public Boolean doInRedis(RedisConnection connection) throws DataAccessException {
 
-        return connection.eval(SCRIPT.getBytes(), ReturnType.BOOLEAN, 1, key, requestId);
+        return connection.scriptingCommands()
+            .eval(SCRIPT.getBytes(), ReturnType.BOOLEAN, 1, key, requestId);
       }
     }
   }

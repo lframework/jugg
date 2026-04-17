@@ -354,7 +354,7 @@ public class NumberUtil {
 
     precision = Math.max(0, precision);
 
-    BigDecimal result = getNumber(number).setScale(precision, BigDecimal.ROUND_HALF_UP);
+    BigDecimal result = getNumber(number).setScale(precision, RoundingMode.HALF_UP);
 
     return result.stripTrailingZeros();
   }

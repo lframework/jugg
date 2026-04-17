@@ -100,13 +100,13 @@ public class OrderTimeLineLogAspect {
         List<String[]> paramsList = new ArrayList<>();
         //循环format
         if (orderTimeLineLog.loopFormat() && Arrays.stream(params)
-            .anyMatch(t -> t instanceof Collection)) {
+            .anyMatch(t -> t instanceof Collection<?>)) {
           String[] strParams = new String[params.length];
           //collectionIndex的索引
           List<Integer> collectionIndexes = new ArrayList<>();
           for (int i = 0; i < params.length; i++) {
             //先处理不是Collection的元素
-            if (params[i] instanceof Collection) {
+            if (params[i] instanceof Collection<?>) {
               collectionIndexes.add(i);
               continue;
             }
@@ -121,7 +121,7 @@ public class OrderTimeLineLogAspect {
               List<String[]> tmpParamsList = new ArrayList<>();
               for (String[] paramsArr : paramsList) {
 
-                Collection collection = (Collection) params[collectionIndex];
+                Collection<?> collection = (Collection<?>) params[collectionIndex];
                 for (Object o : collection) {
                   String[] tmp = new String[paramsArr.length];
                   for (int j = 0; j < paramsArr.length; j++) {
@@ -168,9 +168,9 @@ public class OrderTimeLineLogAspect {
             continue;
           }
 
-          if (orderId instanceof Collection) {
-            Collection<Object> c = (Collection<Object>) orderId;
-            CollectionUtil.forEach(c, (item, index) -> orderIdList.add(item.toString()));
+          if (orderId instanceof Collection<?>) {
+            Collection<?> collection = (Collection<?>) orderId;
+            CollectionUtil.forEach(collection, (item, index) -> orderIdList.add(item.toString()));
           }
 
           orderIdList.add(orderId.toString());
@@ -193,7 +193,7 @@ public class OrderTimeLineLogAspect {
               OrderTimeLine record = new OrderTimeLine();
               record.setId(IdUtil.getId());
               record.setOrderId(orderId);
-              record.setContent(StringUtil.format(orderTimeLineLog.name(), strArr));
+              record.setContent(StringUtil.format(orderTimeLineLog.name(), (Object[]) strArr));
               record.setCreateBy(curUserName);
               record.setCreateById(curUserId);
               record.setBizType(ApplicationUtil.getBean(orderTimeLineLog.type()).getCode());

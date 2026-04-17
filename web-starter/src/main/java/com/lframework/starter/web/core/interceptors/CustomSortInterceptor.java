@@ -32,6 +32,7 @@ import org.apache.ibatis.session.RowBounds;
 @Slf4j
 public class CustomSortInterceptor extends JsqlParserSupport implements InnerInterceptor {
 
+    @SuppressWarnings("unchecked")
     @Override
     public void beforeQuery(
         Executor executor, MappedStatement ms, Object parameter, RowBounds rowBounds,
@@ -73,7 +74,10 @@ public class CustomSortInterceptor extends JsqlParserSupport implements InnerInt
             String sql = mpBs.sql();
             try {
                 Statement statement = CCJSqlParserUtil.parse(sql);
-                PlainSelect plainSelect = (PlainSelect) ((Select) statement).getSelectBody();
+                PlainSelect plainSelect = ((Select) statement).getPlainSelect();
+                if (plainSelect == null) {
+                    return;
+                }
                 plainSelect.setOrderByElements(parser.OrderByElements());
                 mpBs.sql(statement.toString());
             } catch (JSQLParserException | ParseException e) {

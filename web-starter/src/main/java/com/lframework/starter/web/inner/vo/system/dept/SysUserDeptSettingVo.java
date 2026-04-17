@@ -1,11 +1,11 @@
 package com.lframework.starter.web.inner.vo.system.dept;
 
 import com.lframework.starter.web.core.vo.BaseVo;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
 import java.util.List;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 @Data
@@ -27,6 +27,6 @@ public class SysUserDeptSettingVo implements BaseVo, Serializable {
   /**
    * 处理方式 1：新增 2：替换 3：删除
    */
-  @ApiModelProperty(value = "处理方式", required = true)
+  @Schema(description = "处理方式", requiredMode = Schema.RequiredMode.REQUIRED)
   private Integer handleType;
 }

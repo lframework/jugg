@@ -30,13 +30,14 @@ import java.util.Map;
  */
 public class BoUtil {
 
-  private static final Map<Class<? extends BaseBo>, CopyOptions> OPTIONS;
+  private static final Map<Class<? extends BaseBo<?>>, CopyOptions> OPTIONS;
 
   static {
     OPTIONS = new HashMap<>();
   }
 
-  public static <T extends BaseDto, B extends BaseBo, A> B convert(T source, B target,
+  @SuppressWarnings({"unchecked", "varargs"})
+  public static <T extends BaseDto, B extends BaseBo<?>, A> B convert(T source, B target,
       SFunction<A, ?>... columns) {
 
     if (source == null) {
@@ -52,16 +53,18 @@ public class BoUtil {
     return target;
   }
 
-  private static <A, B extends BaseBo, T extends BaseDto> CopyOptions buildCopyOptions(T source,
+  @SuppressWarnings({"unchecked", "varargs"})
+  private static <A, B extends BaseBo<?>, T extends BaseDto> CopyOptions buildCopyOptions(T source,
       B target,
       SFunction<A, ?>... columns) {
-    if (OPTIONS.containsKey(target.getClass())) {
-      return OPTIONS.get(target.getClass());
+    Class<? extends BaseBo<?>> targetClass = (Class<? extends BaseBo<?>>) target.getClass();
+    if (OPTIONS.containsKey(targetClass)) {
+      return OPTIONS.get(targetClass);
     }
 
     synchronized (BoUtil.class) {
-      if (OPTIONS.containsKey(target.getClass())) {
-        return OPTIONS.get(target.getClass());
+      if (OPTIONS.containsKey(targetClass)) {
+        return OPTIONS.get(targetClass);
       }
 
       List<String> columnNames = new ArrayList<>();
@@ -137,7 +140,7 @@ public class BoUtil {
             return v;
           });
 
-      OPTIONS.put(target.getClass(), copyOptions);
+      OPTIONS.put(targetClass, copyOptions);
 
       return copyOptions;
     }

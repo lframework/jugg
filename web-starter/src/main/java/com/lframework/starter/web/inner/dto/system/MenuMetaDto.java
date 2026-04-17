@@ -1,7 +1,7 @@
 package com.lframework.starter.web.inner.dto.system;
 
 import com.lframework.starter.web.core.dto.BaseDto;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
 import lombok.Data;
 
@@ -16,18 +16,18 @@ public class MenuMetaDto implements BaseDto, Serializable {
   /**
    * 标题
    */
-  @ApiModelProperty("标题")
+  @Schema(description = "标题")
   private String title;
 
   /**
    * 图标
    */
-  @ApiModelProperty("图标")
+  @Schema(description = "图标")
   private String icon;
 
   /**
    * 是否不缓存
    */
-  @ApiModelProperty("是否不缓存")
+  @Schema(description = "是否不缓存")
   private Boolean noCache;
 }

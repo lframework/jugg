@@ -19,15 +19,15 @@ import com.lframework.starter.web.inner.service.system.SysDataDicService;
 import com.lframework.starter.web.inner.vo.system.dic.item.CreateSysDataDicItemVo;
 import com.lframework.starter.web.inner.vo.system.dic.item.QuerySysDataDicItemVo;
 import com.lframework.starter.web.inner.vo.system.dic.item.UpdateSysDataDicItemVo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -42,7 +42,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author zmj
  */
-@Api(tags = "数据字典值")
+@Tag(name = "数据字典值")
 @Validated
 @RestController
 @RequestMapping("/system/dic/item")
@@ -57,7 +57,7 @@ public class SysDataDicItemController extends DefaultBaseController {
   /**
    * 查询列表
    */
-  @ApiOperation("查询列表")
+  @Operation(summary = "查询列表")
   @HasPermission(value = {"system:dic-item:*"}, requirePlatform = true)
   @GetMapping("/query")
   public InvokeResult<PageResult<QuerySysDataDicItemBo>> query(@Valid QuerySysDataDicItemVo vo) {
@@ -78,10 +78,10 @@ public class SysDataDicItemController extends DefaultBaseController {
   /**
    * 根据ID查询
    */
-  @ApiOperation("根据ID查询")
-  @ApiImplicitParams({
-      @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true),
-      @ApiImplicitParam(value = "租户ID", name = "tenantId", paramType = "query", required = true)
+  @Operation(summary = "根据ID查询")
+  @Parameters({
+      @Parameter(name = "id", description = "ID", required = true),
+      @Parameter(name = "tenantId", description = "租户ID", required = true)
   })
   @HasPermission(value = {"system:dic-item:*"}, requirePlatform = true)
   @GetMapping
@@ -103,8 +103,8 @@ public class SysDataDicItemController extends DefaultBaseController {
   /**
    * 根据字典编号查询
    */
-  @ApiOperation("根据字典编号查询")
-  @ApiImplicitParam(value = "字典编号", name = "code", paramType = "query", required = true)
+  @Operation(summary = "根据字典编号查询")
+  @Parameter(name = "code", description = "字典编号", required = true)
   @GetMapping("/bydic")
   public InvokeResult<List<SysDataDicItemBo>> getByDicCode(
       @NotBlank(message = "字典编号不能为空！") String code) {
@@ -119,7 +119,7 @@ public class SysDataDicItemController extends DefaultBaseController {
   /**
    * 新增数据字典值
    */
-  @ApiOperation("新增数据字典值")
+  @Operation(summary = "新增数据字典值")
   @HasPermission(value = {"system:dic-item:add"}, requirePlatform = true)
   @PostMapping
   public InvokeResult<Void> create(@Valid CreateSysDataDicItemVo vo) {
@@ -137,7 +137,7 @@ public class SysDataDicItemController extends DefaultBaseController {
   /**
    * 修改数据字典值
    */
-  @ApiOperation("修改数据字典值")
+  @Operation(summary = "修改数据字典值")
   @HasPermission(value = {"system:dic-item:modify"}, requirePlatform = true)
   @PutMapping
   public InvokeResult<Void> update(@Valid UpdateSysDataDicItemVo vo) {
@@ -159,10 +159,10 @@ public class SysDataDicItemController extends DefaultBaseController {
   /**
    * 删除数据字典值
    */
-  @ApiOperation("删除数据字典值")
-  @ApiImplicitParams({
-      @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true),
-      @ApiImplicitParam(value = "租户ID", name = "tenantId", paramType = "query", required = true)
+  @Operation(summary = "删除数据字典值")
+  @Parameters({
+      @Parameter(name = "id", description = "ID", required = true),
+      @Parameter(name = "tenantId", description = "租户ID", required = true)
   })
   @HasPermission(value = {"system:dic-item:delete"}, requirePlatform = true)
   @DeleteMapping

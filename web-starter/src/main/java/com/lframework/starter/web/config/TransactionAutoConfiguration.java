@@ -58,7 +58,9 @@ public class TransactionAutoConfiguration {
     txMap.put("find*", readOnlyTx);
     txMap.put("select*", readOnlyTx);
     source.setNameMap(txMap);
-    TransactionInterceptor txAdvice = new TransactionInterceptor(transactionManager, source);
+    TransactionInterceptor txAdvice = new TransactionInterceptor();
+    txAdvice.setTransactionManager(transactionManager);
+    txAdvice.setTransactionAttributeSource(source);
     return txAdvice;
   }
 

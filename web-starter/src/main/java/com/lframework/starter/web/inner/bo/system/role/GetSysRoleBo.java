@@ -6,7 +6,7 @@ import com.lframework.starter.web.inner.entity.SysRole;
 import com.lframework.starter.web.core.bo.BaseBo;
 import com.lframework.starter.web.inner.entity.SysRoleCategory;
 import com.lframework.starter.web.inner.service.system.SysRoleCategoryService;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
@@ -15,43 +15,43 @@ public class GetSysRoleBo extends BaseBo<SysRole> {
   /**
    * ID
    */
-  @ApiModelProperty("ID")
+  @Schema(description = "ID")
   private String id;
 
   /**
    * 编号
    */
-  @ApiModelProperty("编号")
+  @Schema(description = "编号")
   private String code;
 
   /**
    * 名称
    */
-  @ApiModelProperty("名称")
+  @Schema(description = "名称")
   private String name;
 
   /**
    * 分类ID
    */
-  @ApiModelProperty("分类ID")
+  @Schema(description = "分类ID")
   private String categoryId;
 
   /**
    * 分类名称
    */
-  @ApiModelProperty("分类名称")
+  @Schema(description = "分类名称")
   private String categoryName;
 
   /**
    * 权限
    */
-  @ApiModelProperty("权限")
+  @Schema(description = "权限")
   private String permission;
 
   /**
    * 备注
    */
-  @ApiModelProperty("备注")
+  @Schema(description = "备注")
   private String description;
 
   public GetSysRoleBo() {

@@ -13,13 +13,13 @@ import com.lframework.starter.web.inner.bo.system.message.mail.QuerySysMailMessa
 import com.lframework.starter.web.inner.entity.SysMailMessage;
 import com.lframework.starter.web.inner.service.system.SysMailMessageService;
 import com.lframework.starter.web.inner.vo.system.message.mail.QuerySysMailMessageVo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author zmj
  */
-@Api(tags = "邮件消息")
+@Tag(name = "邮件消息")
 @Validated
 @RestController
 @RequestMapping("/system/message/mail")
@@ -43,7 +43,7 @@ public class SysMailMessageController extends DefaultBaseController {
   /**
    * 查询列表
    */
-  @ApiOperation("查询列表")
+  @Operation(summary = "查询列表")
   @HasPermission("system:mail-message:manage")
   @GetMapping("/query")
   public InvokeResult<PageResult<QuerySysMailMessageBo>> query(@Valid QuerySysMailMessageVo vo) {
@@ -65,9 +65,9 @@ public class SysMailMessageController extends DefaultBaseController {
   /**
    * 根据ID查询
    */
-  @ApiOperation("根据ID查询")
+  @Operation(summary = "根据ID查询")
   @HasPermission("system:mail-message:manage")
-  @ApiImplicitParam(value = "id", name = "id", paramType = "query", required = true)
+  @Parameter(name = "id", description = "id", required = true)
   @GetMapping
   public InvokeResult<GetSysMailMessageBo> get(@NotBlank(message = "id不能为空！") String id) {
 

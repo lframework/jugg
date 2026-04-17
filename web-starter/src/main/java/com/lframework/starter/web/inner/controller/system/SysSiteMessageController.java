@@ -19,13 +19,13 @@ import com.lframework.starter.web.inner.entity.SysSiteMessage;
 import com.lframework.starter.web.inner.service.system.SysSiteMessageService;
 import com.lframework.starter.web.inner.vo.system.message.site.QuerySysSiteMessageByUserVo;
 import com.lframework.starter.web.inner.vo.system.message.site.QuerySysSiteMessageVo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author zmj
  */
-@Api(tags = "站内信")
+@Tag(name = "站内信")
 @Validated
 @RestController
 @RequestMapping("/system/message/site")
@@ -49,7 +49,7 @@ public class SysSiteMessageController extends DefaultBaseController {
   /**
    * 查询列表
    */
-  @ApiOperation("查询列表")
+  @Operation(summary = "查询列表")
   @HasPermission("system:site-message:manage")
   @GetMapping("/query")
   public InvokeResult<PageResult<QuerySysSiteMessageBo>> query(@Valid QuerySysSiteMessageVo vo) {
@@ -71,7 +71,7 @@ public class SysSiteMessageController extends DefaultBaseController {
   /**
    * 查询我的站内信
    */
-  @ApiOperation("查询我的站内信")
+  @Operation(summary = "查询我的站内信")
   @GetMapping("/query/my")
   public InvokeResult<PageResult<QueryMySysSiteMessageBo>> queryMySiteMessage(
       @Valid QuerySysSiteMessageByUserVo vo) {
@@ -94,8 +94,8 @@ public class SysSiteMessageController extends DefaultBaseController {
   /**
    * 根据ID查询内容
    */
-  @ApiOperation("根据ID查询内容")
-  @ApiImplicitParam(value = "id", name = "id", paramType = "query", required = true)
+  @Operation(summary = "根据ID查询内容")
+  @Parameter(name = "id", description = "id", required = true)
   @GetMapping("/content")
   public InvokeResult<SiteMessageDto> getContent(@NotBlank(message = "id不能为空！") String id) {
 
@@ -117,9 +117,9 @@ public class SysSiteMessageController extends DefaultBaseController {
   /**
    * 根据ID查询
    */
-  @ApiOperation("根据ID查询")
+  @Operation(summary = "根据ID查询")
   @HasPermission("system:site-message:manage")
-  @ApiImplicitParam(value = "id", name = "id", paramType = "query", required = true)
+  @Parameter(name = "id", description = "id", required = true)
   @GetMapping
   public InvokeResult<GetSysSiteMessageBo> get(@NotBlank(message = "id不能为空！") String id) {
 

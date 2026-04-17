@@ -16,15 +16,14 @@ import com.lframework.starter.web.inner.service.system.SysUserService;
 import com.lframework.starter.web.inner.vo.system.user.CreateSysUserVo;
 import com.lframework.starter.web.inner.vo.system.user.QuerySysUserVo;
 import com.lframework.starter.web.inner.vo.system.user.UpdateSysUserVo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,7 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author zmj
  */
-@Api(tags = "用户管理")
+@Tag(name = "用户管理")
 @Validated
 @RestController
 @RequestMapping("/system/user")
@@ -56,7 +55,7 @@ public class SysUserController extends DefaultBaseController {
   /**
    * 用户列表
    */
-  @ApiOperation("用户列表")
+  @Operation(summary = "用户列表")
   @HasPermission({"system:user:query", "system:user:add", "system:user:modify"})
   @GetMapping("/query")
   public InvokeResult<PageResult<QuerySysUserBo>> query(@Valid QuerySysUserVo vo) {
@@ -77,8 +76,8 @@ public class SysUserController extends DefaultBaseController {
   /**
    * 查询用户
    */
-  @ApiOperation("查询用户")
-  @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
+  @Operation(summary = "查询用户")
+  @Parameter(name = "id", description = "ID", required = true)
   @HasPermission({"system:user:query", "system:user:add", "system:user:modify"})
   @GetMapping
   public InvokeResult<GetSysUserBo> get(@NotBlank(message = "ID不能为空！") String id) {
@@ -96,11 +95,11 @@ public class SysUserController extends DefaultBaseController {
   /**
    * 根据ID删除
    */
-  @ApiOperation("根据ID删除")
+  @Operation(summary = "根据ID删除")
   @HasPermission({"system:user:delete"})
   @DeleteMapping
   public InvokeResult<Void> deleteById(
-      @ApiParam(value = "用户ID", required = true) @NotEmpty(message = "用户ID不能为空！") String id) {
+      @Parameter(description = "用户ID", required = true) @NotEmpty(message = "用户ID不能为空！") String id) {
 
     sysUserService.deleteById(id);
 
@@ -112,7 +111,7 @@ public class SysUserController extends DefaultBaseController {
   /**
    * 新增用户
    */
-  @ApiOperation("新增用户")
+  @Operation(summary = "新增用户")
   @HasPermission({"system:user:add"})
   @PostMapping
   public InvokeResult<Void> create(@Valid @RequestBody CreateSysUserVo vo) {
@@ -125,7 +124,7 @@ public class SysUserController extends DefaultBaseController {
   /**
    * 修改用户
    */
-  @ApiOperation("修改用户")
+  @Operation(summary = "修改用户")
   @HasPermission({"system:user:modify"})
   @PutMapping
   public InvokeResult<Void> update(@Valid @RequestBody UpdateSysUserVo vo) {
@@ -142,8 +141,8 @@ public class SysUserController extends DefaultBaseController {
   /**
    * 解锁用户
    */
-  @ApiOperation("解锁用户")
-  @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
+  @Operation(summary = "解锁用户")
+  @Parameter(name = "id", description = "ID", required = true)
   @HasPermission({"system:user:modify"})
   @PatchMapping("/unlock")
   public InvokeResult<Void> unlock(@NotBlank(message = "ID不能为空！") String id) {

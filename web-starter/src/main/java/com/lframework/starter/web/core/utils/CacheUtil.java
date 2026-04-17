@@ -11,7 +11,9 @@ import org.springframework.cache.CacheManager;
  */
 public class CacheUtil {
 
-  private static CacheManager cacheManager = ApplicationUtil.getBean(CacheManager.class);
+  private static CacheManager getCacheManager() {
+    return ApplicationUtil.getBean(CacheManager.class);
+  }
 
   /**
    * 获取缓存值
@@ -25,7 +27,7 @@ public class CacheUtil {
    */
   public static <T> T get(String cacheName, Object key, Class<T> clazz) {
 
-    return cacheManager.getCache(cacheName).get(key, clazz);
+    return getCacheManager().getCache(cacheName).get(key, clazz);
   }
 
   /**
@@ -38,7 +40,7 @@ public class CacheUtil {
    */
   public static void put(String cacheName, Object key, Object value) {
 
-    cacheManager.getCache(cacheName).put(key, value);
+    getCacheManager().getCache(cacheName).put(key, value);
   }
 
   /**
@@ -67,6 +69,6 @@ public class CacheUtil {
    */
   public static void evict(String cacheName, Object key) {
 
-    cacheManager.getCache(cacheName).evict(key);
+    getCacheManager().getCache(cacheName).evict(key);
   }
 }

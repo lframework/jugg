@@ -9,7 +9,7 @@ import com.lframework.starter.web.core.utils.JsonUtil;
 import com.lframework.starter.web.core.dto.GenerateCodeDto;
 import com.lframework.starter.web.inner.service.GenerateCodeService;
 import com.lframework.starter.web.inner.entity.SysGenerateCode;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -26,19 +26,19 @@ public class GetSysGenerateCodeBo extends BaseBo<SysGenerateCode> {
    * ID
    */
   @JsonSerialize(using = ToStringSerializer.class)
-  @ApiModelProperty("ID")
+  @Schema(description = "ID")
   private Integer id;
 
   /**
    * 名称
    */
-  @ApiModelProperty("名称")
+  @Schema(description = "名称")
   private String name;
 
   /**
    * 配置规则
    */
-  @ApiModelProperty("配置规则")
+  @Schema(description = "配置规则")
   private String configStr;
 
   public GetSysGenerateCodeBo() {

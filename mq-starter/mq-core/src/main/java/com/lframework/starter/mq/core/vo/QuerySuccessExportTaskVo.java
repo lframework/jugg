@@ -1,15 +1,17 @@
 package com.lframework.starter.mq.core.vo;
 
 import com.lframework.starter.web.core.vo.PageVo;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class QuerySuccessExportTaskVo extends PageVo {
 
   /**
    * 名称
    */
-  @ApiModelProperty("名称")
+  @Schema(description = "名称")
   private String name;
 }

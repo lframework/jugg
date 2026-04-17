@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobDetail;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,11 +97,11 @@ public class QrtzServiceImpl implements QrtzService {
         }
       }
       try {
-        Class clazz = Class.forName(vo.getTargetClassName());
+        Class<?> clazz = Class.forName(vo.getTargetClassName());
         ReflectUtil.newInstance(clazz);
-        Class[] paramTypes = null;
+        Class<?>[] paramTypes = null;
         if (!CollectionUtil.isEmpty(vo.getTargetParamTypes())) {
-          paramTypes = new Class[vo.getTargetParamTypes().size()];
+          paramTypes = new Class<?>[vo.getTargetParamTypes().size()];
           for (int i = 0; i < vo.getTargetParamTypes().size(); i++) {
             String targetParamType = vo.getTargetParamTypes().get(i);
             try {
@@ -190,12 +191,20 @@ public class QrtzServiceImpl implements QrtzService {
     data.setJobType(EnumUtil.getByCode(QrtzJobType.class, jobType));
     data.setTargetClassName(jobDetail.getJobDataMap().getString("targetClassName"));
     data.setTargetMethodName(jobDetail.getJobDataMap().getString("targetMethodName"));
-    data.setTargetParamTypes((List<String>) jobDetail.getJobDataMap().get("targetParamTypes"));
-    data.setTargetParams((List<String>) jobDetail.getJobDataMap().get("targetParams"));
+    data.setTargetParamTypes(toStringList(jobDetail.getJobDataMap().get("targetParamTypes")));
+    data.setTargetParams(toStringList(jobDetail.getJobDataMap().get("targetParams")));
     data.setScript(jobDetail.getJobDataMap().getString("script"));
     Object tenantStr = jobDetail.getJobDataMap().get(StringPool.TENANT_ID_QRTZ);
     data.setTenantId(tenantStr == null ? null : Integer.valueOf(String.valueOf(tenantStr)));
 
     return data;
+  }
+
+  private List<String> toStringList(Object value) {
+    if (!(value instanceof List<?> list)) {
+      return null;
+    }
+
+    return list.stream().filter(Objects::nonNull).map(String::valueOf).toList();
   }
 }

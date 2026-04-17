@@ -30,7 +30,7 @@ public interface BaseMpService<T> extends MPJBaseService<T> {
    * 清除缓存 仅适用于key是常量值的缓存
    */
   default void cleanCaches() {
-    BaseMpService<T> thisService = getThis(getClass());
+    BaseMpService<T> thisService = getCurrentService();
     thisService.cleanCacheByKey(null);
   }
 
@@ -49,10 +49,15 @@ public interface BaseMpService<T> extends MPJBaseService<T> {
    * @param keys
    */
   default void cleanCacheByKeys(Collection<? extends Serializable> keys) {
-    BaseMpService<T> thisService = getThis(getClass());
+    BaseMpService<T> thisService = getCurrentService();
     if (CollectionUtil.isNotEmpty(keys)) {
       keys.forEach(thisService::cleanCacheByKey);
     }
+  }
+
+  @SuppressWarnings("unchecked")
+  private BaseMpService<T> getCurrentService() {
+    return getThis((Class<BaseMpService<T>>) getClass());
   }
 
   // 这里只有复制新增记录的内置字段，因为修改记录的内置字段无论何时都会被覆盖

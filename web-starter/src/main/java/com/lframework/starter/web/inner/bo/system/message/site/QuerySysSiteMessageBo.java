@@ -7,7 +7,7 @@ import com.lframework.starter.web.core.utils.ApplicationUtil;
 import com.lframework.starter.web.inner.entity.SysSiteMessage;
 import com.lframework.starter.web.inner.entity.SysUser;
 import com.lframework.starter.web.inner.service.system.SysUserService;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import lombok.Data;
 
@@ -24,44 +24,44 @@ public class QuerySysSiteMessageBo extends BaseBo<SysSiteMessage> {
   /**
    * ID
    */
-  @ApiModelProperty("ID")
+  @Schema(description = "ID")
   private String id;
 
   /**
    * 标题
    */
-  @ApiModelProperty("标题")
+  @Schema(description = "标题")
   private String title;
 
   /**
    * 接收人姓名
    */
-  @ApiModelProperty("接收人姓名")
+  @Schema(description = "接收人姓名")
   private String receiverName;
 
   /**
    * 创建人
    */
-  @ApiModelProperty("创建人")
+  @Schema(description = "创建人")
   private String createBy;
 
   /**
    * 创建时间
    */
-  @ApiModelProperty("创建时间")
+  @Schema(description = "创建时间")
   @JsonFormat(pattern = StringPool.DATE_TIME_PATTERN)
   private LocalDateTime createTime;
 
   /**
    * 是否已读
    */
-  @ApiModelProperty("是否已读")
+  @Schema(description = "是否已读")
   private Boolean readed;
 
   /**
    * 已读时间
    */
-  @ApiModelProperty("已读时间")
+  @Schema(description = "已读时间")
   @JsonFormat(pattern = StringPool.DATE_TIME_PATTERN)
   private LocalDateTime readTime;
 

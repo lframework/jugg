@@ -8,7 +8,7 @@ import com.lframework.starter.mq.core.queue.QueueDefinition;
 import com.lframework.starter.web.core.components.tenant.TenantContextHolder;
 import com.lframework.starter.web.core.utils.TenantUtil;
 import java.io.Serializable;
-import javax.jms.Message;
+import jakarta.jms.Message;
 import org.apache.activemq.ScheduledMessage;
 import org.springframework.jms.core.JmsTemplate;
 

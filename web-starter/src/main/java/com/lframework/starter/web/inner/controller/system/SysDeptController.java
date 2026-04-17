@@ -16,16 +16,15 @@ import com.lframework.starter.web.inner.service.RecursionMappingService;
 import com.lframework.starter.web.inner.service.system.SysDeptService;
 import com.lframework.starter.web.inner.vo.system.dept.CreateSysDeptVo;
 import com.lframework.starter.web.inner.vo.system.dept.UpdateSysDeptVo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,7 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author zmj
  */
-@Api(tags = "部门管理")
+@Tag(name = "部门管理")
 @Validated
 @RestController
 @RequestMapping("/system/dept")
@@ -55,7 +54,7 @@ public class SysDeptController extends DefaultBaseController {
   /**
    * 部门树形菜单数据
    */
-  @ApiOperation("部门树形菜单数据")
+  @Operation(summary = "部门树形菜单数据")
   @HasPermission({"system:dept:query", "system:dept:add", "system:dept:modify"})
   @GetMapping("/trees")
   public InvokeResult<List<SysDeptTreeBo>> trees() {
@@ -77,8 +76,8 @@ public class SysDeptController extends DefaultBaseController {
   /**
    * 查询部门
    */
-  @ApiOperation("部门详情")
-  @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
+  @Operation(summary = "部门详情")
+  @Parameter(name = "id", description = "ID", required = true)
   @HasPermission({"system:dept:query", "system:dept:add", "system:dept:modify"})
   @GetMapping
   public InvokeResult<GetSysDeptBo> get(@NotBlank(message = "ID不能为空！") String id) {
@@ -96,11 +95,11 @@ public class SysDeptController extends DefaultBaseController {
   /**
    * 删除部门
    */
-  @ApiOperation("删除部门")
+  @Operation(summary = "删除部门")
   @HasPermission({"system:dept:delete"})
   @DeleteMapping
   public InvokeResult<Void> deleteById(
-      @ApiParam(value = "部门ID", required = true) @NotEmpty(message = "部门ID不能为空！") String id) {
+      @Parameter(description = "部门ID", required = true) @NotEmpty(message = "部门ID不能为空！") String id) {
 
     sysDeptService.deleteById(id);
 
@@ -118,7 +117,7 @@ public class SysDeptController extends DefaultBaseController {
   /**
    * 新增部门
    */
-  @ApiOperation("新增部门")
+  @Operation(summary = "新增部门")
   @HasPermission({"system:dept:add"})
   @PostMapping
   public InvokeResult<Void> create(@Valid CreateSysDeptVo vo) {
@@ -131,7 +130,7 @@ public class SysDeptController extends DefaultBaseController {
   /**
    * 修改部门
    */
-  @ApiOperation("修改部门")
+  @Operation(summary = "修改部门")
   @HasPermission({"system:dept:modify"})
   @PutMapping
   public InvokeResult<Void> update(@Valid UpdateSysDeptVo vo) {

@@ -14,16 +14,16 @@ import com.lframework.starter.web.inner.service.system.SysDataDicCategoryService
 import com.lframework.starter.web.inner.vo.system.dic.category.CreateSysDataDicCategoryVo;
 import com.lframework.starter.web.inner.vo.system.dic.category.QuerySysDataDicCategoryVo;
 import com.lframework.starter.web.inner.vo.system.dic.category.UpdateSysDataDicCategoryVo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author zmj
  */
-@Api(tags = "数据字典分类")
+@Tag(name = "数据字典分类")
 @Validated
 @RestController
 @RequestMapping("/system/dic/category")
@@ -50,7 +50,7 @@ public class SysDataDicCategoryController extends DefaultBaseController {
   /**
    * 查询列表
    */
-  @ApiOperation("查询列表")
+  @Operation(summary = "查询列表")
   @HasPermission(value = {"system:dic-category:*"}, requirePlatform = true)
   @GetMapping("/query")
   public InvokeResult<List<QuerySysDataDicCategoryBo>> query(@Valid QuerySysDataDicCategoryVo vo) {
@@ -69,10 +69,10 @@ public class SysDataDicCategoryController extends DefaultBaseController {
   /**
    * 根据ID查询
    */
-  @ApiOperation("根据ID查询")
-  @ApiImplicitParams({
-      @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true),
-      @ApiImplicitParam(value = "租户ID", name = "tenantId", paramType = "query", required = true)
+  @Operation(summary = "根据ID查询")
+  @Parameters({
+      @Parameter(name = "id", description = "ID", required = true),
+      @Parameter(name = "tenantId", description = "租户ID", required = true)
   })
   @HasPermission(value = {"system:dic-category:*"}, requirePlatform = true)
   @GetMapping
@@ -94,7 +94,7 @@ public class SysDataDicCategoryController extends DefaultBaseController {
   /**
    * 新增数据字典分类
    */
-  @ApiOperation("新增数据字典分类")
+  @Operation(summary = "新增数据字典分类")
   @HasPermission(value = {"system:dic-category:add"}, requirePlatform = true)
   @PostMapping
   public InvokeResult<Void> create(@Valid CreateSysDataDicCategoryVo vo) {
@@ -111,7 +111,7 @@ public class SysDataDicCategoryController extends DefaultBaseController {
   /**
    * 修改数据字典分类
    */
-  @ApiOperation("修改数据字典分类")
+  @Operation(summary = "修改数据字典分类")
   @HasPermission(value = {"system:dic-category:modify"}, requirePlatform = true)
   @PutMapping
   public InvokeResult<Void> update(@Valid UpdateSysDataDicCategoryVo vo) {
@@ -125,10 +125,10 @@ public class SysDataDicCategoryController extends DefaultBaseController {
     return InvokeResultBuilder.success();
   }
 
-  @ApiOperation("删除数据字典分类")
-  @ApiImplicitParams({
-      @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true),
-      @ApiImplicitParam(value = "租户ID", name = "tenantId", paramType = "query", required = true)
+  @Operation(summary = "删除数据字典分类")
+  @Parameters({
+      @Parameter(name = "id", description = "ID", required = true),
+      @Parameter(name = "tenantId", description = "租户ID", required = true)
   })
   @HasPermission(value = {"system:dic-category:delete"}, requirePlatform = true)
   @DeleteMapping

@@ -3,8 +3,8 @@ package com.lframework.starter.web.core.components.validation;
 import com.lframework.starter.common.constants.PatternPool;
 import com.lframework.starter.common.utils.RegUtil;
 import com.lframework.starter.common.utils.StringUtil;
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 /**
  * 编号校验 如果参数是null或empty 则通过校验

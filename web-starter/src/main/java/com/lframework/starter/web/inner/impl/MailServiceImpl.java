@@ -21,13 +21,13 @@ public class MailServiceImpl implements MailService {
   @Override
   public String send(String to, String subject, String content) {
 
-    return this.send(Collections.singletonList(to), subject, content, false, null);
+    return this.send(Collections.singletonList(to), subject, content, false, (File[]) null);
   }
 
   @Override
   public String send(String to, String subject, String content, boolean isHtml) {
 
-    return this.send(Collections.singletonList(to), subject, content, isHtml, null);
+    return this.send(Collections.singletonList(to), subject, content, isHtml, (File[]) null);
   }
 
   @Override
@@ -39,13 +39,13 @@ public class MailServiceImpl implements MailService {
   @Override
   public String send(List<String> tos, String subject, String content) {
 
-    return this.send(tos, subject, content, false, null);
+    return this.send(tos, subject, content, false, (File[]) null);
   }
 
   @Override
   public String send(List<String> tos, String subject, String content, boolean isHtml) {
 
-    return this.send(tos, subject, content, isHtml, null);
+    return this.send(tos, subject, content, isHtml, (File[]) null);
   }
 
   @Override

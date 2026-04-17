@@ -18,13 +18,13 @@ import com.lframework.starter.web.inner.service.TenantService;
 import com.lframework.starter.web.inner.vo.system.tenant.CreateTenantVo;
 import com.lframework.starter.web.inner.vo.system.tenant.QueryTenantVo;
 import com.lframework.starter.web.inner.vo.system.tenant.UpdateTenantVo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -40,7 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author zmj
  */
 @Slf4j
-@Api(tags = "租户管理")
+@Tag(name = "租户管理")
 @Validated
 @RestController
 @RequestMapping("/system/tenant")
@@ -52,7 +52,7 @@ public class TenantController extends DefaultBaseController {
   /**
    * 查询列表
    */
-  @ApiOperation("查询列表")
+  @Operation(summary = "查询列表")
   @HasPermission(value = {"system:tenant:query", "system:tenant:add",
       "system:tenant:modify"}, requirePlatform = true)
   @GetMapping("/query")
@@ -71,8 +71,8 @@ public class TenantController extends DefaultBaseController {
   /**
    * 查询详情
    */
-  @ApiOperation("查询详情")
-  @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
+  @Operation(summary = "查询详情")
+  @Parameter(name = "id", description = "ID", required = true)
   @HasPermission(value = {"system:tenant:query", "system:tenant:add",
       "system:tenant:modify"}, requirePlatform = true)
   @GetMapping
@@ -91,7 +91,7 @@ public class TenantController extends DefaultBaseController {
   /**
    * 新增租户
    */
-  @ApiOperation("新增租户")
+  @Operation(summary = "新增租户")
   @HasPermission(value = {"system:tenant:add"}, requirePlatform = true)
   @PostMapping
   public InvokeResult<Void> create(@Valid CreateTenantVo vo) {
@@ -114,7 +114,7 @@ public class TenantController extends DefaultBaseController {
   /**
    * 修改租户
    */
-  @ApiOperation("修改租户")
+  @Operation(summary = "修改租户")
   @HasPermission(value = {"system:tenant:modify"}, requirePlatform = true)
   @PutMapping
   public InvokeResult<Void> update(@Valid UpdateTenantVo vo) {

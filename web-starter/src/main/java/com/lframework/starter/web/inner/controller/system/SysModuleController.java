@@ -13,13 +13,13 @@ import com.lframework.starter.web.core.controller.DefaultBaseController;
 import com.lframework.starter.web.core.components.resp.InvokeResult;
 import com.lframework.starter.web.core.components.resp.InvokeResultBuilder;
 import com.lframework.starter.web.core.utils.TenantUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author zmj
  */
-@Api(tags = "系统模块管理")
+@Tag(name = "系统模块管理")
 @Validated
 @RestController
 @RequestMapping("/system/module")
@@ -48,7 +48,7 @@ public class SysModuleController extends DefaultBaseController {
   /**
    * 查询列表
    */
-  @ApiOperation("查询列表")
+  @Operation(summary = "查询列表")
   @HasPermission(value = {"system:tenant:module"}, requirePlatform = true)
   @GetMapping("/query")
   public InvokeResult<List<QuerySysModuleBo>> query(@NotNull(message = "租户ID不能为空！") Integer tenantId) {
@@ -83,7 +83,7 @@ public class SysModuleController extends DefaultBaseController {
   /**
    * 模块授权
    */
-  @ApiOperation("模块授权")
+  @Operation(summary = "模块授权")
   @HasPermission(value = {"system:tenant:module"}, requirePlatform = true)
   @PostMapping("/setting")
   public InvokeResult<Void> setting(

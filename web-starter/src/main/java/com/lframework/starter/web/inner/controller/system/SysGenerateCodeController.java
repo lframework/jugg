@@ -19,13 +19,13 @@ import com.lframework.starter.web.inner.vo.system.generate.PreviewSysGenerateCod
 import com.lframework.starter.web.inner.vo.system.generate.QuerySysGenerateCodeVo;
 import com.lframework.starter.web.inner.vo.system.generate.SettingSysGenerateCodeVo;
 import com.lframework.starter.web.inner.vo.system.generate.UpdateSysGenerateCodeVo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,7 +41,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author zmj
  */
-@Api(tags = "编号规则")
+@Tag(name = "编号规则")
 @Validated
 @RestController
 @RequestMapping("/system/generate/code")
@@ -56,7 +56,7 @@ public class SysGenerateCodeController extends DefaultBaseController {
   /**
    * 查询列表
    */
-  @ApiOperation("查询列表")
+  @Operation(summary = "查询列表")
   @HasPermission({"system:generate-code:manage"})
   @GetMapping("/query")
   public InvokeResult<PageResult<QuerySysGenerateCodeBo>> query(@Valid QuerySysGenerateCodeVo vo) {
@@ -77,8 +77,8 @@ public class SysGenerateCodeController extends DefaultBaseController {
   /**
    * 根据ID查询
    */
-  @ApiOperation("根据ID查询")
-  @ApiImplicitParam(value = "id", name = "id", paramType = "query", required = true)
+  @Operation(summary = "根据ID查询")
+  @Parameter(name = "id", description = "id", required = true)
   @HasPermission({"system:generate-code:manage"})
   @GetMapping
   public InvokeResult<GetSysGenerateCodeBo> get(@NotNull(message = "id不能为空！") Long id) {
@@ -96,7 +96,7 @@ public class SysGenerateCodeController extends DefaultBaseController {
   /**
    * 新增
    */
-  @ApiOperation("新增")
+  @Operation(summary = "新增")
   @HasPermission({"system:generate-code:manage"})
   @PostMapping
   public InvokeResult<Void> create(@Valid CreateSysGenerateCodeVo vo) {
@@ -109,7 +109,7 @@ public class SysGenerateCodeController extends DefaultBaseController {
   /**
    * 修改
    */
-  @ApiOperation("修改")
+  @Operation(summary = "修改")
   @HasPermission({"system:generate-code:manage"})
   @PutMapping
   public InvokeResult<Void> update(@Valid UpdateSysGenerateCodeVo vo) {
@@ -124,8 +124,8 @@ public class SysGenerateCodeController extends DefaultBaseController {
   /**
    * 根据ID删除
    */
-  @ApiOperation("根据ID删除")
-  @ApiImplicitParam(value = "id", name = "id", paramType = "query", required = true)
+  @Operation(summary = "根据ID删除")
+  @Parameter(name = "id", description = "id", required = true)
   @HasPermission({"system:generate-code:manage"})
   @DeleteMapping
   public InvokeResult<Void> deleteById(@NotNull(message = "id不能为空！") Integer id) {
@@ -140,7 +140,7 @@ public class SysGenerateCodeController extends DefaultBaseController {
   /**
    * 设置规则
    */
-  @ApiOperation("设置规则")
+  @Operation(summary = "设置规则")
   @HasPermission({"system:generate-code:manage"})
   @PatchMapping
   public InvokeResult<Void> setting(@Valid SettingSysGenerateCodeVo vo) {
@@ -155,7 +155,7 @@ public class SysGenerateCodeController extends DefaultBaseController {
   /**
    * 预览
    */
-  @ApiOperation("预览")
+  @Operation(summary = "预览")
   @HasPermission({"system:generate-code:manage"})
   @PostMapping("/preview")
   public InvokeResult<String> preview(@Valid PreviewSysGenerateCodeVo vo) {

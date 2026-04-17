@@ -4,7 +4,7 @@ import com.lframework.starter.common.utils.DateUtil;
 import com.lframework.starter.web.core.bo.BaseBo;
 import com.lframework.starter.web.core.dto.BaseDto;
 import com.lframework.starter.web.inner.dto.system.notice.QuerySysNoticeByUserDto;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
 import lombok.Data;
 
@@ -17,25 +17,25 @@ public class SysNoticeTaskDto extends BaseBo<QuerySysNoticeByUserDto> implements
   /**
    * ID
    */
-  @ApiModelProperty("ID")
+  @Schema(description = "ID")
   private String id;
 
   /**
    * 标题
    */
-  @ApiModelProperty("标题")
+  @Schema(description = "标题")
   private String title;
 
   /**
    * 是否已读
    */
-  @ApiModelProperty("是否已读")
+  @Schema(description = "是否已读")
   private Boolean readed;
 
   /**
    * 发布时间
    */
-  @ApiModelProperty("发布时间")
+  @Schema(description = "发布时间")
   private String publishTime;
 
   public SysNoticeTaskDto(QuerySysNoticeByUserDto dto) {

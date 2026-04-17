@@ -2,7 +2,7 @@ package com.lframework.starter.web.inner.bo.auth;
 
 import com.lframework.starter.web.core.bo.BaseBo;
 import com.lframework.starter.web.inner.dto.system.LoginDto;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -17,13 +17,13 @@ public class TelephoneLoginBo extends BaseBo<LoginDto> {
     /**
      * 登录信息
      */
-    @ApiModelProperty("登录信息")
+    @Schema(description = "登录信息")
     private LoginBo loginInfo;
 
     /**
      * 是否绑定用户
      */
-    @ApiModelProperty("是否绑定用户")
+    @Schema(description = "是否绑定用户")
     private Boolean isBind = Boolean.TRUE;
 
     public TelephoneLoginBo() {

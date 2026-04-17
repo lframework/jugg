@@ -13,12 +13,12 @@ import com.lframework.starter.web.core.controller.DefaultBaseController;
 import com.lframework.starter.web.core.components.resp.InvokeResult;
 import com.lframework.starter.web.core.components.resp.InvokeResultBuilder;
 import com.lframework.starter.web.core.utils.TenantUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.lframework.starter.web.core.annotations.security.HasPermission;
 import org.springframework.validation.annotation.Validated;
@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author zmj
  */
-@Api(tags = "角色授权")
+@Tag(name = "角色授权")
 @Validated
 @RestController
 @RequestMapping("/system/role/menu")
@@ -51,8 +51,8 @@ public class SysRoleMenuController extends DefaultBaseController {
   /**
    * 查询角色菜单列表
    */
-  @ApiOperation("查询角色菜单列表")
-  @ApiImplicitParam(value = "角色ID", name = "roleId", paramType = "query")
+  @Operation(summary = "查询角色菜单列表")
+  @Parameter(name = "roleId", description = "角色ID")
   @HasPermission({"system:role:permission"})
   @GetMapping("/menus")
   public InvokeResult<List<QueryRoleMenuBo>> menus(String roleId) {
@@ -87,7 +87,7 @@ public class SysRoleMenuController extends DefaultBaseController {
   /**
    * 授权角色菜单
    */
-  @ApiOperation("授权角色菜单")
+  @Operation(summary = "授权角色菜单")
   @HasPermission({"system:role:permission"})
   @PostMapping("/setting")
   public InvokeResult<Void> setting(@Valid @RequestBody SysRoleMenuSettingVo vo) {

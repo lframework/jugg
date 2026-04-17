@@ -16,14 +16,14 @@ import com.lframework.starter.web.inner.service.system.SysParameterService;
 import com.lframework.starter.web.inner.vo.system.parameter.CreateSysParameterVo;
 import com.lframework.starter.web.inner.vo.system.parameter.QuerySysParameterVo;
 import com.lframework.starter.web.inner.vo.system.parameter.UpdateSysParameterVo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author zmj
  */
-@Api(tags = "系统参数")
+@Tag(name = "系统参数")
 @Validated
 @RestController
 @RequestMapping("/system/parameter")
@@ -50,7 +50,7 @@ public class SysParameterController extends DefaultBaseController {
   /**
    * 查询列表
    */
-  @ApiOperation("查询列表")
+  @Operation(summary = "查询列表")
   @HasPermission(value = {"system:parameter:query"}, requirePlatform = true)
   @GetMapping("/query")
   public InvokeResult<PageResult<QuerySysParameterBo>> query(@Valid QuerySysParameterVo vo) {
@@ -73,10 +73,10 @@ public class SysParameterController extends DefaultBaseController {
   /**
    * 根据ID查询
    */
-  @ApiOperation("根据ID查询")
-  @ApiImplicitParams({
-      @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true),
-      @ApiImplicitParam(value = "租户ID", name = "tenantId", paramType = "query", required = true)
+  @Operation(summary = "根据ID查询")
+  @Parameters({
+      @Parameter(name = "id", description = "ID", required = true),
+      @Parameter(name = "tenantId", description = "租户ID", required = true)
   })
   @HasPermission(value = {"system:parameter:query"}, requirePlatform = true)
   @GetMapping
@@ -98,7 +98,7 @@ public class SysParameterController extends DefaultBaseController {
   /**
    * 新增
    */
-  @ApiOperation("新增")
+  @Operation(summary = "新增")
   @HasPermission(value = {"system:parameter:add"}, requirePlatform = true)
   @PostMapping
   public InvokeResult<Void> create(@Valid CreateSysParameterVo vo) {
@@ -113,7 +113,7 @@ public class SysParameterController extends DefaultBaseController {
   /**
    * 修改
    */
-  @ApiOperation("修改")
+  @Operation(summary = "修改")
   @HasPermission(value = {"system:parameter:modify"}, requirePlatform = true)
   @PutMapping
   public InvokeResult<Void> update(@Valid UpdateSysParameterVo vo) {
@@ -133,10 +133,10 @@ public class SysParameterController extends DefaultBaseController {
   /**
    * 根据ID删除
    */
-  @ApiOperation("根据ID删除")
-  @ApiImplicitParams({
-      @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true),
-      @ApiImplicitParam(value = "租户ID", name = "tenantId", paramType = "query", required = true)
+  @Operation(summary = "根据ID删除")
+  @Parameters({
+      @Parameter(name = "id", description = "ID", required = true),
+      @Parameter(name = "tenantId", description = "租户ID", required = true)
   })
   @HasPermission(value = {"system:parameter:delete"}, requirePlatform = true)
   @DeleteMapping

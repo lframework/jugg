@@ -2,7 +2,7 @@ package com.lframework.starter.web.inner.vo.system.generate;
 
 import com.lframework.starter.web.core.vo.BaseVo;
 import com.lframework.starter.web.core.vo.SortPageVo;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
 import lombok.Data;
 
@@ -11,12 +11,12 @@ public class QuerySysGenerateCodeVo extends SortPageVo implements BaseVo, Serial
 
   private static final long serialVersionUID = 1L;
 
-  @ApiModelProperty("规则ID")
+  @Schema(description = "规则ID")
   private Integer id;
 
   /**
    * 名称
    */
-  @ApiModelProperty("名称")
+  @Schema(description = "名称")
   private String name;
 }

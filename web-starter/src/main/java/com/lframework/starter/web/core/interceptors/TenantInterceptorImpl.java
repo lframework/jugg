@@ -9,8 +9,8 @@ import com.lframework.starter.web.core.components.tenant.TenantInterceptor;
 import com.lframework.starter.web.inner.entity.Tenant;
 import com.lframework.starter.web.inner.service.TenantService;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

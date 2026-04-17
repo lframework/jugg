@@ -2,7 +2,7 @@ package com.lframework.starter.web.inner.bo.qrtz;
 
 import com.lframework.starter.web.inner.dto.qrtz.QrtzDto;
 import com.lframework.starter.web.core.bo.BaseBo;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
@@ -11,37 +11,37 @@ public class QueryQrtzBo extends BaseBo<QrtzDto> {
   /**
    * 名称
    */
-  @ApiModelProperty("名称")
+  @Schema(description = "名称")
   private String name;
 
   /**
    * 分组
    */
-  @ApiModelProperty("分组")
+  @Schema(description = "分组")
   private String group;
 
   /**
    * 备注
    */
-  @ApiModelProperty("备注")
+  @Schema(description = "备注")
   private String description;
 
   /**
    * 任务类型
    */
-  @ApiModelProperty("任务类型")
+  @Schema(description = "任务类型")
   private Integer jobType;
 
   /**
    * Cron表达式
    */
-  @ApiModelProperty("Cron表达式")
+  @Schema(description = "Cron表达式")
   private String cron;
 
   /**
    * 状态
    */
-  @ApiModelProperty("状态")
+  @Schema(description = "状态")
   private String state;
 
   public QueryQrtzBo(QrtzDto dto) {
@@ -49,6 +49,7 @@ public class QueryQrtzBo extends BaseBo<QrtzDto> {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public <A> BaseBo<QrtzDto> convert(QrtzDto dto) {
     return super.convert(dto, QueryQrtzBo::getState);
   }

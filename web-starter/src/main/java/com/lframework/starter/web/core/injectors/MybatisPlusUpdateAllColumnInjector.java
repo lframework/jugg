@@ -18,12 +18,14 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlSource;
+import org.apache.ibatis.session.Configuration;
 
 public class MybatisPlusUpdateAllColumnInjector extends MPJSqlInjector {
 
   @Override
-  public List<AbstractMethod> getMethodList(Class<?> mapperClass) {
-    List<AbstractMethod> methods = super.getMethodList(mapperClass);
+  public List<AbstractMethod> getMethodList(Configuration configuration, Class<?> mapperClass,
+      TableInfo tableInfo) {
+    List<AbstractMethod> methods = super.getMethodList(configuration, mapperClass, tableInfo);
     methods.add(new UpdateAllColumnById());
     methods.add(new UpdateAllColumn());
     return methods;
@@ -33,6 +35,10 @@ public class MybatisPlusUpdateAllColumnInjector extends MPJSqlInjector {
    * 自定义更新所有字段的方法
    */
   static class UpdateAllColumnById extends AbstractMethod {
+
+    UpdateAllColumnById() {
+      super(SqlMethodConstants.UPDATE_ALL_COLUMN_BY_ID);
+    }
 
     /**
      * 字段筛选条件
@@ -69,6 +75,10 @@ public class MybatisPlusUpdateAllColumnInjector extends MPJSqlInjector {
    * 自定义更新所有字段的方法
    */
   static class UpdateAllColumn extends AbstractMethod {
+
+    UpdateAllColumn() {
+      super(SqlMethodConstants.UPDATE_ALL_COLUMN);
+    }
 
     @Override
     public MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass,

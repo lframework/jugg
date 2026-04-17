@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lframework.starter.common.constants.StringPool;
 import com.lframework.starter.web.inner.entity.SysNotice;
 import com.lframework.starter.web.core.bo.BaseBo;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import lombok.Data;
 
@@ -21,57 +21,57 @@ public class QuerySysNoticeBo extends BaseBo<SysNotice> {
   /**
    * ID
    */
-  @ApiModelProperty("ID")
+  @Schema(description = "ID")
   private String id;
 
   /**
    * 标题
    */
-  @ApiModelProperty("标题")
+  @Schema(description = "标题")
   private String title;
 
   /**
    * 状态
    */
-  @ApiModelProperty("状态")
+  @Schema(description = "状态")
   private Boolean available;
 
   /**
    * 是否发布
    */
-  @ApiModelProperty("是否发布")
+  @Schema(description = "是否发布")
   private Boolean published;
 
   /**
    * 发布时间
    */
-  @ApiModelProperty("发布时间")
+  @Schema(description = "发布时间")
   @JsonFormat(pattern = StringPool.DATE_TIME_PATTERN)
   private LocalDateTime publishTime;
 
   /**
    * 创建人
    */
-  @ApiModelProperty("创建人")
+  @Schema(description = "创建人")
   private String createBy;
 
   /**
    * 创建时间
    */
-  @ApiModelProperty("创建时间")
+  @Schema(description = "创建时间")
   @JsonFormat(pattern = StringPool.DATE_TIME_PATTERN)
   private LocalDateTime createTime;
 
   /**
    * 已读人数
    */
-  @ApiModelProperty("已读人数")
+  @Schema(description = "已读人数")
   private Integer readedNum;
 
   /**
    * 未读人数
    */
-  @ApiModelProperty("未读人数")
+  @Schema(description = "未读人数")
   private Integer unReadNum;
 
   public QuerySysNoticeBo() {

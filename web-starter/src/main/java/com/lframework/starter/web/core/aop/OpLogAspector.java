@@ -170,7 +170,7 @@ public class OpLogAspector {
 
             String finalExtra = extra;
             CreateOpLogsVo vo = new CreateOpLogsVo();
-            vo.setName(StringUtil.format(opLog.name(), strArr));
+            vo.setName(StringUtil.format(opLog.name(), (Object[]) strArr));
             OpLogType opLogTypeBean = ApplicationUtil.getBean(opLog.type());
             vo.setLogType(opLogTypeBean.getCode());
             vo.setExtra(finalExtra);

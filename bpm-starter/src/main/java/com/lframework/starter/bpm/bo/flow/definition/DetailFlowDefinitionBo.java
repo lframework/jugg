@@ -6,7 +6,7 @@ import com.lframework.starter.bpm.service.FlowCategoryService;
 import com.lframework.starter.web.core.annotations.convert.EnumConvert;
 import com.lframework.starter.web.core.bo.BaseBo;
 import com.lframework.starter.web.core.utils.ApplicationUtil;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
@@ -15,37 +15,37 @@ public class DetailFlowDefinitionBo extends BaseBo<FlowDefinitionWrapper> {
   /**
    * ID
    */
-  @ApiModelProperty("ID")
+  @Schema(description = "ID")
   private String id;
 
   /**
    * 流程编号
    */
-  @ApiModelProperty("流程编号")
+  @Schema(description = "流程编号")
   private String code;
 
   /**
    * 流程名称
    */
-  @ApiModelProperty("流程名称")
+  @Schema(description = "流程名称")
   private String name;
 
   /**
    * 流程分类ID
    */
-  @ApiModelProperty("流程分类ID")
+  @Schema(description = "流程分类ID")
   private String categoryId;
 
   /**
    * 流程分类
    */
-  @ApiModelProperty("流程分类")
+  @Schema(description = "流程分类")
   private String categoryName;
 
   /**
    * 是否发布
    */
-  @ApiModelProperty("是否发布")
+  @Schema(description = "是否发布")
   @EnumConvert
   private Integer isPublish;
 

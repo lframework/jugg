@@ -1,9 +1,9 @@
 package com.lframework.starter.web.inner.vo.system.dic.category;
 
 import com.lframework.starter.web.core.vo.BaseVo;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
@@ -14,7 +14,7 @@ public class QuerySysDataDicCategoryVo implements BaseVo, Serializable {
   /**
    * 租户ID
    */
-  @ApiModelProperty(value = "租户ID", required = true)
+  @Schema(description = "租户ID", requiredMode = Schema.RequiredMode.REQUIRED)
   @NotNull(message = "租户ID不能为空！")
   private Integer tenantId;
 }

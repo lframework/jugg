@@ -3,13 +3,12 @@ package com.lframework.starter.web.core.utils;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Validator;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.core.env.Environment;
 
@@ -20,9 +19,21 @@ import org.springframework.core.env.Environment;
  *
  * @author lframework@163.com
  */
-public class ApplicationUtil implements ApplicationContextAware {
+public class ApplicationUtil {
 
-  private static ApplicationContext APPLICATION_CONTEXT;
+  private static volatile ApplicationContext APPLICATION_CONTEXT;
+
+  public static void setApplicationContext(ApplicationContext applicationContext) {
+
+    APPLICATION_CONTEXT = applicationContext;
+  }
+
+  private static ApplicationContext requireApplicationContext() {
+    if (APPLICATION_CONTEXT == null) {
+      throw new IllegalStateException("Spring ApplicationContext has not been initialized yet");
+    }
+    return APPLICATION_CONTEXT;
+  }
 
   /**
    * 安全获取Bean（按名称）
@@ -34,7 +45,8 @@ public class ApplicationUtil implements ApplicationContextAware {
   public static Object safeGetBean(String beanName) {
 
     try {
-      return APPLICATION_CONTEXT.getBean(beanName);
+      ApplicationContext applicationContext = APPLICATION_CONTEXT;
+      return applicationContext == null ? null : applicationContext.getBean(beanName);
     } catch (NoSuchBeanDefinitionException e) {
       return null;
     }
@@ -51,7 +63,8 @@ public class ApplicationUtil implements ApplicationContextAware {
   public static <T> T safeGetBean(Class<T> clazz) {
 
     try {
-      return APPLICATION_CONTEXT.getBean(clazz);
+      ApplicationContext applicationContext = APPLICATION_CONTEXT;
+      return applicationContext == null ? null : applicationContext.getBean(clazz);
     } catch (NoSuchBeanDefinitionException e) {
       return null;
     }
@@ -67,7 +80,7 @@ public class ApplicationUtil implements ApplicationContextAware {
    */
   public static Object getBean(String beanName) {
 
-    return APPLICATION_CONTEXT.getBean(beanName);
+    return requireApplicationContext().getBean(beanName);
   }
 
   /**
@@ -81,7 +94,7 @@ public class ApplicationUtil implements ApplicationContextAware {
    */
   public static <T> T getBean(Class<T> clazz) {
 
-    return APPLICATION_CONTEXT.getBean(clazz);
+    return requireApplicationContext().getBean(clazz);
   }
 
   /**
@@ -95,9 +108,9 @@ public class ApplicationUtil implements ApplicationContextAware {
   public static <T> Map<String, T> getBeansOfType(Class<T> clazz) {
 
     try {
-      return APPLICATION_CONTEXT.getBeansOfType(clazz);
+      return requireApplicationContext().getBeansOfType(clazz);
     } catch (BeansException e) {
-      return Collections.EMPTY_MAP;
+      return Collections.emptyMap();
     }
   }
 
@@ -109,7 +122,7 @@ public class ApplicationUtil implements ApplicationContextAware {
    */
   public static void publishEvent(ApplicationEvent event) {
 
-    APPLICATION_CONTEXT.publishEvent(event);
+    requireApplicationContext().publishEvent(event);
   }
 
   /**
@@ -121,7 +134,7 @@ public class ApplicationUtil implements ApplicationContextAware {
    */
   public static String getProperty(String key) {
 
-    return APPLICATION_CONTEXT.getEnvironment().getProperty(key);
+    return requireApplicationContext().getEnvironment().getProperty(key);
   }
 
   /**
@@ -134,7 +147,7 @@ public class ApplicationUtil implements ApplicationContextAware {
    */
   public static String getRequiredProperty(String key) {
 
-    return APPLICATION_CONTEXT.getEnvironment().getRequiredProperty(key);
+    return requireApplicationContext().getEnvironment().getRequiredProperty(key);
   }
 
   /**
@@ -146,7 +159,7 @@ public class ApplicationUtil implements ApplicationContextAware {
    */
   public static String resolvePlaceholders(String s) {
 
-    return APPLICATION_CONTEXT.getEnvironment().resolvePlaceholders(s);
+    return requireApplicationContext().getEnvironment().resolvePlaceholders(s);
   }
 
   /**
@@ -165,12 +178,6 @@ public class ApplicationUtil implements ApplicationContextAware {
   }
 
   public static Environment getEnv() {
-    return APPLICATION_CONTEXT.getEnvironment();
-  }
-
-  @Override
-  public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-
-    APPLICATION_CONTEXT = applicationContext;
+    return requireApplicationContext().getEnvironment();
   }
 }

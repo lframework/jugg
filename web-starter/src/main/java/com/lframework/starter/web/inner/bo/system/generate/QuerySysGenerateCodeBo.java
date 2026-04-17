@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.lframework.starter.web.core.bo.BaseBo;
 import com.lframework.starter.web.inner.entity.SysGenerateCode;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -21,13 +21,13 @@ public class QuerySysGenerateCodeBo extends BaseBo<SysGenerateCode> {
    * ID
    */
   @JsonSerialize(using = ToStringSerializer.class)
-  @ApiModelProperty("ID")
+  @Schema(description = "ID")
   private Long id;
 
   /**
    * 名称
    */
-  @ApiModelProperty("名称")
+  @Schema(description = "名称")
   private String name;
 
   public QuerySysGenerateCodeBo() {

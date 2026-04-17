@@ -1,7 +1,7 @@
 package com.lframework.starter.web.inner.vo.oplogs;
 
 import com.lframework.starter.web.core.vo.PageVo;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import lombok.Data;
 
@@ -18,30 +18,30 @@ public class QueryOpLogsVo extends PageVo {
   /**
    * 日志名称
    */
-  @ApiModelProperty("日志名称")
+  @Schema(description = "日志名称")
   private String name;
 
   /**
    * 创建人ID
    */
-  @ApiModelProperty("创建人ID")
+  @Schema(description = "创建人ID")
   private String createBy;
 
   /**
    * 日志类别
    */
-  @ApiModelProperty("日志类别")
+  @Schema(description = "日志类别")
   private Integer logType;
 
   /**
    * 创建起始时间
    */
-  @ApiModelProperty("创建起始时间")
+  @Schema(description = "创建起始时间")
   private LocalDateTime startTime;
 
   /**
    * 创建截止时间
    */
-  @ApiModelProperty("创建截止时间")
+  @Schema(description = "创建截止时间")
   private LocalDateTime endTime;
 }

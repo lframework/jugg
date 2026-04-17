@@ -8,11 +8,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class WsProperties {
 
   /**
-   * 是否开启WebSocket
-   */
-  private boolean enabled = Boolean.FALSE;
-
-  /**
    * 集群发送消息时的topic
    */
   private String topic = "jugg:ws:topic";

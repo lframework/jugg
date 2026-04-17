@@ -306,11 +306,16 @@ public class BpmGlobalListener implements GlobalListener {
       DefJson defJson = FlowEngine.jsonConvert.strToBean(defJsonStr, DefJson.class);
       for (NodeJson nodeJson : defJson.getNodeList()) {
         if (nodeJson.getNodeCode().equals(listenerVariable.getNode().getNodeCode())) {
-          List<Map<String, Object>> handleInfos = (List<Map<String, Object>>) nodeJson.getExtMap()
-              .get("handleInfos");
-          if (handleInfos == null) {
-            handleInfos = new ArrayList<>();
-            nodeJson.getExtMap().put("handleInfos", new ArrayList<>());
+          Object handleInfosValue = nodeJson.getExtMap().get("handleInfos");
+          List<Map<String, Object>> handleInfos = new ArrayList<>();
+          if (handleInfosValue instanceof List<?> handleInfosList) {
+            for (Object handleInfoValue : handleInfosList) {
+              if (handleInfoValue instanceof Map<?, ?> handleInfoMap) {
+                Map<String, Object> normalizedHandleInfo = new LinkedHashMap<>();
+                handleInfoMap.forEach((key, value) -> normalizedHandleInfo.put(String.valueOf(key), value));
+                handleInfos.add(normalizedHandleInfo);
+              }
+            }
           }
           String userId = listenerVariable.getFlowParams().getHandler();
           SysUser sysUser = sysUserService.findById(userId);

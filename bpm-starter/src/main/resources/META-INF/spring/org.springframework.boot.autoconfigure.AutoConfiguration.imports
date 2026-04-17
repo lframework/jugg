@@ -1,0 +1,2 @@
+com.lframework.starter.bpm.config.BpmBeanAutoConfiguration
+com.lframework.starter.bpm.config.BpmSwaggerAutoConfiguration

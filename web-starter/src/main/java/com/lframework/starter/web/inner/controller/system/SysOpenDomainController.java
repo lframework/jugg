@@ -16,13 +16,13 @@ import com.lframework.starter.web.core.annotations.security.HasPermission;
 import com.lframework.starter.web.core.controller.DefaultBaseController;
 import com.lframework.starter.web.core.components.resp.InvokeResult;
 import com.lframework.starter.web.core.components.resp.InvokeResultBuilder;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author zmj
  */
-@Api(tags = "开放域")
+@Tag(name = "开放域")
 @Validated
 @RestController
 @RequestMapping("/system/open/domain")
@@ -48,7 +48,7 @@ public class SysOpenDomainController extends DefaultBaseController {
   /**
    * 查询列表
    */
-  @ApiOperation("查询列表")
+  @Operation(summary = "查询列表")
   @HasPermission(value = {"system:open-domain:config"}, requirePlatform = true)
   @GetMapping("/query")
   public InvokeResult<PageResult<QuerySysOpenDomainBo>> query(@Valid QuerySysOpenDomainVo vo) {
@@ -68,8 +68,8 @@ public class SysOpenDomainController extends DefaultBaseController {
   /**
    * 详情
    */
-  @ApiOperation("详情")
-  @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
+  @Operation(summary = "详情")
+  @Parameter(name = "id", description = "ID", required = true)
   @HasPermission(value = {"system:open-domain:config"}, requirePlatform = true)
   @GetMapping
   public InvokeResult<GetSysOpenDomainBo> get(@NotNull(message = "ID不能为空！") Integer id) {
@@ -87,7 +87,7 @@ public class SysOpenDomainController extends DefaultBaseController {
   /**
    * 新增
    */
-  @ApiOperation("新增")
+  @Operation(summary = "新增")
   @HasPermission(value = {"system:open-domain:config"}, requirePlatform = true)
   @PostMapping
   public InvokeResult<Void> create(@Valid CreateSysOpenDomainVo vo) {
@@ -100,7 +100,7 @@ public class SysOpenDomainController extends DefaultBaseController {
   /**
    * 修改
    */
-  @ApiOperation("修改")
+  @Operation(summary = "修改")
   @HasPermission(value = {"system:open-domain:config"}, requirePlatform = true)
   @PutMapping
   public InvokeResult<Void> update(@Valid UpdateSysOpenDomainVo vo) {
@@ -115,7 +115,7 @@ public class SysOpenDomainController extends DefaultBaseController {
   /**
    * 修改Api密钥
    */
-  @ApiOperation("修改Api密钥")
+  @Operation(summary = "修改Api密钥")
   @HasPermission(value = {"system:open-domain:config"}, requirePlatform = true)
   @PutMapping("/secret")
   public InvokeResult<Void> updateSecret(@Valid UpdateSysOpenDomainSecretVo vo) {

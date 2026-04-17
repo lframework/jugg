@@ -22,13 +22,13 @@ import com.lframework.starter.web.inner.vo.system.notice.QuerySysNoticeByUserVo;
 import com.lframework.starter.web.inner.vo.system.notice.QuerySysNoticeVo;
 import com.lframework.starter.web.inner.vo.system.notice.UpdateSysNoticeVo;
 import com.lframework.starter.web.inner.service.system.SysNoticeService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,7 +42,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author zmj
  */
-@Api(tags = "系统通知")
+@Tag(name = "系统通知")
 @Validated
 @RestController
 @RequestMapping("/system/notice")
@@ -54,7 +54,7 @@ public class SysNoticeController extends DefaultBaseController {
   /**
    * 查询列表
    */
-  @ApiOperation("查询列表")
+  @Operation(summary = "查询列表")
   @HasPermission({"system:notice:publish"})
   @GetMapping("/query")
   public InvokeResult<PageResult<QuerySysNoticeBo>> query(@Valid QuerySysNoticeVo vo) {
@@ -75,7 +75,7 @@ public class SysNoticeController extends DefaultBaseController {
   /**
    * 查询我的通知
    */
-  @ApiOperation("查询我的通知")
+  @Operation(summary = "查询我的通知")
   @GetMapping("/query/my")
   public InvokeResult<PageResult<QueryMySysNoticeBo>> queryMyNotice(
       @Valid QuerySysNoticeByUserVo vo) {
@@ -98,10 +98,10 @@ public class SysNoticeController extends DefaultBaseController {
   /**
    * 根据ID查询内容
    */
-  @ApiOperation("根据ID查询内容")
-  @ApiImplicitParam(value = "id", name = "id", paramType = "query", required = true)
+  @Operation(summary = "根据ID查询内容")
   @GetMapping("/content")
-  public InvokeResult<SysNoticeDto> getContent(@NotBlank(message = "id不能为空！") String id) {
+  public InvokeResult<SysNoticeDto> getContent(
+      @Parameter(description = "id", required = true) @NotBlank(message = "id不能为空！") String id) {
 
     SysNoticeDto data = sysNoticeService.getContent(id);
     if (data == null) {
@@ -121,10 +121,10 @@ public class SysNoticeController extends DefaultBaseController {
   /**
    * 根据ID查询
    */
-  @ApiOperation("根据ID查询")
-  @ApiImplicitParam(value = "id", name = "id", paramType = "query", required = true)
+  @Operation(summary = "根据ID查询")
   @GetMapping
-  public InvokeResult<GetSysNoticeBo> get(@NotBlank(message = "id不能为空！") String id) {
+  public InvokeResult<GetSysNoticeBo> get(
+      @Parameter(description = "id", required = true) @NotBlank(message = "id不能为空！") String id) {
 
     SysNotice data = sysNoticeService.findById(id);
     if (data == null) {
@@ -139,7 +139,7 @@ public class SysNoticeController extends DefaultBaseController {
   /**
    * 新增
    */
-  @ApiOperation("新增")
+  @Operation(summary = "新增")
   @HasPermission({"system:notice:add"})
   @PostMapping
   public InvokeResult<Void> create(@Valid CreateSysNoticeVo vo) {
@@ -156,7 +156,7 @@ public class SysNoticeController extends DefaultBaseController {
   /**
    * 修改
    */
-  @ApiOperation("修改")
+  @Operation(summary = "修改")
   @HasPermission({"system:notice:modify"})
   @PutMapping
   public InvokeResult<Void> update(@Valid UpdateSysNoticeVo vo) {

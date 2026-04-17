@@ -8,6 +8,7 @@ import com.lframework.starter.web.core.entity.BaseEntity;
 import com.lframework.starter.mq.core.enums.ExportTaskStatus;
 import java.time.LocalDateTime;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * <p>
@@ -18,6 +19,7 @@ import lombok.Data;
  * @since 2025-04-10
  */
 @Data
+@EqualsAndHashCode(callSuper = false)
 @TableName("tbl_export_task")
 public class ExportTask extends BaseEntity implements BaseDto {
 

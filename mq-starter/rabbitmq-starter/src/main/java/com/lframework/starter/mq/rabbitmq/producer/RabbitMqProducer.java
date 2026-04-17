@@ -57,7 +57,7 @@ public class RabbitMqProducer implements MqProducer {
         convertRoutingKey(definition),
         data,
         m -> {
-          m.getMessageProperties().setDelay((int) millis);
+          m.getMessageProperties().setDelayLong(millis);
           if (TenantUtil.enableTenant() && tenantId != null) {
             m.getMessageProperties().setHeader("tenantId", tenantId);
           }
@@ -87,7 +87,7 @@ public class RabbitMqProducer implements MqProducer {
         convertRoutingKey(definition),
         EMPTY_MSG,
         m -> {
-          m.getMessageProperties().setDelay((int) millis);
+          m.getMessageProperties().setDelayLong(millis);
 
           if (TenantUtil.enableTenant() && tenantId != null) {
             m.getMessageProperties().setHeader("tenantId", tenantId);

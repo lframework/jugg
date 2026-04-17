@@ -23,6 +23,7 @@ import org.dom4j.io.XMLWriter;
  *
  * @author lframework@163.com
  */
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class XmlUtil {
 
   /**

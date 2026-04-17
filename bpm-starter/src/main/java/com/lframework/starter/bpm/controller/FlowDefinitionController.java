@@ -24,14 +24,14 @@ import com.lframework.starter.web.core.components.resp.PageResult;
 import com.lframework.starter.web.core.controller.DefaultBaseController;
 import com.lframework.starter.web.core.utils.PageHelperUtil;
 import com.lframework.starter.web.core.utils.PageResultUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.dromara.warm.flow.core.service.DefService;
 import org.dromara.warm.flow.orm.entity.FlowDefinition;
 import org.dromara.warm.flow.orm.mapper.FlowDefinitionMapper;
@@ -44,7 +44,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api(tags = "流程定义")
+@Tag(name = "流程定义")
 @Validated
 @RestController
 @RequestMapping("/flow/definition")
@@ -61,7 +61,7 @@ public class FlowDefinitionController extends DefaultBaseController {
    *
    * @return
    */
-  @ApiOperation("查询列表")
+  @Operation(summary = "查询列表")
   @GetMapping("/query")
   public InvokeResult<PageResult<QueryFlowDefinitionBo>> query(@Valid QueryFlowDefinitionVo vo) {
     PageHelperUtil.startPage(vo);
@@ -84,8 +84,8 @@ public class FlowDefinitionController extends DefaultBaseController {
     return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
   }
 
-  @ApiOperation("查询详情")
-  @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
+  @Operation(summary = "查询详情")
+  @Parameter(name = "id", description = "ID", required = true)
   @GetMapping("/detail")
   public InvokeResult<DetailFlowDefinitionBo> detail(@NotNull(message = "ID不能为空！") Long id) {
     FlowDefinitionWrapper data = flowDefinitionWrapperService.getById(id);
@@ -102,7 +102,7 @@ public class FlowDefinitionController extends DefaultBaseController {
    * @param vo
    * @return
    */
-  @ApiOperation("新增")
+  @Operation(summary = "新增")
   @PostMapping
   public InvokeResult<Void> create(@Valid CreateFlowDefinitionVo vo) {
 
@@ -128,7 +128,7 @@ public class FlowDefinitionController extends DefaultBaseController {
    * @param vo
    * @return
    */
-  @ApiOperation("修改")
+  @Operation(summary = "修改")
   @PutMapping
   public InvokeResult<Void> update(@Valid UpdateFlowDefinitionVo vo) {
     flowDefinitionWrapperService.update(vo);
@@ -141,7 +141,7 @@ public class FlowDefinitionController extends DefaultBaseController {
    * @param vo
    * @return
    */
-  @ApiOperation("设置发布状态")
+  @Operation(summary = "设置发布状态")
   @PostMapping("/publish")
   public InvokeResult<Void> setPublishStatus(@Valid SetFlowDefinitionPublishVo vo) {
     if (vo.getIsPublish() == FlowDefinitionIsPublish.Y.getCode().intValue()) {
@@ -159,7 +159,7 @@ public class FlowDefinitionController extends DefaultBaseController {
    * @param vo
    * @return
    */
-  @ApiOperation("设置激活状态")
+  @Operation(summary = "设置激活状态")
   @PostMapping("/activity")
   public InvokeResult<Void> setActivityStatus(@Valid SetFlowDefinitionActivityStatusVo vo) {
     if (vo.getActivityStatus() == FlowDefinitionActivityStatus.ACTIVATE.getCode().intValue()) {
@@ -177,7 +177,7 @@ public class FlowDefinitionController extends DefaultBaseController {
    * @param vo
    * @return
    */
-  @ApiOperation("复制流程")
+  @Operation(summary = "复制流程")
   @PostMapping("/copy")
   public InvokeResult<Void> copy(@Valid UpdateFlowDefinitionVo vo) {
     flowDefinitionWrapperService.copy(vo);
@@ -191,8 +191,8 @@ public class FlowDefinitionController extends DefaultBaseController {
    * @param id
    * @return
    */
-  @ApiOperation("根据ID删除")
-  @ApiImplicitParam(value = "ID", name = "id", paramType = "query", required = true)
+  @Operation(summary = "根据ID删除")
+  @Parameter(name = "id", description = "ID", required = true)
   @DeleteMapping
   public InvokeResult<Void> deleteById(@NotNull(message = "ID不能为空！") Long id) {
     defService.removeDef(Collections.singletonList(id));

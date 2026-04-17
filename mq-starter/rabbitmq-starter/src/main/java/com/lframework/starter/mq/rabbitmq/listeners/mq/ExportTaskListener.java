@@ -7,6 +7,7 @@ import com.lframework.starter.common.exceptions.ClientException;
 import com.lframework.starter.common.exceptions.impl.DefaultClientException;
 import com.lframework.starter.common.utils.ReflectUtil;
 import com.lframework.starter.common.utils.StringUtil;
+import com.lframework.starter.mq.core.components.export.ExportTaskWorker;
 import com.lframework.starter.mq.core.dto.AddExportTaskDto;
 import com.lframework.starter.mq.core.dto.ExecuteExportTaskDto;
 import com.lframework.starter.mq.core.entity.ExportTask;
@@ -107,8 +108,13 @@ public class ExportTaskListener {
         throw new DefaultClientException("导出任务重复，请勿重复导出。");
       }
 
-      ExportTaskHandler exportTaskHandler = new ExportTaskHandler(task.getId(),
-          ReflectUtil.newInstance(task.getReqClassName()),
+      Object exportTaskWorkerBean = ReflectUtil.newInstance(task.getReqClassName());
+      if (!(exportTaskWorkerBean instanceof ExportTaskWorker<?, ?, ?> exportTaskWorker)) {
+        throw new DefaultClientException("导出处理器类型错误：" + task.getReqClassName());
+      }
+
+      ExportTaskHandler<?, ?, ?> exportTaskHandler = new ExportTaskHandler<>(task.getId(),
+          exportTaskWorker,
           sysConfService.getLong("export.timeout", 600L));
       exportTaskHandler.execute(task.getReqParams());
     } catch (ClientException e) {

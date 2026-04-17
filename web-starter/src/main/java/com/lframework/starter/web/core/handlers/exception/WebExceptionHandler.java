@@ -7,6 +7,7 @@ import com.lframework.starter.web.core.components.resp.Response;
 import com.lframework.starter.web.core.components.resp.ResponseErrorBuilder;
 import com.lframework.starter.web.core.utils.ApplicationUtil;
 import com.lframework.starter.web.core.utils.ResponseUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.method.HandlerMethod;
 
 /**
@@ -30,11 +32,12 @@ public class WebExceptionHandler {
    * 处理Throwable
    *
    * @param e
-   * @param method
-   * @return
-   */
+  * @param method
+  * @return
+  */
   @ExceptionHandler(Throwable.class)
-  public Response throwableHandle(Throwable e, HandlerMethod method) {
+  public Response throwableHandle(Throwable e, HttpServletRequest request) {
+    HandlerMethod method = resolveHandlerMethod(request);
 
     this.logException(e, method);
 
@@ -57,22 +60,35 @@ public class WebExceptionHandler {
     }
     this.setResponseCode(ex);
 
-    return getBuilder(method.getBean()).fail(ex);
+    return getBuilder(method != null ? method.getBean() : null).fail(ex);
   }
 
   protected void logException(Throwable e, HandlerMethod method) {
 
     if (e instanceof ClientException) {
       if (log.isDebugEnabled()) {
-        String className = method.getBeanType().getName();
-        String methodName = method.getMethod().getName();
+        String className = method != null ? method.getBeanType().getName() : "N/A";
+        String methodName = method != null ? method.getMethod().getName() : "N/A";
         log.debug("className={}, methodName={}, 有异常产生", className, methodName, e);
       }
     } else {
-      String className = method.getBeanType().getName();
-      String methodName = method.getMethod().getName();
+      String className = method != null ? method.getBeanType().getName() : "N/A";
+      String methodName = method != null ? method.getMethod().getName() : "N/A";
       log.error("className={}, methodName={}, 有异常产生", className, methodName, e);
     }
+  }
+
+  protected HandlerMethod resolveHandlerMethod(HttpServletRequest request) {
+    if (request == null) {
+      return null;
+    }
+
+    Object handler = request.getAttribute(HandlerMapping.BEST_MATCHING_HANDLER_ATTRIBUTE);
+    if (handler instanceof HandlerMethod handlerMethod) {
+      return handlerMethod;
+    }
+
+    return null;
   }
 
   protected void setResponseCode(BaseException e) {

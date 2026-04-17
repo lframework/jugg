@@ -2,10 +2,10 @@ package com.lframework.starter.web.inner.vo.system.menu;
 
 import com.lframework.starter.web.core.components.validation.TypeMismatch;
 import com.lframework.starter.web.core.vo.BaseVo;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
@@ -16,14 +16,14 @@ public class UpdateSysMenuVo extends CreateSysMenuVo implements BaseVo, Serializ
   /**
    * ID
    */
-  @ApiModelProperty(value = "ID", required = true)
+  @Schema(description = "ID", requiredMode = Schema.RequiredMode.REQUIRED)
   @NotBlank(message = "ID不能为空！")
   private String id;
 
   /**
    * 状态
    */
-  @ApiModelProperty(value = "状态", required = true)
+  @Schema(description = "状态", requiredMode = Schema.RequiredMode.REQUIRED)
   @NotNull(message = "状态不能为空！")
   @TypeMismatch(message = "状态格式有误！")
   private Boolean available;

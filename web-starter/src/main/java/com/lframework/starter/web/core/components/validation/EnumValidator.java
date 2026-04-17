@@ -5,8 +5,8 @@ import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.web.core.enums.BaseEnum;
 import com.lframework.starter.web.core.utils.EnumUtil;
 import java.io.Serializable;
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 /**
  * 枚举校验 如果参数是null 则通过校验

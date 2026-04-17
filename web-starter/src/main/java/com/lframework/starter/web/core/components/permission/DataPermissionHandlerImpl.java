@@ -75,11 +75,9 @@ public class DataPermissionHandlerImpl implements DataPermissionHandler {
         return EMPTY_SQL;
       }
 
-      dataPermissionMap = (Map<String, String>) session.get(
-          SecurityConstants.DATA_PERMISSION_SQL_MAP);
+      dataPermissionMap = toStringMap(session.get(SecurityConstants.DATA_PERMISSION_SQL_MAP));
 
-      dataPermissionVar = (Map<String, String>) session.get(
-          SecurityConstants.DATA_PERMISSION_SQL_VAR);
+      dataPermissionVar = toStringMap(session.get(SecurityConstants.DATA_PERMISSION_SQL_VAR));
       if (CollectionUtil.isEmpty(dataPermissionMap)) {
         return EMPTY_SQL;
       }
@@ -183,5 +181,16 @@ public class DataPermissionHandlerImpl implements DataPermissionHandler {
         Arrays.stream(dataPermissionList).map(DataPermission::alias)
             .collect(Collectors.toList()));
     results.add(dataPermissionSql);
+  }
+
+  private Map<String, String> toStringMap(Object value) {
+    if (!(value instanceof Map<?, ?> map)) {
+      return null;
+    }
+
+    return map.entrySet().stream()
+        .filter(entry -> entry.getKey() != null && entry.getValue() != null)
+        .collect(Collectors.toMap(entry -> String.valueOf(entry.getKey()),
+            entry -> String.valueOf(entry.getValue())));
   }
 }

@@ -5,7 +5,7 @@ import com.lframework.starter.web.core.bo.BaseBo;
 import com.lframework.starter.web.core.utils.ApplicationUtil;
 import com.lframework.starter.web.inner.entity.SysNotifyGroup;
 import com.lframework.starter.web.inner.service.system.SysNotifyGroupReceiverService;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,37 +24,37 @@ public class GetSysNotifyGroupBo extends BaseBo<SysNotifyGroup> {
   /**
    * ID
    */
-  @ApiModelProperty("ID")
+  @Schema(description = "ID")
   private String id;
 
   /**
    * 名称
    */
-  @ApiModelProperty("名称")
+  @Schema(description = "名称")
   private String name;
 
   /**
    * 接收者类型
    */
-  @ApiModelProperty("接收者类型")
+  @Schema(description = "接收者类型")
   private Integer receiverType;
 
   /**
    * 接收者ID
    */
-  @ApiModelProperty("接收者ID")
+  @Schema(description = "接收者ID")
   private List<String> receiverIds;
 
   /**
    * 消息类型
    */
-  @ApiModelProperty("消息类型")
+  @Schema(description = "消息类型")
   private List<Integer> messageType;
 
   /**
    * 备注
    */
-  @ApiModelProperty("备注")
+  @Schema(description = "备注")
   private String description;
 
   public GetSysNotifyGroupBo() {
@@ -67,6 +67,7 @@ public class GetSysNotifyGroupBo extends BaseBo<SysNotifyGroup> {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public BaseBo<SysNotifyGroup> convert(SysNotifyGroup dto) {
     return super.convert(dto, GetSysNotifyGroupBo::getReceiverType,
         GetSysNotifyGroupBo::getMessageType);

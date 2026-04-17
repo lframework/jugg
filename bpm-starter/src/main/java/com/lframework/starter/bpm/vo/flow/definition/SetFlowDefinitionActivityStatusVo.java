@@ -3,9 +3,9 @@ package com.lframework.starter.bpm.vo.flow.definition;
 import com.lframework.starter.bpm.enums.FlowDefinitionActivityStatus;
 import com.lframework.starter.web.core.components.validation.IsEnum;
 import com.lframework.starter.web.core.vo.BaseVo;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
@@ -16,14 +16,14 @@ public class SetFlowDefinitionActivityStatusVo implements BaseVo, Serializable {
   /**
    * 流程定义ID
    */
-  @ApiModelProperty(value = "流程定义ID", required = true)
+  @Schema(description = "流程定义ID", requiredMode = Schema.RequiredMode.REQUIRED)
   @NotNull(message = "流程定义ID不能为空！")
   private Long id;
 
   /**
    * 激活状态
    */
-  @ApiModelProperty(value = "激活状态", required = true)
+  @Schema(description = "激活状态", requiredMode = Schema.RequiredMode.REQUIRED)
   @NotNull(message = "激活状态不能为空！")
   @IsEnum(enumClass = FlowDefinitionActivityStatus.class, message = "激活状态格式不正确！")
   private Integer activityStatus;

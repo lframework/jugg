@@ -14,12 +14,12 @@ import com.lframework.starter.web.core.controller.DefaultBaseController;
 import com.lframework.starter.web.core.components.resp.InvokeResult;
 import com.lframework.starter.web.core.components.resp.InvokeResultBuilder;
 import com.lframework.starter.web.inner.dto.qrtz.QrtzDto;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.lframework.starter.web.core.annotations.security.HasPermission;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api(tags = "定时器管理")
+@Tag(name = "定时器管理")
 @RestController
 @RequestMapping("/qrtz")
 public class QrtzController extends DefaultBaseController {
@@ -44,7 +44,7 @@ public class QrtzController extends DefaultBaseController {
    * @param vo
    * @return
    */
-  @ApiOperation("查询列表")
+  @Operation(summary = "查询列表")
   @HasPermission(value = {"development:qrtz:manage"}, requirePlatform = true)
   @GetMapping("/query")
   public InvokeResult<PageResult<QueryQrtzBo>> query(@Valid QueryQrtzVo vo) {
@@ -65,7 +65,7 @@ public class QrtzController extends DefaultBaseController {
    *
    * @return
    */
-  @ApiOperation("查询")
+  @Operation(summary = "查询")
   @HasPermission(value = {"development:qrtz:manage"},requirePlatform = true)
   @GetMapping
   public InvokeResult<GetQrtzBo> get(@NotBlank(message = "名称不能为空！") String name,
@@ -84,7 +84,7 @@ public class QrtzController extends DefaultBaseController {
    * @param vo
    * @return
    */
-  @ApiOperation("创建")
+  @Operation(summary = "创建")
   @HasPermission(value = {"development:qrtz:manage"},requirePlatform = true)
   @PostMapping
   public InvokeResult<Void> create(@Valid @RequestBody CreateQrtzVo vo) {
@@ -99,7 +99,7 @@ public class QrtzController extends DefaultBaseController {
    * @param vo
    * @return
    */
-  @ApiOperation("修改")
+  @Operation(summary = "修改")
   @HasPermission(value = {"development:qrtz:manage"},requirePlatform = true)
   @PutMapping
   public InvokeResult<Void> update(@Valid @RequestBody UpdateQrtzVo vo) {
@@ -113,7 +113,7 @@ public class QrtzController extends DefaultBaseController {
    *
    * @return
    */
-  @ApiOperation("暂停")
+  @Operation(summary = "暂停")
   @HasPermission(value = {"development:qrtz:manage"},requirePlatform = true)
   @PutMapping("/pause")
   public InvokeResult<Void> pause(@NotBlank(message = "名称不能为空！") String name,
@@ -128,7 +128,7 @@ public class QrtzController extends DefaultBaseController {
    *
    * @return
    */
-  @ApiOperation("恢复")
+  @Operation(summary = "恢复")
   @HasPermission(value = {"development:qrtz:manage"},requirePlatform = true)
   @PutMapping("/resume")
   public InvokeResult<Void> resume(@NotBlank(message = "名称不能为空！") String name,
@@ -143,7 +143,7 @@ public class QrtzController extends DefaultBaseController {
    *
    * @return
    */
-  @ApiOperation("触发")
+  @Operation(summary = "触发")
   @HasPermission(value = {"development:qrtz:manage"},requirePlatform = true)
   @PutMapping("/trigger")
   public InvokeResult<Void> trigger(@NotBlank(message = "名称不能为空！") String name,
@@ -158,7 +158,7 @@ public class QrtzController extends DefaultBaseController {
    *
    * @return
    */
-  @ApiOperation("删除")
+  @Operation(summary = "删除")
   @HasPermission(value = {"development:qrtz:manage"},requirePlatform = true)
   @DeleteMapping
   public InvokeResult<Void> delete(@NotBlank(message = "名称不能为空！") String name,

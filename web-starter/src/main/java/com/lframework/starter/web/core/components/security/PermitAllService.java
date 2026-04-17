@@ -9,11 +9,13 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher.Builder;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 public class PermitAllService {
 
@@ -25,7 +27,9 @@ public class PermitAllService {
 
   private List<Entry<HttpMethod, String>> permitAllUrls;
 
-  private Set<AntPathRequestMatcher> matchers;
+  private Set<RequestMatcher> matchers;
+
+  private final Builder matcherBuilder = PathPatternRequestMatcher.withDefaults();
 
   @PostConstruct
   public void init() {
@@ -47,19 +51,15 @@ public class PermitAllService {
     // swagger
     results.add(new SimpleEntry<>(null, "/doc.html"));
     results.add(new SimpleEntry<>(null, "/webjars/**"));
-    results.add(new SimpleEntry<>(null, "/v2/api-docs"));
-    results.add(new SimpleEntry<>(null, "/swagger-resources"));
-    results.add(new SimpleEntry<>(null, "/swagger-resources/configuration/ui"));
-    results.add(new SimpleEntry<>(null, "/swagger-resources/configuration/security"));
-    results.add(new SimpleEntry<>(null, "/v2/api-docs-ext"));
+    results.add(new SimpleEntry<>(null, "/v3/api-docs"));
+    results.add(new SimpleEntry<>(null, "/v3/api-docs/**"));
 
     this.permitAllUrls = results;
 
     this.matchers = new CopyOnWriteArraySet<>();
 
     for (Entry<HttpMethod, String> permitAllUrl : this.permitAllUrls) {
-      this.matchers.add(new AntPathRequestMatcher(permitAllUrl.getValue(),
-          permitAllUrl.getKey() == null ? null : permitAllUrl.getKey().toString()));
+      this.matchers.add(buildMatcher(permitAllUrl.getKey(), permitAllUrl.getValue()));
     }
   }
 
@@ -79,7 +79,22 @@ public class PermitAllService {
   }
 
   public void addMatch(HttpServletRequest request) {
-    this.matchers.add(new AntPathRequestMatcher(request.getRequestURI(),
-        request.getMethod()));
+
+    this.matchers.add(buildMatcher(HttpMethod.valueOf(request.getMethod()), getRequestPath(request)));
+  }
+
+  private RequestMatcher buildMatcher(HttpMethod method, String pathPattern) {
+    if (method == null) {
+      return this.matcherBuilder.matcher(pathPattern);
+    }
+    return this.matcherBuilder.matcher(method, pathPattern);
+  }
+
+  private String getRequestPath(HttpServletRequest request) {
+    String pathInfo = request.getPathInfo();
+    if (StringUtil.isEmpty(pathInfo)) {
+      return request.getServletPath();
+    }
+    return request.getServletPath() + pathInfo;
   }
 }

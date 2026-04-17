@@ -6,7 +6,7 @@
   <parent>
     <artifactId>mq-starter</artifactId>
     <groupId>com.lframework</groupId>
-    <version>4.1.2</version>
+    <version>5.0.0</version>
   </parent>
 
   <artifactId>activemq-starter</artifactId>
@@ -22,10 +22,22 @@
       <artifactId>mq-core</artifactId>
       <groupId>com.lframework</groupId>
     </dependency>
+    <dependency>
+      <artifactId>common</artifactId>
+      <groupId>com.lframework</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>lombok</artifactId>
+      <groupId>org.projectlombok</groupId>
+    </dependency>
 
     <dependency>
       <artifactId>spring-boot-starter-activemq</artifactId>
       <groupId>org.springframework.boot</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>activemq-broker</artifactId>
+      <groupId>org.apache.activemq</groupId>
     </dependency>
     <dependency>
       <artifactId>pooled-jms</artifactId>

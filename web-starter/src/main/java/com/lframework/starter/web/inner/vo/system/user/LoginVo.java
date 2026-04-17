@@ -1,9 +1,9 @@
 package com.lframework.starter.web.inner.vo.system.user;
 
 import com.lframework.starter.web.core.vo.BaseVo;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 /**
@@ -17,38 +17,38 @@ public class LoginVo implements BaseVo, Serializable {
   /**
    * 租户ID
    */
-  @ApiModelProperty("租户ID")
+  @Schema(description = "租户ID")
   private Integer tenantId;
 
   /**
    * 租户名称
    */
-  @ApiModelProperty("租户名称")
+  @Schema(description = "租户名称")
   private String tenantName;
 
   /**
    * 用户名
    */
-  @ApiModelProperty(value = "用户名", required = true)
+  @Schema(description = "用户名", requiredMode = Schema.RequiredMode.REQUIRED)
   @NotBlank(message = "用户名不能为空！")
   private String username;
 
   /**
    * 密码
    */
-  @ApiModelProperty(value = "密码", required = true)
+  @Schema(description = "密码", requiredMode = Schema.RequiredMode.REQUIRED)
   @NotBlank(message = "密码不能为空！")
   private String password;
 
   /**
    * sn
    */
-  @ApiModelProperty(value = "sn，验证码流水号", required = true)
+  @Schema(description = "sn，验证码流水号", requiredMode = Schema.RequiredMode.REQUIRED)
   private String sn;
 
   /**
    * 验证码
    */
-  @ApiModelProperty(value = "验证码", required = true)
+  @Schema(description = "验证码", requiredMode = Schema.RequiredMode.REQUIRED)
   private String captcha;
 }

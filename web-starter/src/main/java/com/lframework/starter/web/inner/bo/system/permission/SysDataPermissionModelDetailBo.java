@@ -4,7 +4,7 @@ import com.lframework.starter.common.constants.StringPool;
 import com.lframework.starter.web.core.annotations.convert.EnumConvert;
 import com.lframework.starter.web.core.bo.BaseBo;
 import com.lframework.starter.web.inner.entity.SysDataPermissionModelDetail;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
@@ -13,38 +13,38 @@ public class SysDataPermissionModelDetailBo extends BaseBo<SysDataPermissionMode
   /**
    * ID
    */
-  @ApiModelProperty("ID")
+  @Schema(description = "ID")
   private Integer id;
 
   /**
    * 名称
    */
-  @ApiModelProperty("名称")
+  @Schema(description = "名称")
   private String name;
 
   /**
    * 模型ID
    */
-  @ApiModelProperty("模型ID")
+  @Schema(description = "模型ID")
   private Integer modelId;
 
   /**
    * 条件
    */
-  @ApiModelProperty("条件")
+  @Schema(description = "条件")
   private String[] conditionTypes;
 
   /**
    * 输入类型
    */
-  @ApiModelProperty("输入类型")
+  @Schema(description = "输入类型")
   @EnumConvert
   private Integer inputType;
 
   /**
    * 前段枚举名
    */
-  @ApiModelProperty("前端枚举名")
+  @Schema(description = "前端枚举名")
   private String enumName;
 
   public SysDataPermissionModelDetailBo() {

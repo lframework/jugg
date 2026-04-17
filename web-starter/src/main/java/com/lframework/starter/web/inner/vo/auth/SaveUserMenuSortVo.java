@@ -1,12 +1,12 @@
 package com.lframework.starter.web.inner.vo.auth;
 
 import com.lframework.starter.web.core.vo.BaseVo;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
 import java.util.List;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 /**
@@ -19,7 +19,7 @@ public class SaveUserMenuSortVo implements BaseVo, Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  @ApiModelProperty(value = "菜单树", required = true)
+  @Schema(description = "菜单树", requiredMode = Schema.RequiredMode.REQUIRED)
   @NotNull(message = "菜单树不能为空！")
   @Valid
   private List<MenuSortNodeVo> menus;
@@ -29,11 +29,11 @@ public class SaveUserMenuSortVo implements BaseVo, Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "菜单ID", required = true)
+    @Schema(description = "菜单ID", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "菜单ID不能为空！")
     private String id;
 
-    @ApiModelProperty("子菜单")
+    @Schema(description = "子菜单")
     @Valid
     private List<MenuSortNodeVo> children;
   }

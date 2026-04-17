@@ -1,6 +1,6 @@
 package com.lframework.starter.web.config;
 
-import cn.dev33.satoken.interceptor.SaAnnotationInterceptor;
+import cn.dev33.satoken.interceptor.SaInterceptor;
 import com.lframework.starter.web.core.components.security.PermitAllService;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -18,7 +18,7 @@ public class WebMvcAutoConfiguration implements WebMvcConfigurer {
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
 
-    registry.addInterceptor(new SaAnnotationInterceptor()).addPathPatterns("/**")
+    registry.addInterceptor(new SaInterceptor().isAnnotation(true)).addPathPatterns("/**")
         .excludePathPatterns(
             permitAllService.getUrls().stream().map(Entry::getValue).collect(Collectors.toList()));
   }

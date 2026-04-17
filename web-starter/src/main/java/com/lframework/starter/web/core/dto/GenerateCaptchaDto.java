@@ -1,6 +1,6 @@
 package com.lframework.starter.web.core.dto;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
 import lombok.Data;
 
@@ -17,12 +17,12 @@ public class GenerateCaptchaDto implements BaseDto, Serializable {
   /**
    * 流水号
    */
-  @ApiModelProperty("流水号")
+  @Schema(description = "流水号")
   private String sn;
 
   /**
    * 图片文件Base64
    */
-  @ApiModelProperty("图片文件Base64")
+  @Schema(description = "图片文件Base64")
   private String image;
 }

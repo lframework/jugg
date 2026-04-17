@@ -1,8 +1,8 @@
 package com.lframework.starter.web.core.components.validation;
 
 import com.lframework.starter.common.utils.NumberUtil;
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 /**
  * 小数位数校验 如果参数是null或不是Number，则不进行校验

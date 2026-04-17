@@ -29,11 +29,12 @@ public interface BaseMapper<T> extends MPJBaseMapper<T> {
    * @param updateWrapper 实体对象封装操作类（可以为 null,里面的 entity 用于生成 where 语句）
    * @return
    */
+  @SuppressWarnings("unchecked")
   default int update(Wrapper<T> updateWrapper) {
     T entity = null;
     try {
-      if (updateWrapper instanceof AbstractWrapper) {
-        entity = (T) ((AbstractWrapper) updateWrapper).getEntityClass().newInstance();
+      if (updateWrapper instanceof AbstractWrapper<?, ?, ?> abstractWrapper) {
+        entity = (T) abstractWrapper.getEntityClass().getDeclaredConstructor().newInstance();
         // 将所有的值设置为null
         Field[] fields = ReflectUtil.getFields(entity.getClass());
         if (ArrayUtil.isNotEmpty(fields)) {

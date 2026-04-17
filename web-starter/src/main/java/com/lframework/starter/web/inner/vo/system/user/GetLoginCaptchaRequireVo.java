@@ -1,10 +1,10 @@
 package com.lframework.starter.web.inner.vo.system.user;
 
 import com.lframework.starter.web.core.vo.BaseVo;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
@@ -18,19 +18,19 @@ public class GetLoginCaptchaRequireVo implements BaseVo, Serializable {
   /**
    * 租户ID
    */
-  @ApiModelProperty("租户ID")
+  @Schema(description = "租户ID")
   private Integer tenantId;
 
   /**
    * 租户名称
    */
-  @ApiModelProperty("租户名称")
+  @Schema(description = "租户名称")
   private String tenantName;
 
   /**
    * 用户名
    */
-  @ApiModelProperty(value = "用户名", required = true)
+  @Schema(description = "用户名", requiredMode = Schema.RequiredMode.REQUIRED)
   @NotBlank(message = "用户名不能为空！")
   private String username;
 }

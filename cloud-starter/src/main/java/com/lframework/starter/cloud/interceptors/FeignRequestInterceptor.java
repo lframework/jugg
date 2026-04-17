@@ -5,7 +5,7 @@ import com.lframework.starter.web.core.utils.RequestUtil;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import java.util.Enumeration;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

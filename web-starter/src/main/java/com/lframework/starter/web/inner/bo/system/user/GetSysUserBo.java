@@ -14,7 +14,7 @@ import com.lframework.starter.web.inner.service.system.SysDeptService;
 import com.lframework.starter.web.inner.service.system.SysRoleService;
 import com.lframework.starter.web.inner.service.system.SysUserDeptService;
 import com.lframework.starter.web.inner.service.system.SysUserRoleService;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -26,80 +26,80 @@ public class GetSysUserBo extends BaseBo<SysUser> {
   /**
    * ID
    */
-  @ApiModelProperty("ID")
+  @Schema(description = "ID")
   private String id;
 
   /**
    * 编号
    */
-  @ApiModelProperty("编号")
+  @Schema(description = "编号")
   private String code;
 
   /**
    * 姓名
    */
-  @ApiModelProperty("姓名")
+  @Schema(description = "姓名")
   private String name;
 
   /**
    * 用户名
    */
-  @ApiModelProperty("用户名")
+  @Schema(description = "用户名")
   private String username;
 
   /**
    * 邮箱
    */
-  @ApiModelProperty("邮箱")
+  @Schema(description = "邮箱")
   private String email;
 
   /**
    * 联系电话
    */
-  @ApiModelProperty("联系电话")
+  @Schema(description = "联系电话")
   private String telephone;
 
   /**
    * 性别
    */
-  @ApiModelProperty("性别")
+  @Schema(description = "性别")
   private Integer gender;
 
   /**
    * 部门
    */
-  @ApiModelProperty("部门")
+  @Schema(description = "部门")
   private List<String> depts;
 
   /**
    * 部门名称
    */
-  @ApiModelProperty("部门名称")
+  @Schema(description = "部门名称")
   private String deptName;
 
 
   /**
    * 角色
    */
-  @ApiModelProperty("角色")
+  @Schema(description = "角色")
   private List<String> roles;
 
   /**
    * 角色名称
    */
-  @ApiModelProperty("角色名称")
+  @Schema(description = "角色名称")
   private String roleName;
 
   /**
    * 是否锁定
    */
-  @ApiModelProperty("是否锁定")
+  @Schema(description = "是否锁定")
   private Boolean lockStatus;
 
   /**
    * 备注
    */
-  @ApiModelProperty("备注")
+  @Schema(description = "备注")
   private String description;
 
   public GetSysUserBo() {

@@ -3,6 +3,7 @@ package com.lframework.starter.web.config;
 import cn.dev33.satoken.dao.SaTokenDao;
 import cn.dev33.satoken.dao.SaTokenDaoDefaultImpl;
 import cn.dev33.satoken.dao.SaTokenDaoRedisJackson;
+import io.lettuce.core.api.StatefulConnection;
 import io.lettuce.core.resource.ClientResources;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.springframework.beans.factory.ObjectProvider;
@@ -58,6 +59,7 @@ class SaTokenAutoConfiguration {
      * 开始注入
      */
     @Override
+    @SuppressWarnings("deprecation")
     public void setEnvironment(Environment environment) {
       try {
         // 如果为空或者默认实现，则不进行任何操作
@@ -83,7 +85,7 @@ class SaTokenAutoConfiguration {
         redisConfig.setPassword(RedisPassword.of(cfg.getPassword()));
 
         // 2. 连接池配置
-        GenericObjectPoolConfig poolConfig = new GenericObjectPoolConfig();
+        GenericObjectPoolConfig<StatefulConnection<?, ?>> poolConfig = new GenericObjectPoolConfig<>();
         // pool配置
         RedisProperties.Lettuce lettuce = cfg.getLettuce();
         if (lettuce.getPool() != null) {

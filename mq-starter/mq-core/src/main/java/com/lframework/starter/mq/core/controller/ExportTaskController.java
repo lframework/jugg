@@ -18,11 +18,11 @@ import com.lframework.starter.mq.core.enums.ExportTaskStatus;
 import com.lframework.starter.mq.core.service.ExportTaskService;
 import com.lframework.starter.mq.core.vo.QueryFailExportTaskVo;
 import com.lframework.starter.mq.core.vo.QuerySuccessExportTaskVo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author zmj
  */
-@Api(tags = "导出任务")
+@Tag(name = "导出任务")
 @Validated
 @RestController
 @RequestMapping("/export/task")
@@ -46,7 +46,7 @@ public class ExportTaskController extends DefaultBaseController {
   /**
    * 正在导出列表
    */
-  @ApiOperation("正在导出列表")
+  @Operation(summary = "正在导出列表")
   @GetMapping("/exporting")
   public InvokeResult<List<ExportingExportTaskBo>> queryExporting() {
 
@@ -62,7 +62,7 @@ public class ExportTaskController extends DefaultBaseController {
     return InvokeResultBuilder.success(results);
   }
 
-  @ApiOperation("导出成功列表")
+  @Operation(summary = "导出成功列表")
   @GetMapping("/success")
   public InvokeResult<PageResult<SuccessExportTaskBo>> querySuccess(
       @Valid QuerySuccessExportTaskVo vo) {
@@ -83,7 +83,7 @@ public class ExportTaskController extends DefaultBaseController {
     return InvokeResultBuilder.success(PageResultUtil.rebuild(pageResult, results));
   }
 
-  @ApiOperation("导出失败列表")
+  @Operation(summary = "导出失败列表")
   @GetMapping("/fail")
   public InvokeResult<PageResult<FailExportTaskBo>> queryFail(
       @Valid QueryFailExportTaskVo vo) {

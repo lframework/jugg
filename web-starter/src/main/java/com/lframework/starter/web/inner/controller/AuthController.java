@@ -4,7 +4,6 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.codec.Base64;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.google.code.kaptcha.Producer;
 import com.lframework.starter.common.constants.PatternPool;
 import com.lframework.starter.common.constants.StringPool;
 import com.lframework.starter.common.exceptions.impl.DefaultClientException;
@@ -16,6 +15,7 @@ import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.web.config.properties.KaptchaProperties;
 import com.lframework.starter.web.core.annotations.openapi.OpenApi;
 import com.lframework.starter.web.core.annotations.oplog.OpLog;
+import com.lframework.starter.web.core.components.captcha.CaptchaProducer;
 import com.lframework.starter.web.core.components.captcha.CaptchaValidator;
 import com.lframework.starter.web.core.components.permission.SysDataPermissionDataPermissionType;
 import com.lframework.starter.web.core.components.redis.RedisHandler;
@@ -62,9 +62,9 @@ import com.lframework.starter.web.inner.vo.auth.SaveUserMenuSortVo;
 import com.lframework.starter.web.inner.vo.system.permission.SysDataPermissionModelDetailVo;
 import com.lframework.starter.web.inner.vo.system.user.GetLoginCaptchaRequireVo;
 import com.lframework.starter.web.inner.vo.system.user.LoginVo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Operation;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -75,8 +75,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FastByteArrayOutputStream;
@@ -91,14 +91,14 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author zmj
  */
-@Api(tags = "用户认证")
+@Tag(name = "用户认证")
 @Slf4j
 @Validated
 @RestController
 public class AuthController extends DefaultBaseController {
 
   @Autowired
-  private Producer producer;
+  private CaptchaProducer producer;
 
   @Autowired
   private KaptchaProperties kaptchaProperties;
@@ -148,7 +148,7 @@ public class AuthController extends DefaultBaseController {
   /**
    * 是否为多租户
    */
-  @ApiOperation(value = "是否为多租户")
+  @Operation(summary = "是否为多租户")
   @OpenApi
   @GetMapping("/auth/tenant/require")
   public InvokeResult<TenantRequireBo> getTenantRequire() {
@@ -162,7 +162,7 @@ public class AuthController extends DefaultBaseController {
   /**
    * 是否需要登录验证码
    */
-  @ApiOperation(value = "是否需要登录验证码")
+  @Operation(summary = "是否需要登录验证码")
   @OpenApi
   @PostMapping("/auth/captcha/require")
   public InvokeResult<Boolean> getLoginCaptchaRequire(@Valid GetLoginCaptchaRequireVo vo) {
@@ -199,7 +199,7 @@ public class AuthController extends DefaultBaseController {
   /**
    * 获取登录验证码
    */
-  @ApiOperation(value = "获取登录验证码")
+  @Operation(summary = "获取登录验证码")
   @OpenApi
   @GetMapping("/auth/captcha")
   public InvokeResult<GenerateCaptchaDto> generateCaptcha() {
@@ -229,7 +229,7 @@ public class AuthController extends DefaultBaseController {
     return InvokeResultBuilder.success(resp);
   }
 
-  @ApiOperation("登录")
+  @Operation(summary = "登录")
   @OpenApi
   @OpLog(type = AuthOpLogType.class, name = "用户登录")
   @PostMapping("/auth/login")
@@ -294,7 +294,7 @@ public class AuthController extends DefaultBaseController {
     return InvokeResultBuilder.success(new LoginBo(dto));
   }
 
-  @ApiOperation("退出登录")
+  @Operation(summary = "退出登录")
   @OpenApi
   @OpLog(type = AuthOpLogType.class, name = "退出登录")
   @PostMapping("/auth/logout")
@@ -305,7 +305,7 @@ public class AuthController extends DefaultBaseController {
     return InvokeResultBuilder.success();
   }
 
-  @ApiOperation(value = "获取用户信息")
+  @Operation(summary = "获取用户信息")
   @GetMapping("/auth/info")
   public InvokeResult<LoginBo> info() {
 
@@ -315,7 +315,7 @@ public class AuthController extends DefaultBaseController {
     return InvokeResultBuilder.success(new LoginBo(info));
   }
 
-  @ApiOperation("获取用户菜单")
+  @Operation(summary = "获取用户菜单")
   @GetMapping("/auth/menus")
   public InvokeResult<List<MenuBo>> menus() {
 
@@ -356,7 +356,7 @@ public class AuthController extends DefaultBaseController {
     return InvokeResultBuilder.success(results);
   }
 
-  @ApiOperation("保存用户菜单排序")
+  @Operation(summary = "保存用户菜单排序")
   @PostMapping("/auth/menus/sort")
   public InvokeResult<Void> saveMenusSort(@Valid @RequestBody SaveUserMenuSortVo vo) {
 
@@ -372,7 +372,7 @@ public class AuthController extends DefaultBaseController {
     return InvokeResultBuilder.success();
   }
 
-  @ApiOperation("验证当前登录人的登录密码")
+  @Operation(summary = "验证当前登录人的登录密码")
   @PostMapping("/auth/check/password")
   public InvokeResult<Boolean> checkPassword(
       @NotBlank(message = "登录密码不能为空！") String password) {
@@ -421,8 +421,8 @@ public class AuthController extends DefaultBaseController {
     return children;
   }
 
-  @ApiOperation("收藏菜单")
-  @ApiImplicitParam(value = "菜单ID", name = "menuId", paramType = "query")
+  @Operation(summary = "收藏菜单")
+  @Parameter(name = "menuId", description = "菜单ID")
   @PostMapping("/menu/collect")
   public InvokeResult<Void> collectMenu(String menuId) {
 
@@ -432,7 +432,7 @@ public class AuthController extends DefaultBaseController {
     return InvokeResultBuilder.success();
   }
 
-  @ApiOperation("获取已收藏的菜单")
+  @Operation(summary = "获取已收藏的菜单")
   @GetMapping("/menu/collect")
   public InvokeResult<List<CollectMenuBo>> getCollectMenus() {
     AbstractUserDetails user = getCurrentUser();
@@ -508,8 +508,8 @@ public class AuthController extends DefaultBaseController {
     return InvokeResultBuilder.success(results);
   }
 
-  @ApiOperation("取消收藏菜单")
-  @ApiImplicitParam(value = "菜单ID", name = "menuId", paramType = "query")
+  @Operation(summary = "取消收藏菜单")
+  @Parameter(name = "menuId", description = "菜单ID")
   @PostMapping("/menu/collect/cancel")
   public InvokeResult<Void> cancelCollectMenu(String menuId) {
 

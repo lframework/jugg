@@ -15,11 +15,11 @@ import org.springframework.data.redis.core.RedisTemplate;
 @Slf4j
 public class WsDataPusherImpl implements WsDataPusher {
 
-  private RedisTemplate redisTemplate;
+  private final RedisTemplate<Object, Object> redisTemplate;
 
-  private WsProperties properties;
+  private final WsProperties properties;
 
-  public WsDataPusherImpl(RedisTemplate redisTemplate, WsProperties properties) {
+  public WsDataPusherImpl(RedisTemplate<Object, Object> redisTemplate, WsProperties properties) {
     this.redisTemplate = redisTemplate;
     this.properties = properties;
   }
@@ -59,16 +59,14 @@ public class WsDataPusherImpl implements WsDataPusher {
       if (value instanceof byte[]) {
         return this.redisTemplate.getStringSerializer().deserialize((byte[]) value);
       }
-      if (value instanceof List) {
-        List<Object> valueList = (List<Object>) value;
+      if (value instanceof List<?> valueList) {
         List<Object> resultList = new ArrayList<>(valueList.size());
         for (Object val : valueList) {
           resultList.add(deserialize(val));
         }
         return resultList;
       }
-      if (value instanceof Map) {
-        Map<Object, Object> map = (Map<Object, Object>) value;
+      if (value instanceof Map<?, ?> map) {
         LinkedHashMap<Object, Object> newMap = new LinkedHashMap<>(map.size());
         map.forEach((key, val) -> newMap.put(deserialize(key), deserialize(val)));
         return newMap;

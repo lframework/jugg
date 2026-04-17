@@ -1,8 +1,8 @@
 package com.lframework.starter.web.config;
 
-import com.google.code.kaptcha.Producer;
-import com.google.code.kaptcha.util.Config;
 import com.lframework.starter.web.config.properties.KaptchaProperties;
+import com.lframework.starter.web.core.components.captcha.CaptchaProducer;
+import com.lframework.starter.web.core.components.captcha.DefaultCaptchaProducer;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,10 +19,7 @@ public class KaptchaAutoConfiguration {
 
   @Bean
   @Primary
-  public Producer getProducer(KaptchaProperties properties) {
-
-    Config config = new Config(properties.props());
-
-    return config.getProducerImpl();
+  public CaptchaProducer captchaProducer(KaptchaProperties properties) {
+    return new DefaultCaptchaProducer(properties);
   }
 }

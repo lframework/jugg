@@ -4,8 +4,8 @@ package com.lframework.starter.web.inner.handlers.exception;
 import com.lframework.starter.common.exceptions.BaseException;
 import com.lframework.starter.common.exceptions.impl.InputErrorException;
 import com.lframework.starter.web.core.handlers.exception.WebExceptionConverter;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 
 public class ConstraintViolationExceptionConverter implements WebExceptionConverter {
 

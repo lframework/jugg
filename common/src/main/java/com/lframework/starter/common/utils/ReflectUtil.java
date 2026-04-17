@@ -55,7 +55,7 @@ public class ReflectUtil extends cn.hutool.core.util.ReflectUtil {
     }
 
     // 从序列化方法取出序列化的lambda信息
-    boolean isAccessible = writeReplaceMethod.isAccessible();
+    boolean isAccessible = writeReplaceMethod.canAccess(fn);
     writeReplaceMethod.setAccessible(true);
     SerializedLambda serializedLambda;
     try {

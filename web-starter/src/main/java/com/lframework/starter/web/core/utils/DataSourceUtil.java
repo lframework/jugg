@@ -1,7 +1,7 @@
 package com.lframework.starter.web.core.utils;
 
-import com.baomidou.dynamic.datasource.creator.BasicDataSourceCreator;
-import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DataSourceProperty;
+import com.baomidou.dynamic.datasource.creator.DataSourceProperty;
+import com.baomidou.dynamic.datasource.creator.basic.BasicDataSourceCreator;
 import com.lframework.starter.common.utils.BeanUtil;
 import com.lframework.starter.common.utils.StringUtil;
 import java.sql.Connection;

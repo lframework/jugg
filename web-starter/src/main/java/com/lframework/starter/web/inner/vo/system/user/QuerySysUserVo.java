@@ -2,7 +2,7 @@ package com.lframework.starter.web.inner.vo.system.user;
 
 import com.lframework.starter.web.core.vo.BaseVo;
 import com.lframework.starter.web.core.vo.SortPageVo;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
 import lombok.Data;
 
@@ -14,36 +14,36 @@ public class QuerySysUserVo extends SortPageVo implements BaseVo, Serializable {
   /**
    * 编号
    */
-  @ApiModelProperty("编号")
+  @Schema(description = "编号")
   private String code;
 
   /**
    * 用户名
    */
-  @ApiModelProperty("用户名")
+  @Schema(description = "用户名")
   private String username;
 
   /**
    * 姓名
    */
-  @ApiModelProperty("姓名")
+  @Schema(description = "姓名")
   private String name;
 
   /**
    * 部门ID
    */
-  @ApiModelProperty("部门ID")
+  @Schema(description = "部门ID")
   private String deptId;
 
   /**
    * 角色ID
    */
-  @ApiModelProperty("角色ID")
+  @Schema(description = "角色ID")
   private String roleId;
 
   /**
    * 是否锁定
    */
-  @ApiModelProperty("是否锁定")
+  @Schema(description = "是否锁定")
   private Boolean lockStatus;
 }

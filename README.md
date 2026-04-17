@@ -1,68 +1,78 @@
-### 项目介绍
-Jugg名称来源于Dota游戏中的剑圣。
-Jugg是用来开发业务系统的脚手架，将常用的开发框架整合并配置，以此来简化业务系统的搭建工作。
-### 项目构成
-* common
-* web-starter
-* gen
-* cloud-starter
-* mq-starter
+# Jugg
 
-以上是项目中所有的module。
+Jugg 是面向业务系统的后端基础框架，基于 Java 21、Spring Boot 3 与 Spring Cloud 体系进行封装，目标是把常见的后台开发能力沉淀成可复用的 starter，减少项目初始化和重复造轮子的成本。
 
-所有的module的名称即为主要封装的能力。例如：web-starter表示依赖此starter即可让项目拥有Web后台的能力。
+## 仓库结构
 
-可以根据不同的需求来决定具体使用哪些starter。
+- `common`：通用工具、异常、常量与基础能力
+- `web-starter`：单体 Web 应用能力，集成权限、租户、缓存、文件、任务、OpenAPI 等
+- `cloud-starter`：Spring Cloud 场景下的公共能力封装
+- `mq-starter`：消息队列能力，包含 `mq-core`、`activemq-starter`、`rabbitmq-starter`
+- `bpm-starter`：流程与工作流相关能力
 
-### 内置功能
-* 菜单管理：维护系统菜单、权限。
-* 部门管理：维护系统组织机构。
-* 角色管理：维护角色人员所属角色信息。
-* 用户管理：维护系统人员信息。
-* 操作日志：查询系统人员的操作日志。
-* 代码生成器：代码生成功能。
+按需引用即可，不要求业务项目一次性依赖全部模块。
 
-## 注意事项
-以上内置功能均写在了starter里面，因为这些功能的默认数据库表是根据自己需求创建的表，通常会因为各种原因导致开发人员并不想使用这些表，而是使用自己的表，那么这个时候如果不能很好的支持就会比较难受了。出现这种情况时，只需要在业务系统继承、重写内置Bean或直接创建响应的Bean，即可。
+## 内置能力
 
-例如：现在不想使用内置的用户表，而是使用自定义的用户表，需要进行如下操作：
+- 系统管理：菜单、部门、角色、用户、操作日志等基础后台能力
+- 数据访问：MyBatis-Plus、动态数据源、分页、租户上下文
+- 安全体系：Sa-Token、权限拦截、统一响应与异常处理
+- 基础设施：Redis、RabbitMQ、文件上传、定时任务、OpenAPI/Knife4j
+- 扩展能力：工作流、消息导出、云端基础集成
 
-* 继承DefaultUserServiceImpl并将do*方法全部重写或新建类并实现IUserService接口，然后将自定义的类注册成Bean
-* 继承DefaultSysUserServiceImpl并将do*方法全部重写或新建类并实现ISysUserService，然后将自定义的类注册成Bean
+## 快速开始
 
-完成以上两步操作后，即可将内置的用户表替换成自定义的用户表。其他的内置功能同理。
+### 环境要求
 
-以下是内置的Bean的介绍：
-* 菜单管理：SysMenuController、ISysMenuService（实现类：DefaultSysMenuServiceImpl）
-* 部门管理：SysDeptController、ISysDeptService（实现类：DefaultSysDeptServiceImpl）
-* 角色管理：SysRoleController、ISysRoleService（实现类：DefaultSysRoleServiceImpl）
-* 用户管理：SysUserController、ISysUserService（实现类：DefaultSysUserServiceImpl）
-* 操作日志：OpLogController、IOpLogsService（实现类：DefaultOpLogsServiceImpl）
-* 用户所属部门：ISysUserDeptService（实现类：DefaultSysUserDeptServiceImpl）
-* 用户所属角色：ISysUserRoleService（实现类：DefaultSysUserRoleServiceImpl）
-* 角色授权相关：ISysRoleMenuService（实现类：DefaultSysRoleMenuServiceImpl）、IMenuService（实现类：DefaultMenuServiceImpl）
+- JDK 21
+- Maven 3.9+
+- MySQL 5.7.18+
+- Redis 4.0.8+
+- 可选：RabbitMQ、Nacos、Seata
 
-需要自定义哪些功能就重写哪个类并注册成Bean即可。
+### 构建命令
 
-### 主要技术框架
-* springboot 2.2.2.RELEASE
-* myBatis-plus 3.4.2
-* spring-session-data-redis 2.2.0.RELEASE
-* HuTool 5.7.17 (只依赖了HuTool的core module)
-* lombok 1.18.10
-* EasyExcel 2.2.10（内置了两种导出excel方式：一次性导出、分段导出（只支持简单表头））
+```bash
+mvn clean install
+mvn -pl web-starter -am test
+```
 
-### 开发环境
-* JDK 1.8
-* Mysql 5.7.18
-* Redis 4.0.8（版本可以根据自己的redis进行调整，项目本身依赖Redis的功能很简单，就是两部分：缓存、Session，不会出现大的兼容问题）
+### 业务项目引用
 
-### License
-项目使用Apache 2.0许可证，请遵守此许可证的限制条件。
+业务项目通常通过父 BOM 统一版本：
 
-### 其他说明
-* 目前项目刚刚发布，使用人数很少，暂不提供交流群，Bug请提Issue。
-* 作者是一个只有几年开发经验的菜鸡，如有错误之处，望斧正。
-* 前端项目Gitee地址：[点此进入][frontGitee]
+```xml
+<dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>com.lframework</groupId>
+      <artifactId>parent</artifactId>
+      <version>5.0.0</version>
+      <type>pom</type>
+      <scope>import</scope>
+    </dependency>
+  </dependencies>
+</dependencyManagement>
+```
 
-[frontGitee]: https://gitee.com/lframework/xingyun-front
+然后按需引入 `web-starter`、`cloud-starter`、`mq-starter` 或 `bpm-starter`。
+
+## 自定义与替换
+
+内置系统功能都以 starter Bean 的形式提供，业务项目可以通过继承默认实现或直接注册同类型 Bean 进行替换。例如不使用默认用户体系时，可在业务项目中提供自定义的用户服务实现，覆盖默认注入链。菜单、部门、角色、用户、日志等模块都遵循同样的扩展方式。
+
+## 主要技术栈
+
+- Spring Boot 3.5.0
+- Spring Cloud 2025.0.0
+- Spring Cloud Alibaba 2025.0.0.0
+- MyBatis-Plus 3.5.6
+- Sa-Token 1.39.0
+- Knife4j 4.5.0
+- Lombok 1.18.32
+- Hutool 5.7.17
+- EasyExcel 2.2.10
+
+## License
+
+项目使用 Apache 2.0 许可证，请遵守许可证约束。

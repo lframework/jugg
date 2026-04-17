@@ -33,7 +33,7 @@ public class GenerateCodeFactory {
     for (GenerateCodeRule rule : ruleList) {
       for (GenerateCodeRuleHandler handler : handlerList) {
         if (handler.match(rule)) {
-          builder.append(handler.generate(rule));
+          builder.append(generateRule(handler, rule));
         }
       }
     }
@@ -54,7 +54,7 @@ public class GenerateCodeFactory {
     for (GenerateCodeRule rule : ruleList) {
       for (GenerateCodeRuleHandler handler : handlerList) {
         if (handler.match(rule)) {
-          builder.append(handler.generateExample(rule));
+          builder.append(generateRuleExample(handler, rule));
         }
       }
     }
@@ -62,14 +62,14 @@ public class GenerateCodeFactory {
     return builder.toString();
   }
 
-  public static List<GenerateCodeRuleHandler> getHandlers(String configStr) {
+  public static List<GenerateCodeRuleHandler<?>> getHandlers(String configStr) {
 
     Map<String, GenerateCodeRuleHandler> handlerMap = ApplicationUtil.getBeansOfType(
         GenerateCodeRuleHandler.class);
 
     JSONArray configArr = JsonUtil.parseArray(configStr);
 
-    List<GenerateCodeRuleHandler> results = new ArrayList<>();
+    List<GenerateCodeRuleHandler<?>> results = new ArrayList<>();
 
     for (int i = 0; i < configArr.size(); i++) {
       JSONObject config = configArr.getJSONObject(i);
@@ -95,17 +95,32 @@ public class GenerateCodeFactory {
   }
 
   public static List<GenerateCodeRule> getRules(String configStr) {
-    List<GenerateCodeRuleHandler> ruleHandlerList = GenerateCodeFactory.getHandlers(
+    List<GenerateCodeRuleHandler<?>> ruleHandlerList = GenerateCodeFactory.getHandlers(
         configStr);
     JSONArray configArr = JsonUtil.parseArray(configStr);
 
     List<GenerateCodeRule> results = new ArrayList<>();
 
     for (int i = 0; i < ruleHandlerList.size(); i++) {
-      GenerateCodeRuleHandler ruleHandler = ruleHandlerList.get(i);
-      results.add(ruleHandler.parseRule(configArr.getStr(i)));
+      GenerateCodeRuleHandler<?> ruleHandler = ruleHandlerList.get(i);
+      results.add(parseRule(ruleHandler, configArr.getStr(i)));
     }
 
     return results;
+  }
+
+  @SuppressWarnings("unchecked")
+  private static String generateRule(GenerateCodeRuleHandler<?> handler, GenerateCodeRule rule) {
+    return ((GenerateCodeRuleHandler<GenerateCodeRule>) handler).generate(rule);
+  }
+
+  @SuppressWarnings("unchecked")
+  private static String generateRuleExample(GenerateCodeRuleHandler<?> handler, GenerateCodeRule rule) {
+    return ((GenerateCodeRuleHandler<GenerateCodeRule>) handler).generateExample(rule);
+  }
+
+  @SuppressWarnings("unchecked")
+  private static GenerateCodeRule parseRule(GenerateCodeRuleHandler<?> handler, String json) {
+    return ((GenerateCodeRuleHandler<GenerateCodeRule>) handler).parseRule(json);
   }
 }

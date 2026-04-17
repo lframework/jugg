@@ -2,10 +2,10 @@ package com.lframework.starter.web.inner.vo.system.generate;
 
 import com.lframework.starter.web.core.components.validation.IsJsonArray;
 import com.lframework.starter.web.core.vo.BaseVo;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
@@ -16,14 +16,14 @@ public class SettingSysGenerateCodeVo implements BaseVo, Serializable {
   /**
    * ID
    */
-  @ApiModelProperty(value = "ID", required = true)
+  @Schema(description = "ID", requiredMode = Schema.RequiredMode.REQUIRED)
   @NotNull(message = "id不能为空！")
   private Integer id;
 
   /**
    * 配置规则
    */
-  @ApiModelProperty(value = "配置规则", required = true)
+  @Schema(description = "配置规则", requiredMode = Schema.RequiredMode.REQUIRED)
   @NotBlank(message = "配置规则不能为空！")
   @IsJsonArray(message = "配置规则格式错误！")
   private String configStr;

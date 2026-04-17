@@ -37,11 +37,13 @@ public abstract class BaseBo<T extends BaseDto> implements Serializable, SuperBo
    *
    * @param dto
    */
+  @SuppressWarnings("unchecked")
   public <A> BaseBo<T> convert(T dto) {
 
     return convert(dto, (SFunction<A, ?>[]) null);
   }
 
+  @SuppressWarnings({"unchecked", "varargs"})
   public <A> BaseBo<T> convert(T dto, SFunction<A, ?>... columns) {
 
     BoUtil.convert(dto, this, columns);

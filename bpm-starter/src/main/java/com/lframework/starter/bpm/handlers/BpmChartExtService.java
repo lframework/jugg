@@ -28,35 +28,44 @@ public class BpmChartExtService implements ChartExtService {
     defJson.getNodeList().forEach(nodeJson -> {
       Map<String, Object> extMap = nodeJson.getExtMap();
       if (CollectionUtil.isNotEmpty(extMap) && extMap.containsKey("handleInfos")) {
-        List<Map<String, Object>> handleInfos = (List<Map<String, Object>>) extMap.get(
-            "handleInfos");
+        Object handleInfosValue = extMap.get("handleInfos");
+        if (!(handleInfosValue instanceof List<?> handleInfos)) {
+          return;
+        }
 
         for (int i = 0; i < handleInfos.size(); i++) {
-          Map<String, Object> handleInfo = handleInfos.get(i);
+          Object handleInfoValue = handleInfos.get(i);
+          if (!(handleInfoValue instanceof Map<?, ?> handleInfo)) {
+            continue;
+          }
 
           PromptContent.InfoItem item = new PromptContent.InfoItem();
           item.setPrefix("处理人" + (handleInfos.size() > 1 ? (i + 1) : "") + ": ");
-          item.setContent((String) handleInfo.get("createBy"));
+          item.setContent(stringValue(handleInfo.get("createBy")));
           nodeJson.getPromptContent().getInfo().add(item);
 
           item = new PromptContent.InfoItem();
           item.setPrefix("处理方式: ");
-          item.setContent((String) handleInfo.get("skipType"));
+          item.setContent(stringValue(handleInfo.get("skipType")));
           nodeJson.getPromptContent().getInfo().add(item);
 
           item = new PromptContent.InfoItem();
           item.setPrefix("处理时间: ");
-          item.setContent((String) handleInfo.get("createTime"));
+          item.setContent(stringValue(handleInfo.get("createTime")));
           nodeJson.getPromptContent().getInfo().add(item);
 
           if (handleInfo.containsKey("message")) {
             item = new PromptContent.InfoItem();
             item.setPrefix("说明: ");
-            item.setContent((String) handleInfo.get("message"));
+            item.setContent(stringValue(handleInfo.get("message")));
             nodeJson.getPromptContent().getInfo().add(item);
           }
         }
       }
     });
+  }
+
+  private String stringValue(Object value) {
+    return value == null ? null : value.toString();
   }
 }

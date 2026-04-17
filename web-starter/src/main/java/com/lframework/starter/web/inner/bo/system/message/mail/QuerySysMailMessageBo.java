@@ -6,7 +6,7 @@ import com.lframework.starter.web.core.annotations.constants.EncryType;
 import com.lframework.starter.web.core.annotations.convert.EncryptConvert;
 import com.lframework.starter.web.core.bo.BaseBo;
 import com.lframework.starter.web.inner.entity.SysMailMessage;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import lombok.Data;
 
@@ -23,39 +23,39 @@ public class QuerySysMailMessageBo extends BaseBo<SysMailMessage> {
   /**
    * ID
    */
-  @ApiModelProperty("ID")
+  @Schema(description = "ID")
   private String id;
 
   /**
    * 标题
    */
-  @ApiModelProperty("标题")
+  @Schema(description = "标题")
   private String title;
 
   /**
    * 接收邮箱
    */
-  @ApiModelProperty("接收邮箱")
+  @Schema(description = "接收邮箱")
   @EncryptConvert(type = EncryType.EMAIL)
   private String mail;
 
   /**
    * 创建人
    */
-  @ApiModelProperty("创建人")
+  @Schema(description = "创建人")
   private String createBy;
 
   /**
    * 创建时间
    */
-  @ApiModelProperty("创建时间")
+  @Schema(description = "创建时间")
   @JsonFormat(pattern = StringPool.DATE_TIME_PATTERN)
   private LocalDateTime createTime;
 
   /**
    * 发送状态
    */
-  @ApiModelProperty("发送状态")
+  @Schema(description = "发送状态")
   private Integer sendStatus;
 
   public QuerySysMailMessageBo() {

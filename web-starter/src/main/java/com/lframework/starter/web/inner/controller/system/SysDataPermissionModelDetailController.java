@@ -21,17 +21,17 @@ import com.lframework.starter.web.inner.enums.system.SysDataPermissionModelDetai
 import com.lframework.starter.web.inner.service.system.SysDataPermissionModelDetailService;
 import com.lframework.starter.web.inner.vo.system.permission.SysDataPermissionModelDetailVo;
 import com.lframework.starter.web.inner.service.system.SysDataPermissionDataService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,7 +45,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author zmj
  */
-@Api(tags = "数据权限Model明细")
+@Tag(name = "数据权限Model明细")
 @Validated
 @RestController
 @RequestMapping("/system/data/permission/model/detail")
@@ -57,8 +57,8 @@ public class SysDataPermissionModelDetailController extends DefaultBaseControlle
   @Autowired
   private SysDataPermissionDataService sysDataPermissionDataService;
 
-  @ApiOperation("根据模型ID查询")
-  @ApiImplicitParam(value = "模型ID", name = "modelId", paramType = "query", required = true)
+  @Operation(summary = "根据模型ID查询")
+  @Parameter(name = "modelId", description = "模型ID", required = true)
   @GetMapping
   public InvokeResult<List<SysDataPermissionModelDetailBo>> getByModelId(
       @NotNull(message = "模型ID不能为空！") Integer modelId) {
@@ -73,7 +73,7 @@ public class SysDataPermissionModelDetailController extends DefaultBaseControlle
     return InvokeResultBuilder.success(results);
   }
 
-  @ApiOperation("预览SQL")
+  @Operation(summary = "预览SQL")
   @PostMapping("/preview")
   public InvokeResult<String> preview(
       @Valid @RequestBody List<SysDataPermissionModelDetailVo> models) {
@@ -83,8 +83,8 @@ public class SysDataPermissionModelDetailController extends DefaultBaseControlle
     return InvokeResultBuilder.success(sql);
   }
 
-  @ApiOperation("根据业务ID查询")
-  @ApiImplicitParam(value = "模型ID", name = "modelId", paramType = "query", required = true)
+  @Operation(summary = "根据业务ID查询")
+  @Parameter(name = "modelId", description = "模型ID", required = true)
   @GetMapping("/query")
   public InvokeResult<List<QuerySysDataPermissionModelDetailBo>> queryByBizId(
       @NotBlank(message = "业务ID不能为空！") String bizId,

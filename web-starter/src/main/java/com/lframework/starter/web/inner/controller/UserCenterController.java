@@ -22,14 +22,14 @@ import com.lframework.starter.web.inner.entity.OpLogs;
 import com.lframework.starter.web.inner.service.OpLogsService;
 import com.lframework.starter.web.inner.service.system.SysUserService;
 import com.lframework.starter.web.inner.vo.oplogs.QueryOpLogsVo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,7 +42,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author zmj
  */
-@Api(tags = "个人中心")
+@Tag(name = "个人中心")
 @Validated
 @RestController
 @RequestMapping("/center")
@@ -60,7 +60,7 @@ public class UserCenterController extends DefaultBaseController {
   /**
    * 获取用户信息
    */
-  @ApiOperation(value = "获取用户信息")
+  @Operation(summary = "获取用户信息")
   @GetMapping("/info")
   public InvokeResult<UserInfoBo> getInfo() {
 
@@ -73,11 +73,11 @@ public class UserCenterController extends DefaultBaseController {
   /**
    * 修改密码
    */
-  @ApiOperation("修改密码")
-  @ApiImplicitParams({
-      @ApiImplicitParam(value = "旧密码", name = "oldPsw", paramType = "query", required = true),
-      @ApiImplicitParam(value = "新密码", name = "newPsw", paramType = "query", required = true),
-      @ApiImplicitParam(value = "确认密码", name = "confirmPsw", paramType = "query", required = true)})
+  @Operation(summary = "修改密码")
+  @Parameters({
+      @Parameter(name = "oldPsw", description = "旧密码", required = true),
+      @Parameter(name = "newPsw", description = "新密码", required = true),
+      @Parameter(name = "confirmPsw", description = "确认密码", required = true)})
   @OpLog(type = AuthOpLogType.class, name = "修改密码，原密码：{}，新密码：{}", params = {"#oldPsw", "#newPsw"})
   @PatchMapping("/password")
   public InvokeResult<Void> updatePassword(@NotBlank(message = "旧密码不能为空！") String oldPsw,
@@ -108,10 +108,10 @@ public class UserCenterController extends DefaultBaseController {
   /**
    * 修改邮箱
    */
-  @ApiOperation("修改邮箱")
-  @ApiImplicitParams({
-      @ApiImplicitParam(value = "新邮箱地址", name = "newEmail", paramType = "query", required = true),
-      @ApiImplicitParam(value = "确认邮箱地址", name = "confirmEmail", paramType = "query", required = true)})
+  @Operation(summary = "修改邮箱")
+  @Parameters({
+      @Parameter(name = "newEmail", description = "新邮箱地址", required = true),
+      @Parameter(name = "confirmEmail", description = "确认邮箱地址", required = true)})
   @OpLog(type = AuthOpLogType.class, name = "修改邮箱，新邮箱：{}", params = "#newEmail")
   @PatchMapping("/email")
   public InvokeResult<Void> updateEmail(@NotBlank(message = "新邮箱地址不能为空！") String newEmail,
@@ -137,10 +137,10 @@ public class UserCenterController extends DefaultBaseController {
   /**
    * 修改联系电话
    */
-  @ApiOperation("修改联系电话")
-  @ApiImplicitParams({
-      @ApiImplicitParam(value = "新联系电话", name = "newTelephone", paramType = "query", required = true),
-      @ApiImplicitParam(value = "确认联系电话", name = "confirmTelephone", paramType = "query", required = true)})
+  @Operation(summary = "修改联系电话")
+  @Parameters({
+      @Parameter(name = "newTelephone", description = "新联系电话", required = true),
+      @Parameter(name = "confirmTelephone", description = "确认联系电话", required = true)})
   @OpLog(type = AuthOpLogType.class, name = "修改联系电话，新联系电话：{}", params = "#newTelephone")
   @PatchMapping("/telephone")
   public InvokeResult<Void> updateTelephone(@NotBlank(message = "新联系电话不能为空！") String newTelephone,
@@ -166,7 +166,7 @@ public class UserCenterController extends DefaultBaseController {
   /**
    * 查询操作日志
    */
-  @ApiOperation("查询操作日志")
+  @Operation(summary = "查询操作日志")
   @GetMapping("/oplog")
   public InvokeResult<PageResult<OpLogInUserCenterBo>> oplog(@Valid QueryOpLogsVo vo) {
 
