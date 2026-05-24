@@ -88,7 +88,6 @@ public class ExcelMultipartWriterBuilder
   @Deprecated
   public ExcelMultipartWriterBuilder convertAllFiled(Boolean convertAllFiled) {
 
-    writeWorkbook.setConvertAllFiled(convertAllFiled);
     return this;
   }
 
@@ -130,19 +129,6 @@ public class ExcelMultipartWriterBuilder
   public ExcelMultipartWriterBuilder withTemplate(String pathName) {
 
     return withTemplate(new File(pathName));
-  }
-
-  /**
-   * Write handler
-   *
-   * @deprecated please use {@link WriteHandler}
-   */
-  @Deprecated
-  public ExcelMultipartWriterBuilder registerWriteHandler(
-      com.alibaba.excel.event.WriteHandler writeHandler) {
-
-    writeWorkbook.setWriteHandler(writeHandler);
-    return this;
   }
 
   public ExcelWriter build() {

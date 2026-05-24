@@ -47,7 +47,7 @@ mvn -pl web-starter -am test
     <dependency>
       <groupId>com.lframework</groupId>
       <artifactId>parent</artifactId>
-      <version>5.0.0</version>
+      <version>5.0.1</version>
       <type>pom</type>
       <scope>import</scope>
     </dependency>
@@ -71,7 +71,7 @@ mvn -pl web-starter -am test
 - Knife4j 4.5.0
 - Lombok 1.18.32
 - Hutool 5.7.17
-- EasyExcel 2.2.10
+- EasyExcel 4.0.3
 
 ## License
 

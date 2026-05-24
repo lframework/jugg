@@ -7,7 +7,7 @@
     <groupId>com.lframework</groupId>
     <artifactId>parent</artifactId>
     <name>【${project.artifactId}】Jugg基础框架</name>
-    <version>5.0.0</version>
+    <version>5.0.1</version>
     <packaging>pom</packaging>
 
     <url>https://gitee.com/lframework/jugg</url>
@@ -23,7 +23,7 @@
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
         <spring.version>3.5.0</spring.version>
-        <jugg.version>5.0.0</jugg.version>
+        <jugg.version>5.0.1</jugg.version>
         <lombok.version>1.18.32</lombok.version>
         <hutool.version>5.7.17</hutool.version>
         <druid-spring-boot-starter.version>1.2.23</druid-spring-boot-starter.version>
@@ -32,7 +32,7 @@
         <mybatis-plus-join-boot-starter.version>1.5.6</mybatis-plus-join-boot-starter.version>
         <dynamic-datasource-spring-boot-starter.version>4.3.1</dynamic-datasource-spring-boot-starter.version>
         <jjwt.version>0.9.1</jjwt.version>
-        <easyexcel.version>2.2.10</easyexcel.version>
+        <easyexcel.version>4.0.3</easyexcel.version>
         <httpclient.version>4.5.10</httpclient.version>
         <dom4j.version>1.6.1</dom4j.version>
         <commons-codec.version>1.13</commons-codec.version>
