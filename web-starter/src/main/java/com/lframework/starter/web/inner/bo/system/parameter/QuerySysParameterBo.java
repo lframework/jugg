@@ -40,6 +40,12 @@ public class QuerySysParameterBo extends BaseBo<SysParameter> {
   private String pmValue;
 
   /**
+   * 是否加密值
+   */
+  @Schema(description = "是否加密值")
+  private Boolean isEncrypt;
+
+  /**
    * 备注
    */
   @Schema(description = "备注")
@@ -69,5 +75,9 @@ public class QuerySysParameterBo extends BaseBo<SysParameter> {
 
   @Override
   protected void afterInit(SysParameter dto) {
+
+    if (Boolean.TRUE.equals(dto.getIsEncrypt())) {
+      this.pmValue = StringPool.ENCRYPT_MASK;
+    }
   }
 }

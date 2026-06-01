@@ -6,6 +6,7 @@
     <id column="id" property="id"/>
     <result column="pm_key" property="pmKey"/>
     <result column="pm_value" property="pmValue"/>
+    <result column="is_encrypt" property="isEncrypt"/>
     <result column="description" property="description"/>
     <result column="create_by" property="createBy"/>
     <result column="create_time" property="createTime"/>
@@ -36,6 +37,7 @@
       tb.id,
       tb.pm_key,
       tb.pm_value,
+      tb.is_encrypt,
       tb.description,
       tb.create_by,
       tb.create_time,

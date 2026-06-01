@@ -40,6 +40,11 @@ public class SysParameter extends BaseEntity implements BaseDto {
   private String pmValue;
 
   /**
+   * 是否加密值
+   */
+  private Boolean isEncrypt;
+
+  /**
    * 备注
    */
   private String description;

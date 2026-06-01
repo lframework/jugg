@@ -4,25 +4,28 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageInfo;
+import com.lframework.starter.common.constants.StringPool;
 import com.lframework.starter.common.exceptions.impl.DefaultClientException;
 import com.lframework.starter.common.exceptions.impl.ParameterNotFoundException;
 import com.lframework.starter.common.utils.Assert;
 import com.lframework.starter.common.utils.ObjectUtil;
 import com.lframework.starter.common.utils.StringUtil;
-import com.lframework.starter.web.core.impl.BaseMpServiceImpl;
+import com.lframework.starter.web.config.properties.SecretProperties;
+import com.lframework.starter.web.core.annotations.oplog.OpLog;
 import com.lframework.starter.web.core.components.resp.PageResult;
-import com.lframework.starter.web.inner.components.oplog.SystemOpLogType;
-import com.lframework.starter.web.inner.service.SysConfService;
+import com.lframework.starter.web.core.impl.BaseMpServiceImpl;
+import com.lframework.starter.web.core.utils.EncryptUtil;
+import com.lframework.starter.web.core.utils.OpLogUtil;
 import com.lframework.starter.web.core.utils.PageHelperUtil;
 import com.lframework.starter.web.core.utils.PageResultUtil;
-import com.lframework.starter.web.core.annotations.oplog.OpLog;
+import com.lframework.starter.web.inner.components.oplog.SystemOpLogType;
 import com.lframework.starter.web.inner.entity.SysParameter;
+import com.lframework.starter.web.inner.mappers.system.SysParameterMapper;
+import com.lframework.starter.web.inner.service.SysConfService;
+import com.lframework.starter.web.inner.service.system.SysParameterService;
 import com.lframework.starter.web.inner.vo.system.parameter.CreateSysParameterVo;
 import com.lframework.starter.web.inner.vo.system.parameter.QuerySysParameterVo;
 import com.lframework.starter.web.inner.vo.system.parameter.UpdateSysParameterVo;
-import com.lframework.starter.web.inner.mappers.system.SysParameterMapper;
-import com.lframework.starter.web.inner.service.system.SysParameterService;
-import com.lframework.starter.web.core.utils.OpLogUtil;
 import java.io.Serializable;
 import java.util.List;
 import org.springframework.cache.annotation.CacheEvict;
@@ -69,7 +72,7 @@ public class SysParameterServiceImpl extends
         .eq(SysParameter::getPmKey, key);
     SysParameter data = getBaseMapper().selectOne(queryWrapper);
 
-    return data == null ? null : data.getPmValue();
+    return data == null ? null : resolveFindValue(data);
   }
 
   @Override
@@ -106,9 +109,8 @@ public class SysParameterServiceImpl extends
     }
     SysParameter data = new SysParameter();
     data.setPmKey(vo.getPmKey());
-    if (!StringUtil.isEmpty(vo.getPmValue())) {
-      data.setPmValue(vo.getPmValue());
-    }
+    data.setIsEncrypt(vo.getIsEncrypt());
+    data.setPmValue(resolveCreatedValue(vo));
     if (!StringUtil.isBlank(vo.getDescription())) {
       data.setDescription(vo.getDescription());
     }
@@ -116,7 +118,7 @@ public class SysParameterServiceImpl extends
     getBaseMapper().insert(data);
 
     OpLogUtil.setVariable("id", String.valueOf(data.getId()));
-    OpLogUtil.setExtra(vo);
+    OpLogUtil.setExtra(resolveCreateOpLogExtra(vo));
 
     return data.getId();
   }
@@ -132,15 +134,101 @@ public class SysParameterServiceImpl extends
     }
 
     LambdaUpdateWrapper<SysParameter> updateWrapper = Wrappers.lambdaUpdate(SysParameter.class)
-        .set(SysParameter::getPmValue, StringUtil.isBlank(vo.getPmValue()) ? null : vo.getPmValue())
+        .set(SysParameter::getPmValue, resolveUpdatedValue(data, vo))
         .set(SysParameter::getDescription,
-            StringUtil.isBlank(vo.getDescription()) ? null : vo.getDescription())
+            StringUtil.isBlank(vo.getDescription()) ? StringPool.EMPTY_STR : vo.getDescription())
         .eq(SysParameter::getId, vo.getId());
 
     getBaseMapper().update(updateWrapper);
 
     OpLogUtil.setVariable("id", String.valueOf(data.getId()));
-    OpLogUtil.setExtra(vo);
+    OpLogUtil.setExtra(resolveUpdateOpLogExtra(data, vo));
+  }
+
+  private String resolveUpdatedValue(SysParameter data, UpdateSysParameterVo vo) {
+
+    return resolveUpdatedValue(data, vo, null);
+  }
+
+  private String resolveCreatedValue(CreateSysParameterVo vo) {
+
+    return resolveCreatedValue(vo, null);
+  }
+
+  private String resolveCreatedValue(CreateSysParameterVo vo, SecretProperties secretProperties) {
+
+    String value = StringUtil.isEmpty(vo.getPmValue()) ? null : vo.getPmValue();
+    return encryptValue(value, vo.getIsEncrypt(), secretProperties);
+  }
+
+  private String resolveFindValue(SysParameter data) {
+
+    return resolveFindValue(data, null);
+  }
+
+  private String resolveFindValue(SysParameter data, SecretProperties secretProperties) {
+
+    if (data == null) {
+      return null;
+    }
+
+    return decryptValue(data.getPmValue(), data.getIsEncrypt(), secretProperties);
+  }
+
+  private String resolveUpdatedValue(SysParameter data, UpdateSysParameterVo vo,
+      SecretProperties secretProperties) {
+
+    if (Boolean.TRUE.equals(data.getIsEncrypt()) && StringUtil.isBlank(vo.getPmValue())) {
+      return data.getPmValue();
+    }
+
+    String value = StringUtil.isBlank(vo.getPmValue()) ? null : vo.getPmValue();
+    return encryptValue(value, data.getIsEncrypt(), secretProperties);
+  }
+
+  private CreateSysParameterVo resolveCreateOpLogExtra(CreateSysParameterVo vo) {
+
+    CreateSysParameterVo result = new CreateSysParameterVo();
+    result.setTenantId(vo.getTenantId());
+    result.setPmKey(vo.getPmKey());
+    result.setPmValue(Boolean.TRUE.equals(vo.getIsEncrypt()) ? StringPool.ENCRYPT_MASK
+        : vo.getPmValue());
+    result.setIsEncrypt(vo.getIsEncrypt());
+    result.setDescription(vo.getDescription());
+    return result;
+  }
+
+  private UpdateSysParameterVo resolveUpdateOpLogExtra(SysParameter data, UpdateSysParameterVo vo) {
+
+    UpdateSysParameterVo result = new UpdateSysParameterVo();
+    result.setTenantId(vo.getTenantId());
+    result.setId(vo.getId());
+    result.setPmValue(Boolean.TRUE.equals(data.getIsEncrypt()) ? StringPool.ENCRYPT_MASK
+        : vo.getPmValue());
+    result.setDescription(vo.getDescription());
+    return result;
+  }
+
+  private String encryptValue(String value, Boolean isEncrypt,
+      SecretProperties secretProperties) {
+
+    if (value == null || !Boolean.TRUE.equals(isEncrypt)) {
+      return value;
+    }
+
+    return secretProperties == null ? EncryptUtil.encrypt(value)
+        : EncryptUtil.encrypt(value, secretProperties);
+  }
+
+  private String decryptValue(String value, Boolean isEncrypt,
+      SecretProperties secretProperties) {
+
+    if (value == null || !Boolean.TRUE.equals(isEncrypt)) {
+      return value;
+    }
+
+    return secretProperties == null ? EncryptUtil.decrypt(value)
+        : EncryptUtil.decrypt(value, secretProperties);
   }
 
   @OpLog(type = SystemOpLogType.class, name = "删除系统参数，ID：{}", params = {"#id"})

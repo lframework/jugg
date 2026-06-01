@@ -35,6 +35,13 @@ public class CreateSysParameterVo implements BaseVo, Serializable {
   private String pmValue;
 
   /**
+   * 是否加密值
+   */
+  @Schema(description = "是否加密值", requiredMode = Schema.RequiredMode.REQUIRED)
+  @NotNull(message = "请选择是否加密值！")
+  private Boolean isEncrypt;
+
+  /**
    * 备注
    */
   @Schema(description = "备注")

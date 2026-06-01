@@ -98,6 +98,11 @@ public interface StringPool {
   String ENCRYPT_STR = "*";
 
   /**
+   * 加密掩码
+   */
+  String ENCRYPT_MASK = "******";
+
+  /**
    * 租户ID在Qrtz中的Key
    */
   String TENANT_ID_QRTZ = "__tenantId";
