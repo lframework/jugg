@@ -5,7 +5,6 @@ import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.context.AnalysisContext;
 import com.lframework.starter.common.exceptions.impl.DefaultClientException;
 import com.lframework.starter.common.utils.ArrayUtil;
-import com.lframework.starter.common.utils.NumberUtil;
 import com.lframework.starter.common.utils.ReflectUtil;
 import com.lframework.starter.common.utils.StringUtil;
 import com.lframework.starter.web.core.annotations.excel.ExcelRequired;
@@ -66,6 +65,7 @@ public abstract class ExcelImportListener<T extends ExcelModel> extends ExcelEve
       this.limitRows = Integer.valueOf(
           sysConfService.findRequiredByKey("excel-import.max-size"));
     }
+    this.setTotalProcess(getTotalProcess(this.totalRows));
 
     if (this.totalRows == 0) {
       this.interrupt = true;
@@ -121,12 +121,9 @@ public abstract class ExcelImportListener<T extends ExcelModel> extends ExcelEve
     }
 
     this.currentRows++;
+    this.setProcess(getSafeProcessByIndex(this.currentRows - 1));
 
-    this.setProcess(this.totalRows == 0 ? 100
-        : Math.min(NumberUtil.mul(NumberUtil.div(this.currentRows, this.totalRows), 100).intValue(),
-            100));
-
-    if (!this.hasError) {
+    if (!this.hasError || continueWithError()) {
       this.datas.add(data);
 
       // 校验必填项
@@ -177,14 +174,16 @@ public abstract class ExcelImportListener<T extends ExcelModel> extends ExcelEve
     ExcelImportUtil.setProcess(this.taskId, process);
   }
 
+  protected void setTotalProcess(Integer process) {
+    ExcelImportUtil.setTotalProcess(this.taskId, process);
+  }
+
   protected void setSuccessProcess(Integer process) {
     ExcelImportUtil.setSuccessProcess(this.taskId, process);
   }
 
   protected void setSuccessProcessByIndex(Integer curIndex) {
-    this.setSuccessProcess(this.totalRows == 0 ? 100
-        : Math.min(NumberUtil.mul(NumberUtil.div(curIndex + 1, this.totalRows), 100).intValue(),
-            100));
+    this.setSuccessProcess(getSafeProcessByIndex(curIndex));
   }
 
   protected boolean addTipMsg(String msg) {
@@ -203,6 +202,10 @@ public abstract class ExcelImportListener<T extends ExcelModel> extends ExcelEve
     }
     this.hasError = true;
     ExcelImportUtil.setHasError(this.taskId, true);
+
+    if (!continueWithError()) {
+      this.interrupt = true;
+    }
   }
 
   @Override
@@ -212,7 +215,7 @@ public abstract class ExcelImportListener<T extends ExcelModel> extends ExcelEve
         return;
       }
 
-      this.setProcess(100);
+      this.setTotalProcess(getTotalProcess(this.totalRows));
 
       if (this.requireTransaction()) {
         TransactionStatus transactionStatus = TransactionUtil.getTransaction();
@@ -264,5 +267,17 @@ public abstract class ExcelImportListener<T extends ExcelModel> extends ExcelEve
     ExcelImportUtil.initUploadTask(taskId);
   }
 
+  private Integer getTotalProcess(Integer totalRows) {
+    return totalRows == null ? 0 : Math.max(0, totalRows);
+  }
+
+  private Integer getSafeProcessByIndex(Integer curIndex) {
+    return curIndex == null ? 0 : Math.max(0, curIndex + 1);
+  }
+
   protected abstract void doComplete();
+
+  protected boolean continueWithError() {
+    return false;
+  }
 }

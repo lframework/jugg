@@ -16,9 +16,15 @@ public class ExcelImportBo extends BaseBo<VoidDto> {
   private String id;
 
   /**
-   * 当前进度（条数）
+   * 总进度（条数）
    */
-  @Schema(description = "当前进度（条数）")
+  @Schema(description = "总进度（条数）")
+  private Integer totalProcess = 0;
+
+  /**
+   * 解析进度（条数）
+   */
+  @Schema(description = "解析进度（条数）")
   private Integer process = 0;
 
   /**

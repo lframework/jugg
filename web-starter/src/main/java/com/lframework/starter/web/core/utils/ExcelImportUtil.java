@@ -51,7 +51,7 @@ public class ExcelImportUtil {
    * 更新指定任务的导入进度
    *
    * @param id 任务ID，不能为null
-   * @param process 进度值（0-100），不能为null
+   * @param process 总处理条数，不能为null
    */
   public static void setProcess(String id, Integer process) {
     String key = StringUtil.format(UPLOAD_TASK_KEY, id);
@@ -61,11 +61,25 @@ public class ExcelImportUtil {
   }
 
   /**
+   * 设置总进度
+   * 更新指定任务的总处理条数
+   *
+   * @param id 任务ID，不能为null
+   * @param process 总处理条数，不能为null
+   */
+  public static void setTotalProcess(String id, Integer process) {
+    String key = StringUtil.format(UPLOAD_TASK_KEY, id);
+    ExcelImportBo task = (ExcelImportBo) StpUtil.getSession().get(key);
+    task.setTotalProcess(process);
+    StpUtil.getSession().set(key, task);
+  }
+
+  /**
    * 设置成功进度
    * 更新指定任务的成功处理进度
    *
    * @param id 任务ID，不能为null
-   * @param process 成功进度值（0-100），不能为null
+   * @param process 已成功处理条数，不能为null
    */
   public static void setSuccessProcess(String id, Integer process) {
     String key = StringUtil.format(UPLOAD_TASK_KEY, id);
