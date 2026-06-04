@@ -61,7 +61,7 @@ public class FlowTaskController extends DefaultBaseController {
   public InvokeResult<PageResult<QueryTodoTaskListBo>> queryTodoList(
       @Valid QueryTodoTaskListVo vo) {
     PageResult<FlowTaskDto> pageResult = flowTaskWrapperService.queryTodoList(getPageIndex(vo),
-        getPageSize(vo), vo);
+        getPageSize(vo), vo, getCurrentUser().getId());
     List<FlowTaskDto> datas = pageResult.getDatas();
     List<QueryTodoTaskListBo> results = datas.stream().map(QueryTodoTaskListBo::new).collect(
         Collectors.toList());
@@ -74,7 +74,7 @@ public class FlowTaskController extends DefaultBaseController {
   public InvokeResult<PageResult<QueryMyTaskListBo>> queryMyList(
       @Valid QueryMyTaskListVo vo) {
     PageResult<FlowTaskDto> pageResult = flowTaskWrapperService.queryMyList(getPageIndex(vo),
-        getPageSize(vo), vo);
+        getPageSize(vo), vo, getCurrentUser().getId());
     List<FlowTaskDto> datas = pageResult.getDatas();
     List<QueryMyTaskListBo> results = datas.stream().map(QueryMyTaskListBo::new).collect(
         Collectors.toList());
@@ -146,7 +146,7 @@ public class FlowTaskController extends DefaultBaseController {
   @Operation(summary = "反对")
   @PostMapping("/reject")
   public InvokeResult<Void> reject(@Valid @RequestBody RejectTaskVo vo) {
-    flowTaskWrapperService.reject(vo);
+    flowTaskWrapperService.reject(vo, getCurrentUser().getId());
     return InvokeResultBuilder.success();
   }
 

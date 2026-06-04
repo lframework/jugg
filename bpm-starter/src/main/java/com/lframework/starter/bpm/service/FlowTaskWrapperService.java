@@ -23,7 +23,7 @@ public interface FlowTaskWrapperService extends BaseMpService<FlowTaskWrapper> {
    * @return
    */
   PageResult<FlowTaskDto> queryTodoList(Integer pageIndex, Integer pageSize,
-      QueryTodoTaskListVo vo);
+      QueryTodoTaskListVo vo, String userId);
 
   /**
    * 查询我的发起列表
@@ -34,7 +34,7 @@ public interface FlowTaskWrapperService extends BaseMpService<FlowTaskWrapper> {
    * @return
    */
   PageResult<FlowTaskDto> queryMyList(Integer pageIndex, Integer pageSize,
-      QueryMyTaskListVo vo);
+      QueryMyTaskListVo vo, String userId);
 
   /**
    * 查询流程实例列表
@@ -73,7 +73,7 @@ public interface FlowTaskWrapperService extends BaseMpService<FlowTaskWrapper> {
    *
    * @param vo
    */
-  void reject(RejectTaskVo vo);
+  void reject(RejectTaskVo vo, String userId);
 
   /**
    * 终止

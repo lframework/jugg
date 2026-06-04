@@ -18,7 +18,6 @@ import com.lframework.starter.bpm.vo.flow.task.UndoTaskVo;
 import com.lframework.starter.common.exceptions.impl.DefaultClientException;
 import com.lframework.starter.common.utils.ObjectUtil;
 import com.lframework.starter.web.core.components.resp.PageResult;
-import com.lframework.starter.web.core.components.security.SecurityUtil;
 import com.lframework.starter.web.core.impl.BaseMpServiceImpl;
 import com.lframework.starter.web.core.utils.PageHelperUtil;
 import com.lframework.starter.web.core.utils.PageResultUtil;
@@ -57,20 +56,18 @@ public class FlowTaskWrapperServiceImpl extends
 
   @Override
   public PageResult<FlowTaskDto> queryTodoList(Integer pageIndex, Integer pageSize,
-      QueryTodoTaskListVo vo) {
+      QueryTodoTaskListVo vo, String userId) {
 
     PageHelperUtil.startPage(pageIndex, pageSize);
-    List<FlowTaskDto> datas = getBaseMapper().queryTodoList(vo,
-        SecurityUtil.getCurrentUser().getId());
+    List<FlowTaskDto> datas = getBaseMapper().queryTodoList(vo, userId);
     return PageResultUtil.convert(new PageInfo<>(datas));
   }
 
   @Override
   public PageResult<FlowTaskDto> queryMyList(Integer pageIndex, Integer pageSize,
-      QueryMyTaskListVo vo) {
+      QueryMyTaskListVo vo, String userId) {
     PageHelperUtil.startPage(pageIndex, pageSize);
-    List<FlowTaskDto> datas = getBaseMapper().queryMyList(vo,
-        SecurityUtil.getCurrentUser().getId());
+    List<FlowTaskDto> datas = getBaseMapper().queryMyList(vo, userId);
     return PageResultUtil.convert(new PageInfo<>(datas));
   }
 
@@ -113,7 +110,7 @@ public class FlowTaskWrapperServiceImpl extends
 
   @Transactional(rollbackFor = Exception.class)
   @Override
-  public void reject(RejectTaskVo vo) {
+  public void reject(RejectTaskVo vo, String userId) {
 
     Task task = taskService.getById(vo.getTaskId());
     Long definitionId = task.getDefinitionId();
@@ -132,10 +129,9 @@ public class FlowTaskWrapperServiceImpl extends
     List<User> todoList = FlowEngine.userService().listByAssociatedAndTypes(vo.getTaskId()
         , UserType.APPROVAL.getKey(), UserType.TRANSFER.getKey(), UserType.DEPUTE.getKey());
 
-    String currentUserId = SecurityUtil.getCurrentUser().getId();
     // 判断办理人是否有办理权限
     User todoUser = CollUtil.getOne(
-        StreamUtils.filter(todoList, u -> Objects.equals(u.getProcessedBy(), currentUserId)));
+        StreamUtils.filter(todoList, u -> Objects.equals(u.getProcessedBy(), userId)));
     if (ObjectUtil.isNull(todoUser)) {
       throw new DefaultClientException(ExceptionCons.NOT_AUTHORITY);
     }
