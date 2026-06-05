@@ -9,7 +9,6 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
@@ -42,7 +41,10 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import io.micrometer.tracing.Tracer;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
+import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
@@ -59,6 +61,7 @@ import org.springframework.web.filter.CorsFilter;
  * @author zmj
  */
 @Configuration
+@AutoConfigureBefore(JacksonAutoConfiguration.class)
 @EnableConfigurationProperties({WebProperties.class, DefaultSettingProperties.class, SecretProperties.class})
 public class WebAutoConfiguration {
 
@@ -135,15 +138,13 @@ public class WebAutoConfiguration {
   }
 
   @Bean
-  public ObjectMapper getObjectMapper(Jackson2ObjectMapperBuilder builder) {
+  public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
 
-    ObjectMapper om = builder.build().configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true)
-        .configure(ALLOW_UNESCAPED_CONTROL_CHARS.mappedFeature(), true)
-        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-        .registerModule(new ParameterNamesModule()).registerModule(new Jdk8Module())
-        .registerModule(new JavaTimeModule()).registerModule(new JavaLocalDateTimeModule())
-        .registerModule(new JavaBigDecimalModule());
-    return om;
+    return builder -> builder.featuresToEnable(JsonParser.Feature.ALLOW_SINGLE_QUOTES,
+            ALLOW_UNESCAPED_CONTROL_CHARS.mappedFeature())
+        .featuresToDisable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+        .modulesToInstall(new ParameterNamesModule(), new Jdk8Module(), new JavaTimeModule(),
+            new JavaLocalDateTimeModule(), new JavaBigDecimalModule());
   }
 
   /**
@@ -154,7 +155,7 @@ public class WebAutoConfiguration {
   class JavaLocalDateTimeModule extends SimpleModule {
 
     public JavaLocalDateTimeModule() {
-      super(PackageVersion.VERSION);
+      super("JavaLocalDateTimeModule", PackageVersion.VERSION);
       this.addSerializer(LocalDateTime.class,
           new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(
               NORM_DATETIME_PATTERN)));
@@ -179,7 +180,7 @@ public class WebAutoConfiguration {
   class JavaBigDecimalModule extends SimpleModule {
 
     public JavaBigDecimalModule() {
-      super(PackageVersion.VERSION);
+      super("JavaBigDecimalModule", PackageVersion.VERSION);
       // 添加BigDecimal序列化器，避免科学计数法，舍弃无效的小数0
       this.addSerializer(BigDecimal.class, new BigDecimalSerializer());
     }
