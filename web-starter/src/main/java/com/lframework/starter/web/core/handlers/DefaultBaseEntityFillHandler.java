@@ -67,7 +67,7 @@ public class DefaultBaseEntityFillHandler implements MetaObjectHandler {
       this.strictUpdateFill(metaObject, MyBatisStringPool.COLUMN_UPDATE_BY, String.class,
           defaultSettingProperties.getDefaultUserName());
       this.strictUpdateFill(metaObject, MyBatisStringPool.COLUMN_UPDATE_BY_ID, String.class,
-          defaultSettingProperties.getDefaultUserName());
+          defaultSettingProperties.getDefaultUserId());
     }
 
     this.strictUpdateFill(metaObject, MyBatisStringPool.COLUMN_UPDATE_TIME, LocalDateTime.class,
