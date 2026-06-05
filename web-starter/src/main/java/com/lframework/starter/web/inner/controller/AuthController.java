@@ -33,6 +33,7 @@ import com.lframework.starter.web.core.dto.GenerateCaptchaDto;
 import com.lframework.starter.web.core.utils.ApplicationUtil;
 import com.lframework.starter.web.core.utils.IdUtil;
 import com.lframework.starter.web.core.utils.JsonUtil;
+import com.lframework.starter.web.core.utils.RequestUtil;
 import com.lframework.starter.web.core.utils.TenantUtil;
 import com.lframework.starter.web.inner.bo.auth.CollectMenuBo;
 import com.lframework.starter.web.inner.bo.auth.LoginBo;
@@ -154,7 +155,18 @@ public class AuthController extends DefaultBaseController {
   public InvokeResult<TenantRequireBo> getTenantRequire() {
     TenantRequireBo result = new TenantRequireBo();
     result.setEnable(TenantUtil.enableTenant());
-    result.setTenantId(TenantContextHolder.getTenantId());
+    String serverName = RequestUtil.getRequest().getServerName();
+    if (StringUtil.isNotBlank(serverName)) {
+      List<Tenant> tenantList = tenantService.findAll();
+      if (CollectionUtil.isNotEmpty(tenantList)) {
+        for (Tenant tenant : tenantList) {
+          if (StringUtil.equals(serverName, tenant.getServerName())) {
+            result.setTenantId(tenant.getId());
+            break;
+          }
+        }
+      }
+    }
 
     return InvokeResultBuilder.success(result);
   }
