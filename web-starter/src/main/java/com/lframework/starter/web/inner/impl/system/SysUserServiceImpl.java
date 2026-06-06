@@ -95,7 +95,8 @@ public class SysUserServiceImpl extends BaseMpServiceImpl<SysUserMapper, SysUser
 
   @Override
   public SysUser findByCode(String code) {
-    Wrapper<SysUser> queryWrapper = Wrappers.lambdaQuery(SysUser.class).eq(SysUser::getCode, code);
+    Wrapper<SysUser> queryWrapper = Wrappers.lambdaQuery(SysUser.class).eq(SysUser::getCode, code)
+        .eq(SysUser::getAvailable, true);
     return getOne(queryWrapper);
   }
 
@@ -306,7 +307,7 @@ public class SysUserServiceImpl extends BaseMpServiceImpl<SysUserMapper, SysUser
   protected void doRegist(RegistUserVo vo) {
 
     Wrapper<SysUser> queryWrapper = Wrappers.lambdaQuery(SysUser.class)
-        .eq(SysUser::getUsername, vo.getUsername());
+        .eq(SysUser::getUsername, vo.getUsername()).eq(SysUser::getAvailable, true);
     if (getBaseMapper().selectCount(queryWrapper) > 0) {
       throw new DefaultClientException("用户名重复，请重新输入！");
     }
