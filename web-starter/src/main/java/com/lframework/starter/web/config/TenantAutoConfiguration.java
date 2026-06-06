@@ -5,6 +5,7 @@ import com.baomidou.dynamic.datasource.creator.DataSourceProperty;
 import com.baomidou.dynamic.datasource.provider.AbstractJdbcDataSourceProvider;
 import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceProperties;
 import com.lframework.starter.web.config.properties.SecretProperties;
+import com.lframework.starter.web.core.aop.TenantScopeAspect;
 import com.lframework.starter.web.core.components.tenant.TenantInterceptor;
 import com.lframework.starter.web.core.interceptors.TenantInterceptorImpl;
 import com.lframework.starter.web.core.listeners.TenantListener.ClearTenantListener;
@@ -34,6 +35,11 @@ public class TenantAutoConfiguration {
   @Bean
   public TenantInterceptor tenantInterceptor(TenantService tenantService) {
     return new TenantInterceptorImpl(tenantService);
+  }
+
+  @Bean
+  public TenantScopeAspect tenantScopeAspect() {
+    return new TenantScopeAspect();
   }
 
   @Bean
