@@ -32,22 +32,11 @@ public class NumberUtil {
       return false;
     }
 
-    String str = BigDecimal.valueOf(value.doubleValue()).toPlainString();
+    BigDecimal decimal = value instanceof BigDecimal
+        ? (BigDecimal) value
+        : BigDecimal.valueOf(value.doubleValue());
 
-    if (str.contains(StringPool.DECIMAL_POINT)) {
-      while (StringPool.ZERO.equals(str.substring(str.length() - 1))) {
-        // 将数字末尾为0的字符去除
-        str = str.substring(0, str.length() - 1);
-      }
-
-      if (StringPool.DECIMAL_POINT.equals(str.substring(str.length() - 1))) {
-        return true;
-      }
-
-      return str.substring(str.indexOf(StringPool.DECIMAL_POINT)).length() - 1 <= precision;
-    }
-
-    return true;
+    return Math.max(decimal.stripTrailingZeros().scale(), 0) <= precision;
   }
 
   /**
