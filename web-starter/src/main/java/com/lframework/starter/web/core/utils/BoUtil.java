@@ -8,6 +8,7 @@ import com.lframework.starter.common.utils.ArrayUtil;
 import com.lframework.starter.common.utils.BeanUtil;
 import com.lframework.starter.common.utils.ReflectUtil;
 import com.lframework.starter.web.core.annotations.constants.EncryType;
+import com.lframework.starter.web.core.annotations.convert.DecryptConvert;
 import com.lframework.starter.web.core.annotations.convert.EncryptConvert;
 import com.lframework.starter.web.core.annotations.convert.EnumConvert;
 import com.lframework.starter.web.core.annotations.convert.IgnoreConvert;
@@ -77,6 +78,7 @@ public class BoUtil {
       Map<String, Object[]> enumFieldNames = new HashMap<>();
       Map<String, List<String>> enumNameMap = new HashMap<>();
       Map<String, EncryType> encryptFieldNames = new HashMap<>();
+      List<String> decryptFieldNames = new ArrayList<>();
       Class<? extends Serializable> clazz = target.getClass();
       Field[] fields = ReflectUtil.getFields(clazz);
       if (ArrayUtil.isNotEmpty(fields)) {
@@ -112,6 +114,10 @@ public class BoUtil {
             String fieldName = field.getName();
             encryptFieldNames.put(fieldName, encryType);
           }
+          DecryptConvert decryptConvert = field.getAnnotation(DecryptConvert.class);
+          if (decryptConvert != null) {
+            decryptFieldNames.add(field.getName());
+          }
         }
       }
 
@@ -137,12 +143,28 @@ public class BoUtil {
               }
             }
 
+            if (decryptFieldNames.contains(s)) {
+              if (v instanceof CharSequence) {
+                return decrypt((CharSequence) v);
+              }
+            }
+
             return v;
           });
 
       OPTIONS.put(targetClass, copyOptions);
 
       return copyOptions;
+    }
+  }
+
+  private static String decrypt(CharSequence value) {
+
+    try {
+      return EncryptUtil.decrypt(value.toString());
+    } catch (RuntimeException e) {
+      // 兼容历史明文数据，避免老数据无法转换为BO。
+      return value.toString();
     }
   }
 }

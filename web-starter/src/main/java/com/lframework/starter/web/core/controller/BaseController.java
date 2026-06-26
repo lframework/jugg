@@ -72,4 +72,14 @@ public abstract class BaseController {
 
     return SecurityUtil.getCurrentUser();
   }
+
+  /**
+   * 获取当前登录用户ID
+   *
+   * @return
+   */
+  public String getCurrentUserId() {
+
+    return getCurrentUser() == null ? null : getCurrentUser().getId();
+  }
 }
